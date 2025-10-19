@@ -25,17 +25,5 @@ services:
       - postgres
     command: ["npm", "run", "start:prod"]
 
-  frontend:
-    build:
-      context: ../apps/frontend
-      dockerfile: Dockerfile
-    env_file:
-      - ../apps/frontend/.env
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
-    command: ["npm", "run", "start"]
-
 volumes:
   postgres_data:
