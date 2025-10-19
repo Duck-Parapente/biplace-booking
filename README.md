@@ -1,9 +1,20 @@
-# Boilerplate Starter: NestJS + Next + Postgres (Docker) + CI
+# Biplace Booking
 
-Quickstart:
-1. Copy `.env.example` files into the apps and fill values if needed.
-2. Run: `docker-compose up --build`
-3. Backend health: http://localhost:3001/health
-4. Frontend: http://localhost:3000
+## Infrastructure
 
-This repo contains a minimal working example to get you started.
+- L'app "backend" utilise Docker avec une DB Postgres
+- Le frontend quant à lui est déployé directement sur Vercel
+- Le repo utilise turborepo pour optimiser les builds, etc.
+
+## Environnements (staging/prod)
+
+- Les 2 backs sont hostés sur un AWS Lightsail.
+- La `.ssh/config` (clé PEM à récupérer auprès d'un maintainer):
+  ```Host duck-tower
+  Hostname 13.39.104.141
+  User ec2-user
+  PreferredAuthentications publickey
+  IdentityFile ~/.ssh/aws-duck-tower.pem```
+- L'app est déployée sur 2 environnements:
+    - staging: `/srv/biplace-booking-staging`
+    - prod: `/srv/biplace-booking-prod`
