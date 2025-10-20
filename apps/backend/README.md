@@ -9,7 +9,7 @@ Le backend utilise Docker avec une DB Postgres.
 - Les 2 backs sont hostés sur un AWS Lightsail.
 - La `.ssh/config` (clé PEM à récupérer auprès d'un maintainer):
   ```Host duck-tower
-  Hostname 13.39.104.141
+  Hostname 52.47.156.66
   User ec2-user
   PreferredAuthentications publickey
   IdentityFile ~/.ssh/aws-duck-tower.pem```
