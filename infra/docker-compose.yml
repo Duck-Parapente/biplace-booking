@@ -10,5 +10,17 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  backend:
+    build:
+      context: ..
+      dockerfile: apps/backend/Dockerfile
+    env_file:
+      - ../apps/backend/.env
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    command: ["node", "dist/main.js"]
+
 volumes:
   postgres_data:
