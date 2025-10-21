@@ -12,7 +12,8 @@
     "dev:backend": "turbo start:dev --filter=backend",
     "dev:frontend": "turbo dev --filter=frontend",
     "start": "turbo start",
-    "docker:up": "docker compose -f infra/docker-compose.yml up --build"
+    "docker:up:prod": "docker compose -f infra/docker-compose-prod.yml up --build",
+    "docker:up:staging": "docker compose -f infra/docker-compose-staging.yml up --build"
   },
   "packageManager": "pnpm@8.0.0"
 }

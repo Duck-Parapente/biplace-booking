@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: staging_user
+      POSTGRES_PASSWORD: staging_pwd
+      POSTGRES_DB: biplace_staging
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ..
+      dockerfile: apps/backend/Dockerfile
+    env_file:
+      - ../apps/backend/.env.staging
+    ports:
+      - "3002:3001"
+    depends_on:
+      - postgres
+    command: ["node", "dist/main.js"]
+
+  caddy:
+    image: caddy:2
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  caddy_data:
+  caddy_config:
