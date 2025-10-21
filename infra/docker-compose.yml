@@ -36,8 +36,6 @@ services:
     build:
       context: ..
       dockerfile: apps/backend/Dockerfile
-    env_file:
-      - .env.${ENV}
     ports:
       - "${PORT}:3001"
     depends_on:

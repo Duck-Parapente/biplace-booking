@@ -22,6 +22,11 @@ if [[ ! -f ".env.$ENV" ]]; then
     exit 1
 fi
 
+# Source the environment file to load variables
+set -a  # automatically export all variables
+source ".env.$ENV"
+set +a  # stop automatically exporting
+
 # Export environment
 export ENV=$ENV
 
@@ -65,7 +70,6 @@ case $ENV in
         if docker-compose --profile local up -d postgres; then
             echo "✅ PostgreSQL is running on port 5432"
             echo "💡 Start your backend with: pnpm dev:backend"
-            echo "💡 Or run full local dev: pnpm dev:local"
         else
             echo "❌ Failed to start PostgreSQL"
             exit 1
@@ -76,7 +80,7 @@ case $ENV in
         echo "📦 Building backend with turbo..."
         
         # Build first, then deploy
-        if cd .. && pnpm build --filter=backend && cd infra; then
+        if cd ../../ && pnpm build --filter=backend && cd infra; then
             echo "✅ Build successful"
             if docker-compose --profile staging up -d --build; then
                 echo "✅ Staging deployed!"
@@ -101,7 +105,7 @@ case $ENV in
         echo "📦 Building backend with turbo..."
         
         # Build first, then deploy
-        if cd .. && pnpm build --filter=backend && cd infra; then
+        if cd ../../ && pnpm build --filter=backend && cd infra; then
             echo "✅ Build successful"
             if docker-compose --profile prod up -d --build; then
                 echo "✅ Production deployed!"

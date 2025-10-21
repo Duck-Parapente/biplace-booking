@@ -7,7 +7,7 @@ This directory contains the infrastructure configuration for the Biplace Booking
 ### Local Development (Recommended)
 ```bash
 # From project root - starts DB and backend together
-pnpm dev:local
+pnpm dev:backend
 
 # Or manually:
 # 1. Copy environment file

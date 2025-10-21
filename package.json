@@ -12,16 +12,16 @@
     "dev:backend": "turbo start:dev --filter=backend",
     "dev:frontend": "turbo dev --filter=frontend",
     "start": "turbo start",
-    "docker:local": "cd infra && ./deploy.sh local",
-    "docker:staging": "cd infra && ./deploy.sh staging",
-    "docker:prod": "cd infra && ./deploy.sh prod",
-    "docker:local:force": "cd infra && ./deploy.sh local --force",
-    "docker:staging:force": "cd infra && ./deploy.sh staging --force",
-    "docker:prod:force": "cd infra && ./deploy.sh prod --force",
+    "docker:local": "cd infra && ./scripts/deploy.sh local",
+    "docker:staging": "cd infra && ./scripts/deploy.sh staging",
+    "docker:prod": "cd infra && ./scripts/deploy.sh prod",
+    "docker:local:force": "cd infra && ./scripts/deploy.sh local --force",
+    "docker:staging:force": "cd infra && ./scripts/deploy.sh staging --force",
+    "docker:prod:force": "cd infra && ./scripts/deploy.sh prod --force",
     "docker:down": "cd infra && docker compose down",
     "docker:logs": "cd infra && docker compose logs -f",
-    "docker:monitor": "cd infra && ./monitor-resources.sh",
-    "dev:local": "./scripts/dev-local.sh"
+    "docker:logs:local": "cd infra && set -a && source .env.local && set +a && docker compose logs -f",
+    "docker:monitor": "cd infra && ./scripts/monitor-resources.sh"
   },
   "packageManager": "pnpm@8.0.0"
 }

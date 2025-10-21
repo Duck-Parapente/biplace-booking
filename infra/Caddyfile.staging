@@ -1,6 +1,6 @@
 # Staging API
 api-staging.duckparapente.fr {
-    reverse_proxy backend:3001
+    reverse_proxy backend:3002
     
     # Security headers (less strict for staging)
     header {
