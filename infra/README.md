@@ -42,10 +42,28 @@ pnpm docker:prod
 
 ## Environment Files
 
-- `.env.local` - Local development (database only)
-- `.env.staging` - Staging environment
-- `.env.prod` - Production environment
-- `.env.example` - Template file
+- `.env.local` - Local development (database only, staging-level resources)
+- `.env.staging` - Staging environment (176M total: 64M+80M+32M)
+- `.env.prod` - Production environment (704M total: 256M+320M+128M)
+- `.env.example` - Template file with all variables documented
+
+### Resource Configuration
+
+All resource limits are defined in environment files:
+
+```bash
+# Staging values (176M total)
+POSTGRES_MEMORY_LIMIT=64M
+BACKEND_MEMORY_LIMIT=80M
+CADDY_MEMORY_LIMIT=32M
+
+# Production values (704M total - 4x staging)
+POSTGRES_MEMORY_LIMIT=256M
+BACKEND_MEMORY_LIMIT=320M
+CADDY_MEMORY_LIMIT=128M
+```
+
+**Important for 512MB servers**: Cannot run staging + production simultaneously!
 
 ## Caddy Configuration
 

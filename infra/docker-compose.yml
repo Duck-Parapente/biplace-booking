@@ -3,7 +3,7 @@ services:
   postgres:
     image: postgres:15
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:}
+      POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
@@ -12,6 +12,24 @@ services:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
     profiles: ["local", "staging", "prod"]
+    deploy:
+      resources:
+        limits:
+          memory: ${POSTGRES_MEMORY_LIMIT}
+          cpus: ${POSTGRES_CPU_LIMIT}
+        reservations:
+          memory: ${POSTGRES_MEMORY_RESERVATION}
+          cpus: ${POSTGRES_CPU_RESERVATION}
+    # PostgreSQL optimizations for low memory
+    command: >
+      postgres
+      -c shared_buffers=${POSTGRES_SHARED_BUFFERS}
+      -c effective_cache_size=${POSTGRES_CACHE_SIZE}
+      -c maintenance_work_mem=${POSTGRES_MAINTENANCE_MEM}
+      -c work_mem=${POSTGRES_WORK_MEM}
+      -c max_connections=${POSTGRES_MAX_CONNECTIONS}
+      -c wal_buffers=1MB
+      -c random_page_cost=1.1
 
   # Backend Application (only for staging/prod)
   backend:
@@ -21,12 +39,24 @@ services:
     env_file:
       - .env.${ENV}
     ports:
-      - "${BACKEND_PORT}:3001"
+      - "${PORT}:3001"
     depends_on:
       - postgres
     command: ["node", "dist/main.js"]
     restart: unless-stopped
     profiles: ["staging", "prod"]
+    deploy:
+      resources:
+        limits:
+          memory: ${BACKEND_MEMORY_LIMIT}
+          cpus: ${BACKEND_CPU_LIMIT}
+        reservations:
+          memory: ${BACKEND_MEMORY_RESERVATION}
+          cpus: ${BACKEND_CPU_RESERVATION}
+    # Node.js optimizations for low memory
+    environment:
+      - NODE_OPTIONS=--max-old-space-size=${NODE_MAX_OLD_SPACE}
+      - UV_THREADPOOL_SIZE=${UV_THREADPOOL_SIZE}
 
   # Caddy Reverse Proxy (only for staging/prod)
   caddy:
@@ -39,9 +69,18 @@ services:
       - caddy_data:/data
       - caddy_config:/config
     depends_on:
+      - postgres
       - backend
     restart: unless-stopped
     profiles: ["staging", "prod"]
+    deploy:
+      resources:
+        limits:
+          memory: ${CADDY_MEMORY_LIMIT}
+          cpus: ${CADDY_CPU_LIMIT}
+        reservations:
+          memory: ${CADDY_MEMORY_RESERVATION}
+          cpus: ${CADDY_CPU_RESERVATION}
 
 volumes:
   postgres_data:
