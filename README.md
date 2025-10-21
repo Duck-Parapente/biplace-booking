@@ -2,8 +2,9 @@
 
 ## Monorepo
 
-Pour l'instant, il y a 2 apps pour:
-- "backend" déployé sur un serveur AWS.
-- "frontend" déployé sur Vercel.
+Pour l'instant, il y a 4 services pour gérer la réservation des biplaces:
+- 2 DB (prod/staging) déployées sur un serveur AWS+Docker.
+- 1 "backend" déployé sur Vercel.
+- 1 "frontend" déployé sur Vercel.
 
 Le repo utilise turborepo pour optimiser les builds, etc.

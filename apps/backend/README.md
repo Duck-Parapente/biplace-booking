@@ -2,11 +2,11 @@
 
 ## Infrastructure
 
-Le backend utilise Docker avec une DB Postgres.
+Le backend utilise une DB Postgres sur Docker et un backend déployé sur Vercel. 
 
 ## Environnements (staging/prod)
 
-- Les 2 backs sont hostés sur un AWS Lightsail.
+- Les 2 db sont hostées sur un AWS Lightsail.
 - La `.ssh/config` (clé PEM à récupérer auprès d'un maintainer):
   ```Host duck-tower
   Hostname 52.47.156.66
