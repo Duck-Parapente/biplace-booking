@@ -1,0 +1,36 @@
+# Staging API
+api-staging.duckparapente.fr {
+    reverse_proxy backend:3001
+    
+    # Security headers (less strict for staging)
+    header {
+        Strict-Transport-Security max-age=86400;  # Shorter for staging
+        X-Frame-Options DENY
+        X-Content-Type-Options nosniff
+        Referrer-Policy strict-origin-when-cross-origin
+        X-XSS-Protection "1; mode=block"
+    }
+    
+    # Enable compression
+    encode gzip
+    
+    # Access logging
+    log {
+        output file /var/log/caddy/staging-access.log {
+            roll_size 5mb
+            roll_keep 3
+        }
+        format json
+    }
+    
+    # CORS for testing (more permissive in staging)
+    header {
+        Access-Control-Allow-Origin "*"
+        Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+        Access-Control-Allow-Headers "Content-Type, Authorization"
+    }
+    
+    # Handle preflight requests
+    @options method OPTIONS
+    respond @options 204
+}

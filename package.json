@@ -12,8 +12,15 @@
     "dev:backend": "turbo start:dev --filter=backend",
     "dev:frontend": "turbo dev --filter=frontend",
     "start": "turbo start",
-    "docker:up:prod": "docker compose -f infra/docker-compose-prod.yml up --build",
-    "docker:up:staging": "docker compose -f infra/docker-compose-staging.yml up --build"
+    "docker:local": "cd infra && ./deploy.sh local",
+    "docker:staging": "cd infra && ./deploy.sh staging",
+    "docker:prod": "cd infra && ./deploy.sh prod",
+    "docker:local:force": "cd infra && ./deploy.sh local --force",
+    "docker:staging:force": "cd infra && ./deploy.sh staging --force",
+    "docker:prod:force": "cd infra && ./deploy.sh prod --force",
+    "docker:down": "cd infra && docker compose down",
+    "docker:logs": "cd infra && docker compose logs -f",
+    "dev:local": "./scripts/dev-local.sh"
   },
   "packageManager": "pnpm@8.0.0"
 }

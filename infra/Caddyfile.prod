@@ -1,0 +1,31 @@
+# Production API
+api.duckparapente.fr {
+    reverse_proxy backend:3001
+    
+    # Security headers
+    header {
+        Strict-Transport-Security max-age=31536000;
+        X-Frame-Options DENY
+        X-Content-Type-Options nosniff
+        Referrer-Policy strict-origin-when-cross-origin
+        X-XSS-Protection "1; mode=block"
+    }
+    
+    # Enable compression
+    encode gzip
+    
+    # Access logging
+    log {
+        output file /var/log/caddy/prod-access.log {
+            roll_size 10mb
+            roll_keep 5
+        }
+        format json
+    }
+    
+    # Error pages
+    handle_errors {
+        @5xx expression {http.error.status_code} >= 500
+        respond @5xx "Service temporarily unavailable" 503
+    }
+}

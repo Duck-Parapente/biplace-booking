@@ -1,0 +1,27 @@
+# Local Development (HTTP only)
+:8080 {
+    reverse_proxy localhost:3001
+    
+    # Basic headers for local dev
+    header {
+        X-Frame-Options DENY
+        X-Content-Type-Options nosniff
+    }
+    
+    # CORS for local development
+    header {
+        Access-Control-Allow-Origin "*"
+        Access-Control-Allow-Methods "*"
+        Access-Control-Allow-Headers "*"
+    }
+    
+    # Handle preflight requests
+    @options method OPTIONS
+    respond @options 204
+    
+    # Simple logging
+    log {
+        output stdout
+        format console
+    }
+}
