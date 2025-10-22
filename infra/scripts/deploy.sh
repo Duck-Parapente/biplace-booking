@@ -130,18 +130,6 @@ handle_running_containers() {
     fi
 }
 
-build_backend() {
-    log_info "📦 Building backend with turbo..."
-    local project_root="$(dirname "$INFRA_DIR")"
-    cd "$project_root" || log_error "Cannot cd to project root: $project_root"
-    if command -v pnpm >/dev/null; then
-        pnpm build --filter=backend || log_error "Backend build failed"
-    else
-        log_error "pnpm not installed; cannot build backend"
-    fi
-    log_success "Backend build successful"
-}
-
 deploy_containers() {
     local profile=$1
     local success_message=$2
@@ -177,8 +165,7 @@ deploy_full_stack() {
     icon=$(get_env_icon "$env")
     log_info "$icon Deploying to $env environment..."
     confirm_production "$env"
-    build_backend
-    deploy_containers "$env" "${env^} deployed!" "$api_url"
+    deploy_containers "$env" "$env deployed!" "$api_url"
 }
 
 show_status() {
