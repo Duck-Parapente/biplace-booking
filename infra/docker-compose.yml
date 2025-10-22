@@ -33,9 +33,7 @@ services:
 
   # Backend Application (only for staging/prod)
   backend:
-    build:
-      context: ..
-      dockerfile: apps/backend/Dockerfile
+    image: biplace-backend:${ENV}
     ports:
       - "${PORT}:3001"
     depends_on:
