@@ -18,12 +18,8 @@
     "docker:local": "cd infra && ./scripts/deploy.sh local",
     "docker:staging": "cd infra && ./scripts/deploy.sh staging",
     "docker:prod": "cd infra && ./scripts/deploy.sh prod",
-    "docker:local:force": "cd infra && ./scripts/deploy.sh local --force",
-    "docker:staging:force": "cd infra && ./scripts/deploy.sh staging --force",
-    "docker:prod:force": "cd infra && ./scripts/deploy.sh prod --force",
     "docker:down": "cd infra && docker compose down",
     "docker:logs": "cd infra && docker compose logs -f",
-    "docker:logs:local": "cd infra && set -a && source ./env/local/.env && set +a && docker compose logs -f",
     "docker:monitor": "cd infra && ./scripts/monitor-resources.sh"
   },
   "packageManager": "pnpm@8.0.0"
