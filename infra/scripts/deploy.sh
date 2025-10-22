@@ -25,7 +25,6 @@ START_TIME=$(date +%s)
 
 #------------------------------- Logging ----------------------------------#
 
-# Functions
 log_info() { echo "$1" >&2; }
 log_success() { echo "✅ $1" >&2; }
 log_error() { echo "❌ $1" >&2; exit 1; }
@@ -36,19 +35,28 @@ usage() {
 Usage: ./deploy.sh <environment|status|help> [--force]
 
 Environments:
-    local    Start only PostgreSQL via Docker (run backend with pnpm locally)
-    staging  Build backend and start staging stack
-    prod     Build backend and start production stack (asks confirmation)
+    local    Start only PostgreSQL via Docker (backend runs locally)
+    staging  Build and start full staging stack
+    prod     Build and start production stack (asks for confirmation)
 
 Commands:
     status   Show docker compose service status
     help     Show this help message
 
 Options:
-    --force  Stop running containers without interactive prompt
+    --force  Stop running containers without confirmation
 
-Environment files expected at: infra/env/<env>/.env
-Compose file: $COMPOSE_FILE
+Environment structure:
+    infra/
+      env/
+        staging/
+          .env
+          Caddyfile
+        prod/
+          .env
+          Caddyfile
+      docker-compose.yml
+      .env (local defaults)
 EOF
 }
 
@@ -84,8 +92,8 @@ get_env_icon() {
 
 get_api_url() {
     case $1 in
-        staging) echo "https://api-staging.duckparapente.fr" ;;
-        prod) echo "https://api.duckparapente.fr" ;;
+        staging) echo "https://bb-backend-staging.duckparapente.fr" ;;
+        prod) echo "https://bb-backend-prod.duckparapente.fr" ;;
         *) echo "" ;;
     esac
 }
@@ -95,15 +103,17 @@ validate_environment() {
     [[ "$env" =~ ^(local|staging|prod)$ ]] || log_error "Invalid environment: $env"
 }
 
-check_env_file() {
+copy_env_files() {
     local env=$1
-    local env_file="$INFRA_DIR/env/$env/.env"
-    [[ -f "$env_file" ]] || log_error "Environment file $env_file not found!"
-    # shellcheck source=/dev/null
-    set -a && source "$env_file" && set +a
-    export ENV="$env"
-    log_info "📋 Environment: $env"
-    log_info "📄 Using config: $env_file"
+    local env_dir="$INFRA_DIR/env/$env"
+    [[ -d "$env_dir" ]] || log_error "Missing directory: $env_dir"
+
+    log_info "📂 Copying $env_dir → $INFRA_DIR"
+    cp "$env_dir"/.env "$INFRA_DIR"/.env || log_error "Failed to copy .env"
+    if [[ -f "$env_dir/Caddyfile" ]]; then
+        cp "$env_dir/Caddyfile" "$INFRA_DIR"/Caddyfile || log_error "Failed to copy Caddyfile"
+    fi
+    log_success "Environment files for '$env' copied."
 }
 
 handle_running_containers() {
@@ -112,7 +122,7 @@ handle_running_containers() {
     running=$(docker compose ps -q || true)
     [[ -n "$running" ]] || return 0
 
-    log_warning "Found running containers:";
+    log_warning "Found running containers:"
     docker compose ps --format 'table {{.Name}}\t{{.State}}\t{{.Ports}}'
     echo ""
 
@@ -143,15 +153,14 @@ deploy_containers() {
 confirm_production() {
     local env=$1
     [[ "$env" != "prod" ]] && return 0
-    log_warning "About to deploy to PRODUCTION. Continue? (y/N)"
+    log_warning "⚠️  About to DEPLOY to PRODUCTION. Continue? (y/N)"
     read -r confirm
-    [[ "$confirm" =~ ^[yY]$ ]] || log_error "Production deployment cancelled"
+    [[ "$confirm" =~ ^[yY]$ ]] || log_error "Production deployment cancelled."
 }
 
 deploy_local() {
-    log_info "🔧 Starting local development environment (database only)";
+    log_info "🔧 Starting local development environment (database only)"
     cd "$INFRA_DIR" || log_error "Failed to navigate to infra directory: $INFRA_DIR"
-    [[ -f "$COMPOSE_FILE" ]] || log_error "docker-compose.yml not found at $COMPOSE_FILE"
     log_info "🐳 Starting PostgreSQL container..."
     docker compose --profile local up -d postgres || log_error "Failed to start PostgreSQL"
     log_success "PostgreSQL running (port 5432). Start backend separately: pnpm dev:backend"
@@ -165,16 +174,18 @@ deploy_full_stack() {
     icon=$(get_env_icon "$env")
     log_info "$icon Deploying to $env environment..."
     confirm_production "$env"
+    copy_env_files "$env"
     deploy_containers "$env" "$env deployed!" "$api_url"
 }
 
 show_status() {
     cd "$INFRA_DIR" || log_error "Failed to navigate to infra directory: $INFRA_DIR"
-    log_info "📊 Container status:";
+    log_info "📊 Container status:"
     docker compose ps || log_error "Failed to list containers"
 }
 
-# Main execution
+#----------------------------- Main execution -----------------------------#
+
 main() {
     case "$ACTION" in
         help|-h|--help)
@@ -185,7 +196,6 @@ main() {
             local env="$ACTION"
             ensure_requirements
             validate_environment "$env"
-            check_env_file "$env"
             handle_running_containers
             if [[ "$env" == "local" ]]; then
                 deploy_local
@@ -199,5 +209,4 @@ main() {
     esac
 }
 
-# Run main function
 main "$@"

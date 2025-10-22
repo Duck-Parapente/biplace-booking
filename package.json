@@ -18,8 +18,12 @@
     "docker:local": "cd infra && ./scripts/deploy.sh local",
     "docker:staging": "cd infra && ./scripts/deploy.sh staging",
     "docker:prod": "cd infra && ./scripts/deploy.sh prod",
-    "docker:down": "cd infra && docker compose down",
-    "docker:logs": "cd infra && docker compose logs -f",
+    "docker:down:local": "cd infra && docker compose --profile local down",
+    "docker:down:staging": "cd infra && docker compose --profile staging down",
+    "docker:down:prod": "cd infra && docker compose --profile prod down",
+    "docker:logs:local": "cd infra && docker compose --profile local logs -f",
+    "docker:logs:staging": "cd infra && docker compose --profile staging logs -f",
+    "docker:logs:prod": "cd infra && docker compose --profile prod logs -f",
     "docker:monitor": "cd infra && ./scripts/monitor-resources.sh"
   },
   "packageManager": "pnpm@8.0.0"
