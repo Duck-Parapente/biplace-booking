@@ -145,7 +145,7 @@ deploy_containers() {
     local success_message=$2
     local api_url=$3
     cd "$INFRA_DIR" || log_error "Failed to navigate to infra directory: $INFRA_DIR"
-    docker compose --profile "$profile" up -d --build || log_error "Failed to deploy $profile environment"
+    DOCKER_BUILDKIT=0 docker compose --profile "$profile" up -d --build || log_error "Failed to deploy $profile environment"
     log_success "$success_message"
     [[ -n "$api_url" ]] && log_info "🌐 API available at: $api_url"
 }
