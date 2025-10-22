@@ -11,7 +11,7 @@ pnpm dev:backend
 
 # Or manually:
 # 1. Copy environment file
-cp infra/.env.example infra/.env.local
+cp infra/env/.env.example infra/env/local/.env
 
 # 2. Start database only
 pnpm docker:local
@@ -23,7 +23,7 @@ pnpm dev:backend
 ### Staging Deployment
 ```bash
 # 1. Configure staging environment
-cp infra/.env.example infra/.env.staging
+cp infra/env/.env.example infra/env/staging/.env
 # Edit infra/.env.staging with your staging values
 
 # 2. Deploy to staging (builds with turbo first)
@@ -33,7 +33,7 @@ pnpm docker:staging
 ### Production Deployment
 ```bash
 # 1. Configure production environment
-cp infra/.env.example infra/.env.prod
+cp infra/env/.env.example infra/env/prod/.env
 # Edit infra/.env.prod with your production values
 
 # 2. Deploy to production (builds with turbo first)
@@ -42,9 +42,9 @@ pnpm docker:prod
 
 ## Environment Files
 
-- `.env.local` - Local development (database only, staging-level resources)
-- `.env.staging` - Staging environment (176M total: 64M+80M+32M)
-- `.env.prod` - Production environment (704M total: 256M+320M+128M)
+- `local/.env` - Local development (database only, staging-level resources)
+- `staging/.env` - Staging environment (176M total: 64M+80M+32M)
+- `prod/.env` - Production environment (704M total: 256M+320M+128M)
 - `.env.example` - Template file with all variables documented
 
 ### Resource Configuration
@@ -67,9 +67,8 @@ CADDY_MEMORY_LIMIT=128M
 
 ## Caddy Configuration
 
-- `Caddyfile.local` - Local development (HTTP only)
-- `Caddyfile.staging` - Staging with HTTPS
-- `Caddyfile.prod` - Production with HTTPS
+- `staging/Caddyfile` - Staging with HTTPS
+- `prod/Caddyfile` - Production with HTTPS
 
 ## DNS Records Required
 

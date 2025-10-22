@@ -20,7 +20,7 @@
     "docker:prod:force": "cd infra && ./scripts/deploy.sh prod --force",
     "docker:down": "cd infra && docker compose down",
     "docker:logs": "cd infra && docker compose logs -f",
-    "docker:logs:local": "cd infra && set -a && source .env.local && set +a && docker compose logs -f",
+    "docker:logs:local": "cd infra && set -a && source ./env/local/.env && set +a && docker compose logs -f",
     "docker:monitor": "cd infra && ./scripts/monitor-resources.sh"
   },
   "packageManager": "pnpm@8.0.0"

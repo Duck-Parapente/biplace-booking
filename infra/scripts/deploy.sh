@@ -17,21 +17,22 @@ if [[ ! "$ENV" =~ ^(local|staging|prod)$ ]]; then
 fi
 
 # Check if .env file exists
-if [[ ! -f ".env.$ENV" ]]; then
-    echo "❌ Environment file .env.$ENV not found!"
+ENV_FILE="env/$ENV/.env"
+if [[ ! -f "$ENV_FILE" ]]; then
+    echo "❌ Environment file $ENV_FILE not found!"
     exit 1
 fi
 
 # Source the environment file to load variables
 set -a  # automatically export all variables
-source ".env.$ENV"
+source "$ENV_FILE"
 set +a  # stop automatically exporting
 
 # Export environment
 export ENV=$ENV
 
 echo "📋 Environment: $ENV"
-echo "📄 Using config: .env.$ENV"
+echo "📄 Using config: $ENV_FILE"
 
 # Check for running containers
 RUNNING_CONTAINERS=$(docker-compose ps -q)
