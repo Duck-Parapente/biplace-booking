@@ -35,26 +35,26 @@ echo "📋 Environment: $ENV"
 echo "📄 Using config: $ENV_FILE"
 
 # Check for running containers
-RUNNING_CONTAINERS=$(docker-compose ps -q)
+RUNNING_CONTAINERS=$(docker compose ps -q)
 if [[ -n "$RUNNING_CONTAINERS" ]]; then
     echo "⚠️  Found running containers:"
-    docker-compose ps --format "table {{.Name}}\t{{.State}}\t{{.Ports}}"
+    docker compose ps --format "table {{.Name}}\t{{.State}}\t{{.Ports}}"
     echo ""
     
     if [[ "$FORCE_FLAG" == "--force" ]]; then
         echo "🛑 Force flag detected, stopping containers..."
-        docker-compose down
+        docker compose down
         echo "✅ Containers stopped"
     else
         echo "🛑 Stop existing containers? (y/N)"
         read -r stop_containers
         if [[ $stop_containers == [yY] ]]; then
             echo "🛑 Stopping existing containers..."
-            docker-compose down
+            docker compose down
             echo "✅ Containers stopped"
         else
             echo "❌ Deployment cancelled. Please stop containers manually:"
-            echo "   docker-compose down"
+            echo "   docker compose down"
             echo "   Or use: ./deploy.sh $ENV --force"
             exit 1
         fi
@@ -68,7 +68,7 @@ case $ENV in
         echo "   - Backend should be run with: pnpm dev:backend"
         
         # Start only postgres with local profile
-        if docker-compose --profile local up -d postgres; then
+        if docker compose --profile local up -d postgres; then
             echo "✅ PostgreSQL is running on port 5432"
             echo "💡 Start your backend with: pnpm dev:backend"
         else
@@ -83,7 +83,7 @@ case $ENV in
         # Build first, then deploy
         if cd ../../ && pnpm build --filter=backend && cd infra; then
             echo "✅ Build successful"
-            if docker-compose --profile staging up -d --build; then
+            if docker compose --profile staging up -d --build; then
                 echo "✅ Staging deployed!"
                 echo "🌐 API available at: https://api-staging.duckparapente.fr"
             else
@@ -108,7 +108,7 @@ case $ENV in
         # Build first, then deploy
         if cd ../../ && pnpm build --filter=backend && cd infra; then
             echo "✅ Build successful"
-            if docker-compose --profile prod up -d --build; then
+            if docker compose --profile prod up -d --build; then
                 echo "✅ Production deployed!"
                 echo "🌐 API available at: https://api.duckparapente.fr"
             else
@@ -123,4 +123,4 @@ case $ENV in
 esac
 
 echo "📊 Container status:"
-docker-compose ps
+docker compose ps
