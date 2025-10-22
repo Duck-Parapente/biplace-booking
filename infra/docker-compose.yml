@@ -60,8 +60,8 @@ services:
   caddy:
     image: caddy:2
     ports:
-      - "${HTTP_PORT}:80"
-      - "${HTTPS_PORT}:443"
+      - "80:80"
+      - "443:443"
     volumes:
       - ./env/${ENV}/Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data

@@ -1,5 +1,5 @@
 # Production API
-api.duckparapente.fr {
+bb-backend-prod.duckparapente.fr {
     reverse_proxy backend:3001
     
     # Security headers
