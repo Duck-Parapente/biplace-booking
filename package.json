@@ -16,6 +16,8 @@
     "dev:frontend": "turbo dev --filter=frontend",
     "start": "turbo start",
     "docker:local": "cd infra && docker compose --profile local",
+    "deploy:image:staging": "cd infra && ./scripts/deploy-image.sh staging",
+    "deploy:image:prod": "cd infra && ./scripts/deploy-image.sh prod",
     "docker:staging": "cd infra && ./scripts/deploy.sh staging",
     "docker:prod": "cd infra && ./scripts/deploy.sh prod",
     "docker:down:staging": "cd infra && docker compose --profile staging down",
