@@ -14,6 +14,7 @@ Environment variables:
   BUILD_PLATFORM Override platform (default: linux/amd64)
 
 Steps:
+  0. verify current git branch matches environment
   (clean) remove old archives in .tmp/
   1. docker buildx build (loads image locally)
   2. docker save | gzip -> .tmp/biplace-backend-<env>.tar.gz
@@ -48,6 +49,13 @@ ARCHIVE="${TMP_DIR}/biplace-backend-${ENVIRONMENT}.tar.gz"
 # Updated clean step to target .tmp directory
 echo "[clean] Removing previous local archives (${TMP_DIR}/biplace-backend-*.tar.gz)..."
 rm -f "${TMP_DIR}"/biplace-backend-*.tar.gz || true
+
+# Branch safety check (must be on <env> branch locally)
+CURRENT_BRANCH="$(git -C "${ROOT_DIR}" rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'UNKNOWN')"
+if [[ "${CURRENT_BRANCH}" != "${ENVIRONMENT}" ]]; then
+  echo "Error: current git branch '${CURRENT_BRANCH}' does not match target environment '${ENVIRONMENT}'. Checkout the '${ENVIRONMENT}' branch and retry." >&2
+  exit 3
+fi
 
 echo "[1/5] Building image ${IMAGE_TAG} for ${PLATFORM}..."
 docker buildx ls >/dev/null 2>&1 || {
