@@ -106,8 +106,7 @@ pnpm dev                     # Start both frontend + backend
 pnpm build                   # Build all apps with turbo
 
 # 📦 Direct docker commands (if needed)
-cd infra && ./deploy.sh local
-cd infra && ./deploy.sh staging --force
+cd infra && ./restart-app.sh staging --force
 cd infra && docker-compose up -d --build
 ```
 

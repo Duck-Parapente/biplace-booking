@@ -36,7 +36,7 @@ services:
 
   # Backend Application (only for staging/prod)
   backend:
-    image: biplace-backend:prod ## WIP
+    image: biplace-backend:${ENV}
     container_name: bb-${ENV}-backend
     networks:
       - internal
