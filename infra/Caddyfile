@@ -1,5 +1,5 @@
 # Production API
-bb-backend-prod.duckparapente.fr {
+:80 {
     reverse_proxy backend:3001
     
     # Security headers
@@ -16,16 +16,10 @@ bb-backend-prod.duckparapente.fr {
     
     # Access logging
     log {
-        output file /var/log/caddy/prod-access.log {
+        output file /var/log/caddy/access.log {
             roll_size 10mb
             roll_keep 5
         }
         format json
-    }
-    
-    # Error pages
-    handle_errors {
-        @5xx expression {http.error.status_code} >= 500
-        respond @5xx "Service temporarily unavailable" 503
     }
 }

@@ -48,14 +48,10 @@ Options:
 
 Environment structure:
     infra/
-      env/
-        staging/
-          .env
-          Caddyfile
-        prod/
-          .env
-          Caddyfile
+      Caddyfile
       docker-compose.yml
+      .env.prod
+      .env.staging
       .env (local defaults)
 EOF
 }
@@ -105,14 +101,9 @@ validate_environment() {
 
 copy_env_files() {
     local env=$1
-    local env_dir="$INFRA_DIR/env/$env"
-    [[ -d "$env_dir" ]] || log_error "Missing directory: $env_dir"
 
-    log_info "📂 Copying $env_dir → $INFRA_DIR"
-    cp "$env_dir"/.env "$INFRA_DIR"/.env || log_error "Failed to copy .env"
-    if [[ -f "$env_dir/Caddyfile" ]]; then
-        cp "$env_dir/Caddyfile" "$INFRA_DIR"/Caddyfile || log_error "Failed to copy Caddyfile"
-    fi
+    log_info "📂 Copying environment files for '$env'"
+    cp "$INFRA_DIR/.env.$env" "$INFRA_DIR/.env" || log_error "Failed to copy .env"
     log_success "Environment files for '$env' copied."
 }
 
