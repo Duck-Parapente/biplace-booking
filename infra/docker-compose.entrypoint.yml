@@ -1,0 +1,14 @@
+services:
+  caddy:
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile.entrypoint:/etc/caddy/Caddyfile:ro
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true

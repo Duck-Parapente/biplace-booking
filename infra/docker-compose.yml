@@ -59,9 +59,8 @@ services:
   # Caddy Reverse Proxy (only for staging/prod)
   caddy:
     image: caddy:2
-    ports:
-      - "80:80"
-      - "443:443"
+    expose:
+      - "80"
     networks:
       - internal
     volumes:
@@ -90,3 +89,5 @@ volumes:
 networks:
   internal:
     name: ${ENV}_internal_network
+  proxy:
+    external: true
