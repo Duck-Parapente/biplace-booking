@@ -16,11 +16,11 @@
     "dev:frontend": "turbo dev --filter=frontend",
     "start": "turbo start",
     "docker:local": "cd infra && docker compose --profile local",
-    "build:image:staging": "cd infra && ./scripts/build-push-image.sh staging",
-    "build:image:prod": "cd infra && ./scripts/build-push-image.sh prod",
+    "deploy:staging": "./infra/scripts/deploy.sh staging",
+    "deploy:prod": "./infra/scripts/deploy.sh prod",
     "docker:logs:staging": "cd infra && docker compose --profile staging logs -f",
     "docker:logs:prod": "cd infra && docker compose --profile prod logs -f",
-    "docker:monitor": "cd infra && ./scripts/monitor-resources.sh"
+    "docker:monitor": "./infra/scripts/monitor-resources.sh"
   },
   "packageManager": "pnpm@8.0.0"
 }
