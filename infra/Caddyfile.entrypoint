@@ -1,7 +1,7 @@
 bb-backend-prod.duckparapente.fr {
-    reverse_proxy bb-backend-prod-caddy-1:80
+    reverse_proxy bb-prod-caddy:80
 }
 
 bb-backend-staging.duckparapente.fr {
-    reverse_proxy bb-backend-staging-caddy-1:80
+    reverse_proxy bb-staging-caddy:80
 }

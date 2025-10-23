@@ -1,6 +1,7 @@
 services:
-  caddy:
+  entrypoint_caddy:
     image: caddy:2
+    container_name: caddy-entrypoint
     ports:
       - "80:80"
       - "443:443"

@@ -2,6 +2,7 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:15
+    container_name: bb-${ENV}-postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -36,6 +37,7 @@ services:
   # Backend Application (only for staging/prod)
   backend:
     image: biplace-backend:prod ## WIP
+    container_name: bb-${ENV}-backend
     networks:
       - internal
     depends_on:
@@ -59,10 +61,12 @@ services:
   # Caddy Reverse Proxy (only for staging/prod)
   caddy:
     image: caddy:2
+    container_name: bb-${ENV}-caddy
     expose:
       - "80"
     networks:
       - internal
+      - proxy
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
