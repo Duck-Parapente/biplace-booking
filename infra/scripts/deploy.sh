@@ -3,9 +3,8 @@
 # Deployment script for Biplace Booking
 # Usage:
 #   ./deploy.sh <environment> [--force]
-# Environments: local | staging | prod
+# Environments: staging | prod
 # Examples:
-#   ./deploy.sh local
 #   ./deploy.sh staging --force
 #   ./deploy.sh prod
 #   ./deploy.sh status   # Show container status
@@ -35,7 +34,6 @@ usage() {
 Usage: ./deploy.sh <environment|status|help> [--force]
 
 Environments:
-    local    Start only PostgreSQL via Docker (backend runs locally)
     staging  Build and start full staging stack
     prod     Build and start production stack (asks for confirmation)
 
@@ -79,7 +77,6 @@ ensure_requirements() {
 
 get_env_icon() {
     case $1 in
-        local) echo "🔧" ;;
         staging) echo "🧪" ;;
         prod) echo "🏭" ;;
         *) echo "❓" ;;
@@ -96,7 +93,7 @@ get_api_url() {
 
 validate_environment() {
     local env=$1
-    [[ "$env" =~ ^(local|staging|prod)$ ]] || log_error "Invalid environment: $env"
+    [[ "$env" =~ ^(staging|prod)$ ]] || log_error "Invalid environment: $env"
 }
 
 copy_env_files() {
@@ -149,14 +146,6 @@ confirm_production() {
     [[ "$confirm" =~ ^[yY]$ ]] || log_error "Production deployment cancelled."
 }
 
-deploy_local() {
-    log_info "🔧 Starting local development environment (database only)"
-    cd "$INFRA_DIR" || log_error "Failed to navigate to infra directory: $INFRA_DIR"
-    log_info "🐳 Starting PostgreSQL container..."
-    docker compose --profile local up -d postgres || log_error "Failed to start PostgreSQL"
-    log_success "PostgreSQL running (port 5432). Start backend separately: pnpm dev:backend"
-}
-
 deploy_full_stack() {
     local env=$1
     local api_url
@@ -183,17 +172,12 @@ main() {
             usage; return 0 ;;
         status)
             ensure_requirements; show_status; return 0 ;;
-        local|staging|prod)
+        staging|prod)
             local env="$ACTION"
             ensure_requirements
             validate_environment "$env"
             handle_running_containers
-            if [[ "$env" == "local" ]]; then
-                deploy_local
-            else
-                deploy_full_stack "$env"
-            fi
-            show_status
+            deploy_full_stack "$env"
             ;;
         *)
             log_error "Unknown action: $ACTION (use ./deploy.sh help)" ;;
