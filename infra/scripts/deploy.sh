@@ -14,7 +14,7 @@ Environment variables:
   BUILD_PLATFORM Override platform (default: linux/amd64)
 
 Steps:
-  0. verify current git branch matches environment
+  0. verify clean working tree then checkout environment branch, fetch, hard reset
   (clean) remove old archives in .tmp/
   1. docker buildx build (loads image locally)
   2. docker save | gzip -> .tmp/biplace-backend-<env>.tar.gz
@@ -25,81 +25,123 @@ EOF
   exit 1
 }
 
-ENVIRONMENT="${1:-}"
-[[ -z "${ENVIRONMENT}" ]] && usage
-if [[ "${ENVIRONMENT}" != "staging" && "${ENVIRONMENT}" != "prod" ]]; then
-  echo "Error: environment must be 'staging' or 'prod'" >&2
-  usage
-fi
-
-REMOTE_HOST="${REMOTE_HOST:-duck-tower}"
-REMOTE_PATH="${REMOTE_PATH:-/srv}"
-PLATFORM="${BUILD_PLATFORM:-linux/amd64}"
-REMOTE_APP_DIR="/srv/biplace-booking-${ENVIRONMENT}"
-
-# Added temp directory handling
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-TMP_DIR="${ROOT_DIR}/.tmp"
-mkdir -p "${TMP_DIR}"
-
-IMAGE_TAG="biplace-backend:${ENVIRONMENT}"
-ARCHIVE="${TMP_DIR}/biplace-backend-${ENVIRONMENT}.tar.gz"
-
-# Updated clean step to target .tmp directory
-echo "[clean] Removing previous local archives (${TMP_DIR}/biplace-backend-*.tar.gz)..."
-rm -f "${TMP_DIR}"/biplace-backend-*.tar.gz || true
-
-# Branch safety check (must be on <env> branch locally)
-CURRENT_BRANCH="$(git -C "${ROOT_DIR}" rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'UNKNOWN')"
-if [[ "${CURRENT_BRANCH}" != "${ENVIRONMENT}" ]]; then
-  echo "Error: current git branch '${CURRENT_BRANCH}' does not match target environment '${ENVIRONMENT}'. Checkout the '${ENVIRONMENT}' branch and retry." >&2
-  exit 3
-fi
-
-echo "[1/5] Building image ${IMAGE_TAG} for ${PLATFORM}..."
-docker buildx ls >/dev/null 2>&1 || {
-  echo "docker buildx not available. Install/enable buildx." >&2
-  exit 2
+parse_args() {
+  ENVIRONMENT="${1:-}"
+  [[ -z "${ENVIRONMENT}" ]] && usage
+  if [[ "${ENVIRONMENT}" != "staging" && "${ENVIRONMENT}" != "prod" ]]; then
+    echo "Error: environment must be 'staging' or 'prod'" >&2
+    usage
+  fi
 }
 
-docker buildx build \
-  --platform "${PLATFORM}" \
-  -t "${IMAGE_TAG}" \
-  -f apps/backend/Dockerfile \
-  --load .
-
-echo "[2/5] Saving and compressing image -> ${ARCHIVE} ..."
-docker save "${IMAGE_TAG}" | gzip > "${ARCHIVE}"
-
-if [[ -n "${SKIP_SCP:-}" ]]; then
-  echo "[3/5] SKIP_SCP set; skipping transfer."
-  echo "Archive ready: ${ARCHIVE}"
-  echo "[4/5] Skipping remote git sync (scp skipped)."
-  echo "[5/5] Skipping remote restart (scp skipped)."
-  exit 0
-fi
-
-echo "[3/5] Transferring ${ARCHIVE} to ${REMOTE_HOST}:${REMOTE_PATH}/"
-scp "${ARCHIVE}" "${REMOTE_HOST}:${REMOTE_PATH}/" || {
-  echo "scp failed" >&2
-  exit 1
+setup_paths() {
+  REMOTE_HOST="${REMOTE_HOST:-duck-tower}"
+  REMOTE_PATH="${REMOTE_PATH:-/srv}"
+  PLATFORM="${BUILD_PLATFORM:-linux/amd64}"
+  REMOTE_APP_DIR="/srv/biplace-booking-${ENVIRONMENT}"
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+  TMP_DIR="${ROOT_DIR}/.tmp"
+  mkdir -p "${TMP_DIR}"
+  IMAGE_TAG="biplace-backend:${ENVIRONMENT}"
+  ARCHIVE="${TMP_DIR}/biplace-backend-${ENVIRONMENT}.tar.gz"
 }
 
-# New: remote git fetch/reset on environment branch
-echo "[4/5] Remote git sync in ${REMOTE_APP_DIR} (branch: ${ENVIRONMENT})..."
-if ssh "${REMOTE_HOST}" "cd '${REMOTE_APP_DIR}' && git fetch origin && git checkout ${ENVIRONMENT} && git reset --hard origin/${ENVIRONMENT}"; then
-  echo "Remote git sync completed."
-else
-  echo "Remote git sync failed (directory or branch may be invalid)." >&2
-fi
+checkout_branch() {
+  echo "[branch] Checking working tree cleanliness..."
+  if [[ -n "$(git -C "${ROOT_DIR}" status --porcelain)" ]]; then
+    echo "Error: working tree has uncommitted changes. Commit, stash, or clean before deploying." >&2
+    exit 1
+  fi
 
-REMOTE_RESTART_CMD="${REMOTE_APP_DIR}/infra/scripts/restart-app.sh ${ENVIRONMENT}"
-echo "[5/5] Executing remote restart: ${REMOTE_RESTART_CMD}"
-if ssh "${REMOTE_HOST}" "${REMOTE_RESTART_CMD}"; then
-  echo "Remote restart completed."
-else
-  echo "Remote restart command failed or script missing: ${REMOTE_RESTART_CMD}" >&2
-fi
+  echo "[branch] Switching to branch '${ENVIRONMENT}'..."
+  if ! git -C "${ROOT_DIR}" rev-parse --verify "${ENVIRONMENT}" >/dev/null 2>&1; then
+    echo "Error: branch '${ENVIRONMENT}' does not exist locally." >&2
+    exit 1
+  fi
+  git -C "${ROOT_DIR}" checkout "${ENVIRONMENT}"
 
-echo "Done."
+  echo "[branch] Fetching latest from origin..."
+  git -C "${ROOT_DIR}" fetch origin || { echo "Error: git fetch failed" >&2; exit 1; }
+
+  echo "[branch] Hard resetting to origin/${ENVIRONMENT}..."
+  git -C "${ROOT_DIR}" reset --hard "origin/${ENVIRONMENT}" || { echo "Error: git reset failed" >&2; exit 1; }
+
+  echo "[branch] Ready on commit $(git -C "${ROOT_DIR}" rev-parse --short HEAD)"
+}
+
+clean_archives() {
+  echo "[clean] Removing previous local archives (${TMP_DIR}/biplace-backend-*.tar.gz)..."
+  rm -f "${TMP_DIR}"/biplace-backend-*.tar.gz || true
+}
+
+build_image() {
+  echo "[1/5] Building image ${IMAGE_TAG} for ${PLATFORM}..."
+  docker buildx ls >/dev/null 2>&1 || {
+    echo "docker buildx not available. Install/enable buildx." >&2
+    exit 2
+  }
+  docker buildx build \
+    --platform "${PLATFORM}" \
+    -t "${IMAGE_TAG}" \
+    -f apps/backend/Dockerfile \
+    --load .
+}
+
+save_archive() {
+  echo "[2/5] Saving and compressing image -> ${ARCHIVE} ..."
+  docker save "${IMAGE_TAG}" | gzip > "${ARCHIVE}"
+}
+
+maybe_skip_scp() {
+  if [[ -n "${SKIP_SCP:-}" ]]; then
+    echo "[3/5] SKIP_SCP set; skipping transfer."
+    echo "Archive ready: ${ARCHIVE}"
+    echo "[4/5] Skipping remote git sync (scp skipped)."
+    echo "[5/5] Skipping remote restart (scp skipped)."
+    exit 0
+  fi
+}
+
+transfer_archive() {
+  echo "[3/5] Transferring ${ARCHIVE} to ${REMOTE_HOST}:${REMOTE_PATH}/"
+  scp "${ARCHIVE}" "${REMOTE_HOST}:${REMOTE_PATH}/" || {
+    echo "scp failed" >&2
+    exit 1
+  }
+}
+
+remote_git_sync() {
+  echo "[4/5] Remote git sync in ${REMOTE_APP_DIR} (branch: ${ENVIRONMENT})..."
+  if ssh "${REMOTE_HOST}" "cd '${REMOTE_APP_DIR}' && git fetch origin && git checkout ${ENVIRONMENT} && git reset --hard origin/${ENVIRONMENT}"; then
+    echo "Remote git sync completed."
+  else
+    echo "Remote git sync failed (directory or branch may be invalid)." >&2
+  fi
+}
+
+remote_restart() {
+  local cmd="${REMOTE_APP_DIR}/infra/scripts/restart-app.sh ${ENVIRONMENT}"
+  echo "[5/5] Executing remote restart: ${cmd}"
+  if ssh "${REMOTE_HOST}" "${cmd}"; then
+    echo "Remote restart completed."
+  else
+    echo "Remote restart command failed or script missing: ${cmd}" >&2
+  fi
+}
+
+run() {
+  parse_args "$@"
+  setup_paths
+  checkout_branch
+  clean_archives
+  build_image
+  save_archive
+  maybe_skip_scp
+  transfer_archive
+  remote_git_sync
+  remote_restart
+  echo "Done."
+}
+
+run "$@"
