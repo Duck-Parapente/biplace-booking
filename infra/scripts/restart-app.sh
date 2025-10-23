@@ -180,6 +180,16 @@ show_status() {
     docker compose ps || log_error "Failed to list containers"
 }
 
+# New: ensure main Caddy entrypoint is running
+ensure_caddy_entrypoint_running() {
+    if [[ -z "$(docker ps --filter name=caddy-entrypoint --filter status=running -q)" ]]; then
+        log_warning "Main caddy-entrypoint container is NOT running."
+        echo "Start it with: pnpm dc:main-caddy up -d" >&2
+    else
+        log_success "caddy-entrypoint is running."
+    fi
+}
+
 #----------------------------- Main execution -----------------------------#
 
 main() {
@@ -192,10 +202,11 @@ main() {
             local env="$ACTION"
             ensure_requirements
             validate_environment "$env"
-            # New: load image before stopping containers to reduce downtime
             load_prebuilt_image "$env"
             handle_running_containers
             deploy_full_stack "$env"
+            # New post-deploy check
+            ensure_caddy_entrypoint_running
             ;;
         *)
             log_error "Unknown action: $ACTION (use ./restart-app.sh help)" ;;
