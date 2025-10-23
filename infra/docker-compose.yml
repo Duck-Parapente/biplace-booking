@@ -33,7 +33,7 @@ services:
 
   # Backend Application (only for staging/prod)
   backend:
-    image: biplace-backend:${ENV}
+    image: biplace-backend:prod ## WIP
     ports:
       - "${PORT}:3001"
     depends_on:
