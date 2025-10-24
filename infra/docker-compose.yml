@@ -23,7 +23,6 @@ services:
         reservations:
           memory: ${POSTGRES_MEMORY_RESERVATION}
           cpus: ${POSTGRES_CPU_RESERVATION}
-    # PostgreSQL optimizations for low memory
     command: >
       postgres
       -c shared_buffers=${POSTGRES_SHARED_BUFFERS}
