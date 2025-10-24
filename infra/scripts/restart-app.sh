@@ -174,12 +174,6 @@ deploy_full_stack() {
     deploy_containers "$env" "$env deployed!" "$api_url"
 }
 
-show_status() {
-    cd "$INFRA_DIR" || log_error "Failed to navigate to infra directory: $INFRA_DIR"
-    log_info "📊 Container status:"
-    docker compose ps || log_error "Failed to list containers"
-}
-
 # New: ensure main Caddy entrypoint is running
 ensure_caddy_entrypoint_running() {
     if [[ -z "$(docker ps --filter name=caddy-entrypoint --filter status=running -q)" ]]; then
@@ -196,8 +190,6 @@ main() {
     case "$ACTION" in
         help|-h|--help)
             usage; return 0 ;;
-        status)
-            ensure_requirements; show_status; return 0 ;;
         staging|prod)
             local env="$ACTION"
             ensure_requirements
