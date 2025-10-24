@@ -96,14 +96,6 @@ validate_environment() {
     [[ "$env" =~ ^(staging|prod)$ ]] || log_error "Invalid environment: $env"
 }
 
-copy_env_files() {
-    local env=$1
-
-    log_info "📂 Copying environment files for '$env'"
-    cp "$INFRA_DIR/.env.$env" "$INFRA_DIR/.env" || log_error "Failed to copy .env"
-    log_success "Environment files for '$env' copied."
-}
-
 handle_running_containers() {
     cd "$INFRA_DIR" || log_error "Failed to navigate to infra directory: $INFRA_DIR"
     local running
@@ -170,7 +162,6 @@ deploy_full_stack() {
     icon=$(get_env_icon "$env")
     log_info "$icon Deploying to $env environment..."
     confirm_production "$env"
-    copy_env_files "$env"
     deploy_containers "$env" "$env deployed!" "$api_url"
 }
 
