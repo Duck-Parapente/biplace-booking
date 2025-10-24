@@ -75,22 +75,6 @@ ensure_requirements() {
     [[ -f "$COMPOSE_FILE" ]] || log_error "docker-compose.yml not found at $COMPOSE_FILE"
 }
 
-get_env_icon() {
-    case $1 in
-        staging) echo "🧪" ;;
-        prod) echo "🏭" ;;
-        *) echo "❓" ;;
-    esac
-}
-
-get_api_url() {
-    case $1 in
-        staging) echo "https://bb-backend-staging.duckparapente.fr" ;;
-        prod) echo "https://bb-backend-prod.duckparapente.fr" ;;
-        *) echo "" ;;
-    esac
-}
-
 validate_environment() {
     local env=$1
     [[ "$env" =~ ^(staging|prod)$ ]] || log_error "Invalid environment: $env"
@@ -137,13 +121,10 @@ load_prebuilt_image() {
 }
 
 deploy_containers() {
-    local profile=$1
-    local success_message=$2
-    local api_url=$3
+    local env=$1
     cd "$INFRA_DIR" || log_error "Failed to navigate to infra directory: $INFRA_DIR"
-    DOCKER_BUILDKIT=0 docker compose --profile "$profile" up -d --build || log_error "Failed to deploy $profile environment"
-    log_success "$success_message"
-    [[ -n "$api_url" ]] && log_info "🌐 API available at: $api_url"
+    DOCKER_BUILDKIT=0 docker compose --profile "$env" up -d --build || log_error "Failed to deploy $env environment"
+    log_success "$env deployed!"
 }
 
 confirm_production() {
@@ -156,13 +137,9 @@ confirm_production() {
 
 deploy_full_stack() {
     local env=$1
-    local api_url
-    api_url=$(get_api_url "$env")
-    local icon
-    icon=$(get_env_icon "$env")
-    log_info "$icon Deploying to $env environment..."
+    log_info "🏭 Deploying to $env environment..."
     confirm_production "$env"
-    deploy_containers "$env" "$env deployed!" "$api_url"
+    deploy_containers "$env"
 }
 
 # New: ensure main Caddy entrypoint is running
