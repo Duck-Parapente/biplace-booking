@@ -17,7 +17,7 @@ Rien de plus simple:
 - Lancer `pnpm dev` pour lancer le front et le back.
 - Pour lancer uniquement le backend `pnpm dev:backend` (idem pour le front)
 
-### Comment développer en staging/prod?
+### Comment déployer en staging/prod?
 
 - Il faut déjà avoir accès au serveur du Duck en récupérant la clé PEM. Ensuite, il suffit de modifier ta `~/.ssh/config`:
     ```
