@@ -1,20 +1,17 @@
 {
   "name": "frontend",
-  "version": "0.0.1",
+  "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3000",
-    "build": "next build",
-    "start": "next start -p 3000",
-    "lint": "eslint . || true",
-    "test": "echo \"No tests configured\""
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "next": "14.0.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
-  },
-  "devDependencies": {
-    "eslint": "^9.0.0"
+    "nuxt": "4.2.0",
+    "vue": "3.5.22",
+    "vue-router": "4.6.3"
   }
 }
