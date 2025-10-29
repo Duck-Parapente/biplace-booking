@@ -14,5 +14,10 @@ export default defineNuxtConfig({
       auth0Domain: "biplace-duckparapente.eu.auth0.com",
       auth0ClientId: process.env.NUXT_PUBLIC_AUTH0_CLIENT_ID
     }
-  }
+  },
+  app: {
+  head: {
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }]
+  },
+}
 })
