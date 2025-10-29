@@ -2,7 +2,7 @@ import { createAuth0 } from '@auth0/auth0-vue';
 
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig();
-
+  if (!config.public.auth0Domain || !config.public.auth0ClientId) return;
   nuxtApp.vueApp.use(
     createAuth0({
       domain: config.public.auth0Domain,

@@ -5,9 +5,9 @@
       <button
         v-if="!isAuthenticated"
         class="bg-emerald-500 hover:bg-emerald-600 transition text-sm px-4 py-2 rounded font-medium"
-        @click="loginWithRedirect()"
+        @click="login()"
       >
-        Login
+        Se connecter
       </button>
       <div v-else class="flex items-center gap-3">
         <span class="text-sm">{{ user?.name }}</span>
@@ -15,7 +15,7 @@
           class="bg-slate-700 hover:bg-slate-600 transition text-xs px-3 py-1.5 rounded"
           @click="logout({ logoutParams: { returnTo: window.location.origin } })"
         >
-          Logout
+          Se déconnecter
         </button>
       </div>
     </div>
@@ -23,6 +23,6 @@
 </template>
 
 <script setup lang="ts">
-import { useAuth0 } from '@auth0/auth0-vue';
-const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
+import { useAuth } from '~/composables/useAuth';
+const { login, logout, isAuthenticated, user } = useAuth();
 </script>
