@@ -7,3 +7,8 @@ Pour l'instant, il y a 4 services pour gérer la réservation des biplaces:
 - 1 frontend déployé sur Vercel.
 
 Le repo utilise turborepo pour optimiser les builds, etc.
+
+
+## Infrastructure
+
+[Voir ici](./infra/docs/infrastructure.md)

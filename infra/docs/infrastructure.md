@@ -27,8 +27,10 @@ Rien de plus simple:
     PreferredAuthentications publickey
     IdentityFile ~/.ssh/aws-duck-tower.pem
     ```
-
-- Pour déployer un environnement, tu peux lancer `pnpm deploy:(staging|prod)`, cette commande va principalement:
+- Chaque environnement a son dossier spécifique:
+    - staging: `/srv/biplace-booking-staging`
+    - prod: `/srv/biplace-booking-prod`
+- Pour déployer un environnement, tu peux lancer `pnpm deploy:(staging|prod)` depuis ton local. Cette commande va principalement:
     - Build une image Docker avec le backend
     - L'uploader au bon endroit sur le serveur
     - La dézipper
