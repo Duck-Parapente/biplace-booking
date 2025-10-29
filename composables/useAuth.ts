@@ -2,9 +2,8 @@
   <header class="w-full flex items-center justify-between px-6 py-4 bg-slate-900 text-white">
     <h1 class="text-xl font-semibold">Biplace Duck parapente</h1>
     <div>
-      <span v-if="isLoading" class="text-xs text-gray-300">Chargement...</span>
       <button
-        v-else-if="!isAuthenticated"
+        v-if="!isAuthenticated"
         class="bg-emerald-500 hover:bg-emerald-600 transition text-sm px-4 py-2 rounded font-medium"
         @click="login()"
       >
@@ -14,7 +13,7 @@
         <span class="text-sm">{{ user?.name }}</span>
         <button
           class="bg-slate-700 hover:bg-slate-600 transition text-xs px-3 py-1.5 rounded"
-          @click="logout()"
+          @click="logout({ logoutParams: { returnTo: window.location.origin } })"
         >
           Se déconnecter
         </button>
@@ -25,5 +24,6 @@
 
 <script setup lang="ts">
 import { useAuth } from '~/composables/useAuth';
-const { login, logout, isAuthenticated, user, isLoading } = useAuth();
+const { loginWithRedirect, logout, isAuthenticated, user, isLoading, error } = useAuth0();
+return { login, logout, isAuthenticated, user, isLoading, error };
 </script>
