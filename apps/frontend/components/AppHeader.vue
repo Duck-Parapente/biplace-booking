@@ -11,7 +11,7 @@
         Se connecter
       </button>
       <div v-else class="flex items-center gap-3">
-        <span class="text-sm">{{ user?.name }}</span>
+        <span class="text-sm">{{ user?.name ?? 'Utilisateur' }}</span>
         <button
           class="bg-slate-700 hover:bg-slate-600 transition text-xs px-3 py-1.5 rounded"
           @click="logout()"

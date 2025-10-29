@@ -1,3 +1,4 @@
+/* eslint-disable */
 module.exports = {
-  "*.{js,ts,tsx}": ["eslint --fix", "prettier --write"]
+  'apps/**/*.{js,jsx,ts,tsx,vue}': ['eslint --cache --fix', 'prettier --write'],
 };

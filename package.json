@@ -5,12 +5,26 @@
     "apps/*"
   ],
   "devDependencies": {
-    "turbo": "2.5.8"
+    "@typescript-eslint/eslint-plugin": "7.0.0",
+    "@typescript-eslint/parser": "7.0.0",
+    "eslint": "9.0.0",
+    "eslint-config-prettier": "9.0.0",
+    "eslint-plugin-import": "2.29.0",
+    "eslint-plugin-unused-imports": "3.0.0",
+    "eslint-plugin-vue": "9.24.0",
+    "husky": "9.1.7",
+    "lint-staged": "15.0.0",
+    "prettier": "3.2.0",
+    "turbo": "2.5.8",
+    "vue-eslint-parser": "9.3.1",
+    "typescript": "5.3.3"
   },
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
-    "lint": "turbo lint",
+    "prepare": "husky install",
+    "lint": "eslint apps",
+    "lint:fix": "eslint apps --fix && prettier apps --write",
     "test": "turbo test",
     "dev:backend": "turbo start:dev --filter=backend",
     "dev:frontend": "turbo dev --filter=frontend",
@@ -21,6 +35,15 @@
     "dc:logs:staging": "cd infra && docker compose --profile staging logs -f",
     "dc:logs:prod": "cd infra && docker compose --profile prod logs -f",
     "dc:main-caddy": "cd infra && docker compose -f docker-compose.entrypoint.yml"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,vue}": [
+      "eslint --cache --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "packageManager": "pnpm@9.0.0"
 }
