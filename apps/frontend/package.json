@@ -5,6 +5,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "dev:legacy": "node -e \"if(!globalThis.File){class _F extends Blob{constructor(parts,name,opts={}){super(parts,opts);this.name=name;this.lastModified=opts.lastModified||Date.now();}};globalThis.File=_F;}\" && nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -12,10 +13,14 @@
   "dependencies": {
     "@auth0/auth0-vue": "2.4.0",
     "nuxt": "4.2.0",
+    "posthog-js": "1.282.0",
     "vue": "3.5.22",
     "vue-router": "4.6.3"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "6.14.0"
+  },
+  "engines": {
+    "node": ">=20.10.0"
   }
 }
