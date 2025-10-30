@@ -23,11 +23,6 @@
     "start:dev": {
       "cache": false,
       "persistent": true
-    },
-    "start:prod": {
-      "dependsOn": ["build"],
-      "cache": false,
-      "persistent": true
     }
   }
 }

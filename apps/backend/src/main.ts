@@ -1,15 +1,8 @@
-import { join } from 'path';
-
 import { NestFactory } from '@nestjs/core';
-import * as dotenv from 'dotenv';
 import { json } from 'express';
 import { Logger } from 'nestjs-pino';
 
 import { AppModule } from './app.module';
-
-// 👇 Load your custom .env file
-const envPath = dotenv.config({ path: join(__dirname, '..', '..', '..', 'infra', '.env') });
-console.log(envPath);
 import 'newrelic';
 
 async function bootstrap() {
