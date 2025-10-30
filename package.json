@@ -26,7 +26,7 @@
     "lint": "eslint apps",
     "lint:fix": "eslint apps --fix && prettier apps --write",
     "test": "turbo test",
-    "dev:backend": "turbo start:dev --filter=backend",
+    "dev:backend": "turbo dev --filter=backend",
     "dev:frontend": "turbo dev --filter=frontend",
     "start": "turbo start",
     "dc:local": "cd infra && docker compose --profile local",
