@@ -45,6 +45,8 @@ services:
     command: ['node', 'dist/main.js']
     restart: unless-stopped
     profiles: ['staging', 'prod']
+    env_file:
+      - .env
     deploy:
       resources:
         limits:
@@ -57,8 +59,6 @@ services:
     environment:
       - NODE_OPTIONS=--max-old-space-size=${NODE_MAX_OLD_SPACE}
       - UV_THREADPOOL_SIZE=${UV_THREADPOOL_SIZE}
-    volumes:
-      - .env:/app/infra/.env:ro
 
   # Caddy Reverse Proxy (only for staging/prod)
   caddy:
