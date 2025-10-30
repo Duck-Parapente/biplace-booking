@@ -8,7 +8,8 @@ import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 
 // 👇 Load your custom .env file
-dotenv.config({ path: join(__dirname, '..', '..', '..', 'infra', '.env') });
+const envPath = dotenv.config({ path: join(__dirname, '..', '..', '..', 'infra', '.env') });
+console.log(envPath);
 import 'newrelic';
 
 async function bootstrap() {
