@@ -8,13 +8,13 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - '${POSTGRES_PORT}:5432'
     networks:
       - internal
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
-    profiles: ["local", "staging", "prod"]
+    profiles: ['local', 'staging', 'prod']
     deploy:
       resources:
         limits:
@@ -42,9 +42,9 @@ services:
       - internal
     depends_on:
       - postgres
-    command: ["node", "dist/main.js"]
+    command: ['node', 'dist/main.js']
     restart: unless-stopped
-    profiles: ["staging", "prod"]
+    profiles: ['staging', 'prod']
     deploy:
       resources:
         limits:
@@ -57,13 +57,15 @@ services:
     environment:
       - NODE_OPTIONS=--max-old-space-size=${NODE_MAX_OLD_SPACE}
       - UV_THREADPOOL_SIZE=${UV_THREADPOOL_SIZE}
+    volumes:
+      - ./infra/.env:/app/infra/.env:ro
 
   # Caddy Reverse Proxy (only for staging/prod)
   caddy:
     image: caddy:2
     container_name: bb-${ENV}-caddy
     expose:
-      - "80"
+      - '80'
     networks:
       - internal
       - proxy
@@ -75,7 +77,7 @@ services:
       - postgres
       - backend
     restart: unless-stopped
-    profiles: ["staging", "prod"]
+    profiles: ['staging', 'prod']
     deploy:
       resources:
         limits:

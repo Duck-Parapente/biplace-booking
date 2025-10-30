@@ -3,13 +3,13 @@ import { join } from 'path';
 import { NestFactory } from '@nestjs/core';
 import * as dotenv from 'dotenv';
 import { json } from 'express';
+import { Logger } from 'nestjs-pino';
 
 import { AppModule } from './app.module';
 
 // 👇 Load your custom .env file
 dotenv.config({ path: join(__dirname, '..', '..', '..', 'infra', '.env') });
 import 'newrelic';
-import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
