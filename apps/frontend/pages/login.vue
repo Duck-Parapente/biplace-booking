@@ -1,7 +1,7 @@
 <template>
-  <main class="min-h-screen flex flex-col items-center justify-center bg-secondary">
+  <main class="min-h-screen flex flex-col items-center justify-center bg-secondary-600">
     <button
-      class="bg-primary hover:bg-secondary hover:text-white transition text-secondary px-8 py-4 rounded font-large"
+      class="bg-primary-400 hover:bg-secondary-600 hover:text-primary-400 transition text-secondary-600 px-8 py-4 rounded font-large"
       @click="login()"
     >
       Se connecter
