@@ -1,9 +1,9 @@
+import 'newrelic';
 import { NestFactory } from '@nestjs/core';
 import { json } from 'express';
 import { Logger } from 'nestjs-pino';
 
 import { AppModule } from './app.module';
-import 'newrelic';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
