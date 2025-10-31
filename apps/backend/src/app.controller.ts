@@ -6,7 +6,7 @@ export class AppController {
   private readonly logger = new Logger(AppController.name);
   @Get('health')
   health() {
-    this.logger.log('Health check requested');
-    throw new Error('Health check failed');
+    this.logger.warn('Health check requested');
+    return { status: 'ok', timestamp: new Date().toISOString() };
   }
 }

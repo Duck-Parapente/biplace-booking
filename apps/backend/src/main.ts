@@ -6,7 +6,7 @@ import { AppModule } from './app.module';
 import 'newrelic';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  const app = await NestFactory.create(AppModule);
   app.useLogger(app.get(Logger));
   app.use(json({ limit: '10mb' }));
   await app.listen(parseInt(process.env.PORT || '3001', 10));

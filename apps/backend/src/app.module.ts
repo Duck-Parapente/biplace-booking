@@ -4,7 +4,15 @@ import { LoggerModule } from 'nestjs-pino';
 import { AppController } from './app.controller';
 
 @Module({
-  imports: [LoggerModule.forRoot()],
+  imports: [
+    LoggerModule.forRoot({
+      pinoHttp: {
+        useLevel: 'info',
+        quietReqLogger: true,
+        quietResLogger: true,
+      },
+    }),
+  ],
   controllers: [AppController],
   providers: [],
 })
