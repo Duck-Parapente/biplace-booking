@@ -24,9 +24,9 @@ export class IdentityProvider implements IdentityProviderPort {
     });
   }
 
-  async getExternalUserById(externalUserId: string): Promise<ExternalUser | null> {
+  async getExternalUserById(externalAuthId: string): Promise<ExternalUser | null> {
     try {
-      const user = await this.managementClient.users.get(externalUserId);
+      const user = await this.managementClient.users.get(externalAuthId);
 
       if (!user.data.email) {
         return null;
