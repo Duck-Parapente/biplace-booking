@@ -1,4 +1,3 @@
-import { auth0Config } from '@config/auth0.config';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
@@ -11,7 +10,6 @@ import { IDENTITY_PROVIDER } from './user.di-tokens';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [auth0Config],
     }),
   ],
   controllers: [SyncExternalUserHttpController],

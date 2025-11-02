@@ -1,4 +1,3 @@
-import { Auth0Config, Auth0ConfigType } from '@config/auth0.config';
 import { Email } from '@libs/ddd/email.value-object';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -14,12 +13,10 @@ export class IdentityProvider implements IdentityProviderPort {
   private managementClient: ManagementClient;
 
   constructor(private configService: ConfigService) {
-    const auth0 = this.configService.get<Auth0Config>(Auth0ConfigType)!;
-
     this.managementClient = new ManagementClient({
-      domain: auth0.domain,
-      clientId: auth0.clientId,
-      clientSecret: auth0.clientSecret,
+      domain: this.configService.get<string>('AUTH0_DOMAIN'),
+      clientId: this.configService.get<string>('AUTH0_CLIENT_ID'),
+      clientSecret: this.configService.get<string>('AUTH0_CLIENT_SECRET'),
     });
   }
 
