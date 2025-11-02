@@ -111,6 +111,21 @@ transfer_archive() {
   }
 }
 
+transfer_env_file() {
+  local ENV_FILE="${ROOT_DIR}/infra/.env.${ENVIRONMENT}"
+  echo "[3.5/5] Uploading environment file to ${REMOTE_HOST}:${REMOTE_APP_DIR}/infra/.env"
+
+  if [[ ! -f "${ENV_FILE}" ]]; then
+    echo "Warning: ${ENV_FILE} not found, skipping env file upload." >&2
+    return 0
+  fi
+
+  scp "${ENV_FILE}" "${REMOTE_HOST}:${REMOTE_APP_DIR}/infra/.env" || {
+    echo "env file upload failed" >&2
+    exit 1
+  }
+}
+
 remote_git_sync() {
   echo "[4/5] Remote git sync in ${REMOTE_APP_DIR} (branch: ${ENVIRONMENT})..."
   if ssh "${REMOTE_HOST}" "cd '${REMOTE_APP_DIR}' && git fetch origin && git checkout ${ENVIRONMENT} && git reset --hard origin/${ENVIRONMENT}"; then
@@ -139,6 +154,7 @@ run() {
   save_archive
   maybe_skip_scp
   transfer_archive
+  transfer_env_file
   remote_git_sync
   remote_restart
   echo "Done."
