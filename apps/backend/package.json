@@ -6,7 +6,6 @@
     "dotenv": "dotenv -e ../../infra/.env",
     "dev": "pnpm dotenv -- ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/main.ts | pino-pretty",
     "start": "node dist/main.js",
-    "start:local": "pnpm dotenv -- node dist/main.js",
     "build": "pnpm dotenv -- tsc -p tsconfig.json && tsc-alias",
     "test": "echo \"No tests configured\"",
     "prisma:generate": "pnpm dotenv -- pnpm exec prisma generate",
