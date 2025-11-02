@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
 
 import { AppController } from './app.controller';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { AppController } from './app.controller';
         quietResLogger: true,
       },
     }),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [],
