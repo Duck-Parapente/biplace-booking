@@ -11,7 +11,8 @@
     "test": "echo \"No tests configured\"",
     "prisma:generate": "pnpm dotenv -- pnpm exec prisma generate",
     "prisma:migrate": "pnpm dotenv -- pnpm exec prisma migrate dev",
-    "start:prod": "pnpm exec prisma migrate deploy && node dist/main.js"
+    "prisma:deploy": "pnpm dotenv -- pnpm exec prisma migrate deploy",
+    "start:prod": "pnpm prisma:generate && pnpm prisma:deploy && node dist/main.js"
   },
   "dependencies": {
     "@nestjs/common": "10.0.0",
