@@ -11,4 +11,7 @@
 <script setup lang="ts">
 import { useAuth } from '~/composables/useAuth';
 const { login } = useAuth();
+
+const { setPageTitle } = usePageTitle();
+setPageTitle('Connexion');
 </script>
