@@ -2,10 +2,10 @@
 
 # Restart script for Biplace Booking
 # Usage:
-#   ./restart-app.sh <environment> [--force]
+#   ./restart-app.sh <environment>
 # Environments: staging | prod
 # Examples:
-#   ./restart-app.sh staging --force
+#   ./restart-app.sh staging
 #   ./restart-app.sh prod
 #   ./restart-app.sh status   # Show container status
 #   ./restart-app.sh help     # Show help
@@ -18,7 +18,6 @@ INFRA_DIR="$(dirname "$SCRIPT_DIR")"
 COMPOSE_FILE="$INFRA_DIR/docker-compose.yml"
 
 ACTION=${1:-local}
-FORCE_FLAG=${2:-}
 
 START_TIME=$(date +%s)
 
@@ -31,7 +30,7 @@ log_warning() { echo "⚠️  $1" >&2; }
 
 usage() {
     cat <<EOF
-Usage: ./restart-app.sh <environment|status|help> [--force]
+Usage: ./restart-app.sh <environment|status|help>
 
 Environments:
     staging  Build and start full staging stack
@@ -40,9 +39,6 @@ Environments:
 Commands:
     status   Show docker compose service status
     help     Show this help message
-
-Options:
-    --force  Stop running containers without confirmation
 
 Environment structure:
     infra/
@@ -90,18 +86,8 @@ handle_running_containers() {
     docker compose ps --format 'table {{.Name}}\t{{.State}}\t{{.Ports}}'
     echo ""
 
-    if [[ "$FORCE_FLAG" == "--force" ]]; then
-        log_info "🛑 Force flag detected, stopping containers..."
-        docker compose down && log_success "Containers stopped"
-    else
-        read -r -p "🛑 Stop existing containers? (y/N) " answer
-        if [[ "$answer" =~ ^[yY]$ ]]; then
-            log_info "🛑 Stopping existing containers..."
-            docker compose down && log_success "Containers stopped"
-        else
-            log_error "Deployment cancelled. Use --force to override or manually run: docker compose down"
-        fi
-    fi
+    log_info "🛑 Stopping existing containers..."
+    docker compose down && log_success "Containers stopped"
 }
 
 # New: load pre-built image from /srv to minimize downtime
@@ -127,18 +113,9 @@ deploy_containers() {
     log_success "$env deployed!"
 }
 
-confirm_production() {
-    local env=$1
-    [[ "$env" != "prod" ]] && return 0
-    log_warning "⚠️  About to DEPLOY to PRODUCTION. Continue? (y/N)"
-    read -r confirm
-    [[ "$confirm" =~ ^[yY]$ ]] || log_error "Production deployment cancelled."
-}
-
 deploy_full_stack() {
     local env=$1
     log_info "🏭 Deploying to $env environment..."
-    confirm_production "$env"
     deploy_containers "$env"
 }
 
@@ -165,7 +142,6 @@ main() {
             load_prebuilt_image "$env"
             handle_running_containers
             deploy_full_stack "$env"
-            # New post-deploy check
             ensure_caddy_entrypoint_running
             ;;
         *)
