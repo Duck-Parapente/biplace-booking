@@ -1,5 +1,4 @@
-import { CommandProps, Command } from '@libs/ddd/command.base';
-import { Email } from '@libs/ddd/email.value-object';
+import { CommandProps, Command, Email } from '@libs/ddd';
 
 export class SyncExternalUserCommand extends Command {
   readonly externalAuthId: string;

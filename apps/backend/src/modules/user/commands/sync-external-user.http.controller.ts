@@ -1,4 +1,4 @@
-import { Email } from '@libs/ddd/email.value-object';
+import { Email } from '@libs/ddd';
 import { ApiKeyGuard } from '@libs/guards/api-key.guard';
 import { Controller, Post, Body, Logger, UseGuards } from '@nestjs/common';
 

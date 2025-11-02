@@ -1,10 +1,9 @@
-import { Email } from '@libs/ddd/email.value-object';
+import { Email } from '@libs/ddd';
+import { IdentityProviderPort } from '@modules/user/domain/ports/identity.provider.port';
+import { ExternalUser } from '@modules/user/domain/user.types';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ManagementClient } from 'auth0';
-
-import { IdentityProviderPort } from '../domain/ports/identity.provider.port';
-import { ExternalUser } from '../domain/user.types';
 
 @Injectable()
 export class IdentityProvider implements IdentityProviderPort {
