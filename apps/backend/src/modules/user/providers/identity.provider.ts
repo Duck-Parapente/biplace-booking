@@ -3,9 +3,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ManagementClient } from 'auth0';
 
+import { IdentityProviderPort } from '../domain/ports/identity.provider.port';
 import { ExternalUser } from '../domain/user.types';
-
-import { IdentityProviderPort } from './identity.provider.port';
 
 @Injectable()
 export class IdentityProvider implements IdentityProviderPort {
