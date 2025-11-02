@@ -42,7 +42,7 @@ services:
       - internal
     depends_on:
       - postgres
-    command: ['pnpm start:prod']
+    command: ["sh","-c","pnpm start:prod"]
     restart: unless-stopped
     profiles: ['staging', 'prod']
     env_file:
