@@ -1,5 +1,6 @@
+import { Guard } from '@libs/guards/primitive.guard';
+
 import { ArgumentInvalidException } from '../exceptions/exceptions';
-import { Guard } from '../guard';
 
 import { ValueObject } from './value-object.base';
 

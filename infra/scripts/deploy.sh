@@ -140,6 +140,7 @@ remote_restart() {
   echo "[5/5] Executing remote restart: ${cmd}"
   if ssh "${REMOTE_HOST}" "${cmd}"; then
     echo "Remote restart completed."
+    echo "[info] Prisma migrations will run inside the container (CMD runs 'prisma migrate deploy')."
   else
     echo "Remote restart command failed or script missing: ${cmd}" >&2
   fi

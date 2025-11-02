@@ -1,5 +1,6 @@
+import { Guard } from '@libs/guards/primitive.guard';
+
 import { ArgumentNotProvidedException } from '../exceptions/exceptions';
-import { Guard } from '../guard';
 
 /**
  * Domain Primitive is an object that contains only a single value

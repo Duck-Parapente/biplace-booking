@@ -1,7 +1,8 @@
 import { randomUUID } from 'crypto';
 
+import { Guard } from '@libs/guards/primitive.guard';
+
 import { ArgumentNotProvidedException } from '../exceptions';
-import { Guard } from '../guard';
 
 export type CommandProps<T> = Omit<T, 'id' | 'metadata'> & Partial<Command>;
 

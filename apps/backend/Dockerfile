@@ -14,6 +14,10 @@ RUN pnpm install --frozen-lockfile || pnpm install
 COPY apps/backend/tsconfig.json ./tsconfig.json
 COPY apps/backend/src ./src
 
+# Generate Prisma client before compiling TS (safer for type usage)
+COPY apps/backend/prisma.config.ts ./prisma.config.ts
+RUN pnpm exec prisma generate
+
 # Build (outputs dist/main.js)
 RUN pnpm run build
 
@@ -24,7 +28,12 @@ RUN npm install -g pnpm@8.15.4
 COPY apps/backend/package.json ./package.json
 COPY pnpm-lock.yaml ./pnpm-lock.yaml
 RUN pnpm install --frozen-lockfile --prod --no-optional || pnpm install --prod --no-optional
+
+# Generate client for production node_modules
+COPY apps/backend/prisma.config.ts ./prisma.config.ts
+RUN pnpm exec prisma generate
+
 COPY --from=build /app/dist ./dist
 EXPOSE 3001
 USER node
-CMD ["node","dist/main.js"]
+CMD ["sh","-c","pnpm start:prod"]
