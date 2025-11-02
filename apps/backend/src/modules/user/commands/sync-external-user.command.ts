@@ -1,4 +1,4 @@
-import { Command, CommandProps } from '@/libs/ddd/command.base';
+import { CommandProps, Command } from '@libs/ddd/command.base';
 
 export class SyncExternalUserCommand extends Command {
   readonly externalAuthId: string;

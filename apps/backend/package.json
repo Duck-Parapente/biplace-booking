@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only --env-file=../../infra/.env src/main.ts | pino-pretty",
+    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --env-file=../../infra/.env src/main.ts | pino-pretty",
     "start": "node dist/main.js",
     "start:local": "node --env-file=../../infra/.env dist/main.js",
     "build": "tsc -p tsconfig.json",
@@ -27,6 +27,7 @@
   "devDependencies": {
     "@types/express": "4.17.21",
     "ts-node-dev": "2.0.0",
+    "tsconfig-paths": "4.2.0",
     "typescript": "5.9.3"
   }
 }
