@@ -23,6 +23,6 @@ export class SyncExternalUserService implements ICommandHandler<SyncExternalUser
       return;
     }
 
-    this.logger.log(`External user email: ${externalUser.email}`);
+    this.logger.log(`External user email: ${externalUser.email.email}`);
   }
 }

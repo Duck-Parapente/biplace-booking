@@ -27,13 +27,13 @@ export class IdentityProvider implements IdentityProviderPort {
     try {
       const user = await this.managementClient.users.get(externalAuthId);
 
-      if (!user.data.email) {
+      if (!user.email) {
         return null;
       }
 
       return {
-        externalAuthId: user.data.user_id,
-        email: new Email(user.data.email),
+        externalAuthId: user.user_id,
+        email: new Email({ email: user.email }),
       };
     } catch (error) {
       this.logger.error(`Failed to fetch user from Auth0: ${error}`);
