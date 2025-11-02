@@ -9,8 +9,17 @@ import { UserModule } from './modules/user/user.module';
     LoggerModule.forRoot({
       pinoHttp: {
         useLevel: 'info',
-        quietReqLogger: true,
-        quietResLogger: true,
+        serializers: {
+          req: (req) => ({
+            method: req.method,
+            url: req.url,
+            params: req.params,
+            query: req.query,
+          }),
+          res: (res) => ({
+            statusCode: res.statusCode,
+          }),
+        },
       },
     }),
     UserModule,
