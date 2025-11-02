@@ -28,4 +28,3 @@ RUN pnpm install --frozen-lockfile --prod --no-optional || pnpm install --prod -
 COPY --from=build /app/dist ./dist
 EXPOSE 3001
 USER node
-CMD ["sh","-c","pnpm start:prod"]
