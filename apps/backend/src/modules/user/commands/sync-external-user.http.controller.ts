@@ -1,3 +1,4 @@
+import { Email } from '@libs/ddd/email.value-object';
 import { ApiKeyGuard } from '@libs/guards/api-key.guard';
 import { Controller, Post, Body, Logger, UseGuards } from '@nestjs/common';
 
@@ -12,9 +13,12 @@ export class SyncExternalUserHttpController {
   constructor(private readonly syncExternalUserService: SyncExternalUserService) {}
 
   @Post('sync')
-  async syncExternalUser(@Body() { externalAuthId }: { externalAuthId: string }) {
+  async syncExternalUser(
+    @Body() { externalAuthId, email }: { externalAuthId: string; email: string },
+  ) {
     const command = new SyncExternalUserCommand({
       externalAuthId,
+      email: new Email({ email }),
     });
 
     await this.syncExternalUserService.execute(command);
