@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     public: {
       auth0Domain: 'biplace-duckparapente.eu.auth0.com',
       auth0ClientId: process.env.NUXT_PUBLIC_AUTH0_CLIENT_ID,
+      backendDomain: process.env.NUXT_PUBLIC_BACKEND_BASE_URL,
       posthogPublicKey: 'phc_wKnen6bP02l65gxk7g4o951oCvG5U5zJ4pRyz9HgVkT',
       posthogHost: 'https://us.i.posthog.com',
     },
