@@ -1,9 +1,11 @@
-import { LoggerPort } from '@libs/ports/logger.port';
+import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
+import { Logger } from '@nestjs/common';
 
 import { DomainEvent } from './domain-event.base';
 import { Entity } from './entity.base';
 
 export abstract class AggregateRoot<EntityProps> extends Entity<EntityProps> {
+  private logger = new Logger(this.constructor.name);
   private _domainEvents: DomainEvent[] = [];
 
   get domainEvents(): DomainEvent[] {
@@ -18,14 +20,13 @@ export abstract class AggregateRoot<EntityProps> extends Entity<EntityProps> {
     this._domainEvents = [];
   }
 
-  public async publishEvents(logger: LoggerPort): Promise<void> {
+  public async publishEvents(emitter: EventEmitterPort): Promise<void> {
     await Promise.all(
       this.domainEvents.map(async (event) => {
-        logger.debug(
+        this.logger.log(
           `"${event.constructor.name}" event published for aggregate ${this.constructor.name} : ${this.id}`,
         );
-        // WIP: replace with actual event bus / emitter logic
-        //return eventEmitter.emitAsync(event.constructor.name, event);
+        await emitter.logDomainEvent(event);
       }),
     );
     this.clearEvents();

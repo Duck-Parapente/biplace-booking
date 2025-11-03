@@ -11,7 +11,6 @@ export class UserEntity extends AggregateRoot<UserProps> {
   static create(props: CreateUserProps): UserEntity {
     const id = randomUUID();
     const user = new UserEntity({ id, props });
-
     user.addEvent(
       new UserCreatedDomainEvent({
         aggregateId: id,

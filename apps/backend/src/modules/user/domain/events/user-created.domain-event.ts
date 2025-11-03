@@ -4,7 +4,6 @@ import { DomainEvent } from '@libs/ddd';
 
 export class UserCreatedDomainEvent extends DomainEvent {
   readonly email: Email;
-
   readonly externalAuthId: string;
 
   constructor(props: DomainEventProps<UserCreatedDomainEvent>) {
