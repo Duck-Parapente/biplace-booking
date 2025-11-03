@@ -42,7 +42,8 @@ services:
       - internal
     depends_on:
       - postgres
-    command: ["sh","-c","pnpm start:prod"]
+    # Run migrations before starting the app (in a single command to avoid pnpm overhead)
+    command: ['sh', '-c', 'npx prisma migrate deploy && node dist/main.js']
     restart: unless-stopped
     profiles: ['staging', 'prod']
     env_file:

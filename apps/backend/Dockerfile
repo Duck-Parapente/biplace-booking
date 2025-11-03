@@ -50,4 +50,5 @@ RUN pnpm exec prisma generate
 COPY --from=build /app/dist ./dist
 EXPOSE 3001
 USER node
-CMD ["sh","-c","pnpm start:prod"]
+# Just run the app - migrations will be handled separately during deployment
+CMD ["node", "dist/main.js"]
