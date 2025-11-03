@@ -6,18 +6,32 @@ import { userFormSchema } from '~/types/user';
 export const useUser = () => {
   const { callApi } = useApi();
 
+  // State management
+  const userData = ref<User | null>(null);
+  const loading = ref(false);
+  const error = ref<string | null>(null);
+  const updating = ref(false);
+  const updateError = ref<string | null>(null);
+  const updateSuccess = ref(false);
+
   /**
    * Fetch the current user's data
    */
   const getUser = async (): Promise<User> => {
     try {
+      loading.value = true;
+      error.value = null;
       const user = await callApi<User>('/user/me');
+      userData.value = user;
       return user;
-    } catch (error) {
-      console.error('Failed to fetch user data:', error);
-      throw new Error(
-        error instanceof Error ? error.message : 'Impossible de charger les données utilisateur',
-      );
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Impossible de charger les données utilisateur';
+      error.value = errorMessage;
+      console.error('Failed to fetch user data:', err);
+      throw new Error(errorMessage);
+    } finally {
+      loading.value = false;
     }
   };
 
@@ -43,15 +57,24 @@ export const useUser = () => {
    */
   const updateUser = async (userData: UserFormData): Promise<void> => {
     try {
+      updating.value = true;
+      updateError.value = null;
+      updateSuccess.value = false;
+
       await callApi('/user/update', {
         method: 'POST',
         body: JSON.stringify(userData),
       });
-    } catch (error) {
-      console.error('Failed to update user data:', error);
-      throw new Error(
-        error instanceof Error ? error.message : 'Impossible de mettre à jour les informations',
-      );
+
+      updateSuccess.value = true;
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Impossible de mettre à jour les informations';
+      updateError.value = errorMessage;
+      console.error('Failed to update user data:', err);
+      throw new Error(errorMessage);
+    } finally {
+      updating.value = false;
     }
   };
 
@@ -85,6 +108,14 @@ export const useUser = () => {
   };
 
   return {
+    // State
+    userData,
+    loading,
+    error,
+    updating,
+    updateError,
+    updateSuccess,
+    // Methods
     getUser,
     updateUser,
     validateUserForm,

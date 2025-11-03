@@ -128,17 +128,23 @@
 </template>
 
 <script setup lang="ts">
-import type { User, UserFormData, ValidationErrors } from '~/types/user';
+import type { UserFormData, ValidationErrors } from '~/types/user';
 
 definePageMeta({
   middleware: 'auth',
 });
 
-const { getUser, updateUser: updateUserData, validateUserForm } = useUser();
-
-const userData = ref<User | null>(null);
-const loading = ref(false);
-const error = ref<string | null>(null);
+const {
+  userData,
+  loading,
+  error,
+  updating,
+  updateError,
+  updateSuccess,
+  getUser,
+  updateUser: updateUserData,
+  validateUserForm,
+} = useUser();
 
 const formData = ref<UserFormData>({
   firstName: '',
@@ -147,10 +153,6 @@ const formData = ref<UserFormData>({
   phoneNumber: '',
 });
 
-const updating = ref(false);
-const updateError = ref<string | null>(null);
-const updateSuccess = ref(false);
-
 const validationErrors = ref<ValidationErrors>({
   firstName: '',
   lastName: '',
@@ -158,51 +160,35 @@ const validationErrors = ref<ValidationErrors>({
   phoneNumber: '',
 });
 
-// Load user data on mount
 onMounted(async () => {
   try {
-    loading.value = true;
-    error.value = null;
-    userData.value = await getUser();
+    await getUser();
 
-    // Initialize form data with user data
-    formData.value = {
-      firstName: userData.value.firstName || '',
-      lastName: userData.value.lastName || '',
-      address: userData.value.address || '',
-      phoneNumber: userData.value.phoneNumber || '',
-    };
+    if (userData.value) {
+      formData.value = {
+        firstName: userData.value.firstName || '',
+        lastName: userData.value.lastName || '',
+        address: userData.value.address || '',
+        phoneNumber: userData.value.phoneNumber || '',
+      };
+    }
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Impossible de charger les données utilisateur';
-  } finally {
-    loading.value = false;
+    console.error('Error loading user:', e);
   }
 });
 
-// Handle user update
 const updateUser = async () => {
   try {
-    updating.value = true;
-    updateError.value = null;
-    updateSuccess.value = false;
-
-    // Validate form before submitting
     const validation = validateUserForm(formData.value);
     validationErrors.value = validation.errors;
 
     if (!validation.isValid) {
-      updating.value = false;
       return;
     }
 
     await updateUserData(formData.value);
-
-    updateSuccess.value = true;
   } catch (e) {
-    updateError.value =
-      e instanceof Error ? e.message : 'Impossible de mettre à jour les informations';
-  } finally {
-    updating.value = false;
+    console.error('Error updating user:', e);
   }
 };
 </script>
