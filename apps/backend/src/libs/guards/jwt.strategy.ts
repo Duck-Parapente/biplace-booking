@@ -1,11 +1,12 @@
 // auth/jwt.strategy.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import * as jwksRsa from 'jwks-rsa';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { UserRole } from './roles.enum';
+import { prisma } from '@libs/database/prisma/prisma';
 
 export const DUCK_ROLES_CLAIM = 'biplace-duck-roles';
 export interface JwtPayload {
@@ -17,6 +18,10 @@ export interface JwtPayload {
   iat?: number;
   exp?: number;
   [DUCK_ROLES_CLAIM]?: UserRole[];
+}
+
+export interface AuthenticatedUser {
+  id: string;
 }
 
 @Injectable()
@@ -40,10 +45,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload): Promise<JwtPayload> {
+  async validate(payload: JwtPayload): Promise<AuthenticatedUser> {
     if (!payload.sub) {
-      throw new Error('Invalid token payload');
+      throw new UnauthorizedException('Invalid token payload');
     }
-    return payload;
+
+    const user = await prisma.user.findUnique({
+      where: { externalAuthId: payload.sub },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    return { id: user.id };
   }
 }

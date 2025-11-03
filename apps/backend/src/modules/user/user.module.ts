@@ -24,6 +24,7 @@ import { EVENT_EMITTER, IDENTITY_PROVIDER, USER_REPOSITORY } from './user.di-tok
     JwtStrategy,
     { provide: IDENTITY_PROVIDER, useClass: IdentityProvider },
     { provide: USER_REPOSITORY, useClass: UserRepository },
+    { provide: 'USER_REPOSITORY_FOR_AUTH', useClass: UserRepository },
     { provide: EVENT_EMITTER, useClass: EventEmitter },
   ],
 })

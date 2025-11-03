@@ -29,6 +29,18 @@ export class UserEntity extends AggregateRoot<UserProps> {
     return this.props.externalAuthId;
   }
 
+  get firstName() {
+    return this.props.firstName;
+  }
+
+  get lastName() {
+    return this.props.lastName;
+  }
+
+  get address() {
+    return this.props.address;
+  }
+
   validate(): void {
     // entity business rules validation to protect it's invariant before saving entity to a database
   }

@@ -1,5 +1,5 @@
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
-import { JwtPayload } from '@libs/guards/jwt.strategy';
+import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { Controller, Logger, Get, UseGuards, Request } from '@nestjs/common';
 
 @Controller('user')
@@ -8,11 +8,15 @@ export class GetUserHttpController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  async getUser(@Request() req: { user: JwtPayload }) {
-    this.logger.log(`User authenticated: ${req.user.sub}`);
+  async getUser(@Request() req: { user: AuthenticatedUser }) {
+    const { id } = req.user;
+    this.logger.log(`User fetched: ${id}`);
+
     return {
       message: 'User fetched successfully',
-      user: req.user,
+      user: {
+        id,
+      },
     };
   }
 }
