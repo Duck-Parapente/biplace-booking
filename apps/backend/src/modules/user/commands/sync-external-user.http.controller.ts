@@ -5,14 +5,14 @@ import { Controller, Post, Body, Logger, UseGuards } from '@nestjs/common';
 import { SyncExternalUserCommand } from './sync-external-user.command';
 import { SyncExternalUserService } from './sync-external-user.service';
 
-@Controller('user')
+@Controller('user/sync')
 @UseGuards(ApiKeyGuard)
 export class SyncExternalUserHttpController {
   private readonly logger = new Logger(SyncExternalUserHttpController.name);
 
   constructor(private readonly syncExternalUserService: SyncExternalUserService) {}
 
-  @Post('sync')
+  @Post()
   async syncExternalUser(
     @Body() { externalAuthId, email }: { externalAuthId: string; email: string },
   ) {

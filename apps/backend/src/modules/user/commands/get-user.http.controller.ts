@@ -5,13 +5,13 @@ import { Controller, Logger, Get, UseGuards, Request } from '@nestjs/common';
 import { GetUserCommand } from './get-user.command';
 import { GetUserService } from './get-user.service';
 
-@Controller('user')
+@Controller('user/me')
 export class GetUserHttpController {
   private readonly logger = new Logger(GetUserHttpController.name);
 
   constructor(private readonly getUserService: GetUserService) {}
 
-  @Get('me')
+  @Get()
   @UseGuards(JwtAuthGuard)
   async getUser(@Request() req: { user: AuthenticatedUser }) {
     const { id } = req.user;
