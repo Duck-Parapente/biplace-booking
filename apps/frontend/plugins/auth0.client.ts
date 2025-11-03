@@ -9,6 +9,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       clientId: config.public.auth0ClientId,
       authorizationParams: {
         redirect_uri: window.location.origin,
+        audience: config.public.auth0Audience,
       },
       cacheLocation: 'localstorage', // persist after refresh
       useRefreshTokens: true,
