@@ -5,6 +5,9 @@ import { PassportStrategy } from '@nestjs/passport';
 import * as jwksRsa from 'jwks-rsa';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
+import { UserRole } from './roles.enum';
+
+export const DUCK_ROLES_CLAIM = 'biplace-duck-roles';
 export interface JwtPayload {
   sub: string;
   email?: string;
@@ -13,6 +16,7 @@ export interface JwtPayload {
   picture?: string;
   iat?: number;
   exp?: number;
+  [DUCK_ROLES_CLAIM]?: UserRole[];
 }
 
 @Injectable()
