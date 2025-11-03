@@ -1,5 +1,5 @@
 <template>
-  <main class="p-8">
+  <main class="p-8 max-w-2xl mx-auto">
     <h2 class="text-2xl font-semibold mb-4">Mon Compte</h2>
 
     <div v-if="loading" class="mt-4">
