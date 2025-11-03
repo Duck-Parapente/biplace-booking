@@ -132,9 +132,6 @@ definePageMeta({
   middleware: 'auth',
 });
 
-const { setPageTitle } = usePageTitle();
-setPageTitle('Mon Compte');
-
 const { callApi } = useApi();
 const userData = ref<any>(null);
 const loading = ref(false);

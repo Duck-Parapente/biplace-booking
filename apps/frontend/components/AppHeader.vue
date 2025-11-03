@@ -2,7 +2,7 @@
   <header
     class="w-full flex items-center justify-between px-6 py-4 bg-primary-400 text-secondary-600"
   >
-    <h1 class="text-xl font-semibold">{{ pageTitle }}</h1>
+    <h1 class="text-xl font-semibold">Duck</h1>
     <div v-if="isAuthenticated" class="flex items-center gap-3">
       <span v-if="user?.name" class="text-sm">🪂 {{ user.name }}</span>
       <button
@@ -16,8 +16,6 @@
 </template>
 <script setup lang="ts">
 import { useAuth } from '~/composables/useAuth';
-import { usePageTitle } from '~/composables/usePageTitle';
 
-const { login, logout, isAuthenticated, user, isLoading } = useAuth();
-const { pageTitle } = usePageTitle();
+const { logout, isAuthenticated, user } = useAuth();
 </script>

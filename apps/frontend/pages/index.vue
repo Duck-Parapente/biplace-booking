@@ -9,7 +9,4 @@
 definePageMeta({
   middleware: 'auth',
 });
-
-const { setPageTitle } = usePageTitle();
-setPageTitle('Réservations');
 </script>
