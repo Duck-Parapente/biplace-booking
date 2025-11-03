@@ -1,4 +1,5 @@
 import { prisma } from '@libs/database/prisma/prisma';
+import { Email } from '@libs/ddd';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { UserRepositoryPort } from '@modules/user/domain/ports/user.repository.port';
 import { UserEntity } from '@modules/user/domain/user.entity';
@@ -25,5 +26,26 @@ export class UserRepository implements UserRepositoryPort {
 
     await user.publishEvents(this.eventEmitter);
     this.logger.log(`User saved: ${user.id} (${user.email})`);
+  }
+
+  async findById(userId: string): Promise<UserEntity | null> {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    return UserEntity.fromPersistence(user.id, {
+      email: new Email({ email: user.email }),
+      externalAuthId: user.externalAuthId,
+      firstName: user.firstName ?? undefined,
+      lastName: user.lastName ?? undefined,
+      phoneNumber: user.phoneNumber ?? undefined,
+      address: user.address ?? undefined,
+      currentScore: user.currentScore,
+      createdAt: user.createdAt,
+    });
   }
 }

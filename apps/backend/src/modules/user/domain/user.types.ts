@@ -10,7 +10,10 @@ export interface UserProps {
   externalAuthId: string;
   firstName?: string;
   lastName?: string;
+  phoneNumber?: string;
   address?: string;
+  currentScore?: number;
+  createdAt?: Date;
 }
 
 export interface CreateUserProps {

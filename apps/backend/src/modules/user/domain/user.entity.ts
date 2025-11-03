@@ -21,6 +21,10 @@ export class UserEntity extends AggregateRoot<UserProps> {
     return user;
   }
 
+  static fromPersistence(id: string, props: UserProps): UserEntity {
+    return new UserEntity({ id, props });
+  }
+
   get email() {
     return this.props.email;
   }
@@ -37,8 +41,20 @@ export class UserEntity extends AggregateRoot<UserProps> {
     return this.props.lastName;
   }
 
+  get phoneNumber() {
+    return this.props.phoneNumber;
+  }
+
   get address() {
     return this.props.address;
+  }
+
+  get currentScore() {
+    return this.props.currentScore;
+  }
+
+  get createdAt() {
+    return this.props.createdAt;
   }
 
   validate(): void {

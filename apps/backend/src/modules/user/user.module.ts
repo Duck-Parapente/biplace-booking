@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 
 import { GetUserHttpController } from './commands/get-user.http.controller';
+import { GetUserService } from './commands/get-user.service';
 import { SyncExternalUserHttpController } from './commands/sync-external-user.http.controller';
 import { SyncExternalUserService } from './commands/sync-external-user.service';
 import { UserRepository } from './providers/database/user.repository';
@@ -21,6 +22,7 @@ import { EVENT_EMITTER, IDENTITY_PROVIDER, USER_REPOSITORY } from './user.di-tok
   controllers: [SyncExternalUserHttpController, GetUserHttpController],
   providers: [
     SyncExternalUserService,
+    GetUserService,
     JwtStrategy,
     { provide: IDENTITY_PROVIDER, useClass: IdentityProvider },
     { provide: USER_REPOSITORY, useClass: UserRepository },
