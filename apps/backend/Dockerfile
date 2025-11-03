@@ -1,6 +1,10 @@
-FROM node:20-bookworm AS build
+FROM node:20-bookworm-slim AS build
 WORKDIR /app
 ENV NODE_OPTIONS=--dns-result-order=ipv4first
+
+# Install OpenSSL (required by Prisma)
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
 RUN npm install -g pnpm@8.15.4
 
 # Copy backend workspace manifest only (avoid monorepo complexity)
@@ -22,9 +26,13 @@ COPY apps/backend/src ./src
 # Build (outputs dist/main.js)
 RUN pnpm run build
 
-FROM node:20-bookworm AS prod
+FROM node:20-bookworm-slim AS prod
 WORKDIR /app
 ENV NODE_ENV=production
+
+# Install OpenSSL (required by Prisma)
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
 RUN npm install -g pnpm@8.15.4
 COPY apps/backend/package.json ./package.json
 COPY pnpm-lock.yaml ./pnpm-lock.yaml
