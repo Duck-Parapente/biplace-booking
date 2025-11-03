@@ -22,6 +22,23 @@ export const useUser = () => {
   };
 
   /**
+   * Check if the user's profile is complete
+   */
+  const isProfileComplete = (user: User | null | undefined): boolean => {
+    if (!user) return false;
+    return !!(
+      user.firstName &&
+      user.lastName &&
+      user.address &&
+      user.phoneNumber &&
+      user.firstName.trim() !== '' &&
+      user.lastName.trim() !== '' &&
+      user.address.trim() !== '' &&
+      user.phoneNumber.trim() !== ''
+    );
+  };
+
+  /**
    * Update the current user's data
    */
   const updateUser = async (userData: UserFormData): Promise<void> => {
@@ -71,5 +88,6 @@ export const useUser = () => {
     getUser,
     updateUser,
     validateUserForm,
+    isProfileComplete,
   };
 };

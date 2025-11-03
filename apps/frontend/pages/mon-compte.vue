@@ -198,11 +198,6 @@ const updateUser = async () => {
     await updateUserData(formData.value);
 
     updateSuccess.value = true;
-
-    // Hide success message after 3 seconds
-    setTimeout(() => {
-      updateSuccess.value = false;
-    }, 3000);
   } catch (e) {
     updateError.value =
       e instanceof Error ? e.message : 'Impossible de mettre à jour les informations';
