@@ -128,16 +128,19 @@
 </template>
 
 <script setup lang="ts">
+import type { User, UserFormData, ValidationErrors } from '~/types/user';
+
 definePageMeta({
   middleware: 'auth',
 });
 
-const { callApi } = useApi();
-const userData = ref<any>(null);
+const { getUser, updateUser: updateUserData, validateUserForm } = useUser();
+
+const userData = ref<User | null>(null);
 const loading = ref(false);
 const error = ref<string | null>(null);
 
-const formData = ref({
+const formData = ref<UserFormData>({
   firstName: '',
   lastName: '',
   address: '',
@@ -148,81 +151,19 @@ const updating = ref(false);
 const updateError = ref<string | null>(null);
 const updateSuccess = ref(false);
 
-const validationErrors = ref({
+const validationErrors = ref<ValidationErrors>({
   firstName: '',
   lastName: '',
   address: '',
   phoneNumber: '',
 });
 
-const validateForm = (): boolean => {
-  validationErrors.value = {
-    firstName: '',
-    lastName: '',
-    address: '',
-    phoneNumber: '',
-  };
-
-  let isValid = true;
-
-  // Validate firstName
-  if (!formData.value.firstName || formData.value.firstName.trim().length === 0) {
-    validationErrors.value.firstName = 'Le prénom est requis';
-    isValid = false;
-  } else if (formData.value.firstName.trim().length < 2) {
-    validationErrors.value.firstName = 'Le prénom doit contenir au moins 2 caractères';
-    isValid = false;
-  } else if (formData.value.firstName.trim().length > 50) {
-    validationErrors.value.firstName = 'Le prénom ne doit pas dépasser 50 caractères';
-    isValid = false;
-  }
-
-  // Validate lastName
-  if (!formData.value.lastName || formData.value.lastName.trim().length === 0) {
-    validationErrors.value.lastName = 'Le nom est requis';
-    isValid = false;
-  } else if (formData.value.lastName.trim().length < 2) {
-    validationErrors.value.lastName = 'Le nom doit contenir au moins 2 caractères';
-    isValid = false;
-  } else if (formData.value.lastName.trim().length > 50) {
-    validationErrors.value.lastName = 'Le nom ne doit pas dépasser 50 caractères';
-    isValid = false;
-  }
-
-  // Validate address
-  if (!formData.value.address || formData.value.address.trim().length === 0) {
-    validationErrors.value.address = "L'adresse est requise";
-    isValid = false;
-  } else if (formData.value.address.trim().length < 5) {
-    validationErrors.value.address = "L'adresse doit contenir au moins 5 caractères";
-    isValid = false;
-  } else if (formData.value.address.trim().length > 200) {
-    validationErrors.value.address = "L'adresse ne doit pas dépasser 200 caractères";
-    isValid = false;
-  }
-
-  // Validate phoneNumber (French phone number format)
-  if (!formData.value.phoneNumber || formData.value.phoneNumber.trim().length === 0) {
-    validationErrors.value.phoneNumber = 'Le numéro de téléphone est requis';
-    isValid = false;
-  } else {
-    const phoneRegex = /^(\+33|0)[1-9](\d{2}){4}$/;
-    const cleanPhone = formData.value.phoneNumber.replace(/\s/g, '');
-    if (!phoneRegex.test(cleanPhone)) {
-      validationErrors.value.phoneNumber =
-        'Le numéro de téléphone doit être au format français (ex: 0612345678 ou +33612345678)';
-      isValid = false;
-    }
-  }
-
-  return isValid;
-};
-
+// Load user data on mount
 onMounted(async () => {
   try {
     loading.value = true;
     error.value = null;
-    userData.value = await callApi('/user/me');
+    userData.value = await getUser();
 
     // Initialize form data with user data
     formData.value = {
@@ -233,12 +174,12 @@ onMounted(async () => {
     };
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Impossible de charger les données utilisateur';
-    console.error('Failed to fetch user data:', e);
   } finally {
     loading.value = false;
   }
 });
 
+// Handle user update
 const updateUser = async () => {
   try {
     updating.value = true;
@@ -246,15 +187,15 @@ const updateUser = async () => {
     updateSuccess.value = false;
 
     // Validate form before submitting
-    if (!validateForm()) {
+    const validation = validateUserForm(formData.value);
+    validationErrors.value = validation.errors;
+
+    if (!validation.isValid) {
       updating.value = false;
       return;
     }
 
-    await callApi('/user/update', {
-      method: 'POST',
-      body: JSON.stringify(formData.value),
-    });
+    await updateUserData(formData.value);
 
     updateSuccess.value = true;
 
@@ -265,7 +206,6 @@ const updateUser = async () => {
   } catch (e) {
     updateError.value =
       e instanceof Error ? e.message : 'Impossible de mettre à jour les informations';
-    console.error('Failed to update user data:', e);
   } finally {
     updating.value = false;
   }
