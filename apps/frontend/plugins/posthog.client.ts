@@ -8,9 +8,9 @@ export default defineNuxtPlugin(() => {
     api_host: runtimeConfig.public.posthogHost,
     defaults: '2025-05-24',
     person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
-    loaded: (posthog) => {
-      if (import.meta.env.MODE === 'development') posthog.debug();
-    },
+    // loaded: (posthog) => {
+    //   if (import.meta.env.MODE === 'development') posthog.debug();
+    // },
   });
 
   return {
