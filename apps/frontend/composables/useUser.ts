@@ -1,4 +1,4 @@
-import type { UserDto } from '@shared';
+import type { UserDto } from 'shared';
 import { z } from 'zod';
 
 import { userFormSchema, type UserFormData, type ValidationErrors } from '~/types/user';

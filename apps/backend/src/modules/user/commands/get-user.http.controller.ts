@@ -1,7 +1,7 @@
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { Controller, Logger, Get, UseGuards, Request } from '@nestjs/common';
-import { UserDto } from '@shared';
+import { UserDto } from 'shared';
 
 import { GetUserCommand } from './get-user.command';
 import { GetUserService } from './get-user.service';
