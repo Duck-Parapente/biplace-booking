@@ -48,14 +48,14 @@ services:
     profiles: ['staging', 'prod']
     env_file:
       - .env
-    # deploy:
-    #   resources:
-    #     limits:
-    #       memory: ${BACKEND_MEMORY_LIMIT}
-    #       cpus: ${BACKEND_CPU_LIMIT}
-    #     reservations:
-    #       memory: ${BACKEND_MEMORY_RESERVATION}
-    #       cpus: ${BACKEND_CPU_RESERVATION}
+    deploy:
+      resources:
+        limits:
+          memory: ${BACKEND_MEMORY_LIMIT}
+          cpus: ${BACKEND_CPU_LIMIT}
+        reservations:
+          memory: ${BACKEND_MEMORY_RESERVATION}
+          cpus: ${BACKEND_CPU_RESERVATION}
     environment:
       - NODE_OPTIONS=--max-old-space-size=${NODE_MAX_OLD_SPACE}
       - UV_THREADPOOL_SIZE=${UV_THREADPOOL_SIZE}
