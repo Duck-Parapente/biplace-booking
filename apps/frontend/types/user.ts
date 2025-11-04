@@ -33,15 +33,6 @@ export const userFormSchema = z.object({
 // TypeScript types derived from Zod schemas
 export type UserFormData = z.infer<typeof userFormSchema>;
 
-export interface User {
-  email: string;
-  firstName: string;
-  lastName: string;
-  address: string;
-  phoneNumber: string;
-  currentScore?: number;
-}
-
 export interface ValidationErrors {
   firstName: string;
   lastName: string;

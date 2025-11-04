@@ -1,13 +1,13 @@
+import type { UserDto } from '@shared';
 import { z } from 'zod';
 
-import type { User, UserFormData, ValidationErrors } from '~/types/user';
-import { userFormSchema } from '~/types/user';
+import { userFormSchema, type UserFormData, type ValidationErrors } from '~/types/user';
 
 export const useUser = () => {
   const { callApi } = useApi();
 
   // State management
-  const userData = ref<User | null>(null);
+  const userData = ref<UserDto | null>(null);
   const loading = ref(false);
   const error = ref<string | null>(null);
   const updating = ref(false);
@@ -17,11 +17,11 @@ export const useUser = () => {
   /**
    * Fetch the current user's data
    */
-  const getUser = async (): Promise<User> => {
+  const getUser = async (): Promise<UserDto> => {
     try {
       loading.value = true;
       error.value = null;
-      const user = await callApi<User>('/user/me');
+      const user = await callApi<UserDto>('/user/me');
       userData.value = user;
       return user;
     } catch (err) {
@@ -38,7 +38,7 @@ export const useUser = () => {
   /**
    * Check if the user's profile is complete
    */
-  const isProfileComplete = (user: User | null | undefined): boolean => {
+  const isProfileComplete = (user: UserDto | null | undefined): boolean => {
     if (!user) return false;
     return !!(
       user.firstName &&

@@ -13,7 +13,8 @@
     "skipLibCheck": true,
     "baseUrl": "./",
     "paths": {
-      "@*": ["src/*"]
+      "@*": ["src/*"],
+      "@shared": ["../../packages/shared/src"]
     }
   },
   "include": ["src/**/*"],

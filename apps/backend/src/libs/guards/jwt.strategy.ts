@@ -1,4 +1,5 @@
 // auth/jwt.strategy.ts
+import { prisma } from '@libs/database/prisma/prisma';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
@@ -6,7 +7,6 @@ import * as jwksRsa from 'jwks-rsa';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { UserRole } from './roles.enum';
-import { prisma } from '@libs/database/prisma/prisma';
 
 export const DUCK_ROLES_CLAIM = 'biplace-duck-roles';
 export interface JwtPayload {
