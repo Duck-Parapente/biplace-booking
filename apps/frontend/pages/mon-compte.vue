@@ -1,6 +1,14 @@
 <template>
   <main class="p-4 max-w-xl mx-auto">
-    <h2 class="text-2xl font-semibold mb-6 text-secondary-600">Mon Compte</h2>
+    <h2 class="text-2xl font-semibold mb-4 text-secondary-600">Mon Compte</h2>
+
+    <div class="mb-6 p-3 bg-blue-50 border-l-4 border-blue-400 text-sm text-blue-800">
+      <p class="font-medium mb-1">ℹ️ Pourquoi ces informations ?</p>
+      <p class="text-xs">
+        Votre adresse et numéro de téléphone sont nécessaires pour faciliter les échanges entre
+        parapentistes.
+      </p>
+    </div>
 
     <div v-if="loading">
       <p class="text-gray-500">Chargement...</p>
