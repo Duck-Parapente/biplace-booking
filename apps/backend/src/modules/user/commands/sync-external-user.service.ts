@@ -25,8 +25,8 @@ export class SyncExternalUserService implements ICommandHandler<SyncExternalUser
       externalAuthId: command.externalAuthId,
     });
 
-    await this.userRepository.save(user);
+    await this.userRepository.create(user);
 
-    this.logger.log(`User synced: ${user.id} (${user.email})`);
+    this.logger.log(`User synced: ${user.id}`);
   }
 }

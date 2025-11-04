@@ -15,7 +15,7 @@ export class UserRepository implements UserRepositoryPort {
     private readonly eventEmitter: EventEmitterPort,
   ) {}
 
-  async save(user: UserEntity): Promise<void> {
+  async create(user: UserEntity): Promise<void> {
     await prisma.user.create({
       data: {
         id: user.id,
@@ -25,7 +25,7 @@ export class UserRepository implements UserRepositoryPort {
     });
 
     await user.publishEvents(this.eventEmitter);
-    this.logger.log(`User saved: ${user.id} (${user.email})`);
+    this.logger.log(`User created: ${user.id}`);
   }
 
   async update(user: UserEntity): Promise<void> {
@@ -40,7 +40,7 @@ export class UserRepository implements UserRepositoryPort {
     });
 
     await user.publishEvents(this.eventEmitter);
-    this.logger.log(`User updated: ${user.id} (${user.email})`);
+    this.logger.log(`User updated: ${user.id}`);
   }
 
   async findById(userId: string): Promise<UserEntity | null> {
