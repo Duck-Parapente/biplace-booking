@@ -15,8 +15,7 @@ export class UserEntity extends AggregateRoot<UserProps> {
     user.addEvent(
       new UserCreatedDomainEvent({
         aggregateId: id,
-        email: props.email,
-        externalAuthId: props.externalAuthId,
+        ...props,
       }),
     );
     return user;
@@ -59,26 +58,12 @@ export class UserEntity extends AggregateRoot<UserProps> {
   }
 
   update(props: UpdateUserProps): void {
-    if (props.firstName !== undefined) {
-      this.props.firstName = props.firstName;
-    }
-    if (props.lastName !== undefined) {
-      this.props.lastName = props.lastName;
-    }
-    if (props.address !== undefined) {
-      this.props.address = props.address;
-    }
-    if (props.phoneNumber !== undefined) {
-      this.props.phoneNumber = props.phoneNumber;
-    }
+    Object.assign(this.props, props);
 
     this.addEvent(
       new UserUpdatedDomainEvent({
         aggregateId: this.id,
-        firstName: props.firstName,
-        lastName: props.lastName,
-        address: props.address,
-        phoneNumber: props.phoneNumber,
+        ...props,
       }),
     );
   }
