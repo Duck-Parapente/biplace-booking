@@ -28,6 +28,21 @@ export class UserRepository implements UserRepositoryPort {
     this.logger.log(`User saved: ${user.id} (${user.email})`);
   }
 
+  async update(user: UserEntity): Promise<void> {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        address: user.address,
+        phoneNumber: user.phoneNumber,
+      },
+    });
+
+    await user.publishEvents(this.eventEmitter);
+    this.logger.log(`User updated: ${user.id} (${user.email})`);
+  }
+
   async findById(userId: string): Promise<UserEntity | null> {
     const user = await prisma.user.findUnique({
       where: { id: userId },

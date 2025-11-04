@@ -20,3 +20,10 @@ export interface CreateUserProps {
   email: Email;
   externalAuthId: string;
 }
+
+export interface UpdateUserProps {
+  firstName?: string;
+  lastName?: string;
+  address?: string;
+  phoneNumber?: string;
+}

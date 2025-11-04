@@ -61,8 +61,8 @@ export const useUser = () => {
       updateError.value = null;
       updateSuccess.value = false;
 
-      await callApi('/user/update', {
-        method: 'POST',
+      await callApi('/user/me', {
+        method: 'PATCH',
         body: JSON.stringify(userData),
       });
 

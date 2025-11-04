@@ -8,6 +8,8 @@ import { GetUserHttpController } from './commands/get-user.http.controller';
 import { GetUserService } from './commands/get-user.service';
 import { SyncExternalUserHttpController } from './commands/sync-external-user.http.controller';
 import { SyncExternalUserService } from './commands/sync-external-user.service';
+import { UpdateUserHttpController } from './commands/update-user.http.controller';
+import { UpdateUserService } from './commands/update-user.service';
 import { UserRepository } from './providers/database/user.repository';
 import { IdentityProvider } from './providers/identity/identity.provider';
 import { EVENT_EMITTER, IDENTITY_PROVIDER, USER_REPOSITORY } from './user.di-tokens';
@@ -19,10 +21,11 @@ import { EVENT_EMITTER, IDENTITY_PROVIDER, USER_REPOSITORY } from './user.di-tok
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
-  controllers: [SyncExternalUserHttpController, GetUserHttpController],
+  controllers: [SyncExternalUserHttpController, GetUserHttpController, UpdateUserHttpController],
   providers: [
     SyncExternalUserService,
     GetUserService,
+    UpdateUserService,
     JwtStrategy,
     { provide: IDENTITY_PROVIDER, useClass: IdentityProvider },
     { provide: USER_REPOSITORY, useClass: UserRepository },

@@ -3,7 +3,8 @@ import { randomUUID } from 'crypto';
 import { AggregateRoot, AggregateID } from '@libs/ddd';
 
 import { UserCreatedDomainEvent } from './events/user-created.domain-event';
-import { CreateUserProps, UserProps } from './user.types';
+import { UserUpdatedDomainEvent } from './events/user-updated.domain-event';
+import { CreateUserProps, UpdateUserProps, UserProps } from './user.types';
 
 export class UserEntity extends AggregateRoot<UserProps> {
   protected readonly _id: AggregateID;
@@ -55,6 +56,31 @@ export class UserEntity extends AggregateRoot<UserProps> {
 
   get createdAt() {
     return this.props.createdAt;
+  }
+
+  update(props: UpdateUserProps): void {
+    if (props.firstName !== undefined) {
+      this.props.firstName = props.firstName;
+    }
+    if (props.lastName !== undefined) {
+      this.props.lastName = props.lastName;
+    }
+    if (props.address !== undefined) {
+      this.props.address = props.address;
+    }
+    if (props.phoneNumber !== undefined) {
+      this.props.phoneNumber = props.phoneNumber;
+    }
+
+    this.addEvent(
+      new UserUpdatedDomainEvent({
+        aggregateId: this.id,
+        firstName: props.firstName,
+        lastName: props.lastName,
+        address: props.address,
+        phoneNumber: props.phoneNumber,
+      }),
+    );
   }
 
   validate(): void {
