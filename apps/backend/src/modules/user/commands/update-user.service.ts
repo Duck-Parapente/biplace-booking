@@ -23,12 +23,7 @@ export class UpdateUserService {
       throw new NotFoundException(`User with ID ${command.userId} not found`);
     }
 
-    user.update({
-      firstName: command.firstName,
-      lastName: command.lastName,
-      address: command.address,
-      phoneNumber: command.phoneNumber,
-    });
+    user.update(command.profile);
 
     await this.userRepository.update(user);
 

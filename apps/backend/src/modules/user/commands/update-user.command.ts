@@ -1,18 +1,14 @@
 import { CommandProps, Command } from '@libs/ddd';
 
+import { UserProfile } from '../domain/user.types';
+
 export class UpdateUserCommand extends Command {
   readonly userId: string;
-  readonly firstName?: string;
-  readonly lastName?: string;
-  readonly address?: string;
-  readonly phoneNumber?: string;
+  readonly profile: UserProfile;
 
   constructor(props: CommandProps<UpdateUserCommand>) {
     super(props);
     this.userId = props.userId;
-    this.firstName = props.firstName;
-    this.lastName = props.lastName;
-    this.address = props.address;
-    this.phoneNumber = props.phoneNumber;
+    this.profile = props.profile;
   }
 }

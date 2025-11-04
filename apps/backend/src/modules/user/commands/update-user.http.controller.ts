@@ -20,10 +20,12 @@ export class UpdateUserHttpController {
     const user = await this.updateUserService.execute(
       new UpdateUserCommand({
         userId: id,
-        firstName: body.firstName,
-        lastName: body.lastName,
-        address: body.address,
-        phoneNumber: body.phoneNumber,
+        profile: {
+          firstName: body.firstName,
+          lastName: body.lastName,
+          address: body.address,
+          phoneNumber: body.phoneNumber,
+        },
       }),
     );
 

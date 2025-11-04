@@ -1,17 +1,13 @@
-import { DomainEventProps } from '@libs/ddd';
-import { DomainEvent } from '@libs/ddd';
+import { DomainEventProps, DomainEvent } from '@libs/ddd';
 
+import { UserProfile } from '../user.types';
+
+// Domain event now carries a single consolidated "changes" object.
 export class UserUpdatedDomainEvent extends DomainEvent {
-  readonly firstName?: string;
-  readonly lastName?: string;
-  readonly address?: string;
-  readonly phoneNumber?: string;
+  readonly changes: UserProfile;
 
   constructor(props: DomainEventProps<UserUpdatedDomainEvent>) {
     super(props);
-    this.firstName = props.firstName;
-    this.lastName = props.lastName;
-    this.address = props.address;
-    this.phoneNumber = props.phoneNumber;
+    this.changes = props.changes;
   }
 }

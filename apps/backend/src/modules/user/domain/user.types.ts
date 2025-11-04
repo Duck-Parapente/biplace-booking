@@ -5,13 +5,17 @@ export interface ExternalUser {
   email: Email;
 }
 
-export interface UserProps {
-  email: Email;
-  externalAuthId: string;
+// Consolidated profile fields to avoid repetition across commands/events/types
+export interface UserProfile {
   firstName?: string;
   lastName?: string;
   phoneNumber?: string;
   address?: string;
+}
+
+export interface UserProps extends UserProfile {
+  email: Email;
+  externalAuthId: string;
   currentScore?: number;
   createdAt?: Date;
 }
@@ -21,9 +25,5 @@ export interface CreateUserProps {
   externalAuthId: string;
 }
 
-export interface UpdateUserProps {
-  firstName?: string;
-  lastName?: string;
-  address?: string;
-  phoneNumber?: string;
-}
+// Updating user only touches profile fields for now
+export type UpdateUserProps = UserProfile;

@@ -63,7 +63,7 @@ export class UserEntity extends AggregateRoot<UserProps> {
     this.addEvent(
       new UserUpdatedDomainEvent({
         aggregateId: this.id,
-        ...props,
+        changes: props,
       }),
     );
   }
