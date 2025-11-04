@@ -35,7 +35,7 @@ parse_args() {
 }
 
 setup_paths() {
-  REMOTE_HOST="${REMOTE_HOST:-duck-tower}"
+  REMOTE_HOST="${REMOTE_HOST:-duck-tower-2}"
   REMOTE_PATH="${REMOTE_PATH:-/srv}"
   PLATFORM="${BUILD_PLATFORM:-linux/amd64}"
   REMOTE_APP_DIR="/srv/biplace-booking-${ENVIRONMENT}"
