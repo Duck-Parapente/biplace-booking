@@ -1,7 +1,9 @@
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { Controller, Logger, Patch, UseGuards, Request, Body } from '@nestjs/common';
-import { UserDto } from 'shared';
+import { UserDto, UserProfileDto } from 'shared';
+
+import { mapUserToDto } from './user.mapper';
 
 import { UpdateUserCommand } from './update-user.command';
 import { UpdateUserService } from './update-user.service';
@@ -14,30 +16,17 @@ export class UpdateUserHttpController {
 
   @Patch()
   @UseGuards(JwtAuthGuard)
-  async updateUser(@Request() req: { user: AuthenticatedUser }, @Body() body: UserDto) {
-    const { id } = req.user;
-
+  async updateUser(
+    @Request() { user: { id: userId } }: { user: AuthenticatedUser },
+    @Body() profile: UserProfileDto,
+  ): Promise<UserDto> {
     const user = await this.updateUserService.execute(
       new UpdateUserCommand({
-        userId: id,
-        profile: {
-          firstName: body.firstName,
-          lastName: body.lastName,
-          address: body.address,
-          phoneNumber: body.phoneNumber,
-        },
+        userId,
+        profile,
       }),
     );
 
-    return {
-      id: user.id,
-      email: user.email.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      phoneNumber: user.phoneNumber,
-      address: user.address,
-      currentScore: user.currentScore,
-      createdAt: user.createdAt,
-    };
+    return mapUserToDto(user);
   }
 }

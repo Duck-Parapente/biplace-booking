@@ -52,15 +52,14 @@ export class UserRepository implements UserRepositoryPort {
       return null;
     }
 
-    return UserEntity.fromPersistence(user.id, {
-      email: new Email({ email: user.email }),
-      externalAuthId: user.externalAuthId,
-      firstName: user.firstName ?? undefined,
-      lastName: user.lastName ?? undefined,
-      phoneNumber: user.phoneNumber ?? undefined,
-      address: user.address ?? undefined,
-      currentScore: user.currentScore,
-      createdAt: user.createdAt,
+    const { id, email, ...otherProps } = user;
+
+    return new UserEntity({
+      id,
+      props: {
+        email: new Email({ email }),
+        ...otherProps,
+      },
     });
   }
 }

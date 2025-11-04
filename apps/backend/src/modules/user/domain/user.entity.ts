@@ -21,10 +21,6 @@ export class UserEntity extends AggregateRoot<UserProps> {
     return user;
   }
 
-  static fromPersistence(id: string, props: UserProps): UserEntity {
-    return new UserEntity({ id, props });
-  }
-
   get email() {
     return this.props.email;
   }
