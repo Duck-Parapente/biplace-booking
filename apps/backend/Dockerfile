@@ -7,24 +7,33 @@ RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists
 
 RUN npm install -g pnpm@8.15.4
 
-# Copy backend workspace manifest only (avoid monorepo complexity)
-COPY apps/backend/package.json ./package.json
+# Copy workspace configuration
+COPY pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY pnpm-lock.yaml ./pnpm-lock.yaml
+
+# Copy package.json files for workspace packages
+COPY apps/backend/package.json ./apps/backend/package.json
+COPY packages/shared/package.json ./packages/shared/package.json
 
 # Install dev + prod dependencies to build
 RUN pnpm install --frozen-lockfile || pnpm install
 
 # Copy Prisma config and schema, then generate client during build
-COPY apps/backend/prisma.config.ts ./prisma.config.ts
-COPY apps/backend/src/libs/database/prisma ./src/libs/database/prisma
-RUN pnpm exec prisma generate
+COPY apps/backend/prisma.config.ts ./apps/backend/prisma.config.ts
+COPY apps/backend/src/libs/database/prisma ./apps/backend/src/libs/database/prisma
+RUN cd apps/backend && pnpm exec prisma generate
 
-# Copy source & tsconfig
-COPY apps/backend/tsconfig.json ./tsconfig.json
-COPY apps/backend/src ./src
+# Copy shared package source
+COPY packages/shared/tsconfig.json ./packages/shared/tsconfig.json
+COPY packages/shared/src ./packages/shared/src
+RUN cd packages/shared && pnpm run build
 
-# Build (outputs dist/main.js)
-RUN pnpm run build
+# Copy backend source & tsconfig
+COPY apps/backend/tsconfig.json ./apps/backend/tsconfig.json
+COPY apps/backend/src ./apps/backend/src
+
+# Build backend (outputs dist/main.js)
+RUN cd apps/backend && pnpm run build
 
 FROM node:20-bookworm-slim AS prod
 WORKDIR /app
@@ -34,21 +43,32 @@ ENV NODE_ENV=production
 RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g pnpm@8.15.4
-COPY apps/backend/package.json ./package.json
+
+# Copy workspace configuration
+COPY pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY pnpm-lock.yaml ./pnpm-lock.yaml
 
+# Copy package.json files for workspace packages
+COPY apps/backend/package.json ./apps/backend/package.json
+COPY packages/shared/package.json ./packages/shared/package.json
+
 # Copy Prisma config and schema before installing dependencies
-COPY apps/backend/prisma.config.ts ./prisma.config.ts
-COPY apps/backend/src/libs/database/prisma ./src/libs/database/prisma
+COPY apps/backend/prisma.config.ts ./apps/backend/prisma.config.ts
+COPY apps/backend/src/libs/database/prisma ./apps/backend/src/libs/database/prisma
 
 # Install production dependencies (this will also postinstall prisma generate)
 RUN pnpm install --frozen-lockfile --prod --no-optional || pnpm install --prod --no-optional
 
 # Generate Prisma client in production stage
-RUN pnpm exec prisma generate
+RUN cd apps/backend && pnpm exec prisma generate
 
-COPY --from=build /app/dist ./dist
+# Copy built shared package from build stage
+COPY --from=build /app/packages/shared/dist ./packages/shared/dist
+
+# Copy built backend from build stage
+COPY --from=build /app/apps/backend/dist ./apps/backend/dist
+
 EXPOSE 3001
 USER node
 # Just run the app - migrations will be handled separately during deployment
-CMD ["node", "dist/main.js"]
+CMD ["node", "apps/backend/dist/main.js"]
