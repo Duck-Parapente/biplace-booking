@@ -34,6 +34,39 @@
         </div>
 
         <div>
+          <label for="currentScore" class="block text-sm font-medium text-secondary-600 mb-1">
+            Score actuel
+            <span class="relative inline-block ml-1">
+              <button
+                type="button"
+                @click="showScoreTooltip = !showScoreTooltip"
+                @mouseenter="showScoreTooltip = true"
+                @mouseleave="showScoreTooltip = false"
+                class="w-4 h-4 text-xs leading-4 text-center bg-blue-500 text-white rounded-full cursor-pointer hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                !
+              </button>
+              <div
+                v-if="showScoreTooltip"
+                @click.stop
+                class="absolute z-10 w-64 p-2 mt-1 text-xs text-white bg-gray-800 rounded shadow-lg left-0 sm:-translate-x-1/2 sm:left-1/2"
+              >
+                Votre score est mis à jour après chaque réservation. Plus vous réservez, plus votre
+                score augmente. Il est utilisé pour attribuer les parapentistes de manière
+                équitable.
+              </div>
+            </span>
+          </label>
+          <input
+            id="currentScore"
+            type="number"
+            :value="userData.currentScore || 0"
+            readonly
+            class="w-full px-3 py-2 bg-gray-50 text-gray-500"
+          />
+        </div>
+
+        <div>
           <label for="firstName" class="block text-sm font-medium text-secondary-600 mb-1">
             Prénom <span class="text-red-500">*</span>
           </label>
@@ -160,7 +193,23 @@ const validationErrors = ref<ValidationErrors>({
   phoneNumber: '',
 });
 
+const showScoreTooltip = ref(false);
+
+// Close tooltip when clicking outside
 onMounted(async () => {
+  const handleClickOutside = (event: MouseEvent) => {
+    const target = event.target as HTMLElement;
+    if (showScoreTooltip.value && !target.closest('.relative.inline-block')) {
+      showScoreTooltip.value = false;
+    }
+  };
+
+  document.addEventListener('click', handleClickOutside);
+
+  onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside);
+  });
+
   try {
     await getUser();
 

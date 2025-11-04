@@ -39,6 +39,7 @@ export interface User {
   lastName: string;
   address: string;
   phoneNumber: string;
+  currentScore?: number;
 }
 
 export interface ValidationErrors {
