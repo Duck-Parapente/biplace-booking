@@ -5,7 +5,7 @@ usage() {
   cat <<'EOF'
 Usage: scripts/deploy-image.sh <staging|prod>
 
-Automatically cleans previous local biplace-backend-*.tar.gz archives (stored in .tmp/) before building.
+Automatically cleans previous local *-biplace.tar.gz archives (stored in .tmp/) before building.
 
 Environment variables:
   REMOTE_HOST   SSH host (default: duck-tower)
@@ -17,10 +17,10 @@ Steps:
   0. verify clean working tree then checkout environment branch, fetch, hard reset
   (clean) remove old archives in .tmp/
   1. docker buildx build (loads image locally)
-  2. docker save | gzip -> .tmp/biplace-backend-<env>.tar.gz
+  2. docker save | gzip -> .tmp/<env>-biplace.tar.gz
   3. scp archive to remote host (unless SKIP_SCP set)
   4. remote git sync: git fetch origin && git reset --hard origin/<env>
-  5. remote restart: /srv/biplace-booking-<env>/infra/scripts/restart-app.sh <env>
+  5. remote restart: /srv/<env>-biplace/infra/scripts/restart-app.sh <env>
 EOF
   exit 1
 }
@@ -38,13 +38,13 @@ setup_paths() {
   REMOTE_HOST="${REMOTE_HOST:-duck-tower}"
   REMOTE_PATH="${REMOTE_PATH:-/srv}"
   PLATFORM="${BUILD_PLATFORM:-linux/amd64}"
-  REMOTE_APP_DIR="/srv/biplace-booking-${ENVIRONMENT}"
+  REMOTE_APP_DIR="/srv/${ENVIRONMENT}-biplace"
   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
   TMP_DIR="${ROOT_DIR}/.tmp"
   mkdir -p "${TMP_DIR}"
   IMAGE_TAG="biplace-backend:${ENVIRONMENT}"
-  ARCHIVE="${TMP_DIR}/biplace-backend-${ENVIRONMENT}.tar.gz"
+  ARCHIVE="${TMP_DIR}/${ENVIRONMENT}-biplace.tar.gz"
 }
 
 checkout_branch() {
@@ -71,8 +71,8 @@ checkout_branch() {
 }
 
 clean_archives() {
-  echo "[clean] Removing previous local archives (${TMP_DIR}/biplace-backend-*.tar.gz)..."
-  rm -f "${TMP_DIR}"/biplace-backend-*.tar.gz || true
+  echo "[clean] Removing previous local archives (${TMP_DIR}/*-biplace.tar.gz)..."
+  rm -f "${TMP_DIR}"/*-biplace.tar.gz || true
 }
 
 build_image() {

@@ -93,7 +93,7 @@ handle_running_containers() {
 # New: load pre-built image from /srv to minimize downtime
 load_prebuilt_image() {
     local env="$1"
-    local archive="/srv/biplace-backend-${env}.tar.gz"
+    local archive="/srv/${env}-biplace.tar.gz"
     log_info "📦 Attempting to load pre-built image: ${archive}"
     if [[ -f "${archive}" ]]; then
         if gunzip -c "${archive}" | docker load >/dev/null 2>&1; then

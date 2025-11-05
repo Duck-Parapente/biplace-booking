@@ -28,8 +28,8 @@ Rien de plus simple:
     IdentityFile ~/.ssh/aws-duck-tower.pem
     ```
 - Chaque environnement a son dossier spécifique:
-    - staging: `/srv/biplace-booking-staging`
-    - prod: `/srv/biplace-booking-prod`
+    - staging: `/srv/staging-biplace`
+    - prod: `/srv/prod-biplace`
 - Pour déployer un environnement, tu peux lancer `pnpm deploy:(staging|prod)` depuis ton local. Cette commande va principalement:
     - Build une image Docker avec le backend
     - L'uploader au bon endroit sur le serveur
