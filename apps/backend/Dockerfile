@@ -8,6 +8,7 @@ RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists
 RUN npm install -g pnpm@8.15.4
 
 # Copy workspace configuration
+COPY package.json ./package.json
 COPY pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY pnpm-lock.yaml ./pnpm-lock.yaml
 
@@ -45,6 +46,7 @@ RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists
 RUN npm install -g pnpm@8.15.4
 
 # Copy workspace configuration
+COPY package.json ./package.json
 COPY pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY pnpm-lock.yaml ./pnpm-lock.yaml
 
