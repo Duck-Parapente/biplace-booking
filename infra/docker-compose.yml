@@ -43,7 +43,7 @@ services:
     depends_on:
       - postgres
     # Run migrations before starting the app (in a single command to avoid pnpm overhead)
-    command: ['pnpm', 'run', 'start:prod']
+    command: ['sh', '-c', 'cd apps/backend && pnpm start:prod']
     restart: unless-stopped
     profiles: ['staging', 'prod']
     env_file:
