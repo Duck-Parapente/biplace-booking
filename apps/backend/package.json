@@ -5,12 +5,12 @@
   "scripts": {
     "dotenv": "dotenv -e ../../infra/.env",
     "dev": "pnpm dotenv -- ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/main.ts | pino-pretty",
-    "start": "node dist/apps/backend/src/main.js",
-    "build": "pnpm dotenv -- tsc -p tsconfig.json && tsc-alias",
+    "start": "node dist/src/main.js",
+    "build": "tsc -p tsconfig.json && tsc-alias",
     "test": "echo \"No tests configured\"",
-    "prisma:generate": "pnpm dotenv -- pnpm exec prisma generate",
+    "prisma:generate": "pnpm exec prisma generate",
     "prisma:migrate": "pnpm dotenv -- pnpm exec prisma migrate dev",
-    "prisma:deploy": "pnpm dotenv -- pnpm exec prisma migrate deploy",
+    "prisma:deploy": "pnpm exec prisma migrate deploy",
     "start:prod": "pnpm prisma:deploy && pnpm start"
   },
   "dependencies": {

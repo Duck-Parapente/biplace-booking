@@ -71,6 +71,6 @@ COPY --from=build /app/packages/shared/dist ./packages/shared/dist
 COPY --from=build /app/apps/backend/dist ./apps/backend/dist
 
 EXPOSE 3001
+WORKDIR /app/apps/backend
 USER node
-# Just run the app - migrations will be handled separately during deployment
-CMD ["node", "apps/backend/dist/main.js"]
+CMD ["pnpm", "start:prod"]
