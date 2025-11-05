@@ -9,7 +9,7 @@
     "build": "tsc -p tsconfig.json && tsc-alias",
     "test": "echo \"No tests configured\"",
     "prisma:generate": "pnpm exec prisma generate",
-    "prisma:migrate": "pnpm dotenv -- pnpm exec prisma migrate dev",
+    "prisma:migrate": "pnpm exec prisma migrate dev",
     "prisma:deploy": "pnpm exec prisma migrate deploy",
     "start:prod": "pnpm prisma:deploy && pnpm start"
   },
