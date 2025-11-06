@@ -87,6 +87,16 @@
             Se déconnecter
           </button>
         </nav>
+
+        <!-- Footer -->
+        <div class="pb-6 text-center">
+          <a
+            href="mailto:gestion.biplace.duckparapente@gmail.com"
+            class="text-secondary-600 text-sm hover:opacity-80 transition-opacity inline-block px-8 py-3"
+          >
+            Une question ou remarque ?
+          </a>
+        </div>
       </div>
     </Transition>
   </Teleport>
