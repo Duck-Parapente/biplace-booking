@@ -4,9 +4,10 @@
   >
     <NuxtLink
       to="/"
-      class="text-xl font-semibold hover:opacity-80 transition-opacity -my-2 py-2 -ml-2 pl-2 pr-4"
+      class="flex items-center gap-2 text-xl font-semibold hover:opacity-80 transition-opacity -my-2 py-2 -ml-2 pl-2 pr-4"
     >
-      Duck
+      <img src="/duck-logo.png" alt="Duck Logo" class="h-8 w-8" />
+      <span>Biplace</span>
     </NuxtLink>
 
     <div v-if="isAuthenticated" class="flex items-center gap-3">
