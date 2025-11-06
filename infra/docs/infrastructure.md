@@ -7,7 +7,7 @@
 
 Pour lancer le projet, il te faut:
 - docker avec le plugin compose (docker-compose est déprécié)
-- pour le serveur AWS, il faut en plus créer un réseau proxy `docker network create proxy` (valable uniquement pour une installation from scratch)
+- pour le serveur Contabo, il faut en plus créer un réseau proxy `docker network create proxy` (valable uniquement pour une installation from scratch)
 
 ### Comment développer en local?
 
@@ -25,7 +25,7 @@ Rien de plus simple:
     Hostname 52.47.156.66
     User ec2-user
     PreferredAuthentications publickey
-    IdentityFile ~/.ssh/aws-duck-tower.pem
+    IdentityFile ~/.ssh/duck-tower.pem
     ```
 - Chaque environnement a son dossier spécifique:
     - staging: `/srv/staging-biplace`
