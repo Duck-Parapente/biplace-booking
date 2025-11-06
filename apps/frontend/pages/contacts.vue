@@ -1,5 +1,5 @@
 <template>
-  <main class="flex-1 flex flex-col bg-gray-50 overflow-hidden">
+  <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
     <div class="flex-1 p-4 max-w-4xl mx-auto w-full flex flex-col min-h-0">
       <h2 class="text-2xl font-semibold mb-4 text-secondary-600">Contacts</h2>
 
@@ -22,7 +22,7 @@
           />
         </div>
 
-        <div v-if="filteredUsers.length > 0" class="space-y-3 flex-1 overflow-y-auto">
+        <div v-if="filteredUsers.length > 0" class="space-y-3 flex-1 min-h-0 overflow-y-auto">
           <div
             v-for="user in filteredUsers"
             :key="user.id"
@@ -33,6 +33,9 @@
                 <h3 class="text-lg font-semibold text-secondary-600">
                   {{ user.firstName }} {{ user.lastName }}
                 </h3>
+                <p v-if="user.address" class="text-xs text-gray-500 mt-1">
+                  {{ user.address }}
+                </p>
               </div>
 
               <div class="flex flex-col gap-2 sm:items-end">

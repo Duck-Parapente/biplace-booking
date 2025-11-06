@@ -1,6 +1,6 @@
 <template>
-  <main class="flex-1 flex flex-col bg-gray-50">
-    <div class="flex-1 p-4 max-w-xl mx-auto w-full flex flex-col">
+  <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
+    <div class="flex-1 p-4 max-w-xl mx-auto w-full flex flex-col min-h-0">
       <h2 class="text-2xl font-semibold mb-4 text-secondary-600">Mon Compte</h2>
 
       <div class="mb-6 p-3 bg-white border-l-4 border-blue-400 text-sm text-blue-800 shadow-sm">
