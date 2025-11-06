@@ -36,6 +36,21 @@ export const useUser = () => {
   };
 
   /**
+   * Fetch all users
+   */
+  const getUsers = async (): Promise<UserDto[]> => {
+    try {
+      const users = await callApi<UserDto[]>('/users');
+      return users;
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Impossible de charger la liste des utilisateurs';
+      console.error('Failed to fetch users:', err);
+      throw new Error(errorMessage);
+    }
+  };
+
+  /**
    * Check if the user's profile is complete
    */
   const isProfileComplete = (user: UserDto | null | undefined): boolean => {
@@ -117,6 +132,7 @@ export const useUser = () => {
     updateSuccess,
     // Methods
     getUser,
+    getUsers,
     updateUser,
     validateUserForm,
     isProfileComplete,
