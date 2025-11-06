@@ -62,4 +62,21 @@ export class UserRepository implements UserRepositoryPort {
       },
     });
   }
+
+  async findAll(): Promise<UserEntity[]> {
+    const users = await prisma.user.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return users.map((user) => {
+      const { id, email, ...otherProps } = user;
+      return new UserEntity({
+        id,
+        props: {
+          email: new Email({ email }),
+          ...otherProps,
+        },
+      });
+    });
+  }
 }
