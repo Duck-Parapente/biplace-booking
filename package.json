@@ -23,7 +23,7 @@
   },
   "scripts": {
     "build": "turbo build",
-    "dev": "turbo dev",
+    "dev": "pnpm dc:local up -d && turbo dev",
     "lint": "eslint apps",
     "lint:fix": "eslint apps --fix && prettier apps --write",
     "test": "turbo test",
