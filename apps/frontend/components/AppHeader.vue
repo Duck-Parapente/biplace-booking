@@ -63,6 +63,22 @@
 
         <!-- Menu content -->
         <nav class="flex-1 flex flex-col items-center justify-center gap-8">
+          <NuxtLink
+            to="/mon-compte"
+            class="text-secondary-600 text-2xl font-semibold hover:opacity-80 transition-opacity"
+            @click="isMenuOpen = false"
+          >
+            Mon compte
+          </NuxtLink>
+
+          <NuxtLink
+            to="/contacts"
+            class="text-secondary-600 text-2xl font-semibold hover:opacity-80 transition-opacity"
+            @click="isMenuOpen = false"
+          >
+            Contacts
+          </NuxtLink>
+
           <button
             class="bg-secondary-600 text-primary-400 transition text-lg px-6 py-3 rounded hover:opacity-90"
             @click="handleLogout()"
