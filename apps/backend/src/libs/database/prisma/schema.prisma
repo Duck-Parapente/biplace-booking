@@ -26,4 +26,15 @@ model User {
     address        String?
     currentScore   Int      @default(0)
     createdAt      DateTime @default(now())
+    ownedPacks     Pack[]
+}
+
+model Pack {
+    id           String   @id @default(uuid())
+    ownerId      String?
+    owner        User?    @relation(fields: [ownerId], references: [id])
+    label        String
+    flightsHours Int
+    flightsCount Int
+    createdAt    DateTime @default(now())
 }
