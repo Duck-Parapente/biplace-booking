@@ -4,6 +4,8 @@ import { Guard } from '@libs/guards/primitive.guard';
 
 import { ArgumentNotProvidedException } from '../exceptions';
 
+import { UUID } from './uuid.value-object';
+
 type DomainEventMetadata = {
   /** Timestamp when this domain event occurred */
   readonly timestamp: number;
@@ -24,7 +26,7 @@ type DomainEventMetadata = {
 };
 
 export type DomainEventProps<T> = Omit<T, 'id' | 'metadata'> & {
-  aggregateId: string;
+  aggregateId: UUID;
   metadata?: DomainEventMetadata;
 };
 
@@ -32,7 +34,7 @@ export abstract class DomainEvent {
   public readonly id: string;
 
   /** Aggregate ID where domain event occurred */
-  public readonly aggregateId: string;
+  public readonly aggregateId: UUID;
 
   public readonly metadata: DomainEventMetadata;
 

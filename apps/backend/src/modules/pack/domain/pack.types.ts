@@ -1,5 +1,7 @@
+import { UUID } from '@libs/ddd/uuid.value-object';
+
 export interface PackProfile {
-  ownerId: string;
+  ownerId: UUID;
   label: string;
   flightsHours?: number;
   flightsCount?: number;

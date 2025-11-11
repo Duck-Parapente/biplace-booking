@@ -1,3 +1,4 @@
+import { UUID } from '@libs/ddd/uuid.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { Roles } from '@libs/guards/roles.decorator';
 import { UserRole } from '@libs/guards/roles.enum';
@@ -19,7 +20,10 @@ export class CreatePackHttpController {
   @Post()
   async syncExternalUser(@Body() body: CreatePackDto) {
     const command = new CreatePackCommand({
-      profile: body,
+      profile: {
+        ...body,
+        ownerId: new UUID({ uuid: body.ownerId }),
+      },
     });
 
     await this.createPackService.execute(command);

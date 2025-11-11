@@ -12,7 +12,7 @@ export class EventEmitter implements EventEmitterPort {
     const { aggregateId, metadata, ...payload } = domainEvent;
     await prisma.event.create({
       data: {
-        aggregateId,
+        aggregateId: aggregateId.uuid,
         name: domainEvent.constructor.name,
         payload,
         metadata,

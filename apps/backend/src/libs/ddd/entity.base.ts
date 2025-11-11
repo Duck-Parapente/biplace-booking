@@ -6,7 +6,9 @@ import {
   ArgumentOutOfRangeException,
 } from '../exceptions';
 
-export type AggregateID = string;
+import { UUID } from './uuid.value-object';
+
+export type AggregateID = UUID;
 
 export interface BaseEntityProps {
   id: AggregateID;

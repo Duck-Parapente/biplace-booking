@@ -4,7 +4,7 @@ import { UserEntity } from '../domain/user.entity';
 
 export function mapUserToDto(user: UserEntity): UserDto {
   return {
-    id: user.id,
+    id: user.id.uuid,
     email: user.email.email,
     externalAuthId: user.externalAuthId,
     firstName: user.firstName ?? '',

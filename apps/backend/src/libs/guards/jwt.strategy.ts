@@ -1,5 +1,6 @@
 // auth/jwt.strategy.ts
 import { prisma } from '@libs/database/prisma/prisma';
+import { UUID } from '@libs/ddd/uuid.value-object';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
@@ -21,7 +22,7 @@ export interface JwtPayload {
 }
 
 export interface AuthenticatedUser {
-  id: string;
+  id: UUID;
   roles: UserRole[];
 }
 
@@ -58,6 +59,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    return { id: user.id, roles: payload[DUCK_ROLES_CLAIM] };
+    return { id: new UUID({ uuid: user.id }), roles: payload[DUCK_ROLES_CLAIM] };
   }
 }

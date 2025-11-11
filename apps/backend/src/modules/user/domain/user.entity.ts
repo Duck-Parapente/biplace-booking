@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto';
 
 import { AggregateRoot, AggregateID } from '@libs/ddd';
+import { UUID } from '@libs/ddd/uuid.value-object';
 
 import { UserCreatedDomainEvent } from './events/user-created.domain-event';
 import { UserUpdatedDomainEvent } from './events/user-updated.domain-event';
@@ -10,7 +11,7 @@ export class UserEntity extends AggregateRoot<UserProps> {
   protected readonly _id: AggregateID;
 
   static create(props: CreateUserProps): UserEntity {
-    const id = randomUUID();
+    const id = new UUID({ uuid: randomUUID() });
     const user = new UserEntity({ id, props });
     user.addEvent(
       new UserCreatedDomainEvent({

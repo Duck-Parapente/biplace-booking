@@ -20,10 +20,5 @@ export interface UserProps extends UserProfile {
   createdAt?: Date;
 }
 
-export interface CreateUserProps {
-  email: Email;
-  externalAuthId: string;
-}
-
-// Updating user only touches profile fields for now
+export type CreateUserProps = ExternalUser;
 export type UpdateUserProps = UserProfile;

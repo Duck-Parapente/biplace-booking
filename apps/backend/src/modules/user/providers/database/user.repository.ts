@@ -1,5 +1,6 @@
 import { prisma } from '@libs/database/prisma/prisma';
 import { Email } from '@libs/ddd';
+import { UUID, UuidProps } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { UserRepositoryPort } from '@modules/user/domain/ports/user.repository.port';
@@ -18,7 +19,7 @@ export class UserRepository implements UserRepositoryPort {
   async create(user: UserEntity): Promise<void> {
     await prisma.user.create({
       data: {
-        id: user.id,
+        id: user.id.uuid,
         email: user.email.email,
         externalAuthId: user.externalAuthId,
       },
@@ -30,7 +31,7 @@ export class UserRepository implements UserRepositoryPort {
 
   async update(user: UserEntity): Promise<void> {
     await prisma.user.update({
-      where: { id: user.id },
+      where: { id: user.id.uuid },
       data: {
         firstName: user.firstName,
         lastName: user.lastName,
@@ -43,21 +44,22 @@ export class UserRepository implements UserRepositoryPort {
     this.logger.log(`User updated: ${user.id}`);
   }
 
-  async findById(userId: string): Promise<UserEntity | null> {
+  async findById(userId: UuidProps): Promise<UserEntity | null> {
     const user = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: userId.uuid },
     });
 
     if (!user) {
       return null;
     }
 
-    const { id, email, ...otherProps } = user;
+    const { id, email, externalAuthId, ...otherProps } = user;
 
     return new UserEntity({
-      id,
+      id: new UUID({ uuid: id }),
       props: {
         email: new Email({ email }),
+        externalAuthId,
         ...otherProps,
       },
     });
@@ -69,11 +71,12 @@ export class UserRepository implements UserRepositoryPort {
     });
 
     return users.map((user) => {
-      const { id, email, ...otherProps } = user;
+      const { id, email, externalAuthId, ...otherProps } = user;
       return new UserEntity({
-        id,
+        id: new UUID({ uuid: id }),
         props: {
           email: new Email({ email }),
+          externalAuthId,
           ...otherProps,
         },
       });

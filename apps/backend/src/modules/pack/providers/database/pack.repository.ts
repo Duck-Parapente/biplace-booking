@@ -17,12 +17,12 @@ export class PackRepository implements PackRepositoryPort {
   async create(pack: PackEntity): Promise<void> {
     await prisma.pack.create({
       data: {
-        id: pack.id,
+        id: pack.id.uuid,
         label: pack.label,
         flightsHours: pack.flightsHours ?? 0,
         flightsCount: pack.flightsCount ?? 0,
         owner: {
-          connect: { id: pack.ownerId },
+          connect: { id: pack.ownerId.uuid },
         },
       },
     });
