@@ -1,0 +1,28 @@
+meta {
+  name: pack/create
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{BACKEND_DOMAIN}}/pack/create
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: 
+}
+
+body:json {
+  {
+    "label": "label test",
+    "ownerId": "6f3bcb61-0713-44f6-8b1f-b4f9963d2aba",
+    "flightsHours": 2
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
