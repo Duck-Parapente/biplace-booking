@@ -1,6 +1,7 @@
 import { EVENT_EMITTER } from '@app.di-tokens';
 import { EventEmitter } from '@libs/events/database/event-emitter';
 import { JwtStrategy } from '@libs/guards/jwt.strategy';
+import { PackModule } from '@modules/pack/pack.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
@@ -28,6 +29,7 @@ import { UserModule } from './modules/user/user.module';
       },
     }),
     UserModule,
+    PackModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
