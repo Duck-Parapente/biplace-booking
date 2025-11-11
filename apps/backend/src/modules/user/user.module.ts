@@ -13,8 +13,7 @@ import { SyncExternalUserService } from './commands/sync-external-user.service';
 import { UpdateUserHttpController } from './commands/update-user.http.controller';
 import { UpdateUserService } from './commands/update-user.service';
 import { UserRepository } from './providers/database/user.repository';
-import { IdentityProvider } from './providers/identity/identity.provider';
-import { EVENT_EMITTER, IDENTITY_PROVIDER, USER_REPOSITORY } from './user.di-tokens';
+import { EVENT_EMITTER, USER_REPOSITORY } from './user.di-tokens';
 
 @Module({
   imports: [
@@ -35,7 +34,6 @@ import { EVENT_EMITTER, IDENTITY_PROVIDER, USER_REPOSITORY } from './user.di-tok
     GetUsersService,
     UpdateUserService,
     JwtStrategy,
-    { provide: IDENTITY_PROVIDER, useClass: IdentityProvider },
     { provide: USER_REPOSITORY, useClass: UserRepository },
     { provide: 'USER_REPOSITORY_FOR_AUTH', useClass: UserRepository },
     { provide: EVENT_EMITTER, useClass: EventEmitter },
