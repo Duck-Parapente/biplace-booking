@@ -1,3 +1,5 @@
+import { EventEmitter } from '@libs/events/database/event-emitter';
+import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { Module } from '@nestjs/common';
 
 import { CreatePackHttpController } from './commands/create-pack.http.controller';
@@ -8,6 +10,10 @@ import { PackRepository } from './providers/database/pack.repository';
 @Module({
   imports: [],
   controllers: [CreatePackHttpController],
-  providers: [CreatePackService, { provide: PACK_REPOSITORY, useClass: PackRepository }],
+  providers: [
+    CreatePackService,
+    { provide: PACK_REPOSITORY, useClass: PackRepository },
+    { provide: EVENT_EMITTER, useClass: EventEmitter },
+  ],
 })
 export class PackModule {}

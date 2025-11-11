@@ -1,6 +1,6 @@
-import { EVENT_EMITTER } from '@app.di-tokens';
 import { prisma } from '@libs/database/prisma/prisma';
 import { Email } from '@libs/ddd';
+import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { UserRepositoryPort } from '@modules/user/domain/ports/user.repository.port';
 import { UserEntity } from '@modules/user/domain/user.entity';
