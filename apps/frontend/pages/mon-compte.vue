@@ -3,7 +3,10 @@
     <div class="flex-1 p-4 max-w-xl mx-auto w-full flex flex-col min-h-0">
       <h2 class="text-2xl font-semibold mb-4 text-secondary-600">Mon Compte</h2>
 
-      <div class="mb-6 p-3 bg-white border-l-4 border-blue-400 text-sm text-blue-800 shadow-sm">
+      <div
+        v-if="!isProfileComplete(userData)"
+        class="mb-6 p-3 bg-white border-l-4 border-blue-400 text-sm text-blue-800 shadow-sm"
+      >
         <p class="font-medium mb-1">ℹ️ Pourquoi ces informations ?</p>
         <p class="text-xs">
           Votre adresse et numéro de téléphone sont nécessaires pour faciliter les échanges entre
@@ -179,6 +182,7 @@ const {
   getUser,
   updateUser: updateUserData,
   validateUserForm,
+  isProfileComplete,
 } = useUser();
 
 const formData = ref<UserFormData>({
