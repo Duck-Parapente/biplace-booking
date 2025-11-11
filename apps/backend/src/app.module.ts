@@ -1,4 +1,7 @@
+import { JwtStrategy } from '@libs/guards/jwt.strategy';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
 import { LoggerModule } from 'nestjs-pino';
 
 import { AppController } from './app.controller';
@@ -23,8 +26,12 @@ import { UserModule } from './modules/user/user.module';
       },
     }),
     UserModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [JwtStrategy],
 })
 export class AppModule {}

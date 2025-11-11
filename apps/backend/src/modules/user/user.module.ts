@@ -1,8 +1,5 @@
 import { EventEmitter } from '@libs/events/database/event-emitter';
-import { JwtStrategy } from '@libs/guards/jwt.strategy';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { PassportModule } from '@nestjs/passport';
 
 import { GetUserHttpController } from './commands/get-user.http.controller';
 import { GetUserService } from './commands/get-user.service';
@@ -16,12 +13,7 @@ import { UserRepository } from './providers/database/user.repository';
 import { EVENT_EMITTER, USER_REPOSITORY } from './user.di-tokens';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
-  ],
+  imports: [],
   controllers: [
     SyncExternalUserHttpController,
     GetUserHttpController,
@@ -33,7 +25,6 @@ import { EVENT_EMITTER, USER_REPOSITORY } from './user.di-tokens';
     GetUserService,
     GetUsersService,
     UpdateUserService,
-    JwtStrategy,
     { provide: USER_REPOSITORY, useClass: UserRepository },
     { provide: 'USER_REPOSITORY_FOR_AUTH', useClass: UserRepository },
     { provide: EVENT_EMITTER, useClass: EventEmitter },
