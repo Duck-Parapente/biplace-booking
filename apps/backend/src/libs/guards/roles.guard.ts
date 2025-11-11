@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import { DUCK_ROLES_CLAIM, JwtPayload } from './jwt.strategy';
+import { AuthenticatedUser } from './jwt.strategy';
 import { ROLES_KEY } from './roles.decorator';
 import { UserRole } from './roles.enum';
 
@@ -20,13 +20,13 @@ export class RolesGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const user = request.user as JwtPayload;
+    const user = request.user as AuthenticatedUser;
 
     if (!user) {
       throw new ForbiddenException('User not authenticated');
     }
 
-    const userRoles = user[DUCK_ROLES_CLAIM] || [];
+    const userRoles = user.roles || [];
 
     const hasRole = requiredRoles.some((role) => userRoles.includes(role));
 

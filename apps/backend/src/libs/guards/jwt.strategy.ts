@@ -22,6 +22,7 @@ export interface JwtPayload {
 
 export interface AuthenticatedUser {
   id: string;
+  roles: UserRole[];
 }
 
 @Injectable()
@@ -57,6 +58,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    return { id: user.id };
+    return { id: user.id, roles: payload[DUCK_ROLES_CLAIM] };
   }
 }
