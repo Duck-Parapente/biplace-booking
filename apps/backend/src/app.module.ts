@@ -1,3 +1,5 @@
+import { EVENT_EMITTER } from '@app.di-tokens';
+import { EventEmitter } from '@libs/events/database/event-emitter';
 import { JwtStrategy } from '@libs/guards/jwt.strategy';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -32,6 +34,6 @@ import { UserModule } from './modules/user/user.module';
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   controllers: [HealthController],
-  providers: [JwtStrategy],
+  providers: [JwtStrategy, { provide: EVENT_EMITTER, useClass: EventEmitter }],
 })
 export class AppModule {}

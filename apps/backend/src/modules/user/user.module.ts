@@ -1,4 +1,3 @@
-import { EventEmitter } from '@libs/events/database/event-emitter';
 import { Module } from '@nestjs/common';
 
 import { GetUserHttpController } from './commands/get-user.http.controller';
@@ -10,7 +9,7 @@ import { SyncExternalUserService } from './commands/sync-external-user.service';
 import { UpdateUserHttpController } from './commands/update-user.http.controller';
 import { UpdateUserService } from './commands/update-user.service';
 import { UserRepository } from './providers/database/user.repository';
-import { EVENT_EMITTER, USER_REPOSITORY } from './user.di-tokens';
+import { USER_REPOSITORY } from './user.di-tokens';
 
 @Module({
   imports: [],
@@ -27,7 +26,6 @@ import { EVENT_EMITTER, USER_REPOSITORY } from './user.di-tokens';
     UpdateUserService,
     { provide: USER_REPOSITORY, useClass: UserRepository },
     { provide: 'USER_REPOSITORY_FOR_AUTH', useClass: UserRepository },
-    { provide: EVENT_EMITTER, useClass: EventEmitter },
   ],
 })
 export class UserModule {}
