@@ -2,8 +2,8 @@ import { Controller, Get } from '@nestjs/common';
 import { Logger } from '@nestjs/common';
 
 @Controller()
-export class AppController {
-  private readonly logger = new Logger(AppController.name);
+export class HealthController {
+  private readonly logger = new Logger(HealthController.name);
   @Get('health')
   health() {
     this.logger.warn('Health check requested');

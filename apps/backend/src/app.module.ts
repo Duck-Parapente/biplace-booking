@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { LoggerModule } from 'nestjs-pino';
 
-import { AppController } from './app.controller';
+import { HealthController } from './health.controller';
 import { UserModule } from './modules/user/user.module';
 
 @Module({
@@ -31,7 +31,7 @@ import { UserModule } from './modules/user/user.module';
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
-  controllers: [AppController],
+  controllers: [HealthController],
   providers: [JwtStrategy],
 })
 export class AppModule {}
