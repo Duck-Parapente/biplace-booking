@@ -97,9 +97,10 @@
 </template>
 
 <script setup lang="ts">
+import { Roles } from 'shared';
 import { computed, ref } from 'vue';
 
-import { Roles, useAuth } from '~/composables/useAuth';
+import { useAuth } from '~/composables/useAuth';
 
 const { logout, isAuthenticated, hasRole } = useAuth();
 const isMenuOpen = ref(false);

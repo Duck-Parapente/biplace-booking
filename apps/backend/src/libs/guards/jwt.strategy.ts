@@ -6,10 +6,10 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import * as jwksRsa from 'jwks-rsa';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { DUCK_ROLES_CLAIM } from 'shared';
 
 import { UserRole } from './roles.enum';
 
-export const DUCK_ROLES_CLAIM = 'biplace-duck-roles';
 export interface JwtPayload {
   sub: string;
   email?: string;

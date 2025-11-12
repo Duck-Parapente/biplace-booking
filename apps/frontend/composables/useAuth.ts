@@ -1,10 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-vue';
-
-const DUCK_ROLES_CLAIM = 'biplace-duck-roles';
-export enum Roles {
-  ADMIN = 'ADMIN',
-  MANAGER = 'MANAGER',
-}
+import { DUCK_ROLES_CLAIM, type Roles } from 'shared';
 
 export interface UseAuth {
   login: () => Promise<void>;
