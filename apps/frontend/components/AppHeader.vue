@@ -65,19 +65,13 @@
         <!-- Menu content -->
         <nav class="flex-1 flex flex-col items-center justify-center gap-8">
           <NuxtLink
-            to="/mon-compte"
+            v-for="item in visibleMenuItems"
+            :key="item.path"
+            :to="item.path"
             class="text-secondary-600 text-2xl font-semibold hover:opacity-80 transition-opacity"
             @click="isMenuOpen = false"
           >
-            Mon compte
-          </NuxtLink>
-
-          <NuxtLink
-            to="/contacts"
-            class="text-secondary-600 text-2xl font-semibold hover:opacity-80 transition-opacity"
-            @click="isMenuOpen = false"
-          >
-            Contacts
+            {{ item.label }}
           </NuxtLink>
 
           <button
@@ -103,12 +97,31 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
-import { useAuth } from '~/composables/useAuth';
+import { Roles, useAuth } from '~/composables/useAuth';
 
-const { logout, isAuthenticated } = useAuth();
+const { logout, isAuthenticated, hasRole } = useAuth();
 const isMenuOpen = ref(false);
+
+interface MenuItem {
+  path: string;
+  label: string;
+  requiresRole?: Roles;
+}
+
+const menuItems: MenuItem[] = [
+  { path: '/mon-compte', label: 'Mon compte' },
+  { path: '/contacts', label: 'Contacts' },
+  { path: '/gestion-packs', label: 'Gestion des Packs', requiresRole: Roles.ADMIN },
+];
+
+const visibleMenuItems = computed(() => {
+  return menuItems.filter((item) => {
+    if (!item.requiresRole) return true;
+    return hasRole(item.requiresRole);
+  });
+});
 
 const handleLogout = () => {
   isMenuOpen.value = false;
