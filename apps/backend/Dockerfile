@@ -25,8 +25,7 @@ COPY apps/backend/src/libs/database/prisma ./apps/backend/src/libs/database/pris
 RUN cd apps/backend && pnpm exec prisma generate
 
 # Copy shared package source
-COPY packages/shared/tsconfig.json ./packages/shared/tsconfig.json
-COPY packages/shared/src ./packages/shared/src
+COPY packages/shared ./packages/shared
 RUN cd packages/shared && pnpm run build
 
 # Copy backend source & tsconfig
