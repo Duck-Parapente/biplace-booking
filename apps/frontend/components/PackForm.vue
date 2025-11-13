@@ -35,7 +35,7 @@
     </div>
 
     <div v-if="success" class="p-3 bg-primary-400/20 text-secondary-600 text-sm">
-      <p>✓ Pack {{ mode === 'edit' ? 'modifié' : 'créé' }} avec succès</p>
+      <p>{{ wordings.successMessage }}</p>
     </div>
 
     <div class="flex gap-3 pt-2">
@@ -44,15 +44,7 @@
         :disabled="submitting"
         class="flex-1 bg-secondary-600 text-primary-400 hover:bg-secondary-700 transition text-sm px-4 py-2 rounded disabled:opacity-50"
       >
-        {{
-          submitting
-            ? mode === 'edit'
-              ? 'Modification...'
-              : 'Création...'
-            : mode === 'edit'
-              ? 'Modifier'
-              : 'Créer'
-        }}
+        {{ submitting ? wordings.submittingButton : wordings.submitButton }}
       </button>
       <button
         type="button"
@@ -68,18 +60,18 @@
 <script setup lang="ts">
 import type { CreatePackDto, UserDto, UpdatePackDto } from 'shared';
 
+import type { PackFormWordings } from '~/composables/usePack';
+
 interface Props {
   users: UserDto[];
   submitting: boolean;
   error: string | null;
   success: boolean;
   modelValue: CreatePackDto | UpdatePackDto;
-  mode?: 'create' | 'edit';
+  wordings: PackFormWordings;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  mode: 'create',
-});
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
   submit: [];
@@ -108,7 +100,7 @@ const handleOwnerSelect = (userId: string) => {
 };
 
 watch(ownerSearch, (newValue) => {
-  if (!newValue && props.mode === 'create') {
+  if (!newValue) {
     emit('update:modelValue', { ...localForm.value, ownerId: '' });
   }
 });
@@ -121,7 +113,7 @@ watch(
       if (user) {
         ownerSearch.value = getUserDisplayName(user);
       }
-    } else if (!ownerId && props.mode === 'create') {
+    } else if (!ownerId) {
       ownerSearch.value = '';
     }
   },

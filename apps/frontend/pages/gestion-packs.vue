@@ -59,44 +59,25 @@
       </div>
     </div>
 
-    <!-- Create Pack Modal -->
+    <!-- Pack Modal -->
     <div
-      v-if="showCreateModal"
+      v-if="showModal"
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-      @click.self="closeCreatePackModal"
+      @click.self="closeModal"
     >
       <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-        <h3 class="text-xl font-semibold mb-4 text-secondary-600">Ajouter un pack</h3>
+        <h3 class="text-xl font-semibold mb-4 text-secondary-600">
+          {{ currentWordings.modalTitle }}
+        </h3>
         <PackForm
           v-model="packForm"
           :users="users"
-          :submitting="creating"
-          :error="createError"
-          :success="createSuccess"
-          mode="create"
-          @submit="createPack"
-          @cancel="closeCreatePackModal"
-        />
-      </div>
-    </div>
-
-    <!-- Edit Pack Modal -->
-    <div
-      v-if="showEditModal"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-      @click.self="closeEditPackModal"
-    >
-      <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-        <h3 class="text-xl font-semibold mb-4 text-secondary-600">Modifier le pack</h3>
-        <PackForm
-          v-model="editPackForm"
-          :users="users"
-          :submitting="editing"
-          :error="editError"
-          :success="editSuccess"
-          mode="edit"
-          @submit="updatePack"
-          @cancel="closeEditPackModal"
+          :submitting="submitting"
+          :error="submitError"
+          :success="submitSuccess"
+          :wordings="currentWordings"
+          @submit="submitPack"
+          @cancel="closeModal"
         />
       </div>
     </div>
@@ -114,22 +95,17 @@ const {
   packs,
   loading,
   error,
-  showCreateModal,
-  showEditModal,
-  creating,
-  editing,
-  createError,
-  editError,
-  createSuccess,
-  editSuccess,
+  showModal,
+  modalMode,
+  submitting,
+  submitError,
+  submitSuccess,
   packForm,
-  editPackForm,
+  currentWordings,
   openCreatePackModal,
-  closeCreatePackModal,
   openEditPackModal,
-  closeEditPackModal,
-  createPack,
-  updatePack,
+  closeModal,
+  submitPack,
   initializePacks,
 } = usePack();
 

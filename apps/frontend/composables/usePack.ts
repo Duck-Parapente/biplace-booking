@@ -1,29 +1,70 @@
 import type { CreatePackDto, PackDto, UpdatePackDto } from 'shared';
 
+enum PackOperationMode {
+  CREATE = 'create',
+  EDIT = 'edit',
+}
+
+interface PackOperationConfig {
+  endpoint: (id?: string) => string;
+  method: 'POST' | 'PATCH';
+  errorMessage: string;
+  successMessage: string;
+}
+
+interface PackFormWordings {
+  modalTitle: string;
+  submitButton: string;
+  submittingButton: string;
+  successMessage: string;
+}
+
+const PACK_OPERATION_CONFIG: Record<PackOperationMode, PackOperationConfig> = {
+  [PackOperationMode.CREATE]: {
+    endpoint: () => '/pack/create',
+    method: 'POST',
+    errorMessage: 'Impossible de créer le pack',
+    successMessage: 'Pack créé avec succès',
+  },
+  [PackOperationMode.EDIT]: {
+    endpoint: (id?: string) => `/pack/${id}`,
+    method: 'PATCH',
+    errorMessage: 'Impossible de modifier le pack',
+    successMessage: 'Pack modifié avec succès',
+  },
+};
+
+const PACK_FORM_WORDINGS: Record<PackOperationMode, PackFormWordings> = {
+  [PackOperationMode.CREATE]: {
+    modalTitle: 'Ajouter un pack',
+    submitButton: 'Créer',
+    submittingButton: 'Création...',
+    successMessage: '✓ Pack créé avec succès',
+  },
+  [PackOperationMode.EDIT]: {
+    modalTitle: 'Modifier le pack',
+    submitButton: 'Modifier',
+    submittingButton: 'Modification...',
+    successMessage: '✓ Pack modifié avec succès',
+  },
+};
+
 export const usePack = () => {
   const { callApi } = useApi();
 
   const packs = ref<PackDto[]>([]);
   const loading = ref(false);
   const error = ref<string | null>(null);
-  const showCreateModal = ref(false);
-  const showEditModal = ref(false);
-  const creating = ref(false);
-  const editing = ref(false);
-  const createError = ref<string | null>(null);
-  const editError = ref<string | null>(null);
-  const createSuccess = ref(false);
-  const editSuccess = ref(false);
+
+  // Unified modal state
+  const showModal = ref(false);
+  const modalMode = ref<PackOperationMode>(PackOperationMode.CREATE);
+  const submitting = ref(false);
+  const submitError = ref<string | null>(null);
+  const submitSuccess = ref(false);
   const editingPackId = ref<string | null>(null);
 
-  const packForm = ref<CreatePackDto>({
-    label: '',
-    ownerId: '',
-    flightsHours: undefined,
-    flightsCount: undefined,
-  });
-
-  const editPackForm = ref<UpdatePackDto>({
+  const packForm = ref<CreatePackDto | UpdatePackDto>({
     label: '',
     ownerId: '',
     flightsHours: undefined,
@@ -31,9 +72,11 @@ export const usePack = () => {
   });
 
   const openCreatePackModal = () => {
-    showCreateModal.value = true;
-    createError.value = null;
-    createSuccess.value = false;
+    modalMode.value = PackOperationMode.CREATE;
+    showModal.value = true;
+    submitError.value = null;
+    submitSuccess.value = false;
+    editingPackId.value = null;
     // Reset form
     packForm.value = {
       label: '',
@@ -43,26 +86,23 @@ export const usePack = () => {
     };
   };
 
-  const closeCreatePackModal = () => {
-    showCreateModal.value = false;
+  const closeModal = () => {
+    showModal.value = false;
+    editingPackId.value = null;
   };
 
   const openEditPackModal = (pack: PackDto) => {
+    modalMode.value = PackOperationMode.EDIT;
     editingPackId.value = pack.id;
-    editPackForm.value = {
+    packForm.value = {
       label: pack.label,
       ownerId: pack.ownerId,
       flightsHours: pack.flightsHours,
       flightsCount: pack.flightsCount,
     };
-    showEditModal.value = true;
-    editError.value = null;
-    editSuccess.value = false;
-  };
-
-  const closeEditPackModal = () => {
-    showEditModal.value = false;
-    editingPackId.value = null;
+    showModal.value = true;
+    submitError.value = null;
+    submitSuccess.value = false;
   };
 
   const getPacks = async (): Promise<PackDto[]> => {
@@ -83,79 +123,47 @@ export const usePack = () => {
     }
   };
 
-  const createPack = async () => {
+  const submitPack = async () => {
     try {
-      creating.value = true;
-      createError.value = null;
-      createSuccess.value = false;
+      submitting.value = true;
+      submitError.value = null;
+      submitSuccess.value = false;
 
-      // Prepare the payload - only include optional fields if they have values
-      const payload: CreatePackDto = {
+      const config = PACK_OPERATION_CONFIG[modalMode.value];
+
+      // Validate pack ID for edit mode
+      if (modalMode.value === PackOperationMode.EDIT && !editingPackId.value) {
+        throw new Error('No pack ID for update');
+      }
+
+      const payload: CreatePackDto | UpdatePackDto = {
         label: packForm.value.label,
         ownerId: packForm.value.ownerId,
         flightsHours: packForm.value.flightsHours,
         flightsCount: packForm.value.flightsCount,
       };
 
-      await callApi('/pack/create', {
-        method: 'POST',
+      await callApi(config.endpoint(editingPackId.value ?? undefined), {
+        method: config.method,
         body: JSON.stringify(payload),
       });
 
-      createSuccess.value = true;
+      submitSuccess.value = true;
 
-      // Reload packs after creation
+      // Reload packs after creation/update
       await getPacks();
 
       // Close modal after a short delay
       setTimeout(() => {
-        closeCreatePackModal();
+        closeModal();
       }, 1500);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Impossible de créer le pack';
-      createError.value = errorMessage;
-      console.error('Failed to create pack:', err);
+      const config = PACK_OPERATION_CONFIG[modalMode.value];
+      const errorMessage = err instanceof Error ? err.message : config.errorMessage;
+      submitError.value = errorMessage;
+      console.error(`Failed to ${modalMode.value} pack:`, err);
     } finally {
-      creating.value = false;
-    }
-  };
-
-  const updatePack = async () => {
-    if (!editingPackId.value) return;
-
-    try {
-      editing.value = true;
-      editError.value = null;
-      editSuccess.value = false;
-
-      // Prepare the payload - only include fields that have values
-      const payload: UpdatePackDto = {
-        label: editPackForm.value.label,
-        ownerId: editPackForm.value.ownerId,
-        flightsHours: editPackForm.value.flightsHours,
-        flightsCount: editPackForm.value.flightsCount,
-      };
-
-      await callApi(`/pack/${editingPackId.value}`, {
-        method: 'PATCH',
-        body: JSON.stringify(payload),
-      });
-
-      editSuccess.value = true;
-
-      // Reload packs after update
-      await getPacks();
-
-      // Close modal after a short delay
-      setTimeout(() => {
-        closeEditPackModal();
-      }, 1500);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Impossible de modifier le pack';
-      editError.value = errorMessage;
-      console.error('Failed to update pack:', err);
-    } finally {
-      editing.value = false;
+      submitting.value = false;
     }
   };
 
@@ -163,27 +171,28 @@ export const usePack = () => {
     await getPacks();
   };
 
+  // Computed wording based on current mode
+  const currentWordings = computed(() => PACK_FORM_WORDINGS[modalMode.value]);
+
   return {
     packs,
     loading,
     error,
-    showCreateModal,
-    showEditModal,
-    creating,
-    editing,
-    createError,
-    editError,
-    createSuccess,
-    editSuccess,
+    showModal,
+    modalMode,
+    submitting,
+    submitError,
+    submitSuccess,
     packForm,
-    editPackForm,
+    currentWordings,
     getPacks,
     openCreatePackModal,
-    closeCreatePackModal,
     openEditPackModal,
-    closeEditPackModal,
-    createPack,
-    updatePack,
+    closeModal,
+    submitPack,
     initializePacks,
   };
 };
+
+// Export types and enums for use in components
+export { PackOperationMode, type PackFormWordings };
