@@ -22,9 +22,29 @@
             </button>
           </div>
 
-          <!-- Future: Pack list will be displayed here -->
-          <div class="text-gray-500 text-sm">
-            <p>La liste des packs sera affichée ici.</p>
+          <!-- Pack List -->
+          <div v-if="packs.length === 0" class="text-gray-500 text-sm">
+            <p>Aucun pack créé pour le moment.</p>
+          </div>
+
+          <div v-else class="space-y-3">
+            <div
+              v-for="pack in packs"
+              :key="pack.id"
+              class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition"
+            >
+              <div class="flex justify-between items-start">
+                <div class="flex-1">
+                  <h3 class="text-lg font-semibold text-secondary-600">{{ pack.label }}</h3>
+                  <div class="mt-2 text-sm text-gray-600">
+                    <p>
+                      <span class="font-medium">Propriétaire:</span>
+                      {{ getUserDisplayName(users.find((u) => u.id === pack.ownerId)) }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -60,6 +80,7 @@ definePageMeta({
 });
 
 const {
+  packs,
   loading,
   error,
   showCreateModal,
@@ -74,6 +95,7 @@ const {
 } = usePack();
 
 const { getUsers } = useUser();
+const { getUserDisplayName } = useUserHelpers();
 
 const users = ref<UserDto[]>([]);
 const loadingUsers = ref(false);

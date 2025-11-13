@@ -1,8 +1,9 @@
-import type { CreatePackDto } from 'shared';
+import type { CreatePackDto, PackDto } from 'shared';
 
 export const usePack = () => {
   const { callApi } = useApi();
 
+  const packs = ref<PackDto[]>([]);
   const loading = ref(false);
   const error = ref<string | null>(null);
   const showCreateModal = ref(false);
@@ -34,6 +35,24 @@ export const usePack = () => {
     showCreateModal.value = false;
   };
 
+  const getPacks = async (): Promise<PackDto[]> => {
+    try {
+      loading.value = true;
+      error.value = null;
+      const fetchedPacks = await callApi<PackDto[]>('/packs');
+      packs.value = fetchedPacks;
+      return fetchedPacks;
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Impossible de charger la liste des packs';
+      error.value = errorMessage;
+      console.error('Failed to fetch packs:', err);
+      throw new Error(errorMessage);
+    } finally {
+      loading.value = false;
+    }
+  };
+
   const createPack = async () => {
     try {
       creating.value = true;
@@ -55,6 +74,9 @@ export const usePack = () => {
 
       createSuccess.value = true;
 
+      // Reload packs after creation
+      await getPacks();
+
       // Close modal after a short delay
       setTimeout(() => {
         closeCreatePackModal();
@@ -68,12 +90,12 @@ export const usePack = () => {
     }
   };
 
-  const initializePacks = () => {
-    // Future: Load pack list here
-    loading.value = false;
+  const initializePacks = async () => {
+    await getPacks();
   };
 
   return {
+    packs,
     loading,
     error,
     showCreateModal,
@@ -81,6 +103,7 @@ export const usePack = () => {
     createError,
     createSuccess,
     packForm,
+    getPacks,
     openCreatePackModal,
     closeCreatePackModal,
     createPack,

@@ -82,13 +82,7 @@ const localForm = computed({
 });
 
 const ownerSearch = ref('');
-
-const getUserDisplayName = (user: UserDto): string => {
-  if (user.firstName && user.lastName) {
-    return `${user.firstName} ${user.lastName}`;
-  }
-  return user.email;
-};
+const { getUserDisplayName } = useUserHelpers();
 
 const userOptions = computed(() =>
   props.users.map((user) => ({
