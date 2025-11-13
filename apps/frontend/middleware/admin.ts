@@ -7,9 +7,7 @@ export default defineNuxtRouteMiddleware(async () => {
     return;
   }
 
-  // Check if user has ADMIN role
   if (!hasRole(UserRoles.ADMIN)) {
-    // Redirect to home if not admin
     return navigateTo('/');
   }
 });
