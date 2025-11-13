@@ -35,7 +35,7 @@
     </div>
 
     <div v-if="success" class="p-3 bg-primary-400/20 text-secondary-600 text-sm">
-      <p>✓ Pack créé avec succès</p>
+      <p>✓ Pack {{ mode === 'edit' ? 'modifié' : 'créé' }} avec succès</p>
     </div>
 
     <div class="flex gap-3 pt-2">
@@ -44,7 +44,15 @@
         :disabled="submitting"
         class="flex-1 bg-secondary-600 text-primary-400 hover:bg-secondary-700 transition text-sm px-4 py-2 rounded disabled:opacity-50"
       >
-        {{ submitting ? 'Création...' : 'Créer' }}
+        {{
+          submitting
+            ? mode === 'edit'
+              ? 'Modification...'
+              : 'Création...'
+            : mode === 'edit'
+              ? 'Modifier'
+              : 'Créer'
+        }}
       </button>
       <button
         type="button"
@@ -58,22 +66,25 @@
 </template>
 
 <script setup lang="ts">
-import type { CreatePackDto, UserDto } from 'shared';
+import type { CreatePackDto, UserDto, UpdatePackDto } from 'shared';
 
 interface Props {
   users: UserDto[];
   submitting: boolean;
   error: string | null;
   success: boolean;
-  modelValue: CreatePackDto;
+  modelValue: CreatePackDto | UpdatePackDto;
+  mode?: 'create' | 'edit';
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  mode: 'create',
+});
 
 const emit = defineEmits<{
   submit: [];
   cancel: [];
-  'update:modelValue': [value: CreatePackDto];
+  'update:modelValue': [value: CreatePackDto | UpdatePackDto];
 }>();
 
 const localForm = computed({
@@ -97,7 +108,7 @@ const handleOwnerSelect = (userId: string) => {
 };
 
 watch(ownerSearch, (newValue) => {
-  if (!newValue) {
+  if (!newValue && props.mode === 'create') {
     emit('update:modelValue', { ...localForm.value, ownerId: '' });
   }
 });
@@ -110,7 +121,7 @@ watch(
       if (user) {
         ownerSearch.value = getUserDisplayName(user);
       }
-    } else if (!ownerId) {
+    } else if (!ownerId && props.mode === 'create') {
       ownerSearch.value = '';
     }
   },

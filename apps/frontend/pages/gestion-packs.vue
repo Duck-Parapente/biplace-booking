@@ -11,17 +11,8 @@
         <p><strong>Erreur:</strong> {{ error }}</p>
       </div>
 
-      <div v-else class="flex-1 overflow-y-auto">
+      <div v-else class="flex-1 overflow-y-auto pb-20">
         <div class="bg-white p-4 rounded-lg shadow-sm">
-          <div class="mb-6">
-            <button
-              @click="openCreatePackModal"
-              class="bg-secondary-600 text-primary-400 hover:bg-secondary-700 transition text-sm px-4 py-2 rounded"
-            >
-              Ajouter un pack
-            </button>
-          </div>
-
           <!-- Pack List -->
           <div v-if="packs.length === 0" class="text-gray-500 text-sm">
             <p>Aucun pack créé pour le moment.</p>
@@ -43,10 +34,28 @@
                     </p>
                   </div>
                 </div>
+                <button
+                  @click="openEditPackModal(pack)"
+                  class="ml-4 bg-blue-600 text-white hover:bg-blue-700 transition text-sm px-3 py-1 rounded"
+                >
+                  Modifier
+                </button>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Sticky Bottom Button -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg">
+      <div class="max-w-4xl mx-auto">
+        <button
+          @click="openCreatePackModal"
+          class="w-full bg-secondary-600 text-primary-400 hover:bg-secondary-700 transition text-sm px-4 py-3 rounded font-medium"
+        >
+          Ajouter un pack
+        </button>
       </div>
     </div>
 
@@ -58,14 +67,36 @@
     >
       <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
         <h3 class="text-xl font-semibold mb-4 text-secondary-600">Ajouter un pack</h3>
-        <PackCreateForm
+        <PackForm
           v-model="packForm"
           :users="users"
           :submitting="creating"
           :error="createError"
           :success="createSuccess"
+          mode="create"
           @submit="createPack"
           @cancel="closeCreatePackModal"
+        />
+      </div>
+    </div>
+
+    <!-- Edit Pack Modal -->
+    <div
+      v-if="showEditModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+      @click.self="closeEditPackModal"
+    >
+      <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+        <h3 class="text-xl font-semibold mb-4 text-secondary-600">Modifier le pack</h3>
+        <PackForm
+          v-model="editPackForm"
+          :users="users"
+          :submitting="editing"
+          :error="editError"
+          :success="editSuccess"
+          mode="edit"
+          @submit="updatePack"
+          @cancel="closeEditPackModal"
         />
       </div>
     </div>
@@ -84,13 +115,21 @@ const {
   loading,
   error,
   showCreateModal,
+  showEditModal,
   creating,
+  editing,
   createError,
+  editError,
   createSuccess,
+  editSuccess,
   packForm,
+  editPackForm,
   openCreatePackModal,
   closeCreatePackModal,
+  openEditPackModal,
+  closeEditPackModal,
   createPack,
+  updatePack,
   initializePacks,
 } = usePack();
 
