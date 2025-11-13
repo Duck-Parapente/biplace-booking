@@ -10,3 +10,5 @@ export interface PackProfile {
 export type PackProps = PackProfile;
 
 export type CreatePackProps = PackProfile;
+
+export type UpdatePackProps = Partial<PackProfile>;

@@ -48,4 +48,38 @@ export class PackRepository implements PackRepositoryPort {
       });
     });
   }
+
+  async findById(id: UUID): Promise<PackEntity | null> {
+    const pack = await prisma.pack.findUnique({
+      where: { id: id.uuid },
+    });
+
+    if (!pack) {
+      return null;
+    }
+
+    const { id: packId, ownerId, ...otherProps } = pack;
+    return new PackEntity({
+      id: new UUID({ uuid: packId }),
+      props: {
+        ownerId: new UUID({ uuid: ownerId }),
+        ...otherProps,
+      },
+    });
+  }
+
+  async update(pack: PackEntity): Promise<void> {
+    await prisma.pack.update({
+      where: { id: pack.id.uuid },
+      data: {
+        label: pack.label,
+        flightsHours: pack.flightsHours,
+        flightsCount: pack.flightsCount,
+        ownerId: pack.ownerId.uuid,
+      },
+    });
+
+    await pack.publishEvents(this.eventEmitter);
+    this.logger.log(`Pack updated: ${pack.id}`);
+  }
 }

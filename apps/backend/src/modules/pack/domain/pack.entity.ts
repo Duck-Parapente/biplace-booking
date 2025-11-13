@@ -4,7 +4,8 @@ import { AggregateRoot, AggregateID } from '@libs/ddd';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
 import { PackCreatedDomainEvent } from './events/pack-created.domain-event';
-import { CreatePackProps, PackProps } from './pack.types';
+import { PackUpdatedDomainEvent } from './events/pack-updated.domain-event';
+import { CreatePackProps, PackProps, UpdatePackProps } from './pack.types';
 
 export class PackEntity extends AggregateRoot<PackProps> {
   protected readonly _id: AggregateID;
@@ -19,6 +20,17 @@ export class PackEntity extends AggregateRoot<PackProps> {
       }),
     );
     return user;
+  }
+
+  update(updates: UpdatePackProps): void {
+    Object.assign(this.props, updates);
+
+    this.addEvent(
+      new PackUpdatedDomainEvent({
+        aggregateId: this.id,
+        updates,
+      }),
+    );
   }
 
   get label() {
