@@ -2,11 +2,21 @@
   "name": "shared",
   "version": "0.0.1",
   "private": true,
-  "main": "./dist/index.js",
+  "main": "./dist/cjs/index.cjs",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch"
+    "build": "rm -rf dist && npm run build:cjs && npm run build:esm && npm run copy:types",
+    "build:cjs": "tsc -p tsconfig.cjs.json && mv dist/cjs/index.js dist/cjs/index.cjs",
+    "build:esm": "tsc -p tsconfig.esm.json && mv dist/esm/index.js dist/esm/index.mjs",
+    "copy:types": "cp dist/cjs/index.d.ts dist/index.d.ts && cp -r dist/cjs/types dist/types",
+    "dev": "tsc -p tsconfig.cjs.json --watch"
   },
   "dependencies": {
     "zod": "4.1.12"

@@ -1,5 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-vue';
-import { DUCK_ROLES_CLAIM, type Roles } from 'shared';
+import { DUCK_ROLES_CLAIM, UserRoles } from 'shared';
 
 export interface UseAuth {
   login: () => Promise<void>;
@@ -8,7 +8,7 @@ export interface UseAuth {
   user: Ref<{ name?: string } | undefined>;
   isLoading: Ref<boolean>;
   getAccessToken: () => Promise<string>;
-  hasRole: (role: Roles) => boolean;
+  hasRole: (role: UserRoles) => boolean;
 }
 
 export const useAuth = (): UseAuth => {

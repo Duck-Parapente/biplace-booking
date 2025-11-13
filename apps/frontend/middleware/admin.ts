@@ -1,3 +1,5 @@
+import { UserRoles } from 'shared';
+
 export default defineNuxtRouteMiddleware(async () => {
   const { isAuthenticated, isLoading, hasRole } = useAuth();
 
@@ -10,7 +12,7 @@ export default defineNuxtRouteMiddleware(async () => {
   }
 
   // Check if user has ADMIN role
-  if (!hasRole(Roles.ADMIN)) {
+  if (!hasRole(UserRoles.ADMIN)) {
     // Redirect to home if not admin
     return navigateTo('/');
   }

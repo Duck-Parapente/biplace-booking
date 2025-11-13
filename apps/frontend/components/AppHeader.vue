@@ -97,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import { Roles } from 'shared';
+import { UserRoles } from 'shared';
 import { computed, ref } from 'vue';
 
 import { useAuth } from '~/composables/useAuth';
@@ -108,13 +108,13 @@ const isMenuOpen = ref(false);
 interface MenuItem {
   path: string;
   label: string;
-  requiresRole?: Roles;
+  requiresRole?: UserRoles;
 }
 
 const menuItems: MenuItem[] = [
   { path: '/mon-compte', label: 'Mon compte' },
   { path: '/contacts', label: 'Contacts' },
-  { path: '/gestion-packs', label: 'Gestion des Packs', requiresRole: Roles.ADMIN },
+  { path: '/gestion-packs', label: 'Gestion des Packs', requiresRole: UserRoles.ADMIN },
 ];
 
 const visibleMenuItems = computed(() => {
