@@ -4,6 +4,12 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
   modules: ['@nuxtjs/tailwindcss'],
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false,
+    },
+  ],
   runtimeConfig: {
     public: {
       auth0Domain: 'biplace-duckparapente.eu.auth0.com',

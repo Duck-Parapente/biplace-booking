@@ -1,5 +1,6 @@
 <template>
   <header
+    :class="$attrs.class"
     class="w-full flex items-center justify-between px-6 py-4 bg-primary-400 text-secondary-600"
   >
     <NuxtLink
@@ -100,7 +101,9 @@
 import { UserRoles } from 'shared';
 import { computed, ref } from 'vue';
 
-import { useAuth } from '~/composables/useAuth';
+defineOptions({
+  inheritAttrs: false,
+});
 
 const { logout, isAuthenticated, hasRole } = useAuth();
 const isMenuOpen = ref(false);
