@@ -107,7 +107,7 @@
 import type { UserDto } from 'shared';
 
 definePageMeta({
-  middleware: 'admin',
+  middleware: ['auth', 'admin'],
 });
 
 const {
