@@ -13,6 +13,15 @@ import { UserModule } from './modules/user/user.module';
     LoggerModule.forRoot({
       pinoHttp: {
         useLevel: 'info',
+        serializers: {
+          req: (req) => ({
+            ...req,
+            headers: {
+              ...req.headers,
+              authorization: req.headers.authorization ? '[REDACTED]' : undefined,
+            },
+          }),
+        },
       },
     }),
     UserModule,
