@@ -3,10 +3,9 @@ import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { Controller, Logger, Patch, UseGuards, Request, Body } from '@nestjs/common';
 import { UserDto, UserProfileDto } from 'shared';
 
-import { mapUserToDto } from './user.mapper';
-
 import { UpdateUserCommand } from './update-user.command';
 import { UpdateUserService } from './update-user.service';
+import { mapUserToDto } from './user.mapper';
 
 @Controller('user/me')
 export class UpdateUserHttpController {

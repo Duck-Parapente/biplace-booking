@@ -8,6 +8,7 @@
     "start": "node dist/apps/backend/src/main.js",
     "build": "tsc -p tsconfig.json && tsc-alias",
     "test": "echo \"No tests configured\"",
+    "lint:deps": "depcruise src --config ./dependency-cruiser.js --validate",
     "prisma:generate": "pnpm exec prisma generate",
     "prisma:migrate": "pnpm dotenv -- pnpm exec prisma migrate dev",
     "prisma:deploy": "pnpm exec prisma migrate deploy",
@@ -42,6 +43,7 @@
   "devDependencies": {
     "@types/express": "4.17.21",
     "@types/passport-jwt": "4.0.1",
+    "dependency-cruiser": "17.2.0",
     "ts-node-dev": "2.0.0",
     "tsc-alias": "1.8.16",
     "tsconfig-paths": "4.2.0",

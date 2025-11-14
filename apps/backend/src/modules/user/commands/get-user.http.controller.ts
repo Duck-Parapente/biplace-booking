@@ -3,10 +3,9 @@ import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { Controller, Logger, Get, UseGuards, Request } from '@nestjs/common';
 import { UserDto } from 'shared';
 
-import { mapUserToDto } from './user.mapper';
-
 import { GetUserCommand } from './get-user.command';
 import { GetUserService } from './get-user.service';
+import { mapUserToDto } from './user.mapper';
 
 @Controller('user/me')
 export class GetUserHttpController {

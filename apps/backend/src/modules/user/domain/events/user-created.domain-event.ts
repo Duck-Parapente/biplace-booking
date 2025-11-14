@@ -1,7 +1,6 @@
 import { DomainEventProps } from '@libs/ddd';
 import { Email } from '@libs/ddd';
 import { DomainEvent } from '@libs/ddd';
-import { UUID } from '@libs/ddd/uuid.value-object';
 
 export class UserCreatedDomainEvent extends DomainEvent {
   readonly email: Email;
