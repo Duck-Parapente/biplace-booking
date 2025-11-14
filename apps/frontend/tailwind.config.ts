@@ -24,6 +24,7 @@ export default {
         },
         secondary: {
           600: '#376465',
+          700: '#2C4B4D',
         },
       },
     },

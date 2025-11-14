@@ -154,7 +154,7 @@
             <button
               type="submit"
               :disabled="updating"
-              class="bg-secondary-600 text-primary-400 transition text-sm px-4 py-2 rounded disabled:opacity-50"
+              class="bg-secondary-600 text-white transition text-sm px-4 py-2 rounded disabled:opacity-50"
             >
               {{ updating ? 'Mise à jour...' : 'Mettre à jour' }}
             </button>
