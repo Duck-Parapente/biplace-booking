@@ -20,6 +20,7 @@
     "zod": "4.1.12"
   },
   "devDependencies": {
-    "@nuxtjs/tailwindcss": "6.14.0"
+    "@nuxtjs/tailwindcss": "6.14.0",
+    "@types/lodash": "4.17.20"
   }
 }
