@@ -7,6 +7,11 @@ import { PassportStrategy } from '@nestjs/passport';
 import * as jwksRsa from 'jwks-rsa';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { DUCK_ROLES_CLAIM, UserRoles } from 'shared';
+import https from 'https';
+
+const requestAgent = new https.Agent({
+  keepAlive: false,
+});
 
 export interface JwtPayload {
   sub: string;
@@ -35,9 +40,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,
       secretOrKeyProvider: jwksRsa.passportJwtSecret({
         cache: true,
-        rateLimit: true,
-        jwksRequestsPerMinute: 5,
+        cacheMaxAge: 12 * 60 * 60 * 1000, // 12 hours
+        rateLimit: false,
+        timeout: 2000,
         jwksUri: `https://${domain}/.well-known/jwks.json`,
+        requestAgent,
       }),
       audience,
       issuer: `https://${domain}/`,
