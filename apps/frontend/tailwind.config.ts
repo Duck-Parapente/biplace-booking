@@ -1,4 +1,13 @@
-/** @type {import('tailwindcss').Config} */
+import type { Config } from 'tailwindcss';
+
+type Env = 'local' | 'staging' | 'prod';
+const env = (process.env.NUXT_PUBLIC_ENV as Env) || 'prod';
+const colors: Record<Env, string> = {
+  local: '#ADDF20',
+  staging: '#DA8525',
+  prod: '#E2C736',
+};
+
 export default {
   content: [
     './components/**/*.{js,vue,ts}',
@@ -11,7 +20,7 @@ export default {
     extend: {
       colors: {
         primary: {
-          400: '#E2C736',
+          400: colors[env] ?? colors.prod,
         },
         secondary: {
           600: '#376465',
@@ -20,4 +29,4 @@ export default {
     },
   },
   plugins: [],
-};
+} satisfies Config;

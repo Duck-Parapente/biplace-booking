@@ -6,7 +6,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(
     createAuth0({
       domain: config.public.auth0Domain,
-      audience: config.public.auth0Audience,
       clientId: config.public.auth0ClientId,
       authorizationParams: {
         redirect_uri: window.location.origin,
