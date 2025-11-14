@@ -67,14 +67,14 @@
 </template>
 
 <script setup lang="ts">
-import { filter, orderBy } from 'lodash';
+import { chain, filter } from 'lodash';
 import type { UserDto } from 'shared';
 
 definePageMeta({
   middleware: 'auth',
 });
 
-const { getUsers } = useUser();
+const { getUsers, isProfileComplete } = useUser();
 
 const users = ref<UserDto[]>([]);
 const loading = ref(true);
@@ -101,7 +101,10 @@ onMounted(async () => {
     error.value = null;
 
     const response = await getUsers();
-    users.value = orderBy(response, [(user) => user.lastName || ''], ['asc']);
+    users.value = chain(response)
+      .filter(isProfileComplete)
+      .orderBy([(user) => user.lastName || ''], ['asc'])
+      .value();
   } catch (e: any) {
     console.error('Error loading users:', e);
     error.value = e.message || 'Impossible de charger les contacts';
