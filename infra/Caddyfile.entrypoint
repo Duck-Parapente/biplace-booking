@@ -1,7 +1,17 @@
 bb-backend-prod.duckparapente.fr {
     reverse_proxy bb-prod-caddy:80
+    
+    log {
+        output stdout
+        format json
+    }
 }
 
 bb-backend-staging.duckparapente.fr {
     reverse_proxy bb-staging-caddy:80
+    
+    log {
+        output stdout
+        format json
+    }
 }
