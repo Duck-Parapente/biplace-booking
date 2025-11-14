@@ -24,7 +24,7 @@ export abstract class AggregateRoot<EntityProps> extends Entity<EntityProps> {
     await Promise.all(
       this.domainEvents.map(async (event) => {
         this.logger.log(
-          `"${event.constructor.name}" event published for aggregate ${this.constructor.name} : ${this.id}`,
+          `"${event.constructor.name}" event published for aggregate ${this.constructor.name} : ${this.id.uuid}`,
         );
         await emitter.logDomainEvent(event);
       }),

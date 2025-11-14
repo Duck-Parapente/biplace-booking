@@ -23,7 +23,6 @@ export class GetUserService {
       throw new NotFoundException(`User with ID ${command.userId} not found`);
     }
 
-    this.logger.log(`User fetched: ${user.id}`);
     return user;
   }
 }

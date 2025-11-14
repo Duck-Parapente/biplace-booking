@@ -16,7 +16,6 @@ export class GetUsersService {
   async execute(): Promise<UserEntity[]> {
     const users = await this.userRepository.findAll();
 
-    this.logger.log(`Fetched ${users.length} users`);
     return users;
   }
 }

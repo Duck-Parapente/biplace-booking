@@ -19,6 +19,6 @@ export class UUID extends ValueObject<UuidProps> {
   }
 
   protected validate({ uuid }: UuidProps): void {
-    if (!validate(uuid)) throw new ArgumentInvalidException('UUID is not valid');
+    if (!validate(uuid)) throw new ArgumentInvalidException(`UUID is not valid: ${uuid}`);
   }
 }
