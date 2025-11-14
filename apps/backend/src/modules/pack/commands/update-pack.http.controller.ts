@@ -1,17 +1,16 @@
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { Roles } from '@libs/guards/roles.decorator';
-import { UserRole } from '@libs/guards/roles.enum';
 import { RolesGuard } from '@libs/guards/roles.guard';
 import { Controller, Patch, Body, Logger, UseGuards, Param } from '@nestjs/common';
-import { UpdatePackDto } from 'shared';
+import { UpdatePackDto, UserRoles } from 'shared';
 
 import { UpdatePackCommand } from './update-pack.command';
 import { UpdatePackService } from './update-pack.service';
 
 @Controller('pack')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(UserRole.ADMIN)
+@Roles(UserRoles.ADMIN)
 export class UpdatePackHttpController {
   private readonly logger = new Logger(UpdatePackHttpController.name);
 

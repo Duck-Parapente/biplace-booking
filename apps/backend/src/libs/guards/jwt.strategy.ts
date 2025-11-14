@@ -6,9 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import * as jwksRsa from 'jwks-rsa';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { DUCK_ROLES_CLAIM } from 'shared';
-
-import { UserRole } from './roles.enum';
+import { DUCK_ROLES_CLAIM, UserRoles } from 'shared';
 
 export interface JwtPayload {
   sub: string;
@@ -18,12 +16,12 @@ export interface JwtPayload {
   picture?: string;
   iat?: number;
   exp?: number;
-  [DUCK_ROLES_CLAIM]?: UserRole[];
+  [DUCK_ROLES_CLAIM]?: UserRoles[];
 }
 
 export interface AuthenticatedUser {
   id: UUID;
-  roles: UserRole[];
+  roles: UserRoles[];
 }
 
 @Injectable()
