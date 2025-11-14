@@ -35,7 +35,7 @@
     </div>
 
     <div v-if="success" class="p-3 bg-primary-400/20 text-secondary-600 text-sm">
-      <p>{{ wordings.successMessage }}</p>
+      <p>{{ currentOperationConfig.successMessage }}</p>
     </div>
 
     <div class="flex gap-3 pt-2">
@@ -44,7 +44,9 @@
         :disabled="submitting"
         class="flex-1 bg-secondary-600 text-primary-400 hover:bg-secondary-700 transition text-sm px-4 py-2 rounded disabled:opacity-50"
       >
-        {{ submitting ? wordings.submittingButton : wordings.submitButton }}
+        {{
+          submitting ? currentOperationConfig.submittingButton : currentOperationConfig.submitButton
+        }}
       </button>
       <button
         type="button"
@@ -60,7 +62,7 @@
 <script setup lang="ts">
 import type { CreatePackDto, UserDto, UpdatePackDto } from 'shared';
 
-import type { PackFormWordings } from '~/composables/usePack';
+import type { PackOperationConfig } from '~/composables/usePack';
 
 interface Props {
   users: UserDto[];
@@ -68,7 +70,7 @@ interface Props {
   error: string | null;
   success: boolean;
   modelValue: CreatePackDto | UpdatePackDto;
-  wordings: PackFormWordings;
+  currentOperationConfig: PackOperationConfig;
 }
 
 const props = defineProps<Props>();

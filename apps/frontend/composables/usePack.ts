@@ -9,10 +9,6 @@ interface PackOperationConfig {
   endpoint: (id?: string) => string;
   method: 'POST' | 'PATCH';
   errorMessage: string;
-  successMessage: string;
-}
-
-interface PackFormWordings {
   modalTitle: string;
   submitButton: string;
   submittingButton: string;
@@ -24,28 +20,19 @@ const PACK_OPERATION_CONFIG: Record<PackOperationMode, PackOperationConfig> = {
     endpoint: () => '/pack/create',
     method: 'POST',
     errorMessage: 'Impossible de créer le pack',
-    successMessage: 'Pack créé avec succès',
+    successMessage: '✓ Pack créé avec succès',
+    modalTitle: 'Ajouter un pack',
+    submitButton: 'Créer',
+    submittingButton: 'Création...',
   },
   [PackOperationMode.EDIT]: {
     endpoint: (id?: string) => `/pack/${id}`,
     method: 'PATCH',
     errorMessage: 'Impossible de modifier le pack',
-    successMessage: 'Pack modifié avec succès',
-  },
-};
-
-const PACK_FORM_WORDINGS: Record<PackOperationMode, PackFormWordings> = {
-  [PackOperationMode.CREATE]: {
-    modalTitle: 'Ajouter un pack',
-    submitButton: 'Créer',
-    submittingButton: 'Création...',
-    successMessage: '✓ Pack créé avec succès',
-  },
-  [PackOperationMode.EDIT]: {
+    successMessage: '✓ Pack modifié avec succès',
     modalTitle: 'Modifier le pack',
     submitButton: 'Modifier',
     submittingButton: 'Modification...',
-    successMessage: '✓ Pack modifié avec succès',
   },
 };
 
@@ -172,7 +159,7 @@ export const usePack = () => {
   };
 
   // Computed wording based on current mode
-  const currentWordings = computed(() => PACK_FORM_WORDINGS[modalMode.value]);
+  const currentOperationConfig = computed(() => PACK_OPERATION_CONFIG[modalMode.value]);
 
   return {
     packs,
@@ -184,7 +171,7 @@ export const usePack = () => {
     submitError,
     submitSuccess,
     packForm,
-    currentWordings,
+    currentOperationConfig,
     getPacks,
     openCreatePackModal,
     openEditPackModal,
@@ -194,5 +181,4 @@ export const usePack = () => {
   };
 };
 
-// Export types and enums for use in components
-export { PackOperationMode, type PackFormWordings };
+export { PackOperationMode, type PackOperationConfig };

@@ -67,7 +67,7 @@
     >
       <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
         <h3 class="text-xl font-semibold mb-4 text-secondary-600">
-          {{ currentWordings.modalTitle }}
+          {{ currentOperationConfig.modalTitle }}
         </h3>
         <PackForm
           v-model="packForm"
@@ -75,7 +75,7 @@
           :submitting="submitting"
           :error="submitError"
           :success="submitSuccess"
-          :wordings="currentWordings"
+          :currentOperationConfig="currentOperationConfig"
           @submit="submitPack"
           @cancel="closeModal"
         />
@@ -96,12 +96,11 @@ const {
   loading,
   error,
   showModal,
-  modalMode,
   submitting,
   submitError,
   submitSuccess,
   packForm,
-  currentWordings,
+  currentOperationConfig,
   openCreatePackModal,
   openEditPackModal,
   closeModal,
