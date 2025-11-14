@@ -4,7 +4,7 @@ type Env = 'local' | 'staging' | 'prod';
 const env = (process.env.NUXT_PUBLIC_ENV as Env) || 'prod';
 const colors: Record<Env, string> = {
   local: '#ADDF20',
-  staging: '#DA8525',
+  staging: '#E09846',
   prod: '#E2C736',
 };
 
