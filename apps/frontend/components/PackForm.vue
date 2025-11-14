@@ -51,7 +51,8 @@
       <button
         type="button"
         @click="emit('cancel')"
-        class="flex-1 bg-gray-200 text-gray-700 hover:bg-gray-300 transition text-sm px-4 py-2 rounded"
+        :disabled="submitting"
+        class="flex-1 bg-gray-200 text-gray-700 hover:bg-gray-300 transition text-sm px-4 py-2 rounded disabled:opacity-50"
       >
         Annuler
       </button>

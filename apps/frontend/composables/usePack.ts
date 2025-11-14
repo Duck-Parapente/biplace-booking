@@ -140,16 +140,16 @@ export const usePack = () => {
       // Reload packs after creation/update
       await getPacks();
 
-      // Close modal after a short delay
+      // Keep submitting true until modal closes
       setTimeout(() => {
         closeModal();
+        submitting.value = false;
       }, 1500);
     } catch (err) {
       const config = PACK_OPERATION_CONFIG[modalMode.value];
       const errorMessage = err instanceof Error ? err.message : config.errorMessage;
       submitError.value = errorMessage;
       console.error(`Failed to ${modalMode.value} pack:`, err);
-    } finally {
       submitting.value = false;
     }
   };
