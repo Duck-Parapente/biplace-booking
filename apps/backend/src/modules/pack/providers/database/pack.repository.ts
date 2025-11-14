@@ -29,7 +29,7 @@ export class PackRepository implements PackRepositoryPort {
     });
 
     await pack.publishEvents(this.eventEmitter);
-    this.logger.log(`Pack created: ${pack.id}`);
+    this.logger.log(`Pack created: ${pack.id.uuid}`);
   }
 
   async findAll(): Promise<PackEntity[]> {
@@ -80,6 +80,6 @@ export class PackRepository implements PackRepositoryPort {
     });
 
     await pack.publishEvents(this.eventEmitter);
-    this.logger.log(`Pack updated: ${pack.id}`);
+    this.logger.log(`Pack updated: ${pack.id.uuid}`);
   }
 }

@@ -19,8 +19,8 @@ export class GetUserService {
     const user = await this.userRepository.findById(command.userId);
 
     if (!user) {
-      this.logger.warn(`User not found: ${command.userId}`);
-      throw new NotFoundException(`User with ID ${command.userId} not found`);
+      this.logger.warn(`User not found: ${command.userId.uuid}`);
+      throw new NotFoundException(`User with ID ${command.userId.uuid} not found`);
     }
 
     return user;

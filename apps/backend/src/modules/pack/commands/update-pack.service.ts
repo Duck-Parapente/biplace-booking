@@ -25,7 +25,5 @@ export class UpdatePackService implements ICommandHandler<UpdatePackCommand, voi
     pack.update(updates);
 
     await this.packRepository.update(pack);
-
-    this.logger.log(`Pack updated: ${pack.id}`);
   }
 }

@@ -19,15 +19,13 @@ export class UpdateUserService {
     const user = await this.userRepository.findById(command.userId);
 
     if (!user) {
-      this.logger.warn(`User not found: ${command.userId}`);
-      throw new NotFoundException(`User with ID ${command.userId} not found`);
+      throw new NotFoundException(`User with ID ${command.userId.uuid} not found`);
     }
 
     user.update(command.profile);
 
     await this.userRepository.update(user);
 
-    this.logger.log(`User updated: ${user.id}`);
     return user;
   }
 }

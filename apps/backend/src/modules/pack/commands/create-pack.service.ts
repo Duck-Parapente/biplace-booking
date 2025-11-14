@@ -20,7 +20,5 @@ export class CreatePackService implements ICommandHandler<CreatePackCommand, voi
     const pack = PackEntity.create(profile);
 
     await this.packRepository.create(pack);
-
-    this.logger.log(`Pack created: ${pack.id}`);
   }
 }

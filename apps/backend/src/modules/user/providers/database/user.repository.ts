@@ -26,7 +26,7 @@ export class UserRepository implements UserRepositoryPort {
     });
 
     await user.publishEvents(this.eventEmitter);
-    this.logger.log(`User created: ${user.id}`);
+    this.logger.log(`User created: ${user.id.uuid}`);
   }
 
   async update(user: UserEntity): Promise<void> {
@@ -41,7 +41,7 @@ export class UserRepository implements UserRepositoryPort {
     });
 
     await user.publishEvents(this.eventEmitter);
-    this.logger.log(`User updated: ${user.id}`);
+    this.logger.log(`User updated: ${user.id.uuid}`);
   }
 
   async findById(userId: UuidProps): Promise<UserEntity | null> {

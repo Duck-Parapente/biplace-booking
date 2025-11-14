@@ -23,7 +23,5 @@ export class SyncExternalUserService implements ICommandHandler<SyncExternalUser
     });
 
     await this.userRepository.create(user);
-
-    this.logger.log(`User synced: ${user.id}`);
   }
 }
