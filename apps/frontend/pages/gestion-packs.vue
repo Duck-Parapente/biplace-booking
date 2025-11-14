@@ -29,7 +29,7 @@
                   <h3 class="text-lg font-semibold text-secondary-600">{{ pack.label }}</h3>
                   <div class="mt-2 text-sm text-gray-600">
                     <p>
-                      <span class="font-medium">Propriétaire:</span>
+                      <span class="font-medium">Respo:</span>
                       {{ getUserDisplayName(users.find((u) => u.id === pack.ownerId)) }}
                     </p>
                   </div>
