@@ -39,7 +39,7 @@
 
           <div>
             <label for="currentScore" class="block text-sm font-medium text-secondary-600 mb-1">
-              Score actuel
+              Canardos
               <span class="relative inline-block ml-1">
                 <button
                   type="button"
@@ -55,9 +55,9 @@
                   @click.stop
                   class="absolute z-10 w-64 p-2 mt-1 text-xs text-white bg-gray-800 rounded shadow-lg left-0 sm:-translate-x-1/2 sm:left-1/2"
                 >
-                  Votre score est mis à jour après chaque réservation. Plus vous réservez, plus
-                  votre score augmente. Il est utilisé pour attribuer les parapentistes de manière
-                  équitable.
+                  Le nombre de canardos est mis à jour après chaque réservation. Plus vous réservez,
+                  plus le nombre augmente. Il est utilisé pour attribuer les parapentistes de
+                  manière équitable.
                 </div>
               </span>
             </label>
