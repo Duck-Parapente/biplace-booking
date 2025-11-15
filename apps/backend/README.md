@@ -18,3 +18,11 @@ Le code est structué en architecture hexagonale. Tout est super bien expliqué 
 - PlanningView: Vue consolidée calendrier + affichage public
 
 Plus de détails sur la [page Notion](https://www.notion.so/Pr-parer-un-event-storming-28d4808c7ea280f19cd2e436ac501f7f)
+
+## Comment développer en local?
+
+Rien de plus simple:
+- Installer les dépendances avec `pnpm install`
+- Lance `pnpm dc:local` pour démarrer un conteneur avec une DB.
+- Lancer `pnpm dev` pour lancer le front et le back.
+- Pour lancer uniquement le backend `pnpm dev:backend` (idem pour le front)

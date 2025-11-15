@@ -1,23 +1,16 @@
 # Biplace Booking Infrastructure
 
-### Architecture
+## Architecture
 ![Architecture](archi.png)
 
-### Pré-requis
+## Pré-requis
 
 Pour lancer le projet, il te faut:
 - docker avec le plugin compose (docker-compose est déprécié)
 - pour le serveur Contabo, il faut en plus créer un réseau proxy `docker network create proxy` (valable uniquement pour une installation from scratch)
+- rclone configuré avec un remote "gdrive", [cf. doc](https://rclone.org/drive/#making-your-own-client-id)
 
-### Comment développer en local?
-
-Rien de plus simple:
-- Installer les dépendances avec `pnpm install`
-- Lance `pnpm dc:local` pour démarrer un conteneur avec une DB.
-- Lancer `pnpm dev` pour lancer le front et le back.
-- Pour lancer uniquement le backend `pnpm dev:backend` (idem pour le front)
-
-### Comment déployer en staging/prod?
+## Comment déployer en staging/prod?
 
 - Il faut déjà avoir accès au serveur du Duck en récupérant la clé PEM. Ensuite, il suffit de modifier ta `~/.ssh/config`:
     ```
@@ -36,5 +29,18 @@ Rien de plus simple:
     - La dézipper
     - Relancer les conteneurs qui sont up (caddy+db+backend)
 
+## Quels crons sont mis en place?
 
+### Backup de la base de données
 
+Tous les jours, les DB de staging/prod sont backup par [backup-database.sh](../scripts/backup-database.sh):
+    - Création d'un dump + compression
+    - Upload sur le GoogleDrive du compte `gestion.biplace.duckparapente@gmail.com`
+    - Suppression des dumps qui ont plus de 7 jours
+
+Voici la config du cron:
+
+```
+    0 3 * * * /srv/prod-biplace/backup-database.sh >> /var/log/db_backup.log 2>&1
+    0 4 * * * /srv/staging-biplace/backup-database.sh >> /var/log/db_backup.log 2>&1
+```
