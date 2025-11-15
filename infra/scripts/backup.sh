@@ -20,7 +20,7 @@ if [ -z "$ENV" ] || [ -z "$POSTGRES_DB" ] || [ -z "$POSTGRES_USER" ]; then
 fi
 
 # ----------- BUILD VARIABLES -----------
-DATE=$(date +%Y_%m_%d)
+DATE=$(date +%Y_%m_%d_%H%M%S)
 BACKUP_DIR="/var/backups/db"
 
 CONTAINER="bb-${ENV}-postgres"
