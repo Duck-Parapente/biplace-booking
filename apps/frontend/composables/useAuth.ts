@@ -12,6 +12,8 @@ export interface UseAuth {
 }
 
 export const useAuth = (): UseAuth => {
+  const config = useRuntimeConfig();
+
   const {
     loginWithRedirect: login,
     logout,
@@ -23,7 +25,16 @@ export const useAuth = (): UseAuth => {
   } = useAuth0();
 
   const getAccessToken = async (): Promise<string> => {
-    return await getAccessTokenSilently();
+    try {
+      return await getAccessTokenSilently({
+        authorizationParams: {
+          audience: config.public.auth0Audience,
+        },
+      });
+    } catch (error) {
+      console.error('Error getting access token:', error);
+      throw error;
+    }
   };
 
   const hasRole = (role: string): boolean => {
