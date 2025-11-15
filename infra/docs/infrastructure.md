@@ -33,14 +33,15 @@ Pour lancer le projet, il te faut:
 
 ### Backup de la base de données
 
-Tous les jours, les DB de staging/prod sont backup par [backup-database.sh](../scripts/backup-database.sh):
-    - Création d'un dump + compression
-    - Upload sur le GoogleDrive du compte `gestion.biplace.duckparapente@gmail.com`
-    - Suppression des dumps qui ont plus de 7 jours
+Tous les jours, les DB de staging/prod sont backup par [backup.sh](../scripts/backup.sh):
+    - Création d'un dump de la DB + compression
+    - Copie du .env + compression
+    - Upload des 2 archives sur le Google Drive du compte `gestion.biplace.duckparapente@gmail.com`
+    - Suppression des archives qui ont plus de 7 jours
 
 Voici la config du cron:
 
 ```
-    0 3 * * * /srv/prod-biplace/backup-database.sh >> /var/log/db_backup.log 2>&1
-    0 4 * * * /srv/staging-biplace/backup-database.sh >> /var/log/db_backup.log 2>&1
+    0 3 * * * /srv/prod-biplace/infra/scripts/backup.sh >> /var/log/db_backup.log 2>&1
+    0 4 * * * /srv/staging-biplace/infra/scripts/backup.sh >> /var/log/db_backup.log 2>&1
 ```

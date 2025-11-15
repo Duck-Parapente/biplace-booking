@@ -30,6 +30,10 @@ DUMP_NAME="dump_${DATE}.sql"
 LOCAL_FILE="$BACKUP_DIR/$DUMP_NAME"
 COMPRESSED_FILE="${LOCAL_FILE}.gz"
 
+ENV_BACKUP_NAME="env_${DATE}.env"
+LOCAL_ENV_FILE="$BACKUP_DIR/$ENV_BACKUP_NAME"
+COMPRESSED_ENV_FILE="${LOCAL_ENV_FILE}.gz"
+
 echo "----- BACKUP STARTED -----"
 echo "Environment:   $ENV"
 echo "Container:     $CONTAINER"
@@ -43,21 +47,29 @@ echo "Cleaning backup directory: $BACKUP_DIR"
 rm -rf "$BACKUP_DIR"
 mkdir -p "$BACKUP_DIR"
 
-# ----------- BACKUP COMMAND -----------
+# ----------- DATABASE BACKUP -----------
 echo "Running pg_dump..."
 docker exec "$CONTAINER" pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB" > "$LOCAL_FILE"
 
-echo "Compressing backup..."
+echo "Compressing database backup..."
 gzip -f "$LOCAL_FILE"
 
+# ----------- .ENV BACKUP -----------
+echo "Backing up .env file..."
+cp "$ENV_FILE" "$LOCAL_ENV_FILE"
+gzip -f "$LOCAL_ENV_FILE"
+
 # ----------- UPLOAD TO GOOGLE DRIVE -----------
-echo "Uploading backup to Google Drive..."
+echo "Uploading database and .env backup to Google Drive..."
 rclone copy "$COMPRESSED_FILE" "$REMOTE"
+rclone copy "$COMPRESSED_ENV_FILE" "$REMOTE"
 
 # ----------- DELETE OLD REMOTE FILES -----------
 echo "Deleting remote backups older than 7 days..."
 rclone delete "$REMOTE" --min-age 7d
 
 echo "Backup completed successfully!"
-echo "Backup file: $COMPRESSED_FILE"
+echo "Database backup: $COMPRESSED_FILE"
+echo ".env backup:     $COMPRESSED_ENV_FILE"
 echo "----------------------------------------"
+echo "----- BACKUP FINISHED -----"
