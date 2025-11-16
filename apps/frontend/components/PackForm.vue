@@ -6,9 +6,9 @@
       id="ownerSearch"
       v-model="ownerSearch"
       :options="userOptions"
-      label="Propriétaire"
+      label="Responsable du pack"
       required
-      placeholder="Rechercher un propriétaire..."
+      placeholder="Rechercher un utilisateur..."
       no-results-text="Aucun utilisateur trouvé"
       @select="handleOwnerSelect"
     />
