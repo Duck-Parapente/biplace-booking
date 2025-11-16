@@ -6,7 +6,7 @@ La documentation officielle est [disponible ici](https://docs.nestjs.com/)
 
 ## Architecture
 
-Le code est structué en architecture hexagonale. Tout est super bien expliqué et imagé sur [ce repo](https://github.com/Sairyss/domain-driven-hexagon)
+Le code est structuré en architecture hexagonale. Tout est super bien expliqué et imagé sur [ce repo](https://github.com/Sairyss/domain-driven-hexagon)
 
 ## Bounded contexts
 

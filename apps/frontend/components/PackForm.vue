@@ -13,6 +13,13 @@
       @select="handleOwnerSelect"
     />
 
+    <div class="mb-6 p-3 bg-white border-l-4 border-blue-400 text-sm text-blue-800 shadow-sm">
+      <p class="text-xs">
+        Les informations sur les heures de vol et le nombre de vols correspondent à l'état initial
+        du pack, lors de sa création.
+      </p>
+    </div>
+
     <BaseInput
       id="flightsHours"
       v-model="localForm.flightsHours"
