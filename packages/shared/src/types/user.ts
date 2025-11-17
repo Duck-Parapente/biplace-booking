@@ -1,15 +1,48 @@
-// Profile subset used for update operations
-export interface UserProfileDto {
+import {
+  IsDate,
+  IsEmail,
+  isEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
+
+export class UserProfileDto {
+  @IsOptional()
+  @IsString()
   firstName?: string;
+  @IsOptional()
+  @IsString()
   lastName?: string;
+  @IsOptional()
+  @IsString()
   address?: string;
+  @IsOptional()
+  @IsString()
   phoneNumber?: string;
 }
 
-export interface UserDto extends UserProfileDto {
-  id: string;
-  email: string;
-  externalAuthId: string;
+export class UserDto extends UserProfileDto {
+  @IsUUID()
+  @IsNotEmpty()
+  id!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsEmail()
+  email!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  externalAuthId!: string;
+
+  @IsOptional()
+  @IsNumber()
   currentScore?: number;
-  createdAt: Date;
+
+  @IsNotEmpty()
+  @IsDate()
+  createdAt!: Date;
 }
