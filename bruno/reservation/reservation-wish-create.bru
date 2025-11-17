@@ -1,0 +1,24 @@
+meta {
+  name: reservation-wish/create
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{BACKEND_DOMAIN}}/reservation-wish/create
+  body: json
+  auth: bearer
+}
+
+body:json {
+  {
+    "startingDate": "2025-11-20",
+    "packChoices": ["1fc88443-c816-4f73-b0d6-5c8721a3ba3a"],
+    "publicComment": "Bi dispo l'aprem à St-Hil"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

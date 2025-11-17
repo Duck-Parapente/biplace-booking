@@ -19,6 +19,7 @@
     "dev": "tsc -p tsconfig.cjs.json --watch"
   },
   "dependencies": {
+    "class-validator": "0.14.0",
     "zod": "4.1.12"
   },
   "devDependencies": {

@@ -17,7 +17,7 @@ export class CreatePackHttpController {
   constructor(private readonly createPackService: CreatePackService) {}
 
   @Post()
-  async syncExternalUser(@Body() body: CreatePackDto) {
+  async createPack(@Body() body: CreatePackDto) {
     const command = new CreatePackCommand({
       profile: {
         ...body,

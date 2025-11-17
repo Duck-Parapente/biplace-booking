@@ -17,24 +17,37 @@ model Event {
 }
 
 model User {
-    id             String   @id @default(uuid())
-    email          String   @unique
-    externalAuthId String   @unique
-    firstName      String?
-    lastName       String?
-    phoneNumber    String?
-    address        String?
-    currentScore   Int      @default(0)
-    createdAt      DateTime @default(now())
-    ownedPacks     Pack[]
+    id                String            @id @default(uuid())
+    email             String            @unique
+    externalAuthId    String            @unique
+    firstName         String?
+    lastName          String?
+    phoneNumber       String?
+    address           String?
+    currentScore      Int               @default(0)
+    createdAt         DateTime          @default(now())
+    ownedPacks        Pack[]
+    reservationWishes ReservationWish[]
 }
 
 model Pack {
-    id           String   @id @default(uuid())
-    ownerId      String?
-    owner        User?    @relation(fields: [ownerId], references: [id])
-    label        String
-    flightsHours Int
-    flightsCount Int
-    createdAt    DateTime @default(now())
+    id                String            @id @default(uuid())
+    ownerId           String?
+    owner             User?             @relation(fields: [ownerId], references: [id])
+    label             String
+    flightsHours      Int
+    flightsCount      Int
+    createdAt         DateTime          @default(now())
+    reservationWishes ReservationWish[]
+}
+
+model ReservationWish {
+    id            String   @id @default(uuid())
+    startingDate  DateTime
+    endingDate    DateTime
+    packChoices   Pack[]
+    publicComment String?
+    createdBy     User     @relation(fields: [createdById], references: [id])
+    createdById   String
+    createdAt     DateTime @default(now())
 }

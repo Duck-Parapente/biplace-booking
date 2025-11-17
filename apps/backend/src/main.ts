@@ -1,4 +1,5 @@
 import 'newrelic';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { json } from 'express';
 import { Logger } from 'nestjs-pino';
@@ -9,6 +10,23 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useLogger(app.get(Logger));
   app.use(json({ limit: '10mb' }));
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // strip unknown properties
+      forbidNonWhitelisted: true,
+      transform: true, // auto-transform payloads to DTO instances
+      exceptionFactory: (errors) => {
+        // Custom error format
+        return new BadRequestException(
+          errors.map((err) => ({
+            property: err.property,
+            constraints: err.constraints,
+          })),
+        );
+      },
+    }),
+  );
 
   app.enableCors({
     origin: process.env.FRONTEND_URL,

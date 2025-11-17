@@ -1,12 +1,13 @@
 import { JwtStrategy } from '@libs/guards/jwt.strategy';
 import { PackModule } from '@modules/pack/pack.module';
+import { ReservationModule } from '@modules/reservation/reservation.module';
+import { UserModule } from '@modules/user/user.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { LoggerModule } from 'nestjs-pino';
 
 import { HealthController } from './health.controller';
-import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserModule } from './modules/user/user.module';
     }),
     UserModule,
     PackModule,
+    ReservationModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
