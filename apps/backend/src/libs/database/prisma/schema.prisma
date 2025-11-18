@@ -41,13 +41,20 @@ model Pack {
     reservationWishes ReservationWish[]
 }
 
+enum ReservationWishStatus {
+    PENDING
+    CONFIRMED
+    CANCELLED
+}
+
 model ReservationWish {
-    id            String   @id
+    id            String                @id
     startingDate  DateTime
     endingDate    DateTime
     packChoices   Pack[]
     publicComment String?
-    createdBy     User     @relation(fields: [createdById], references: [id])
+    createdBy     User                  @relation(fields: [createdById], references: [id])
     createdById   String
-    createdAt     DateTime @default(now())
+    createdAt     DateTime              @default(now())
+    status        ReservationWishStatus @default(PENDING)
 }

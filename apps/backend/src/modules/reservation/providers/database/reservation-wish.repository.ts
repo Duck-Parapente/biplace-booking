@@ -4,6 +4,7 @@ import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
 import { ReservationWishEntity } from '@modules/reservation/domain/reservation-wish.entity';
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ReservationWishStatus } from '@prisma/client';
 
 @Injectable()
 export class ReservationWishRepository implements ReservationWishRepositoryPort {
@@ -32,11 +33,12 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
     this.logger.log(`ReservationWish created: ${reservationWish.id.uuid}`);
   }
 
-  async existsByStartingDateAndUserId(startingDate, userId): Promise<boolean> {
+  async existsPendingForStartingDateAndUser(startingDate, userId): Promise<boolean> {
     const count = await prisma.reservationWish.count({
       where: {
         startingDate: startingDate.value,
         createdById: userId.uuid,
+        status: ReservationWishStatus.PENDING,
       },
     });
 

@@ -21,7 +21,7 @@ export class CreateReservationWishService
 
   async execute({ reservationWish }: CreateReservationWishCommand): Promise<void> {
     const hasExistingWishOnStartingDate =
-      await this.reservationWishRepository.existsByStartingDateAndUserId(
+      await this.reservationWishRepository.existsPendingForStartingDateAndUser(
         reservationWish.startingDate,
         reservationWish.createdById,
       );
