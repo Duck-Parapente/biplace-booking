@@ -14,8 +14,6 @@ export class GetPacksService {
   ) {}
 
   async execute(): Promise<PackEntity[]> {
-    const packs = await this.packRepository.findAll();
-
-    return packs;
+    return this.packRepository.findAll();
   }
 }

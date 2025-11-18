@@ -101,4 +101,25 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
     await reservationWish.publishEvents(this.eventEmitter);
     this.logger.log(`ReservationWish updated: ${reservationWish.id.uuid}`);
   }
+
+  async findAll(): Promise<ReservationWishEntity[]> {
+    const records = await prisma.reservationWish.findMany({
+      include: { packChoices: true },
+    });
+
+    return records.map(
+      (record) =>
+        new ReservationWishEntity({
+          id: new UUID({ uuid: record.id }),
+          props: {
+            createdById: new UUID({ uuid: record.createdById }),
+            status: mapStatus(record.status),
+            startingDate: new DateValueObject({ value: record.startingDate }),
+            endingDate: new DateValueObject({ value: record.endingDate }),
+            packChoices: record.packChoices.map((packChoice) => new UUID({ uuid: packChoice.id })),
+            publicComment: record.publicComment,
+          },
+        }),
+    );
+  }
 }

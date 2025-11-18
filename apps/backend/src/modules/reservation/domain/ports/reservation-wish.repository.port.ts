@@ -11,4 +11,5 @@ export interface ReservationWishRepositoryPort {
   ): Promise<boolean>;
   findById(reservationWishId: UUID): Promise<ReservationWishEntity | null>;
   update(reservationWish: ReservationWishEntity): Promise<void>;
+  findAll(): Promise<ReservationWishEntity[]>;
 }
