@@ -6,9 +6,11 @@
 ## Pré-requis
 
 Pour lancer le projet, il te faut:
-- docker avec le plugin compose (docker-compose est déprécié)
-- pour le serveur Contabo, il faut en plus créer un réseau proxy `docker network create proxy` (valable uniquement pour une installation from scratch)
-- rclone configuré avec un remote "gdrive", [cf. doc](https://rclone.org/drive/#making-your-own-client-id)
+- `docker` avec le plugin compose (docker-compose est déprécié)
+- `node` >=20.10.0 (cf. package.json)
+- pour le serveur Contabo, il faut en plus:
+    - créer un réseau proxy `docker network create proxy` (valable uniquement pour une installation from scratch)
+    - rclone configuré avec un remote "gdrive", [cf. doc](https://rclone.org/drive/#making-your-own-client-id) pour la gestion des backups
 
 ## Comment déployer en staging/prod?
 
