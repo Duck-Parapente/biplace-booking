@@ -2,8 +2,18 @@ import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
-import { Controller, Post, Body, Logger, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Logger,
+  UseGuards,
+  Request,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateReservationWishDto } from 'shared';
+
+import { UserHasReservationWishOnStartingDateError } from '../domain/reservation.exceptions';
 
 import { CreateReservationWishCommand } from './create-reservation-wish.command';
 import { CreateReservationWishService } from './create-reservation-wish.service';
@@ -29,8 +39,17 @@ export class CreateReservationWishHttpController {
       },
     });
 
-    await this.createReservationWishService.execute(command);
+    try {
+      await this.createReservationWishService.execute(command);
 
-    return { message: 'Reservation wish created' };
+      return { message: 'Reservation wish created' };
+    } catch (error) {
+      if (error instanceof UserHasReservationWishOnStartingDateError) {
+        throw new BadRequestException(error.message);
+      }
+
+      this.logger.error('Error creating reservation wish', error);
+      throw error;
+    }
   }
 }

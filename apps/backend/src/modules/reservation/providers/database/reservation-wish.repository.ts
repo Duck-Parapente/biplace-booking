@@ -31,4 +31,15 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
     await reservationWish.publishEvents(this.eventEmitter);
     this.logger.log(`ReservationWish created: ${reservationWish.id.uuid}`);
   }
+
+  async existsByStartingDateAndUserId(startingDate, userId): Promise<boolean> {
+    const count = await prisma.reservationWish.count({
+      where: {
+        startingDate: startingDate.value,
+        createdById: userId.uuid,
+      },
+    });
+
+    return count > 0;
+  }
 }
