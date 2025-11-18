@@ -38,11 +38,13 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
         id: reservationWish.id.uuid,
         startingDate: reservationWish.startingDate.value,
         endingDate: reservationWish.endingDate.value,
+        publicComment: reservationWish.publicComment,
         packChoices: {
           connect: reservationWish.packChoices.map(({ uuid: id }) => ({ id })),
         },
-        createdById: reservationWish.createdById.uuid,
-        publicComment: reservationWish.publicComment,
+        createdBy: {
+          connect: { id: reservationWish.createdById.uuid },
+        },
       },
     });
 
