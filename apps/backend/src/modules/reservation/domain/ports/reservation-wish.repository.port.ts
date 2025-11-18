@@ -9,4 +9,6 @@ export interface ReservationWishRepositoryPort {
     startingDate: DateValueObject,
     userId: UUID,
   ): Promise<boolean>;
+  findById(reservationWishId: UUID): Promise<ReservationWishEntity | null>;
+  update(reservationWish: ReservationWishEntity): Promise<void>;
 }

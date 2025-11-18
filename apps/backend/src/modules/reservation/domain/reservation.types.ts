@@ -14,4 +14,11 @@ export type CreateReservationWishProps = BaseReservationWishProps & {
 export type ReservationWishProps = BaseReservationWishProps & {
   startingDate: DateValueObject;
   endingDate: DateValueObject;
+  status: ReservationWishStatus;
 };
+
+export enum ReservationWishStatus {
+  PENDING = 'PENDING',
+  CANCELLED = 'CANCELLED',
+  CONFIRMED = 'CONFIRMED',
+}

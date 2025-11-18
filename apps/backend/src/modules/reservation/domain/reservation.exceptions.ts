@@ -9,3 +9,19 @@ export class UserHasReservationWishOnStartingDateError extends Error {
     this.name = UserHasReservationWishOnStartingDateError.name;
   }
 }
+
+export class CannotCancelConfirmedReservationWishError extends Error {
+  constructor(reservationWishId: UUID) {
+    super(
+      `Cannot cancel reservation wish with ID ${reservationWishId.uuid} because it is already confirmed.`,
+    );
+    this.name = CannotCancelConfirmedReservationWishError.name;
+  }
+}
+
+export class ReservationWishNotFoundError extends Error {
+  constructor(reservationWishId: UUID) {
+    super(`Reservation wish with ID ${reservationWishId.uuid} not found.`);
+    this.name = ReservationWishNotFoundError.name;
+  }
+}

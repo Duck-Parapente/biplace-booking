@@ -21,5 +21,17 @@ module.exports = {
       from: { path: 'libs/ddd' },
       to: { path: '^src/modules' },
     },
+    {
+      name: 'only-providers-database-import-prisma',
+      comment: 'Only providers/database and src/libs should import from @prisma*',
+      severity: 'error',
+      from: { pathNot: '^(src/modules/.*/providers/database|src/libs)' },
+      to: { path: '@prisma.*' },
+    },
   ],
+  options: {
+    exclude: {
+      path: 'node_modules',
+    },
+  },
 };

@@ -56,5 +56,5 @@ model ReservationWish {
     createdBy     User                  @relation(fields: [createdById], references: [id])
     createdById   String
     createdAt     DateTime              @default(now())
-    status        ReservationWishStatus @default(PENDING)
+    status        ReservationWishStatus
 }

@@ -1,10 +1,27 @@
 import { prisma } from '@libs/database/prisma/prisma';
+import { DateValueObject } from '@libs/ddd/date.value-object';
+import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
 import { ReservationWishEntity } from '@modules/reservation/domain/reservation-wish.entity';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ReservationWishStatus } from '@prisma/client';
+
+import { ReservationWishStatus as DomainReservationWishStatus } from '../../domain/reservation.types';
+
+const mapStatus = (status: ReservationWishStatus): DomainReservationWishStatus => {
+  switch (status) {
+    case ReservationWishStatus.PENDING:
+      return DomainReservationWishStatus.PENDING;
+    case ReservationWishStatus.CONFIRMED:
+      return DomainReservationWishStatus.CONFIRMED;
+    case ReservationWishStatus.CANCELLED:
+      return DomainReservationWishStatus.CANCELLED;
+    default:
+      throw new Error(`Unknown ReservationWishStatus: ${status}`);
+  }
+};
 
 @Injectable()
 export class ReservationWishRepository implements ReservationWishRepositoryPort {
@@ -43,5 +60,42 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
     });
 
     return count > 0;
+  }
+
+  async findById(reservationWishId: UUID): Promise<ReservationWishEntity | null> {
+    const record = await prisma.reservationWish.findUnique({
+      where: { id: reservationWishId.uuid },
+      include: { packChoices: true },
+    });
+
+    if (!record) {
+      return null;
+    }
+
+    const entity = new ReservationWishEntity({
+      id: reservationWishId,
+      props: {
+        createdById: new UUID({ uuid: record.createdById }),
+        status: mapStatus(record.status),
+        startingDate: new DateValueObject({ value: record.startingDate }),
+        endingDate: new DateValueObject({ value: record.endingDate }),
+        packChoices: record.packChoices.map((packChoice) => new UUID({ uuid: packChoice.id })),
+        publicComment: record.publicComment,
+      },
+    });
+
+    return entity;
+  }
+
+  async update(reservationWish: ReservationWishEntity): Promise<void> {
+    await prisma.reservationWish.update({
+      where: { id: reservationWish.id.uuid },
+      data: {
+        status: reservationWish.status,
+      },
+    });
+
+    await reservationWish.publishEvents(this.eventEmitter);
+    this.logger.log(`ReservationWish updated: ${reservationWish.id.uuid}`);
   }
 }

@@ -4,8 +4,14 @@ import { AggregateRoot, AggregateID } from '@libs/ddd';
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
+import { ReservationwishCancelledDomainEvent } from './events/reservation-wish-cancelled.domain-event';
 import { ReservationwishCreatedDomainEvent } from './events/reservation-wish-created.domain-event';
-import { CreateReservationWishProps, ReservationWishProps } from './reservation.types';
+import { CannotCancelConfirmedReservationWishError } from './reservation.exceptions';
+import {
+  CreateReservationWishProps,
+  ReservationWishProps,
+  ReservationWishStatus,
+} from './reservation.types';
 
 export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
   protected readonly _id: AggregateID;
@@ -25,6 +31,7 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
 
     const props: ReservationWishProps = {
       ...rawProps,
+      status: ReservationWishStatus.PENDING,
       startingDate: DateValueObject.fromDate(normalizedStart),
       endingDate: DateValueObject.fromDate(normalizedEnd),
     };
@@ -58,6 +65,28 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
 
   get createdById() {
     return this.props.createdById;
+  }
+
+  get status() {
+    return this.props.status;
+  }
+
+  cancel() {
+    if (this.props.status === ReservationWishStatus.CANCELLED) {
+      return;
+    }
+
+    if (this.props.status === ReservationWishStatus.CONFIRMED) {
+      throw new CannotCancelConfirmedReservationWishError(this.id);
+    }
+
+    this.props.status = ReservationWishStatus.CANCELLED;
+
+    this.addEvent(
+      new ReservationwishCancelledDomainEvent({
+        aggregateId: this.id,
+      }),
+    );
   }
 
   validate(): void {
