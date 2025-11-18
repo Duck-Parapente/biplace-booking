@@ -8,7 +8,7 @@ import { CreatePackDto, UserRoles } from 'shared';
 import { CreatePackCommand } from './create-pack.command';
 import { CreatePackService } from './create-pack.service';
 
-@Controller('pack/create')
+@Controller('packs')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRoles.ADMIN)
 export class CreatePackHttpController {

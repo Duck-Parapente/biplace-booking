@@ -17,7 +17,7 @@ interface PackOperationConfig {
 
 const PACK_OPERATION_CONFIG: Record<PackOperationMode, PackOperationConfig> = {
   [PackOperationMode.CREATE]: {
-    endpoint: () => '/pack/create',
+    endpoint: () => '/packs',
     method: 'POST',
     errorMessage: 'Impossible de créer le pack',
     successMessage: '✓ Pack créé avec succès',
@@ -26,7 +26,7 @@ const PACK_OPERATION_CONFIG: Record<PackOperationMode, PackOperationConfig> = {
     submittingButton: 'Création...',
   },
   [PackOperationMode.EDIT]: {
-    endpoint: (id?: string) => `/pack/${id}`,
+    endpoint: (id?: string) => `/packs/${id}`,
     method: 'PATCH',
     errorMessage: 'Impossible de modifier le pack',
     successMessage: '✓ Pack modifié avec succès',

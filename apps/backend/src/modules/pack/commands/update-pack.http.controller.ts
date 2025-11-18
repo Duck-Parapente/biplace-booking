@@ -8,7 +8,7 @@ import { UpdatePackDto, UserRoles } from 'shared';
 import { UpdatePackCommand } from './update-pack.command';
 import { UpdatePackService } from './update-pack.service';
 
-@Controller('pack')
+@Controller('packs')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRoles.ADMIN)
 export class UpdatePackHttpController {

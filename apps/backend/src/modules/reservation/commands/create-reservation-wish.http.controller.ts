@@ -18,7 +18,7 @@ import { UserHasReservationWishOnStartingDateError } from '../domain/reservation
 import { CreateReservationWishCommand } from './create-reservation-wish.command';
 import { CreateReservationWishService } from './create-reservation-wish.service';
 
-@Controller('reservation-wish/create')
+@Controller('reservation-wishes')
 @UseGuards(JwtAuthGuard)
 export class CreateReservationWishHttpController {
   private readonly logger = new Logger(CreateReservationWishHttpController.name);
