@@ -39,6 +39,7 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
         startingDate: reservationWish.startingDate.value,
         endingDate: reservationWish.endingDate.value,
         publicComment: reservationWish.publicComment,
+        status: reservationWish.status,
         packChoices: {
           connect: reservationWish.packChoices.map(({ uuid: id }) => ({ id })),
         },
