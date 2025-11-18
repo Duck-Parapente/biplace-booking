@@ -6,6 +6,19 @@ import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { UserRepositoryPort } from '@modules/user/domain/ports/user.repository.port';
 import { UserEntity } from '@modules/user/domain/user.entity';
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { User } from '@prisma/client';
+
+const toEntity = (user: User): UserEntity => {
+  const { id, email, externalAuthId, ...otherProps } = user;
+  return new UserEntity({
+    id: new UUID({ uuid: id }),
+    props: {
+      email: new Email({ email }),
+      externalAuthId,
+      ...otherProps,
+    },
+  });
+};
 
 @Injectable()
 export class UserRepository implements UserRepositoryPort {
@@ -48,38 +61,16 @@ export class UserRepository implements UserRepositoryPort {
     const user = await prisma.user.findUnique({
       where: { id: userId.uuid },
     });
-
     if (!user) {
       return null;
     }
-
-    const { id, email, externalAuthId, ...otherProps } = user;
-
-    return new UserEntity({
-      id: new UUID({ uuid: id }),
-      props: {
-        email: new Email({ email }),
-        externalAuthId,
-        ...otherProps,
-      },
-    });
+    return toEntity(user);
   }
 
   async findAll(): Promise<UserEntity[]> {
     const users = await prisma.user.findMany({
       orderBy: { createdAt: 'desc' },
     });
-
-    return users.map((user) => {
-      const { id, email, externalAuthId, ...otherProps } = user;
-      return new UserEntity({
-        id: new UUID({ uuid: id }),
-        props: {
-          email: new Email({ email }),
-          externalAuthId,
-          ...otherProps,
-        },
-      });
-    });
+    return users.map(toEntity);
   }
 }
