@@ -9,9 +9,10 @@ export class EventEmitter implements EventEmitterPort {
   private readonly logger = new Logger(EventEmitter.name);
 
   async logDomainEvent(domainEvent: DomainEvent): Promise<void> {
-    const { aggregateId, metadata, ...payload } = domainEvent;
+    const { id, aggregateId, metadata, ...payload } = domainEvent;
     await prisma.event.create({
       data: {
+        id: id.uuid,
         aggregateId: aggregateId.uuid,
         name: domainEvent.constructor.name,
         payload,

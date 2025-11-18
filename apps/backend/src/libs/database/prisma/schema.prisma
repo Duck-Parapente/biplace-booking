@@ -8,7 +8,7 @@ generator client {
 }
 
 model Event {
-    id          String   @id @default(uuid())
+    id          String   @id
     aggregateId String
     name        String
     payload     Json
@@ -17,7 +17,7 @@ model Event {
 }
 
 model User {
-    id                String            @id @default(uuid())
+    id                String            @id
     email             String            @unique
     externalAuthId    String            @unique
     firstName         String?
@@ -31,7 +31,7 @@ model User {
 }
 
 model Pack {
-    id                String            @id @default(uuid())
+    id                String            @id
     ownerId           String?
     owner             User?             @relation(fields: [ownerId], references: [id])
     label             String
@@ -42,7 +42,7 @@ model Pack {
 }
 
 model ReservationWish {
-    id            String   @id @default(uuid())
+    id            String   @id
     startingDate  DateTime
     endingDate    DateTime
     packChoices   Pack[]

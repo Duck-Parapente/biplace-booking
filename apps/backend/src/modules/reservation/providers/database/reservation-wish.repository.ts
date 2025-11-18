@@ -17,6 +17,7 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
   async create(reservationWish: ReservationWishEntity): Promise<void> {
     await prisma.reservationWish.create({
       data: {
+        id: reservationWish.id.uuid,
         startingDate: reservationWish.startingDate.value,
         endingDate: reservationWish.endingDate.value,
         packChoices: {

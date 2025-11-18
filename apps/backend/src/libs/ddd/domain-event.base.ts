@@ -4,7 +4,7 @@ import { Guard } from '@libs/guards/primitive.guard';
 
 import { ArgumentNotProvidedException } from '../exceptions';
 
-import { UUID } from './uuid.value-object';
+import { UUID, UuidProps } from './uuid.value-object';
 
 type DomainEventMetadata = {
   /** Timestamp when this domain event occurred */
@@ -31,7 +31,7 @@ export type DomainEventProps<T> = Omit<T, 'id' | 'metadata'> & {
 };
 
 export abstract class DomainEvent {
-  public readonly id: string;
+  public readonly id: UuidProps;
 
   /** Aggregate ID where domain event occurred */
   public readonly aggregateId: UUID;
@@ -42,7 +42,7 @@ export abstract class DomainEvent {
     if (Guard.isEmpty(props)) {
       throw new ArgumentNotProvidedException('DomainEvent props should not be empty');
     }
-    this.id = randomUUID();
+    this.id = new UUID({ uuid: randomUUID() });
     this.aggregateId = props.aggregateId;
     this.metadata = {
       correlationId: props?.metadata?.correlationId,
