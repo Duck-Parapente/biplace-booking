@@ -13,6 +13,10 @@ export const useReservationWish = () => {
   const submitError = ref<string | null>(null);
   const submitSuccess = ref(false);
 
+  const cancelling = ref(false);
+  const cancellingError = ref<string | null>(null);
+  const cancellingSuccess = ref(false);
+
   const addReservationWishForm = ref<CreateReservationWishDto>({
     startingDate: '',
     packChoices: [],
@@ -63,6 +67,32 @@ export const useReservationWish = () => {
     }
   };
 
+  const cancelReservationWish = async (reservationWishId: string) => {
+    try {
+      cancelling.value = true;
+      cancellingError.value = null;
+      cancellingSuccess.value = false;
+
+      await callApi(`${BASE_PATH}/${reservationWishId}`, {
+        method: 'DELETE',
+      });
+
+      cancellingSuccess.value = true;
+
+      await getReservationWishes();
+
+      setTimeout(() => {
+        cancelling.value = false;
+      }, 100);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Impossible de créer une demande de réservation';
+      cancellingError.value = errorMessage;
+      console.error(errorMessage);
+      cancelling.value = false;
+    }
+  };
+
   return {
     reservationWishes,
     loading,
@@ -73,5 +103,9 @@ export const useReservationWish = () => {
     getReservationWishes,
     submitReservationWish,
     addReservationWishForm,
+    cancelling,
+    cancellingError,
+    cancellingSuccess,
+    cancelReservationWish,
   };
 };
