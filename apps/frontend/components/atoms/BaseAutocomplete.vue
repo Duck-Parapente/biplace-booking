@@ -14,6 +14,7 @@
         autocomplete="off"
         :disabled="disabled"
         @input="handleInput"
+        @click="handleFocus"
         @focus="handleFocus"
         @blur="handleBlur"
         class="w-full px-3 py-2 pr-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-secondary-600 disabled:opacity-50 disabled:cursor-not-allowed"
