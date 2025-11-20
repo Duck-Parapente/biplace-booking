@@ -29,13 +29,9 @@
                   <div class="flex items-center gap-2 mb-2">
                     <span
                       class="px-2 py-1 text-xs font-medium rounded"
-                      :class="{
-                        'bg-yellow-200 text-yellow-800': wish.status === 'PENDING',
-                        'bg-green-200 text-green-800': wish.status === 'CONFIRMED',
-                        'bg-gray-200 text-gray-800': wish.status === 'CANCELLED',
-                      }"
+                      :class="getStatusConfig(wish.status).classes"
                     >
-                      {{ getStatusLabel(wish.status) }}
+                      {{ getStatusConfig(wish.status).label }}
                     </span>
                   </div>
                   <div class="text-sm text-gray-600 space-y-1">
@@ -189,13 +185,14 @@ const formatDateLong = (date: Date | string): string => {
   });
 };
 
-const getStatusLabel = (status: ReservationStatusDto): string => {
-  const labels: Record<ReservationStatusDto, string> = {
-    PENDING: 'En attente',
-    CONFIRMED: 'Confirmée',
-    CANCELLED: 'Annulée',
+const getStatusConfig = (status: ReservationStatusDto) => {
+  const DEFAULT_CLASSES = 'bg-gray-200 text-gray-800';
+  const configs: Record<ReservationStatusDto, { label: string; classes: string }> = {
+    PENDING: { label: 'En attente', classes: 'bg-yellow-200 text-yellow-800' },
+    CONFIRMED: { label: 'Confirmée', classes: 'bg-green-200 text-green-800' },
+    CANCELLED: { label: 'Annulée', classes: DEFAULT_CLASSES },
   };
-  return labels[status] || status;
+  return configs[status] || { label: status, classes: DEFAULT_CLASSES };
 };
 
 onMounted(() => {
