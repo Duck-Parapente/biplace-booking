@@ -24,8 +24,8 @@ model User {
     lastName          String?
     phoneNumber       String?
     address           String?
-    currentScore      Int               @default(0)
-    createdAt         DateTime          @default(now())
+    currentScore      Int
+    createdAt         DateTime
     ownedPacks        Pack[]
     reservationWishes ReservationWish[]
 }
@@ -37,7 +37,7 @@ model Pack {
     label             String
     flightsHours      Int
     flightsCount      Int
-    createdAt         DateTime          @default(now())
+    createdAt         DateTime
     reservationWishes ReservationWish[]
 }
 
@@ -55,6 +55,6 @@ model ReservationWish {
     publicComment String?
     createdBy     User                  @relation(fields: [createdById], references: [id])
     createdById   String
-    createdAt     DateTime              @default(now())
+    createdAt     DateTime
     status        ReservationWishStatus
 }

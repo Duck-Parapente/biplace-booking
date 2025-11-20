@@ -16,8 +16,7 @@ export interface UserProfile {
 export interface UserProps extends UserProfile {
   email: Email;
   externalAuthId: string;
-  currentScore?: number;
-  createdAt?: Date;
+  currentScore: number;
 }
 
 export type CreateUserProps = ExternalUser;

@@ -6,28 +6,29 @@ import {
   ArgumentOutOfRangeException,
 } from '../exceptions';
 
+import { DateValueObject } from './date.value-object';
 import { UUID } from './uuid.value-object';
 
 export type AggregateID = UUID;
 
 export interface BaseEntityProps {
   id: AggregateID;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: DateValueObject;
+  updatedAt: DateValueObject;
 }
 
 export interface CreateEntityProps<T> {
   id: AggregateID;
   props: T;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: DateValueObject;
+  updatedAt?: DateValueObject;
 }
 
 export abstract class Entity<EntityProps> {
   constructor({ id, createdAt, updatedAt, props }: CreateEntityProps<EntityProps>) {
     this.setId(id);
     this.validateProps(props);
-    const now = new Date();
+    const now = DateValueObject.fromDate(new Date());
     this._createdAt = createdAt || now;
     this._updatedAt = updatedAt || now;
     this.props = props;
@@ -44,9 +45,9 @@ export abstract class Entity<EntityProps> {
    */
   protected abstract _id: AggregateID;
 
-  private readonly _createdAt: Date;
+  private readonly _createdAt: DateValueObject;
 
-  private _updatedAt: Date;
+  private _updatedAt: DateValueObject;
 
   get id(): AggregateID {
     return this._id;
@@ -56,11 +57,11 @@ export abstract class Entity<EntityProps> {
     this._id = id;
   }
 
-  get createdAt(): Date {
+  get createdAt(): DateValueObject {
     return this._createdAt;
   }
 
-  get updatedAt(): Date {
+  get updatedAt(): DateValueObject {
     return this._updatedAt;
   }
 

@@ -7,7 +7,7 @@ export interface PackProfile {
   flightsCount?: number;
 }
 
-export type PackProps = PackProfile;
+export type PackProps = Required<PackProfile>;
 
 export type CreatePackProps = PackProfile;
 

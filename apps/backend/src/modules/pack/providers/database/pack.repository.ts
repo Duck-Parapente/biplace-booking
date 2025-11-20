@@ -1,10 +1,24 @@
 import { prisma } from '@libs/database/prisma/prisma';
+import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { PackEntity } from '@modules/pack/domain/pack.entity';
 import { PackRepositoryPort } from '@modules/pack/domain/ports/pack.repository.port';
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Pack } from '@prisma/client';
+
+const toEntity = (pack: Pack): PackEntity => {
+  const { id, ownerId, ...otherProps } = pack;
+  return new PackEntity({
+    id: new UUID({ uuid: id }),
+    createdAt: DateValueObject.fromDate(pack.createdAt),
+    props: {
+      ownerId: new UUID({ uuid: ownerId }),
+      ...otherProps,
+    },
+  });
+};
 
 @Injectable()
 export class PackRepository implements PackRepositoryPort {
@@ -19,6 +33,7 @@ export class PackRepository implements PackRepositoryPort {
     await prisma.pack.create({
       data: {
         id: pack.id.uuid,
+        createdAt: pack.createdAt.value,
         label: pack.label,
         flightsHours: pack.flightsHours ?? 0,
         flightsCount: pack.flightsCount ?? 0,
@@ -36,36 +51,17 @@ export class PackRepository implements PackRepositoryPort {
     const packs = await prisma.pack.findMany({
       orderBy: { createdAt: 'desc' },
     });
-
-    return packs.map((pack) => {
-      const { id, ownerId, ...otherProps } = pack;
-      return new PackEntity({
-        id: new UUID({ uuid: id }),
-        props: {
-          ownerId: new UUID({ uuid: ownerId }),
-          ...otherProps,
-        },
-      });
-    });
+    return packs.map(toEntity);
   }
 
   async findById(id: UUID): Promise<PackEntity | null> {
     const pack = await prisma.pack.findUnique({
       where: { id: id.uuid },
     });
-
     if (!pack) {
       return null;
     }
-
-    const { id: packId, ownerId, ...otherProps } = pack;
-    return new PackEntity({
-      id: new UUID({ uuid: packId }),
-      props: {
-        ownerId: new UUID({ uuid: ownerId }),
-        ...otherProps,
-      },
-    });
+    return toEntity(pack);
   }
 
   async update(pack: PackEntity): Promise<void> {

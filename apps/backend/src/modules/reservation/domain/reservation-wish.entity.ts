@@ -36,7 +36,11 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
       endingDate: DateValueObject.fromDate(normalizedEnd),
     };
 
-    const entity = new ReservationWishEntity({ id, props });
+    const entity = new ReservationWishEntity({
+      id,
+      createdAt: DateValueObject.fromDate(new Date()),
+      props,
+    });
 
     entity.addEvent(
       new ReservationwishCreatedDomainEvent({

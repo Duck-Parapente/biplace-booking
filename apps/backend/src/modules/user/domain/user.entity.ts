@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto';
 
 import { AggregateRoot, AggregateID } from '@libs/ddd';
+import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
 import { UserCreatedDomainEvent } from './events/user-created.domain-event';
@@ -12,7 +13,14 @@ export class UserEntity extends AggregateRoot<UserProps> {
 
   static create(props: CreateUserProps): UserEntity {
     const id = new UUID({ uuid: randomUUID() });
-    const user = new UserEntity({ id, props });
+    const user = new UserEntity({
+      id,
+      createdAt: DateValueObject.fromDate(new Date()),
+      props: {
+        ...props,
+        currentScore: 0,
+      },
+    });
     user.addEvent(
       new UserCreatedDomainEvent({
         aggregateId: id,
@@ -48,10 +56,6 @@ export class UserEntity extends AggregateRoot<UserProps> {
 
   get currentScore() {
     return this.props.currentScore;
-  }
-
-  get createdAt() {
-    return this.props.createdAt;
   }
 
   update(props: UpdateUserProps): void {

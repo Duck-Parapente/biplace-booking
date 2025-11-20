@@ -6,7 +6,7 @@ import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
 import { ReservationWishEntity } from '@modules/reservation/domain/reservation-wish.entity';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { ReservationWishStatus } from '@prisma/client';
+import { ReservationWish, ReservationWishStatus } from '@prisma/client';
 
 import { ReservationWishStatus as DomainReservationWishStatus } from '../../domain/reservation.types';
 
@@ -23,6 +23,25 @@ const mapStatus = (status: ReservationWishStatus): DomainReservationWishStatus =
   }
 };
 
+const toEntity = (
+  record: ReservationWish & { packChoices: { id: string }[] },
+): ReservationWishEntity => {
+  return new ReservationWishEntity({
+    id: new UUID({ uuid: record.id }),
+    createdAt: DateValueObject.fromDate(record.createdAt),
+    props: {
+      createdById: new UUID({ uuid: record.createdById }),
+      status: mapStatus(record.status),
+      startingDate: DateValueObject.fromDate(record.startingDate),
+      endingDate: DateValueObject.fromDate(record.endingDate),
+      packChoices: record.packChoices.map(
+        (packChoice: { id: string }) => new UUID({ uuid: packChoice.id }),
+      ),
+      publicComment: record.publicComment,
+    },
+  });
+};
+
 @Injectable()
 export class ReservationWishRepository implements ReservationWishRepositoryPort {
   private readonly logger = new Logger(ReservationWishRepository.name);
@@ -36,6 +55,7 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
     await prisma.reservationWish.create({
       data: {
         id: reservationWish.id.uuid,
+        createdAt: reservationWish.createdAt.value,
         startingDate: reservationWish.startingDate.value,
         endingDate: reservationWish.endingDate.value,
         publicComment: reservationWish.publicComment,
@@ -75,19 +95,7 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
       return null;
     }
 
-    const entity = new ReservationWishEntity({
-      id: reservationWishId,
-      props: {
-        createdById: new UUID({ uuid: record.createdById }),
-        status: mapStatus(record.status),
-        startingDate: new DateValueObject({ value: record.startingDate }),
-        endingDate: new DateValueObject({ value: record.endingDate }),
-        packChoices: record.packChoices.map((packChoice) => new UUID({ uuid: packChoice.id })),
-        publicComment: record.publicComment,
-      },
-    });
-
-    return entity;
+    return toEntity(record);
   }
 
   async update(reservationWish: ReservationWishEntity): Promise<void> {
@@ -100,5 +108,13 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
 
     await reservationWish.publishEvents(this.eventEmitter);
     this.logger.log(`ReservationWish updated: ${reservationWish.id.uuid}`);
+  }
+
+  async findAll(): Promise<ReservationWishEntity[]> {
+    const records = await prisma.reservationWish.findMany({
+      include: { packChoices: true },
+    });
+
+    return records.map(toEntity);
   }
 }
