@@ -119,7 +119,7 @@ const {
   openEditPackModal,
   closeModal,
   submitPack,
-  initializePacks,
+  getPacks,
 } = usePack();
 
 const { getUsers } = useUser();
@@ -140,7 +140,7 @@ const loadUsers = async () => {
 };
 
 onMounted(() => {
-  initializePacks();
+  getPacks();
   loadUsers();
 });
 </script>

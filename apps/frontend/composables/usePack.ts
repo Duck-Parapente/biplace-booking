@@ -1,5 +1,7 @@
 import type { CreatePackDto, PackDto, UpdatePackDto } from 'shared';
 
+const BASE_PATH = '/packs';
+
 enum PackOperationMode {
   CREATE = 'create',
   EDIT = 'edit',
@@ -17,7 +19,7 @@ interface PackOperationConfig {
 
 const PACK_OPERATION_CONFIG: Record<PackOperationMode, PackOperationConfig> = {
   [PackOperationMode.CREATE]: {
-    endpoint: () => '/packs',
+    endpoint: () => BASE_PATH,
     method: 'POST',
     errorMessage: 'Impossible de créer le pack',
     successMessage: '✓ Pack créé avec succès',
@@ -26,7 +28,7 @@ const PACK_OPERATION_CONFIG: Record<PackOperationMode, PackOperationConfig> = {
     submittingButton: 'Création...',
   },
   [PackOperationMode.EDIT]: {
-    endpoint: (id?: string) => `/packs/${id}`,
+    endpoint: (id?: string) => `${BASE_PATH}/${id}`,
     method: 'PATCH',
     errorMessage: 'Impossible de modifier le pack',
     successMessage: '✓ Pack modifié avec succès',
@@ -96,7 +98,7 @@ export const usePack = () => {
     try {
       loading.value = true;
       error.value = null;
-      const fetchedPacks = await callApi<PackDto[]>('/packs');
+      const fetchedPacks = await callApi<PackDto[]>(BASE_PATH);
       packs.value = fetchedPacks;
       return fetchedPacks;
     } catch (err) {
@@ -123,16 +125,9 @@ export const usePack = () => {
         throw new Error('No pack ID for update');
       }
 
-      const payload: CreatePackDto | UpdatePackDto = {
-        label: packForm.value.label,
-        ownerId: packForm.value.ownerId,
-        flightsHours: packForm.value.flightsHours,
-        flightsCount: packForm.value.flightsCount,
-      };
-
       await callApi(config.endpoint(editingPackId.value ?? undefined), {
         method: config.method,
-        body: JSON.stringify(payload),
+        body: JSON.stringify(packForm.value),
       });
 
       submitSuccess.value = true;
@@ -144,7 +139,7 @@ export const usePack = () => {
       setTimeout(() => {
         closeModal();
         submitting.value = false;
-      }, 1500);
+      }, 1000);
     } catch (err) {
       const config = PACK_OPERATION_CONFIG[modalMode.value];
       const errorMessage = err instanceof Error ? err.message : config.errorMessage;
@@ -152,10 +147,6 @@ export const usePack = () => {
       console.error(`Failed to ${modalMode.value} pack:`, err);
       submitting.value = false;
     }
-  };
-
-  const initializePacks = async () => {
-    await getPacks();
   };
 
   // Computed wording based on current mode
@@ -177,7 +168,6 @@ export const usePack = () => {
     openEditPackModal,
     closeModal,
     submitPack,
-    initializePacks,
   };
 };
 
