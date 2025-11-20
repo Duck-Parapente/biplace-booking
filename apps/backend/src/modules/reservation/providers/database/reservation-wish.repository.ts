@@ -28,11 +28,12 @@ const toEntity = (
 ): ReservationWishEntity => {
   return new ReservationWishEntity({
     id: new UUID({ uuid: record.id }),
+    createdAt: DateValueObject.fromDate(record.createdAt),
     props: {
       createdById: new UUID({ uuid: record.createdById }),
       status: mapStatus(record.status),
-      startingDate: new DateValueObject({ value: record.startingDate }),
-      endingDate: new DateValueObject({ value: record.endingDate }),
+      startingDate: DateValueObject.fromDate(record.startingDate),
+      endingDate: DateValueObject.fromDate(record.endingDate),
       packChoices: record.packChoices.map(
         (packChoice: { id: string }) => new UUID({ uuid: packChoice.id }),
       ),
@@ -54,6 +55,7 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
     await prisma.reservationWish.create({
       data: {
         id: reservationWish.id.uuid,
+        createdAt: reservationWish.createdAt.value,
         startingDate: reservationWish.startingDate.value,
         endingDate: reservationWish.endingDate.value,
         publicComment: reservationWish.publicComment,

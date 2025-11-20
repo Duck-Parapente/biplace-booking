@@ -21,7 +21,7 @@ export function mapReservationWishToDto(
 ): ReservationWishDto {
   return {
     id: reservationWish.id.uuid,
-    createdAt: reservationWish.createdAt,
+    createdAt: reservationWish.createdAt.value,
     startingDate: reservationWish.startingDate.value,
     endingDate: reservationWish.endingDate.value,
     packChoices: reservationWish.packChoices.map((packChoice) => packChoice.uuid),

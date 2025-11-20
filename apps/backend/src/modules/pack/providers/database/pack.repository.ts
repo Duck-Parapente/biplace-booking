@@ -1,4 +1,5 @@
 import { prisma } from '@libs/database/prisma/prisma';
+import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
@@ -11,6 +12,7 @@ const toEntity = (pack: Pack): PackEntity => {
   const { id, ownerId, ...otherProps } = pack;
   return new PackEntity({
     id: new UUID({ uuid: id }),
+    createdAt: DateValueObject.fromDate(pack.createdAt),
     props: {
       ownerId: new UUID({ uuid: ownerId }),
       ...otherProps,
@@ -31,6 +33,7 @@ export class PackRepository implements PackRepositoryPort {
     await prisma.pack.create({
       data: {
         id: pack.id.uuid,
+        createdAt: pack.createdAt.value,
         label: pack.label,
         flightsHours: pack.flightsHours ?? 0,
         flightsCount: pack.flightsCount ?? 0,

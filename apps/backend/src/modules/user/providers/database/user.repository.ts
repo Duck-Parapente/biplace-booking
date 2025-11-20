@@ -1,5 +1,6 @@
 import { prisma } from '@libs/database/prisma/prisma';
 import { Email } from '@libs/ddd';
+import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID, UuidProps } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
@@ -12,6 +13,7 @@ const toEntity = (user: User): UserEntity => {
   const { id, email, externalAuthId, ...otherProps } = user;
   return new UserEntity({
     id: new UUID({ uuid: id }),
+    createdAt: DateValueObject.fromDate(user.createdAt),
     props: {
       email: new Email({ email }),
       externalAuthId,
@@ -33,6 +35,8 @@ export class UserRepository implements UserRepositoryPort {
     await prisma.user.create({
       data: {
         id: user.id.uuid,
+        createdAt: user.createdAt.value,
+        currentScore: user.currentScore,
         email: user.email.email,
         externalAuthId: user.externalAuthId,
       },
