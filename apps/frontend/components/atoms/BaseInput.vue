@@ -28,7 +28,7 @@ interface Props {
   id: string;
   modelValue?: string | number;
   label?: string;
-  type?: 'text' | 'number' | 'email' | 'password' | 'tel';
+  type?: 'text' | 'number' | 'email' | 'password' | 'tel' | 'date';
   required?: boolean;
   placeholder?: string;
   autocomplete?: string;
