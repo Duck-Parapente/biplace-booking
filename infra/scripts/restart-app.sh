@@ -116,7 +116,13 @@ deploy_full_stack() {
 ensure_caddy_entrypoint_running() {
     if [[ -z "$(docker ps --filter name=caddy-entrypoint --filter status=running -q)" ]]; then
         log_warning "Main caddy-entrypoint container is NOT running."
-        echo "Start it with: pnpm dc:main-caddy up -d" >&2
+        log_info "Starting caddy-entrypoint..."
+        if command -v pnpm >/dev/null; then
+            pnpm dc:caddy:up || log_error "Failed to start caddy-entrypoint"
+            log_success "caddy-entrypoint started."
+        else
+            log_warning "pnpm not found, skipping caddy-entrypoint start"
+        fi
     else
         log_success "caddy-entrypoint is running."
     fi

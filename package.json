@@ -35,7 +35,7 @@
     "deploy:prod": "./infra/scripts/deploy.sh prod",
     "dc:logs:staging": "cd infra && docker compose --profile staging logs -f",
     "dc:logs:prod": "cd infra && docker compose --profile prod logs -f",
-    "dc:main-caddy": "cd infra && docker compose -f docker-compose.entrypoint.yml"
+    "dc:caddy:up": "cd /srv/prod-biplace/infra && docker compose -f docker-compose.entrypoint.yml up -d"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,vue}": [
