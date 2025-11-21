@@ -136,7 +136,7 @@ remote_git_sync() {
 }
 
 remote_restart() {
-  local cmd="${REMOTE_APP_DIR}/infra/scripts/restart-app.sh ${ENVIRONMENT}"
+  local cmd="${REMOTE_APP_DIR}/infra/scripts/restart-app.sh"
   echo "[5/5] Executing remote restart: ${cmd}"
   if ssh "${REMOTE_HOST}" "${cmd}"; then
     echo "Remote restart completed."

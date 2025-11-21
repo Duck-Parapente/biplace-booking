@@ -1,23 +1,24 @@
 #!/bin/bash
+set -e
 
-# Restart script for Biplace Booking
-# Usage:
-#   ./restart-app.sh <environment>
-# Environments: staging | prod
-# Examples:
-#   ./restart-app.sh staging
-#   ./restart-app.sh prod
-#   ./restart-app.sh status   # Show container status
-#   ./restart-app.sh help     # Show help
-
-set -euo pipefail
-IFS=$'\n\t'
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# ----------- PATH SETUP -----------
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 INFRA_DIR="$(dirname "$SCRIPT_DIR")"
+ENV_FILE="$INFRA_DIR/.env"
 COMPOSE_FILE="$INFRA_DIR/docker-compose.yml"
 
-ACTION=${1:-local}
+# ----------- LOAD .env CONFIG -----------
+if [ ! -f "$ENV_FILE" ]; then
+    echo "Missing .env file at: $ENV_FILE"
+    exit 1
+fi
+
+export $(grep -v '^#' "$ENV_FILE" | xargs)
+
+if [ -z "$ENV" ]; then
+    echo "Missing required variable ENV in .env"
+    exit 1
+fi
 
 START_TIME=$(date +%s)
 
@@ -30,23 +31,19 @@ log_warning() { echo "⚠️  $1" >&2; }
 
 usage() {
     cat <<EOF
-Usage: ./restart-app.sh <environment|status|help>
+Usage: ./restart-app.sh
 
-Environments:
+Reads environment from infra/.env file (ENV variable).
+
+Supported environments:
     staging  Build and start full staging stack
-    prod     Build and start production stack (asks for confirmation)
-
-Commands:
-    status   Show docker compose service status
-    help     Show this help message
+    prod     Build and start production stack
 
 Environment structure:
     infra/
       Caddyfile
       docker-compose.yml
-      .env.prod
-      .env.staging
-      .env (local defaults)
+      .env (contains ENV=staging or ENV=prod)
 EOF
 }
 
@@ -72,8 +69,7 @@ ensure_requirements() {
 }
 
 validate_environment() {
-    local env=$1
-    [[ "$env" =~ ^(staging|prod)$ ]] || log_error "Invalid environment: $env"
+    [[ "$ENV" =~ ^(staging|prod)$ ]] || log_error "Invalid environment in .env: $ENV (must be 'staging' or 'prod')"
 }
 
 handle_running_containers() {
@@ -90,10 +86,9 @@ handle_running_containers() {
     docker compose down && log_success "Containers stopped"
 }
 
-# New: load pre-built image from /srv to minimize downtime
+# Load pre-built image from /srv to minimize downtime
 load_prebuilt_image() {
-    local env="$1"
-    local archive="/srv/${env}-biplace.tar.gz"
+    local archive="/srv/${ENV}-biplace.tar.gz"
     log_info "📦 Attempting to load pre-built image: ${archive}"
     if [[ -f "${archive}" ]]; then
         if gunzip -c "${archive}" | docker load >/dev/null 2>&1; then
@@ -107,19 +102,17 @@ load_prebuilt_image() {
 }
 
 deploy_containers() {
-    local env=$1
     cd "$INFRA_DIR" || log_error "Failed to navigate to infra directory: $INFRA_DIR"
-    DOCKER_BUILDKIT=0 docker compose --profile "$env" up -d --build || log_error "Failed to deploy $env environment"
-    log_success "$env deployed!"
+    DOCKER_BUILDKIT=0 docker compose --profile "$ENV" up -d --build || log_error "Failed to deploy $ENV environment"
+    log_success "$ENV deployed!"
 }
 
 deploy_full_stack() {
-    local env=$1
-    log_info "🏭 Deploying to $env environment..."
-    deploy_containers "$env"
+    log_info "🏭 Deploying to $ENV environment..."
+    deploy_containers
 }
 
-# New: ensure main Caddy entrypoint is running
+# Ensure main Caddy entrypoint is running
 ensure_caddy_entrypoint_running() {
     if [[ -z "$(docker ps --filter name=caddy-entrypoint --filter status=running -q)" ]]; then
         log_warning "Main caddy-entrypoint container is NOT running."
@@ -131,22 +124,18 @@ ensure_caddy_entrypoint_running() {
 
 #----------------------------- Main execution -----------------------------#
 
-main() {
-    case "$ACTION" in
-        help|-h|--help)
-            usage; return 0 ;;
-        staging|prod)
-            local env="$ACTION"
-            ensure_requirements
-            validate_environment "$env"
-            load_prebuilt_image "$env"
-            handle_running_containers
-            deploy_full_stack "$env"
-            ensure_caddy_entrypoint_running
-            ;;
-        *)
-            log_error "Unknown action: $ACTION (use ./restart-app.sh help)" ;;
-    esac
-}
+echo "----- RESTART STARTED -----"
+echo "Environment:   $ENV"
+echo "Infra Dir:     $INFRA_DIR"
+echo "Compose File:  $COMPOSE_FILE"
+echo "----------------------------------------"
 
-main "$@"
+ensure_requirements
+validate_environment
+load_prebuilt_image
+handle_running_containers
+deploy_full_stack
+ensure_caddy_entrypoint_running
+
+echo "----------------------------------------"
+echo "----- RESTART FINISHED -----"
