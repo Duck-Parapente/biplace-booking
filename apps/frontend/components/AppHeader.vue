@@ -115,6 +115,7 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
+  { path: '/', label: 'Accueil' },
   { path: '/mon-compte', label: 'Mon compte' },
   { path: '/contacts', label: 'Contacts' },
   { path: '/gestion-packs', label: 'Gestion des Packs', requiresRole: UserRoles.ADMIN },
