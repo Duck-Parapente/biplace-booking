@@ -3,6 +3,23 @@
     <div class="flex-1 p-4 max-w-4xl mx-auto w-full flex flex-col min-h-0">
       <h2 class="text-2xl font-semibold mb-4 text-secondary-600">Mes demandes de réservation</h2>
 
+      <!-- Status Filter Tags -->
+      <div class="flex gap-2 mb-4 flex-wrap">
+        <button
+          v-for="status in availableStatuses"
+          :key="status"
+          @click="toggleStatus(status)"
+          class="px-3 py-1.5 text-sm font-medium rounded-lg transition"
+          :class="
+            selectedStatuses.has(status)
+              ? 'bg-secondary-600 text-white'
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          "
+        >
+          {{ getStatusConfig(status).label }}
+        </button>
+      </div>
+
       <div v-if="loading" class="text-gray-500">
         <p>Chargement...</p>
       </div>
@@ -14,13 +31,13 @@
       <div v-else class="flex-1 overflow-y-auto pb-20">
         <div class="rounded-lg shadow-sm">
           <!-- Reservation Wishes List -->
-          <div v-if="reservationWishes.length === 0" class="text-gray-500 text-sm">
+          <div v-if="filteredReservationWishes.length === 0" class="text-gray-500 text-sm">
             <p>Aucune demande de réservation pour le moment.</p>
           </div>
 
           <div v-else class="space-y-3">
             <div
-              v-for="wish in sortedReservationWishes"
+              v-for="wish in filteredReservationWishes"
               :key="wish.id"
               class="border bg-gray-50 border-gray-300 rounded-lg p-4 hover:shadow-md transition"
             >
@@ -101,7 +118,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ReservationStatusDto } from 'shared';
+import { ReservationStatusDto } from 'shared';
 
 definePageMeta({
   middleware: 'auth',
@@ -124,15 +141,27 @@ const {
 const { packs, getPacks } = usePack();
 
 const showModal = ref(false);
+const selectedStatuses = ref<Set<ReservationStatusDto>>(new Set([ReservationStatusDto.PENDING]));
 
-const sortedReservationWishes = computed(() => {
-  return [...reservationWishes.value].sort((a, b) => {
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
+const availableStatuses = computed(() => {
+  return [...new Set(reservationWishes.value.map(({ status }) => status))];
 });
 
+const filteredReservationWishes = computed(() => {
+  return reservationWishes.value
+    .sort((a, b) => {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    })
+    .filter(({ status }) => selectedStatuses.value.has(status));
+});
+
+const toggleStatus = (status: ReservationStatusDto) => {
+  const set = selectedStatuses.value;
+  set.has(status) ? set.delete(status) : set.add(status);
+};
+
 const getPackLabel = (packId: string): string => {
-  const pack = packs.value.find((p) => p.id === packId);
+  const pack = packs.value.find(({ id }) => id === packId);
   return pack ? pack.label : packId;
 };
 
