@@ -21,5 +21,6 @@ import { PackRepository } from './providers/pack.repository';
     { provide: PACK_REPOSITORY, useClass: PackRepository },
     { provide: EVENT_EMITTER, useClass: EventEmitter },
   ],
+  exports: [GetPacksService],
 })
 export class PackModule {}

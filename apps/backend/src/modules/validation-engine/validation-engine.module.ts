@@ -1,6 +1,5 @@
-import { GetPacksService } from '@modules/pack/commands/get-packs.service';
-import { GetReservationWishesService } from '@modules/reservation/commands/get-reservation-wishes.service';
-import { UpdateReservationWishService } from '@modules/reservation/commands/update-reservation-wish.service';
+import { PackModule } from '@modules/pack/pack.module';
+import { ReservationModule } from '@modules/reservation/reservation.module';
 import { Module } from '@nestjs/common';
 
 import { AttibutePackCliController } from './commands/attribute-packs.cli.controller';
@@ -16,7 +15,7 @@ import {
 } from './validation-engine.di-tokens';
 
 @Module({
-  imports: [],
+  imports: [PackModule, ReservationModule],
   controllers: [],
   providers: [
     { provide: PACK_REPOSITORY, useClass: PackRepository },
@@ -25,9 +24,6 @@ import {
     AttibutePackCliController,
     AttributionDomainService,
     AttributePacksDomainService,
-    UpdateReservationWishService,
-    GetPacksService,
-    GetReservationWishesService,
   ],
 })
 export class ValidationEngineModule {}

@@ -28,5 +28,6 @@ import { RESERVATION_WISH_REPOSITORY } from './reservation.di-tokens';
     { provide: RESERVATION_WISH_REPOSITORY, useClass: ReservationWishRepository },
     { provide: EVENT_EMITTER, useClass: EventEmitter },
   ],
+  exports: [GetReservationWishesService, UpdateReservationWishService],
 })
 export class ReservationModule {}

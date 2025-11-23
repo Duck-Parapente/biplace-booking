@@ -1,5 +1,6 @@
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
-import { Controller, Logger, Get, UseGuards } from '@nestjs/common';
+import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
+import { Controller, Logger, Get, UseGuards, Request } from '@nestjs/common';
 import { ReservationWishDto } from 'shared';
 
 import { GetReservationWishesService } from './get-reservation-wishes.service';
@@ -13,8 +14,10 @@ export class GetReservationWishesHttpController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getReservationWishes(): Promise<ReservationWishDto[]> {
-    const reservationWishes = await this.getReservationWishesService.execute();
+  async getReservationWishes(
+    @Request() { user: { id } }: { user: AuthenticatedUser },
+  ): Promise<ReservationWishDto[]> {
+    const reservationWishes = await this.getReservationWishesService.execute(id);
     return reservationWishes.map(mapReservationWishToDto);
   }
 }
