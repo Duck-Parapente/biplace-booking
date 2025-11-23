@@ -9,7 +9,7 @@ import { CreateReservationWishService } from './commands/create-reservation-wish
 import { GetReservationWishesHttpController } from './commands/get-reservation-wishes.http.controller';
 import { GetReservationWishesService } from './commands/get-reservation-wishes.service';
 import { ReservationWishDomainService } from './domain/reservation-wish.domain-service';
-import { ReservationWishRepository } from './providers/database/reservation-wish.repository';
+import { ReservationWishRepository } from './providers/reservation-wish.repository';
 import { RESERVATION_WISH_REPOSITORY } from './reservation.di-tokens';
 
 @Module({

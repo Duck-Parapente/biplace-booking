@@ -9,7 +9,7 @@ import { GetPacksService } from './commands/get-packs.service';
 import { UpdatePackHttpController } from './commands/update-pack.http.controller';
 import { UpdatePackService } from './commands/update-pack.service';
 import { PACK_REPOSITORY } from './pack.di-tokens';
-import { PackRepository } from './providers/database/pack.repository';
+import { PackRepository } from './providers/pack.repository';
 
 @Module({
   imports: [],

@@ -10,7 +10,7 @@ import { SyncExternalUserHttpController } from './commands/sync-external-user.ht
 import { SyncExternalUserService } from './commands/sync-external-user.service';
 import { UpdateUserHttpController } from './commands/update-user.http.controller';
 import { UpdateUserService } from './commands/update-user.service';
-import { UserRepository } from './providers/database/user.repository';
+import { UserRepository } from './providers/user.repository';
 import { USER_REPOSITORY } from './user.di-tokens';
 
 @Module({

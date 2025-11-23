@@ -8,7 +8,7 @@ import { ReservationWishEntity } from '@modules/reservation/domain/reservation-w
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ReservationWish, ReservationWishStatus } from '@prisma/client';
 
-import { ReservationWishStatus as DomainReservationWishStatus } from '../../domain/reservation.types';
+import { ReservationWishStatus as DomainReservationWishStatus } from '../domain/reservation.types';
 
 const mapStatus = (status: ReservationWishStatus): DomainReservationWishStatus => {
   switch (status) {
