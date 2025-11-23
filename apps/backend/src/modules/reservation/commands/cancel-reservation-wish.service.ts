@@ -2,10 +2,10 @@ import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { ReservationWishRepositoryPort } from '../domain/ports/reservation-wish.repository.port';
+import { ReservationWishDomainService } from '../domain/reservation-wish.domain-service';
 import { RESERVATION_WISH_REPOSITORY } from '../reservation.di-tokens';
 
 import { CancelReservationWishCommand } from './cancel-reservation-wish.command';
-import { ReservationWishNotFoundError } from '../domain/reservation.exceptions';
 
 @CommandHandler(CancelReservationWishCommand)
 export class CancelReservationWishService
@@ -16,14 +16,11 @@ export class CancelReservationWishService
   constructor(
     @Inject(RESERVATION_WISH_REPOSITORY)
     private readonly reservationWishRepository: ReservationWishRepositoryPort,
+    private readonly domainService: ReservationWishDomainService,
   ) {}
 
   async execute({ reservationWishId }: CancelReservationWishCommand): Promise<void> {
-    const entity = await this.reservationWishRepository.findById(reservationWishId);
-
-    if (!entity) {
-      throw new ReservationWishNotFoundError(reservationWishId);
-    }
+    const entity = await this.domainService.getReservationWishOrFail(reservationWishId);
 
     entity.cancel();
 

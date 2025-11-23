@@ -8,6 +8,7 @@ import { CreateReservationWishHttpController } from './commands/create-reservati
 import { CreateReservationWishService } from './commands/create-reservation-wish.service';
 import { GetReservationWishesHttpController } from './commands/get-reservation-wishes.http.controller';
 import { GetReservationWishesService } from './commands/get-reservation-wishes.service';
+import { ReservationWishDomainService } from './domain/reservation-wish.domain-service';
 import { ReservationWishRepository } from './providers/database/reservation-wish.repository';
 import { RESERVATION_WISH_REPOSITORY } from './reservation.di-tokens';
 
@@ -22,6 +23,7 @@ import { RESERVATION_WISH_REPOSITORY } from './reservation.di-tokens';
     CreateReservationWishService,
     CancelReservationWishService,
     GetReservationWishesService,
+    ReservationWishDomainService,
     { provide: RESERVATION_WISH_REPOSITORY, useClass: ReservationWishRepository },
     { provide: EVENT_EMITTER, useClass: EventEmitter },
   ],
