@@ -10,8 +10,8 @@ import {
 import { AttributionDomainService } from './attibution.domain-service';
 import { PackRepositoryPort } from './ports/pack.repository.port';
 import { ReservationWishRepositoryPort } from './ports/reservation-wish.repository.port';
-import { Attribution, ReservationWishSummary } from './validation-engine.types';
 import { ReservationRepositoryPort } from './ports/reservation.repository.port';
+import { Attribution, ReservationWishSummary } from './validation-engine.types';
 
 @Injectable()
 export class AttributePacksDomainService {
@@ -52,7 +52,8 @@ export class AttributePacksDomainService {
     startingDate: DateValueObject,
     endingDate: DateValueObject,
   ): Promise<void> {
-    const pendingWishes = await this.reservationWishRepository.findPendingByDate(startingDate);
+    const pendingWishes =
+      await this.reservationWishRepository.findPendingAndRefusedByStartingDate(startingDate);
 
     if (pendingWishes.length === 0) {
       this.logger.log(`No pending wishes for ${startingDate.value.toISOString()}`);
@@ -78,6 +79,8 @@ export class AttributePacksDomainService {
     this.logger.log(`Generated ${attributions.length} attributions`);
 
     await this.createReservations(attributions, pendingWishes, startingDate, endingDate);
+
+    await this.refuseUnattributedWishes(attributions, pendingWishes);
   }
 
   private async createReservations(
@@ -115,11 +118,25 @@ export class AttributePacksDomainService {
         publicComment: wish.publicComment,
       });
 
-      await this.reservationWishRepository.confirmReservation(wish.id);
+      await this.reservationWishRepository.confirmReservationWish(wish.id);
 
       this.logger.log(
         `Created reservation for wish ${wish.id.uuid} with pack ${attribution.assignedPackId.uuid}`,
       );
+    }
+  }
+
+  private async refuseUnattributedWishes(
+    attributions: Attribution[],
+    pendingWishes: ReservationWishSummary[],
+  ): Promise<void> {
+    const confirmedWishIds = new Set(attributions.map((a) => a.reservationWishId.uuid));
+
+    for (const wish of pendingWishes) {
+      if (!confirmedWishIds.has(wish.id.uuid)) {
+        await this.reservationWishRepository.refuseReservationWish(wish.id);
+        this.logger.log(`Refused reservation wish ${wish.id.uuid} (no pack available)`);
+      }
     }
   }
 }

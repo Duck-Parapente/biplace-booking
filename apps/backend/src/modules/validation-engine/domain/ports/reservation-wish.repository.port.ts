@@ -1,9 +1,12 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
-import { ReservationWishSummary } from '../validation-engine.types';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
-export interface ReservationWishRepositoryPort {
-  findPendingByDate(date: DateValueObject): Promise<ReservationWishSummary[]>;
-  confirmReservation(reservationWishId: UUID): Promise<void>;
-}
+import { ReservationWishSummary } from '../validation-engine.types';
 
+export interface ReservationWishRepositoryPort {
+  findPendingAndRefusedByStartingDate(
+    startingDate: DateValueObject,
+  ): Promise<ReservationWishSummary[]>;
+  confirmReservationWish(reservationWishId: UUID): Promise<void>;
+  refuseReservationWish(reservationWishId: UUID): Promise<void>;
+}

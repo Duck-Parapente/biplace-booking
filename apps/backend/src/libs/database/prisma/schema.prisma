@@ -46,6 +46,7 @@ model Pack {
 enum ReservationWishStatus {
     PENDING
     CONFIRMED
+    REFUSED
     CANCELLED
 }
 
