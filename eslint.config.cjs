@@ -18,7 +18,15 @@ const importOrderRule = [
 
 module.exports = [
   {
-    ignores: ['**/.output/**', '**/dist/**', 'node_modules/**', '**/.nuxt/**', '**/newrelic.js', '**/dependency-cruiser.js'],
+    ignores: [
+      '**/.output/**',
+      '**/dist/**',
+      'node_modules/**',
+      '**/.nuxt/**',
+      '**/newrelic.js',
+      '**/jest.config.js',
+      '**/dependency-cruiser.js',
+    ],
   },
   // JS in apps
   {
