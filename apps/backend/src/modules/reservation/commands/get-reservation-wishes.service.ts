@@ -1,3 +1,4 @@
+import { UUID } from '@libs/ddd/uuid.value-object';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
 import { ReservationWishRepositoryPort } from '../domain/ports/reservation-wish.repository.port';
@@ -13,7 +14,7 @@ export class GetReservationWishesService {
     protected readonly reservationWishRepository: ReservationWishRepositoryPort,
   ) {}
 
-  async execute(): Promise<ReservationWishEntity[]> {
-    return this.reservationWishRepository.findAll();
+  async execute(userId: UUID): Promise<ReservationWishEntity[]> {
+    return this.reservationWishRepository.findAllForUser(userId);
   }
 }

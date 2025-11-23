@@ -110,8 +110,11 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
     this.logger.log(`ReservationWish updated: ${reservationWish.id.uuid}`);
   }
 
-  async findAll(): Promise<ReservationWishEntity[]> {
+  async findAllForUser(userId: UUID): Promise<ReservationWishEntity[]> {
     const records = await prisma.reservationWish.findMany({
+      where: {
+        createdById: userId.uuid,
+      },
       include: { packChoices: true },
     });
 
