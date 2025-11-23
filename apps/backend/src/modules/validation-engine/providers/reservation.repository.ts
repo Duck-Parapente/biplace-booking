@@ -3,7 +3,7 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { Injectable, Logger } from '@nestjs/common';
 
 import { ReservationRepositoryPort } from '../domain/ports/reservation.repository.port';
-import { ReservationWishSummary } from '../domain/validation-engine.types';
+import { ReservationWishSummary } from '@libs/types/accross-modules';
 
 @Injectable()
 export class ReservationRepository implements ReservationRepositoryPort {

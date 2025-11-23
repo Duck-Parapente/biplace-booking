@@ -1,5 +1,6 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
+import { PackSummary } from '@libs/types/accross-modules';
 
 import { PackEntity } from '../pack.entity';
 
@@ -9,7 +10,7 @@ export interface PackRepositoryPort {
   findAvailablePacks(
     startingDate: DateValueObject,
     endingDate: DateValueObject,
-  ): Promise<PackEntity[]>;
+  ): Promise<PackSummary[]>;
   findById(id: UUID): Promise<PackEntity | null>;
   update(pack: PackEntity): Promise<void>;
 }

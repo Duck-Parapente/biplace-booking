@@ -1,4 +1,5 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
+import { ReservationWishSummary } from '@libs/types/accross-modules';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
 import {
@@ -11,7 +12,7 @@ import { AttributionDomainService } from './attibution.domain-service';
 import { PackRepositoryPort } from './ports/pack.repository.port';
 import { ReservationWishRepositoryPort } from './ports/reservation-wish.repository.port';
 import { ReservationRepositoryPort } from './ports/reservation.repository.port';
-import { Attribution, ReservationWishSummary } from './validation-engine.types';
+import { Attribution } from './validation-engine.types';
 
 @Injectable()
 export class AttributePacksDomainService {

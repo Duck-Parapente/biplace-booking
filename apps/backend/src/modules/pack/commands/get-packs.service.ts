@@ -1,4 +1,5 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
+import { PackSummary } from '@libs/types/accross-modules';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
 import { PackEntity } from '../domain/pack.entity';
@@ -21,7 +22,7 @@ export class GetPacksService {
   async getAvailablePacks(
     startingDate: DateValueObject,
     endingDate: DateValueObject,
-  ): Promise<PackEntity[]> {
+  ): Promise<PackSummary[]> {
     return this.packRepository.findAvailablePacks(startingDate, endingDate);
   }
 }

@@ -3,6 +3,7 @@ import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
+import { ReservationWishSummary } from '@libs/types/accross-modules';
 import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
 import { ReservationWishEntity } from '@modules/reservation/domain/reservation-wish.entity';
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -121,5 +122,33 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
     });
 
     return records.map(toEntity);
+  }
+
+  async findPendingAndRefusedByStartingDate(
+    startingDate: DateValueObject,
+  ): Promise<ReservationWishSummary[]> {
+    const reservationWishes = await prisma.reservationWish.findMany({
+      where: {
+        startingDate: startingDate.value,
+        status: { in: [ReservationWishStatus.PENDING, ReservationWishStatus.REFUSED] },
+      },
+      include: {
+        packChoices: true,
+        createdBy: true,
+      },
+    });
+
+    return reservationWishes.map(
+      ({ id: uuid, packChoices, createdAt, publicComment, createdBy }) => ({
+        id: new UUID({ uuid }),
+        packChoices: packChoices.map(({ id }) => new UUID({ uuid: id })),
+        createdAt: DateValueObject.fromDate(createdAt),
+        publicComment,
+        createdBy: {
+          id: new UUID({ uuid: createdBy.id }),
+          currentScore: createdBy.currentScore,
+        },
+      }),
+    );
   }
 }

@@ -14,6 +14,7 @@ import {
 export enum ReservationStatusDto {
   PENDING = 'PENDING',
   CONFIRMED = 'CONFIRMED',
+  REFUSED = 'REFUSED',
   CANCELLED = 'CANCELLED',
 }
 

@@ -1,5 +1,5 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
-import { PackSummary } from '../validation-engine.types';
+import { PackSummary } from '@libs/types/accross-modules';
 
 export interface PackRepositoryPort {
   findAvailablePacks(

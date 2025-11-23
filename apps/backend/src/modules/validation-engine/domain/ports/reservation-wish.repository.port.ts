@@ -1,7 +1,6 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
-
-import { ReservationWishSummary } from '../validation-engine.types';
+import { ReservationWishSummary } from '@libs/types/accross-modules';
 
 export interface ReservationWishRepositoryPort {
   findPendingAndRefusedByStartingDate(

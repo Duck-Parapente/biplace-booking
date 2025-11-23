@@ -9,6 +9,8 @@ const mapStatus = (status: ReservationWishStatus): ReservationStatusDto => {
       return ReservationStatusDto.PENDING;
     case ReservationWishStatus.CONFIRMED:
       return ReservationStatusDto.CONFIRMED;
+    case ReservationWishStatus.REFUSED:
+      return ReservationStatusDto.REFUSED;
     case ReservationWishStatus.CANCELLED:
       return ReservationStatusDto.CANCELLED;
     default:
