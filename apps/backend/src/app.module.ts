@@ -2,12 +2,14 @@ import { JwtStrategy } from '@libs/guards/jwt.strategy';
 import { PackModule } from '@modules/pack/pack.module';
 import { ReservationModule } from '@modules/reservation/reservation.module';
 import { UserModule } from '@modules/user/user.module';
+import { ValidationEngineModule } from '@modules/validation-engine/validation-engine.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
+import { ConsoleModule } from 'nestjs-console';
 import { LoggerModule } from 'nestjs-pino';
 
-import { HealthController } from './health.controller';
+const appModules = [UserModule, PackModule, ReservationModule, ValidationEngineModule];
 
 @Module({
   imports: [
@@ -25,15 +27,14 @@ import { HealthController } from './health.controller';
         },
       },
     }),
-    UserModule,
-    PackModule,
-    ReservationModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
+    ConsoleModule,
+    ...appModules,
   ],
-  controllers: [HealthController],
+  controllers: [],
   providers: [JwtStrategy],
 })
 export class AppModule {}

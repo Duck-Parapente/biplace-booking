@@ -5,7 +5,9 @@
   "scripts": {
     "dotenv": "dotenv -e ../../infra/.env",
     "dev": "pnpm dotenv -- ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/main.ts | pino-pretty",
+    "attribute:dev": "pnpm dotenv -- ts-node-dev -r tsconfig-paths/register --transpile-only src/console.ts run:attribute-packs | pino-pretty",
     "start": "node dist/apps/backend/src/main.js",
+    "attribute": "node dist/apps/backend/src/console.js run:attribute-packs",
     "build": "tsc -p tsconfig.json && tsc-alias",
     "test": "echo \"No tests configured\"",
     "lint:deps": "depcruise src --config ./dependency-cruiser.js --validate",
@@ -28,6 +30,7 @@
     "dotenv-cli": "11.0.0",
     "express": "4.18.2",
     "jwks-rsa": "3.2.0",
+    "nestjs-console": "10.0.0",
     "nestjs-pino": "4.4.1",
     "newrelic": "13.6.2",
     "passport": "0.7.0",
