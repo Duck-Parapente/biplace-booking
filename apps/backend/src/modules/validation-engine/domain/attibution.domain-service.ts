@@ -13,8 +13,8 @@ export class AttributionDomainService {
     // Étape 1 : Trier par ordre de priorité (userScore décroissant), puis par date de demande (croissant)
     const sortedWishes = [...reservationWishes].sort((a, b) => {
       // Comparer d'abord par score (du plus haut au plus bas)
-      if (b.userScore !== a.userScore) {
-        return b.userScore - a.userScore;
+      if (b.createdBy.currentScore !== a.createdBy.currentScore) {
+        return b.createdBy.currentScore - a.createdBy.currentScore;
       }
       // En cas d'égalité, comparer par date de création (du plus ancien au plus récent)
       return a.createdAt.value.getTime() - b.createdAt.value.getTime();

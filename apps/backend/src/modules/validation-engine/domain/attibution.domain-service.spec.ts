@@ -52,29 +52,41 @@ describe('AttributionDomainService', () => {
           return {
             availablePacks: [packI, packJ, packK, packL, packM],
             wishes: [
-              { id: wishD, userId: userD, userScore: 600, packChoices: [packK], createdAt },
+              {
+                id: wishD,
+                createdBy: { id: userD, currentScore: 600 },
+                packChoices: [packK],
+                createdAt,
+              },
               {
                 id: wishE,
-                userId: userE,
-                userScore: 500,
                 packChoices: [packI, packJ, packL],
                 createdAt,
+                createdBy: { id: userE, currentScore: 500 },
               },
               {
                 id: wishF,
-                userId: userF,
-                userScore: 400,
                 packChoices: [packI, packJ, packM],
                 createdAt,
+                createdBy: { id: userF, currentScore: 400 },
               },
-              { id: wishB, userId: userB, userScore: 200, packChoices: [packI], createdAt },
-              { id: wishC, userId: userC, userScore: 100, packChoices: [packJ, packK], createdAt },
+              {
+                id: wishB,
+                createdBy: { id: userB, currentScore: 200 },
+                packChoices: [packI],
+                createdAt,
+              },
+              {
+                id: wishC,
+                createdBy: { id: userC, currentScore: 100 },
+                packChoices: [packJ, packK],
+                createdAt,
+              },
               {
                 id: wishA,
-                userId: userA,
-                userScore: 50,
                 packChoices: [packI, packJ, packK],
                 createdAt,
+                createdBy: { id: userA, currentScore: 50 },
               },
             ],
             expectedAttributions: [
@@ -102,16 +114,14 @@ describe('AttributionDomainService', () => {
             wishes: [
               {
                 id: wishNewer,
-                userId: userA,
-                userScore: 100,
                 packChoices: [packI],
+                createdBy: { id: userA, currentScore: 100 },
                 createdAt: DateValueObject.fromDate(newerDate),
               },
               {
                 id: wishOlder,
-                userId: userB,
-                userScore: 100,
                 packChoices: [packI],
+                createdBy: { id: userB, currentScore: 100 },
                 createdAt: DateValueObject.fromDate(olderDate),
               },
             ],

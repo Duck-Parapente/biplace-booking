@@ -19,21 +19,11 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
   static create(rawProps: CreateReservationWishProps) {
     const id = new UUID({ uuid: randomUUID() });
 
-    const start = rawProps.startingDate.value;
-
-    const normalizedStart = new Date(
-      Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate(), 0, 0, 0),
-    );
-
-    const normalizedEnd = new Date(
-      Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate() + 1, 0, 0, 0),
-    );
-
     const props: ReservationWishProps = {
       ...rawProps,
       status: ReservationWishStatus.PENDING,
-      startingDate: DateValueObject.fromDate(normalizedStart),
-      endingDate: DateValueObject.fromDate(normalizedEnd),
+      startingDate: rawProps.startingDate.startOfDayInUTC(0),
+      endingDate: rawProps.startingDate.startOfDayInUTC(1),
     };
 
     const entity = new ReservationWishEntity({

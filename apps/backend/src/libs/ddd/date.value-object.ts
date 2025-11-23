@@ -13,6 +13,17 @@ export class DateValueObject extends ValueObject<DateProps> {
     return this.props.value;
   }
 
+  startOfDayInUTC(offset: number = 0): DateValueObject {
+    const startOfDay = new Date(this.props.value);
+    startOfDay.setUTCDate(startOfDay.getUTCDate() + offset);
+    startOfDay.setUTCHours(0, 0, 0, 0);
+    return new DateValueObject({ value: startOfDay });
+  }
+
+  static now(): DateValueObject {
+    return DateValueObject.fromDate(new Date());
+  }
+
   static fromDateString(date: string): DateValueObject {
     if (Guard.isEmpty(date)) {
       throw new ArgumentInvalidException('Date string cannot be empty');
