@@ -1,13 +1,13 @@
 import { Logger } from '@nestjs/common';
 import { Command, Console } from 'nestjs-console';
 
-import { AttributePacksDomainService } from '../domain/attribute-packs.domain-service';
+import { AttributePacksService } from './attribute-packs.service';
 
 @Console()
 export class AttibutePackCliController {
   private readonly logger = new Logger(AttibutePackCliController.name);
 
-  constructor(private readonly attributePacksDomainService: AttributePacksDomainService) {}
+  constructor(private readonly attributePacksService: AttributePacksService) {}
 
   @Command({
     command: 'run:attribute-packs',
@@ -17,7 +17,7 @@ export class AttibutePackCliController {
     const startTime = Date.now();
     this.logger.log('Starting packs attribution...');
 
-    await this.attributePacksDomainService.attributePacks();
+    await this.attributePacksService.attributePacks();
 
     const endTime = Date.now();
     const duration = ((endTime - startTime) / 1000).toFixed(2);

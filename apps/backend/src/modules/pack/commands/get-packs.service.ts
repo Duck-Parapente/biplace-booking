@@ -19,7 +19,7 @@ export class GetPacksService {
     return this.packRepository.findAll();
   }
 
-  async getAvailablePacks(
+  async findAvailablePacks(
     startingDate: DateValueObject,
     endingDate: DateValueObject,
   ): Promise<PackSummary[]> {

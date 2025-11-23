@@ -8,6 +8,7 @@ import { ReservationWishStatus } from '../domain/reservation.types';
 import { RESERVATION_WISH_REPOSITORY } from '../reservation.di-tokens';
 
 import { UpdateReservationWishCommand } from './update-reservation-wish.command';
+import { ReservationWishNotFoundError } from '../domain/reservation.exceptions';
 
 @CommandHandler(UpdateReservationWishCommand)
 export class UpdateReservationWishService
@@ -42,7 +43,11 @@ export class UpdateReservationWishService
     status: ReservationWishStatus,
     userId?: UUID,
   ): Promise<void> {
-    const entity = await this.domainService.getReservationWishOrFail(reservationWishId);
+    const entity = await this.reservationWishRepository.findById(reservationWishId);
+
+    if (!entity) {
+      throw new ReservationWishNotFoundError(reservationWishId);
+    }
 
     if (userId) {
       await this.domainService.validateUserCanUpdateReservationWish(entity, userId);

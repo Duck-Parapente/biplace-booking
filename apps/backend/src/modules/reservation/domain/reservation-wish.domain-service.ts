@@ -7,7 +7,6 @@ import { RESERVATION_WISH_REPOSITORY } from '../reservation.di-tokens';
 import { ReservationWishRepositoryPort } from './ports/reservation-wish.repository.port';
 import { ReservationWishEntity } from './reservation-wish.entity';
 import {
-  ReservationWishNotFoundError,
   UnauthorizedToCancelReservationWishError,
   UserHasReservationWishOnStartingDateError,
 } from './reservation.exceptions';
@@ -22,16 +21,6 @@ export class ReservationWishDomainService {
 
   async validateCreateReservationWish(props: CreateReservationWishProps): Promise<void> {
     await this.checkNoDuplicateWishForUser(props.startingDate, props.createdById);
-  }
-
-  async getReservationWishOrFail(reservationWishId: UUID): Promise<ReservationWishEntity> {
-    const entity = await this.reservationWishRepository.findById(reservationWishId);
-
-    if (!entity) {
-      throw new ReservationWishNotFoundError(reservationWishId);
-    }
-
-    return entity;
   }
 
   async validateUserCanUpdateReservationWish(

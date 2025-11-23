@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto';
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
-import { AttributionDomainService } from './attibution.domain-service';
+import { AttributionDomainService } from './attribution.domain-service';
 import { BaseValidationEngineProps } from './validation-engine.types';
 
 const createUUID = (): UUID => {

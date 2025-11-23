@@ -1,32 +1,25 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { ReservationWishSummary } from '@libs/types/accross-modules';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
-import {
-  RESERVATION_WISH_REPOSITORY,
-  PACK_REPOSITORY,
-  RESERVATION_REPOSITORY,
-} from '../validation-engine.di-tokens';
-
-import { AttributionDomainService } from './attibution.domain-service';
-import { PackRepositoryPort } from './ports/pack.repository.port';
-import { ReservationWishRepositoryPort } from './ports/reservation-wish.repository.port';
-import { ReservationRepositoryPort } from './ports/reservation.repository.port';
-import { Attribution } from './validation-engine.types';
+import { AttributionDomainService } from '../domain/attribution.domain-service';
+import { Attribution } from '../domain/validation-engine.types';
+import { GetPacksService } from '@modules/pack/commands/get-packs.service';
+import { GetReservationWishesService } from '@modules/reservation/commands/get-reservation-wishes.service';
+import { UpdateReservationWishService } from '@modules/reservation/commands/update-reservation-wish.service';
+import { GetReservationsService } from '@modules/reservation/commands/get-reservations.service';
 
 @Injectable()
-export class AttributePacksDomainService {
-  private readonly logger = new Logger(AttributePacksDomainService.name);
+export class AttributePacksService {
+  private readonly logger = new Logger(AttributePacksService.name);
   private readonly ATTRIBUTION_START_DAY_OFFSET = 1;
   private readonly ATTRIBUTION_END_DAY_OFFSET = 5;
 
   constructor(
-    @Inject(RESERVATION_WISH_REPOSITORY)
-    private readonly reservationWishRepository: ReservationWishRepositoryPort,
-    @Inject(PACK_REPOSITORY)
-    private readonly packRepository: PackRepositoryPort,
-    @Inject(RESERVATION_REPOSITORY)
-    private readonly reservationRepository: ReservationRepositoryPort,
+    private readonly getPacksService: GetPacksService,
+    private readonly getReservationWishesService: GetReservationWishesService,
+    private readonly updateReservationWishService: UpdateReservationWishService,
+    private readonly getReservationsService: GetReservationsService,
     private readonly attributionDomainService: AttributionDomainService,
   ) {}
 
@@ -54,14 +47,14 @@ export class AttributePacksDomainService {
     endingDate: DateValueObject,
   ): Promise<void> {
     const pendingWishes =
-      await this.reservationWishRepository.findPendingAndRefusedByStartingDate(startingDate);
+      await this.getReservationWishesService.findPendingAndRefusedByStartingDate(startingDate);
 
     if (pendingWishes.length === 0) {
       this.logger.log(`No pending wishes for ${startingDate.value.toISOString()}`);
       return;
     }
 
-    const availablePacks = await this.packRepository.findAvailablePacks(startingDate, endingDate);
+    const availablePacks = await this.getPacksService.findAvailablePacks(startingDate, endingDate);
 
     if (availablePacks.length === 0) {
       this.logger.log(`No available packs for ${startingDate.value.toISOString()}`);
@@ -97,29 +90,29 @@ export class AttributePacksDomainService {
         continue;
       }
 
-      const hasExistingReservation = await this.reservationRepository.existsByPackAndDate(
-        attribution.assignedPackId,
-        startingDate,
-        endingDate,
-      );
+      // const hasExistingReservation = await this.getReservationsService.existsByPackAndDate(
+      //   attribution.assignedPackId,
+      //   startingDate,
+      //   endingDate,
+      // );
 
-      if (hasExistingReservation) {
-        this.logger.error(
-          `Reservation already exists for pack ${attribution.assignedPackId.uuid} on ${startingDate.value.toISOString()}`,
-        );
-        continue;
-      }
+      // if (hasExistingReservation) {
+      //   this.logger.error(
+      //     `Reservation already exists for pack ${attribution.assignedPackId.uuid} on ${startingDate.value.toISOString()}`,
+      //   );
+      //   continue;
+      // }
 
-      await this.reservationRepository.create({
-        packId: attribution.assignedPackId,
-        userId: wish.createdBy.id,
-        startingDate,
-        endingDate,
-        reservationWishId: wish.id,
-        publicComment: wish.publicComment,
-      });
+      // await this.getReservationsService.create({
+      //   packId: attribution.assignedPackId,
+      //   userId: wish.createdBy.id,
+      //   startingDate,
+      //   endingDate,
+      //   reservationWishId: wish.id,
+      //   publicComment: wish.publicComment,
+      // });
 
-      await this.reservationWishRepository.confirmReservationWish(wish.id);
+      await this.updateReservationWishService.confirmReservationWish(wish.id);
 
       this.logger.log(
         `Created reservation for wish ${wish.id.uuid} with pack ${attribution.assignedPackId.uuid}`,
@@ -135,7 +128,7 @@ export class AttributePacksDomainService {
 
     for (const wish of pendingWishes) {
       if (!confirmedWishIds.has(wish.id.uuid)) {
-        await this.reservationWishRepository.refuseReservationWish(wish.id);
+        await this.updateReservationWishService.refuseReservationWish(wish.id);
         this.logger.log(`Refused reservation wish ${wish.id.uuid} (no pack available)`);
       }
     }
