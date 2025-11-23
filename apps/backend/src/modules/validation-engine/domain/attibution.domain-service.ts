@@ -20,7 +20,7 @@ export class AttributionDomainService {
       return a.createdAt.value.getTime() - b.createdAt.value.getTime();
     });
 
-    // Étape 2 : Boucler sur les utilisateurs (du plus prioritaire au moins prioritaire)
+    // Étape 2 : Boucler sur les souhaits (du plus prioritaire au moins prioritaire)
     for (const wish of sortedWishes) {
       // Étape 2.1 : Filtrer les souhaits en enlevant les packs déjà attribués
       const availablePackChoices = wish.packChoices.filter(
