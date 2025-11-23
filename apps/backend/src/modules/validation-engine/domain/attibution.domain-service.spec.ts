@@ -131,7 +131,7 @@ describe('AttributionDomainService', () => {
           reservationWishes: wishes,
         };
 
-        const result = await service.attributePacks(props);
+        const result = await service.getAttributions(props);
 
         expect(result).toHaveLength(expectedAttributions.length);
 

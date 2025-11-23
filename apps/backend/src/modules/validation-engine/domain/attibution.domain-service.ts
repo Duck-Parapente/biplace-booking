@@ -5,7 +5,7 @@ import { Attribution, BaseValidationEngineProps } from './validation-engine.type
 
 @Injectable()
 export class AttributionDomainService {
-  async attributePacks(props: BaseValidationEngineProps): Promise<Attribution[]> {
+  async getAttributions(props: BaseValidationEngineProps): Promise<Attribution[]> {
     const { reservationWishes } = props;
     const attributions: Attribution[] = [];
     const assignedPacks = new Set<string>();
