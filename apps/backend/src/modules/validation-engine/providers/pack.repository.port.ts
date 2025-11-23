@@ -1,6 +1,5 @@
-import { prisma } from '@libs/database/prisma/prisma';
 import { DateValueObject } from '@libs/ddd/date.value-object';
-import { UUID } from '@libs/ddd/uuid.value-object';
+import { GetPacksService } from '@modules/pack/commands/get-packs.service';
 import { Injectable, Logger } from '@nestjs/common';
 
 import { PackRepositoryPort } from '../domain/ports/pack.repository.port';
@@ -10,28 +9,16 @@ import { PackSummary } from '../domain/validation-engine.types';
 export class PackRepository implements PackRepositoryPort {
   private readonly logger = new Logger(PackRepository.name);
 
+  constructor(readonly getPacksService: GetPacksService) {}
+
   async findAvailablePacks(
     startingDate: DateValueObject,
     endingDate: DateValueObject,
   ): Promise<PackSummary[]> {
-    const packs = await prisma.pack.findMany({
-      where: {
-        reservations: {
-          none: {
-            OR: [
-              {
-                AND: [
-                  { startingDate: { lte: endingDate.value } },
-                  { endingDate: { gte: startingDate.value } },
-                ],
-              },
-            ],
-          },
-        },
-      },
-    });
-    return packs.map(({ id: uuid }) => ({
-      id: new UUID({ uuid }),
+    const packs = await this.getPacksService.getAvailablePacks(startingDate, endingDate);
+
+    return packs.map(({ id }) => ({
+      id,
     }));
   }
 }

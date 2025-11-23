@@ -1,3 +1,4 @@
+import { GetPacksService } from '@modules/pack/commands/get-packs.service';
 import { UpdateReservationWishService } from '@modules/reservation/commands/update-reservation-wish.service';
 import { Module } from '@nestjs/common';
 
@@ -18,6 +19,7 @@ import { PACK_REPOSITORY, RESERVATION_WISH_REPOSITORY } from './validation-engin
     AttributionDomainService,
     AttributePacksDomainService,
     UpdateReservationWishService,
+    GetPacksService,
   ],
 })
 export class ValidationEngineModule {}

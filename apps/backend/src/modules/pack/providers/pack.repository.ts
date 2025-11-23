@@ -54,6 +54,29 @@ export class PackRepository implements PackRepositoryPort {
     return packs.map(toEntity);
   }
 
+  async findAvailablePacks(
+    startingDate: DateValueObject,
+    endingDate: DateValueObject,
+  ): Promise<PackEntity[]> {
+    const packs = await prisma.pack.findMany({
+      where: {
+        reservations: {
+          none: {
+            OR: [
+              {
+                AND: [
+                  { startingDate: { lte: endingDate.value } },
+                  { endingDate: { gte: startingDate.value } },
+                ],
+              },
+            ],
+          },
+        },
+      },
+    });
+    return packs.map(toEntity);
+  }
+
   async findById(id: UUID): Promise<PackEntity | null> {
     const pack = await prisma.pack.findUnique({
       where: { id: id.uuid },
