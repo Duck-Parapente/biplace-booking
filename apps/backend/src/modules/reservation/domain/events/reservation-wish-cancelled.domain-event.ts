@@ -1,8 +1,13 @@
 import { DomainEventProps } from '@libs/ddd';
 import { DomainEvent } from '@libs/ddd';
 
-export class ReservationwishCancelledDomainEvent extends DomainEvent {
-  constructor(props: DomainEventProps<ReservationwishCancelledDomainEvent>) {
+import { ReservationWishStatus } from '../reservation.types';
+
+export class ReservationWishStatusUpdatedDomainEvent extends DomainEvent {
+  readonly status: ReservationWishStatus;
+
+  constructor(props: DomainEventProps<ReservationWishStatusUpdatedDomainEvent>) {
     super(props);
+    this.status = props.status;
   }
 }

@@ -1,6 +1,7 @@
 import { prisma } from '@libs/database/prisma/prisma';
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
+import { UpdateReservationWishService } from '@modules/reservation/commands/update-reservation-wish.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { ReservationWishStatus } from '@prisma/client';
 
@@ -10,6 +11,8 @@ import { ReservationWishSummary } from '../domain/validation-engine.types';
 @Injectable()
 export class ReservationWishRepository implements ReservationWishRepositoryPort {
   private readonly logger = new Logger(ReservationWishRepository.name);
+
+  constructor(readonly updateReservationWishService: UpdateReservationWishService) {}
 
   async findPendingAndRefusedByStartingDate(
     startingDate: DateValueObject,
@@ -39,13 +42,11 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
     );
   }
 
-  confirmReservationWish(reservationWishId: UUID): Promise<void> {
-    this.logger.log(`Confirming reservation wish ${reservationWishId.uuid}`);
-    throw new Error('Method not implemented.');
+  async confirmReservationWish(reservationWishId: UUID): Promise<void> {
+    await this.updateReservationWishService.confirmReservationWish(reservationWishId);
   }
 
-  refuseReservationWish(_reservationWishId: UUID): Promise<void> {
-    this.logger.log(`Refusing reservation wish ${_reservationWishId.uuid}`);
-    throw new Error('Method not implemented.');
+  async refuseReservationWish(reservationWishId: UUID): Promise<void> {
+    await this.updateReservationWishService.refuseReservationWish(reservationWishId);
   }
 }

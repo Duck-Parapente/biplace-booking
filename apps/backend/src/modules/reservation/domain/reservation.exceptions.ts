@@ -1,6 +1,8 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
+import { ReservationWishStatus } from './reservation.types';
+
 export class UserHasReservationWishOnStartingDateError extends Error {
   constructor(userId: UUID, startingDate: DateValueObject) {
     super(
@@ -10,12 +12,16 @@ export class UserHasReservationWishOnStartingDateError extends Error {
   }
 }
 
-export class CannotCancelConfirmedReservationWishError extends Error {
-  constructor(reservationWishId: UUID) {
+export class CannotUpdateReservationWishStatusError extends Error {
+  constructor(
+    reservationWishId: UUID,
+    previousStatus: ReservationWishStatus,
+    newStatus: ReservationWishStatus,
+  ) {
     super(
-      `Cannot cancel reservation wish with ID ${reservationWishId.uuid} because it is already confirmed.`,
+      `Cannot up reservation wish with ID ${reservationWishId.uuid} from status ${previousStatus} to ${newStatus}.`,
     );
-    this.name = CannotCancelConfirmedReservationWishError.name;
+    this.name = CannotUpdateReservationWishStatusError.name;
   }
 }
 

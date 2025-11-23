@@ -1,11 +1,14 @@
 import { CommandProps, Command } from '@libs/ddd';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
-export class CancelReservationWishCommand extends Command {
+import { ReservationWishStatus } from '../domain/reservation.types';
+
+export class UpdateReservationWishCommand extends Command {
   readonly reservationWishId: UUID;
   readonly userId: UUID;
+  readonly status: ReservationWishStatus;
 
-  constructor(props: CommandProps<CancelReservationWishCommand>) {
+  constructor(props: CommandProps<UpdateReservationWishCommand>) {
     super(props);
     this.reservationWishId = props.reservationWishId;
     this.userId = props.userId;

@@ -34,7 +34,7 @@ export class ReservationWishDomainService {
     return entity;
   }
 
-  async validateUserCanCancelReservationWish(
+  async validateUserCanUpdateReservationWish(
     entity: ReservationWishEntity,
     userId: UUID,
   ): Promise<void> {

@@ -20,5 +20,6 @@ export type ReservationWishProps = BaseReservationWishProps & {
 export enum ReservationWishStatus {
   PENDING = 'PENDING',
   CANCELLED = 'CANCELLED',
+  REFUSED = 'REFUSED',
   CONFIRMED = 'CONFIRMED',
 }

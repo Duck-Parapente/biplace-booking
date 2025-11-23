@@ -13,33 +13,35 @@ import {
 } from '@nestjs/common';
 
 import {
-  CannotCancelConfirmedReservationWishError,
+  CannotUpdateReservationWishStatusError,
   ReservationWishNotFoundError,
   UnauthorizedToCancelReservationWishError,
 } from '../domain/reservation.exceptions';
+import { ReservationWishStatus } from '../domain/reservation.types';
 
-import { CancelReservationWishCommand } from './cancel-reservation-wish.command';
-import { CancelReservationWishService } from './cancel-reservation-wish.service';
+import { UpdateReservationWishCommand } from './update-reservation-wish.command';
+import { UpdateReservationWishService } from './update-reservation-wish.service';
 
 @Controller('reservation-wishes')
 @UseGuards(JwtAuthGuard)
-export class CancelReservationWishHttpController {
-  private readonly logger = new Logger(CancelReservationWishHttpController.name);
+export class UpdateReservationWishHttpController {
+  private readonly logger = new Logger(UpdateReservationWishHttpController.name);
 
-  constructor(private readonly cancelReservationWishService: CancelReservationWishService) {}
+  constructor(private readonly updateReservationWishService: UpdateReservationWishService) {}
 
   @Delete(':id')
-  async createReservationWish(
+  async cancelReservationWish(
     @Param('id') id: string,
     @Request() { user: { id: userId } }: { user: AuthenticatedUser },
   ) {
-    const command = new CancelReservationWishCommand({
+    const command = new UpdateReservationWishCommand({
       reservationWishId: new UUID({ uuid: id }),
       userId,
+      status: ReservationWishStatus.CANCELLED,
     });
 
     try {
-      await this.cancelReservationWishService.execute(command);
+      await this.updateReservationWishService.execute(command);
 
       return { message: 'Reservation wish cancelled' };
     } catch (error) {
@@ -48,7 +50,7 @@ export class CancelReservationWishHttpController {
         throw new NotFoundException(error.message);
       }
 
-      if (error instanceof CannotCancelConfirmedReservationWishError) {
+      if (error instanceof CannotUpdateReservationWishStatusError) {
         throw new BadRequestException(error.message);
       }
 

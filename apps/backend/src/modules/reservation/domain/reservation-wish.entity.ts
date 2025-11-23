@@ -4,9 +4,9 @@ import { AggregateRoot, AggregateID } from '@libs/ddd';
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
-import { ReservationwishCancelledDomainEvent } from './events/reservation-wish-cancelled.domain-event';
+import { ReservationWishStatusUpdatedDomainEvent } from './events/reservation-wish-cancelled.domain-event';
 import { ReservationwishCreatedDomainEvent } from './events/reservation-wish-created.domain-event';
-import { CannotCancelConfirmedReservationWishError } from './reservation.exceptions';
+import { CannotUpdateReservationWishStatusError } from './reservation.exceptions';
 import {
   CreateReservationWishProps,
   ReservationWishProps,
@@ -15,6 +15,22 @@ import {
 
 export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
   protected readonly _id: AggregateID;
+
+  private static readonly ALLOWED_STATUS_TRANSITIONS: Record<
+    ReservationWishStatus,
+    ReservationWishStatus[]
+  > = {
+    [ReservationWishStatus.CANCELLED]: [
+      ReservationWishStatus.PENDING,
+      ReservationWishStatus.REFUSED,
+    ],
+    [ReservationWishStatus.CONFIRMED]: [
+      ReservationWishStatus.PENDING,
+      ReservationWishStatus.REFUSED,
+    ],
+    [ReservationWishStatus.REFUSED]: [ReservationWishStatus.PENDING],
+    [ReservationWishStatus.PENDING]: [],
+  };
 
   static create(rawProps: CreateReservationWishProps) {
     const id = new UUID({ uuid: randomUUID() });
@@ -65,20 +81,19 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
     return this.props.status;
   }
 
-  cancel() {
-    if (this.props.status === ReservationWishStatus.CANCELLED) {
-      return;
+  update(status: ReservationWishStatus): void {
+    const allowedTransitions = ReservationWishEntity.ALLOWED_STATUS_TRANSITIONS[status];
+
+    if (!allowedTransitions.includes(this.props.status)) {
+      throw new CannotUpdateReservationWishStatusError(this.id, this.props.status, status);
     }
 
-    if (this.props.status === ReservationWishStatus.CONFIRMED) {
-      throw new CannotCancelConfirmedReservationWishError(this.id);
-    }
-
-    this.props.status = ReservationWishStatus.CANCELLED;
+    this.props.status = status;
 
     this.addEvent(
-      new ReservationwishCancelledDomainEvent({
+      new ReservationWishStatusUpdatedDomainEvent({
         aggregateId: this.id,
+        status,
       }),
     );
   }

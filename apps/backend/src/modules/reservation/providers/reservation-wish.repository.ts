@@ -18,6 +18,8 @@ const mapStatus = (status: ReservationWishStatus): DomainReservationWishStatus =
       return DomainReservationWishStatus.CONFIRMED;
     case ReservationWishStatus.CANCELLED:
       return DomainReservationWishStatus.CANCELLED;
+    case ReservationWishStatus.REFUSED:
+      return DomainReservationWishStatus.REFUSED;
     default:
       throw new Error(`Unknown ReservationWishStatus: ${status}`);
   }
@@ -98,7 +100,7 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
     return toEntity(record);
   }
 
-  async update(reservationWish: ReservationWishEntity): Promise<void> {
+  async updateStatus(reservationWish: ReservationWishEntity): Promise<void> {
     await prisma.reservationWish.update({
       where: { id: reservationWish.id.uuid },
       data: {
