@@ -25,3 +25,12 @@ export class ReservationWishNotFoundError extends Error {
     this.name = ReservationWishNotFoundError.name;
   }
 }
+
+export class UnauthorizedToCancelReservationWishError extends Error {
+  constructor(userId: UUID, reservationWishId: UUID) {
+    super(
+      `User with ID ${userId.uuid} is not authorized to cancel reservation wish with ID ${reservationWishId.uuid}.`,
+    );
+    this.name = UnauthorizedToCancelReservationWishError.name;
+  }
+}

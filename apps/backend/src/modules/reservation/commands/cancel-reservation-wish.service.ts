@@ -19,8 +19,10 @@ export class CancelReservationWishService
     private readonly domainService: ReservationWishDomainService,
   ) {}
 
-  async execute({ reservationWishId }: CancelReservationWishCommand): Promise<void> {
+  async execute({ reservationWishId, userId }: CancelReservationWishCommand): Promise<void> {
     const entity = await this.domainService.getReservationWishOrFail(reservationWishId);
+
+    await this.domainService.validateUserCanCancelReservationWish(entity, userId);
 
     entity.cancel();
 

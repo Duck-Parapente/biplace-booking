@@ -1,5 +1,6 @@
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
+import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import {
   Controller,
   Logger,
@@ -8,11 +9,13 @@ import {
   Param,
   BadRequestException,
   NotFoundException,
+  Request,
 } from '@nestjs/common';
 
 import {
   CannotCancelConfirmedReservationWishError,
   ReservationWishNotFoundError,
+  UnauthorizedToCancelReservationWishError,
 } from '../domain/reservation.exceptions';
 
 import { CancelReservationWishCommand } from './cancel-reservation-wish.command';
@@ -26,9 +29,13 @@ export class CancelReservationWishHttpController {
   constructor(private readonly cancelReservationWishService: CancelReservationWishService) {}
 
   @Delete(':id')
-  async createReservationWish(@Param('id') id: string) {
+  async createReservationWish(
+    @Param('id') id: string,
+    @Request() { user: { id: userId } }: { user: AuthenticatedUser },
+  ) {
     const command = new CancelReservationWishCommand({
       reservationWishId: new UUID({ uuid: id }),
+      userId,
     });
 
     try {
@@ -43,6 +50,11 @@ export class CancelReservationWishHttpController {
 
       if (error instanceof CannotCancelConfirmedReservationWishError) {
         throw new BadRequestException(error.message);
+      }
+
+      if (error instanceof UnauthorizedToCancelReservationWishError) {
+        this.logger.warn(`Unauthorized cancellation attempt: ${error.message}`);
+        throw new NotFoundException('Reservation wish not found');
       }
 
       this.logger.error('Error cancelling reservation wish', error);
