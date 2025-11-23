@@ -6,7 +6,7 @@ import { ReservationWishEntity } from '../reservation-wish.entity';
 
 export interface ReservationWishRepositoryPort {
   create(reservationWishEntity: ReservationWishEntity): Promise<void>;
-  existsPendingForStartingDateAndUser(
+  existsNotCancelledForStartingDateAndUser(
     startingDate: DateValueObject,
     userId: UUID,
   ): Promise<boolean>;

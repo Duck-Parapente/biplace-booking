@@ -7,13 +7,4 @@ export interface ReservationRepositoryPort {
     startingDate: DateValueObject,
     endingDate: DateValueObject,
   ): Promise<boolean>;
-
-  create(props: {
-    packId: UUID;
-    userId: UUID;
-    startingDate: DateValueObject;
-    endingDate: DateValueObject;
-    reservationWishId: UUID;
-    publicComment: string;
-  }): Promise<void>;
 }

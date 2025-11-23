@@ -97,13 +97,13 @@ export class AttributePacksDomainService {
         continue;
       }
 
-      const existingReservation = await this.reservationRepository.findByPackAndDate(
+      const hasExistingReservation = await this.reservationRepository.existsByPackAndDate(
         attribution.assignedPackId,
         startingDate,
         endingDate,
       );
 
-      if (existingReservation) {
+      if (hasExistingReservation) {
         this.logger.error(
           `Reservation already exists for pack ${attribution.assignedPackId.uuid} on ${startingDate.value.toISOString()}`,
         );

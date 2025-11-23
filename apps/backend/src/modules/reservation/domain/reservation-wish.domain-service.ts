@@ -48,7 +48,7 @@ export class ReservationWishDomainService {
     userId: UUID,
   ): Promise<void> {
     const hasExistingWishOnStartingDate =
-      await this.reservationWishRepository.existsPendingForStartingDateAndUser(
+      await this.reservationWishRepository.existsNotCancelledForStartingDateAndUser(
         startingDate,
         userId,
       );

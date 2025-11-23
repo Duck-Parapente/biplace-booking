@@ -1,25 +1,22 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
+import { GetReservationsService } from '@modules/reservation/commands/get-reservations.service';
 import { Injectable, Logger } from '@nestjs/common';
 
 import { ReservationRepositoryPort } from '../domain/ports/reservation.repository.port';
-import { ReservationWishSummary } from '@libs/types/accross-modules';
 
 @Injectable()
 export class ReservationRepository implements ReservationRepositoryPort {
   private readonly logger = new Logger(ReservationRepository.name);
 
-  constructor() {}
+  constructor(readonly getReservationsService: GetReservationsService) {}
 
-  findByPackAndDate(
+  existsByPackAndDate(
     packId: UUID,
     startingDate: DateValueObject,
     endingDate: DateValueObject,
-  ): Promise<ReservationWishSummary | null> {
-    this.logger.log(
-      `Finding reservation for pack ${packId.uuid} between ${startingDate.toString()} and ${endingDate.toString()}`,
-    );
-    throw new Error('Method not implemented.');
+  ): Promise<boolean> {
+    return this.getReservationsService.existsByPackAndDate(packId, startingDate, endingDate);
   }
 
   create(props: {
