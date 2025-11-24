@@ -28,7 +28,7 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
       ReservationWishStatus.PENDING,
       ReservationWishStatus.REFUSED,
     ],
-    [ReservationWishStatus.REFUSED]: [ReservationWishStatus.PENDING],
+    [ReservationWishStatus.REFUSED]: [ReservationWishStatus.PENDING, ReservationWishStatus.REFUSED],
     [ReservationWishStatus.PENDING]: [],
   };
 

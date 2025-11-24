@@ -5,7 +5,7 @@ import { DomainEvent } from './domain-event.base';
 import { Entity } from './entity.base';
 
 export abstract class AggregateRoot<EntityProps> extends Entity<EntityProps> {
-  private logger = new Logger(this.constructor.name);
+  protected logger = new Logger(this.constructor.name);
   private _domainEvents: DomainEvent[] = [];
 
   get domainEvents(): DomainEvent[] {
