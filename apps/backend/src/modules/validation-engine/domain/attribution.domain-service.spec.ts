@@ -90,11 +90,11 @@ describe('AttributionDomainService', () => {
               },
             ],
             expectedAttributions: [
-              { wishId: wishD, packId: packK },
-              { wishId: wishE, packId: packL },
-              { wishId: wishF, packId: packM },
-              { wishId: wishB, packId: packI },
-              { wishId: wishC, packId: packJ },
+              { wishId: wishD, packId: packK.id },
+              { wishId: wishE, packId: packL.id },
+              { wishId: wishF, packId: packM.id },
+              { wishId: wishB, packId: packI.id },
+              { wishId: wishC, packId: packJ.id },
             ],
             expectedUnassigned: [wishA],
           };
@@ -125,7 +125,7 @@ describe('AttributionDomainService', () => {
                 createdAt: DateValueObject.fromDate(olderDate),
               },
             ],
-            expectedAttributions: [{ wishId: wishOlder, packId: packI }],
+            expectedAttributions: [{ wishId: wishOlder, packId: packI.id }],
             expectedUnassigned: [wishNewer],
           };
         },
