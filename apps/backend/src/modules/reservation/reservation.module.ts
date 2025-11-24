@@ -7,10 +7,10 @@ import { CreateReservationWishService } from './commands/create-reservation-wish
 import { CreateReservationsService } from './commands/create-reservation.service';
 import { GetReservationWishesHttpController } from './commands/get-reservation-wishes.http.controller';
 import { GetReservationWishesService } from './commands/get-reservation-wishes.service';
-import { GetReservationsService } from './commands/get-reservations.service';
 import { UpdateReservationWishHttpController } from './commands/update-reservation-wish.http.controller';
 import { UpdateReservationWishService } from './commands/update-reservation-wish.service';
 import { ReservationWishDomainService } from './domain/reservation-wish.domain-service';
+import { ReservationDomainService } from './domain/reservation.domain-service';
 import { ReservationWishRepository } from './providers/reservation-wish.repository';
 import { ReservationRepository } from './providers/reservation.repository';
 import { RESERVATION_REPOSITORY, RESERVATION_WISH_REPOSITORY } from './reservation.di-tokens';
@@ -27,18 +27,13 @@ import { RESERVATION_REPOSITORY, RESERVATION_WISH_REPOSITORY } from './reservati
     UpdateReservationWishService,
     GetReservationWishesService,
     GetReservationWishesService,
-    GetReservationsService,
     CreateReservationsService,
     ReservationWishDomainService,
+    ReservationDomainService,
     { provide: RESERVATION_WISH_REPOSITORY, useClass: ReservationWishRepository },
     { provide: RESERVATION_REPOSITORY, useClass: ReservationRepository },
     { provide: EVENT_EMITTER, useClass: EventEmitter },
   ],
-  exports: [
-    GetReservationWishesService,
-    UpdateReservationWishService,
-    GetReservationsService,
-    CreateReservationsService,
-  ],
+  exports: [GetReservationWishesService, UpdateReservationWishService, CreateReservationsService],
 })
 export class ReservationModule {}

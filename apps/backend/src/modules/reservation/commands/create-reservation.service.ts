@@ -1,6 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
 import { ReservationRepositoryPort } from '../domain/ports/reservation.repository.port';
+import { ReservationDomainService } from '../domain/reservation.domain-service';
 import { ReservationEntity } from '../domain/reservation.entity';
 import { CreateReservationProps } from '../domain/reservation.types';
 import { RESERVATION_REPOSITORY } from '../reservation.di-tokens';
@@ -12,9 +13,11 @@ export class CreateReservationsService {
   constructor(
     @Inject(RESERVATION_REPOSITORY)
     protected readonly reservationRepository: ReservationRepositoryPort,
+    protected readonly reservationDomainService: ReservationDomainService,
   ) {}
 
   async create(props: CreateReservationProps): Promise<void> {
+    await this.reservationDomainService.validateCreateReservationWish(props);
     const entity = ReservationEntity.create(props);
     await this.reservationRepository.create(entity);
   }

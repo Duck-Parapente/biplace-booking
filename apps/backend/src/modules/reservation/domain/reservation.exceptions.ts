@@ -40,3 +40,12 @@ export class UnauthorizedToCancelReservationWishError extends Error {
     this.name = UnauthorizedToCancelReservationWishError.name;
   }
 }
+
+export class CannotCreateReservationError extends Error {
+  constructor(packId: UUID, startingDate: DateValueObject) {
+    super(
+      `Cannot create reservation for pack ID ${packId.uuid} on starting date ${startingDate.value.toISOString()}.`,
+    );
+    this.name = CannotCreateReservationError.name;
+  }
+}
