@@ -6,19 +6,23 @@ import { ReservationRepositoryPort } from '../domain/ports/reservation.repositor
 import { RESERVATION_REPOSITORY } from '../reservation.di-tokens';
 
 @Injectable()
-export class GetReservationsService {
-  private readonly logger = new Logger(GetReservationsService.name);
+export class CreateReservationsService {
+  private readonly logger = new Logger(CreateReservationsService.name);
 
   constructor(
     @Inject(RESERVATION_REPOSITORY)
     protected readonly reservationRepository: ReservationRepositoryPort,
   ) {}
 
-  existsByPackAndDate(
-    packId: UUID,
-    startingDate: DateValueObject,
-    endingDate: DateValueObject,
-  ): Promise<boolean> {
-    return this.reservationRepository.existsByPackAndDate(packId, startingDate, endingDate);
+  async create(props: {
+    packId: UUID;
+    userId: UUID;
+    startingDate: DateValueObject;
+    endingDate: DateValueObject;
+    reservationWishId: UUID;
+    publicComment?: string;
+  }): Promise<void> {
+    this.logger.warn(`Will create reservation with props: ${JSON.stringify(props)}`);
+    throw new Error('Method not implemented.');
   }
 }

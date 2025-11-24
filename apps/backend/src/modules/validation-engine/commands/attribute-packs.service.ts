@@ -1,8 +1,8 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { ReservationWishSummary } from '@libs/types/accross-modules';
 import { GetPacksService } from '@modules/pack/commands/get-packs.service';
+import { CreateReservationsService } from '@modules/reservation/commands/create-reservation.service';
 import { GetReservationWishesService } from '@modules/reservation/commands/get-reservation-wishes.service';
-import { GetReservationsService } from '@modules/reservation/commands/get-reservations.service';
 import { UpdateReservationWishService } from '@modules/reservation/commands/update-reservation-wish.service';
 import { Injectable, Logger } from '@nestjs/common';
 
@@ -19,7 +19,7 @@ export class AttributePacksService {
     private readonly getPacksService: GetPacksService,
     private readonly getReservationWishesService: GetReservationWishesService,
     private readonly updateReservationWishService: UpdateReservationWishService,
-    private readonly getReservationsService: GetReservationsService,
+    private readonly createReservationsService: CreateReservationsService,
     private readonly attributionDomainService: AttributionDomainService,
   ) {}
 
@@ -107,7 +107,7 @@ export class AttributePacksService {
         continue;
       }
 
-      await this.getReservationsService.create({
+      await this.createReservationsService.create({
         packId: attribution.assignedPackId,
         userId: wish.createdBy.id,
         startingDate,

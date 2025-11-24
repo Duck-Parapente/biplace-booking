@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 
 import { CreateReservationWishHttpController } from './commands/create-reservation-wish.http.controller';
 import { CreateReservationWishService } from './commands/create-reservation-wish.service';
+import { CreateReservationsService } from './commands/create-reservation.service';
 import { GetReservationWishesHttpController } from './commands/get-reservation-wishes.http.controller';
 import { GetReservationWishesService } from './commands/get-reservation-wishes.service';
 import { GetReservationsService } from './commands/get-reservations.service';
@@ -27,11 +28,17 @@ import { RESERVATION_REPOSITORY, RESERVATION_WISH_REPOSITORY } from './reservati
     GetReservationWishesService,
     GetReservationWishesService,
     GetReservationsService,
+    CreateReservationsService,
     ReservationWishDomainService,
     { provide: RESERVATION_WISH_REPOSITORY, useClass: ReservationWishRepository },
     { provide: RESERVATION_REPOSITORY, useClass: ReservationRepository },
     { provide: EVENT_EMITTER, useClass: EventEmitter },
   ],
-  exports: [GetReservationWishesService, UpdateReservationWishService, GetReservationsService],
+  exports: [
+    GetReservationWishesService,
+    UpdateReservationWishService,
+    GetReservationsService,
+    CreateReservationsService,
+  ],
 })
 export class ReservationModule {}
