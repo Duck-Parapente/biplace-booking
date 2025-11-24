@@ -141,11 +141,15 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
     return reservationWishes.map(
       ({ id: uuid, packChoices, createdAt, publicComment, createdBy }) => ({
         id: new UUID({ uuid }),
-        packChoices: packChoices.map(({ id }) => new UUID({ uuid: id })),
+        packChoices: packChoices.map(({ id, label }) => ({ id: new UUID({ uuid: id }), label })),
         createdAt: DateValueObject.fromDate(createdAt),
         publicComment,
         createdBy: {
           id: new UUID({ uuid: createdBy.id }),
+          nickname:
+            createdBy.firstName && createdBy.lastName
+              ? `${createdBy.firstName} ${createdBy.lastName}`
+              : createdBy.email,
           currentScore: createdBy.currentScore,
         },
       }),

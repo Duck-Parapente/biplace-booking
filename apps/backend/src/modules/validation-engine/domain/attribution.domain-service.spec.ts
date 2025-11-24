@@ -10,11 +10,11 @@ const createUUID = (): UUID => {
   return new UUID({ uuid: randomUUID() });
 };
 
-const packI = createUUID();
-const packJ = createUUID();
-const packK = createUUID();
-const packL = createUUID();
-const packM = createUUID();
+const packI = { id: createUUID(), label: 'Pack I' };
+const packJ = { id: createUUID(), label: 'Pack J' };
+const packK = { id: createUUID(), label: 'Pack K' };
+const packL = { id: createUUID(), label: 'Pack L' };
+const packM = { id: createUUID(), label: 'Pack M' };
 
 const userA = createUUID();
 const userB = createUUID();
@@ -54,7 +54,7 @@ describe('AttributionDomainService', () => {
             wishes: [
               {
                 id: wishD,
-                createdBy: { id: userD, currentScore: 600 },
+                createdBy: { id: userD, currentScore: 600, nickname: 'User D' },
                 packChoices: [packK],
                 createdAt,
               },
@@ -62,23 +62,23 @@ describe('AttributionDomainService', () => {
                 id: wishE,
                 packChoices: [packI, packJ, packL],
                 createdAt,
-                createdBy: { id: userE, currentScore: 500 },
+                createdBy: { id: userE, currentScore: 500, nickname: 'User E' },
               },
               {
                 id: wishF,
                 packChoices: [packI, packJ, packM],
                 createdAt,
-                createdBy: { id: userF, currentScore: 400 },
+                createdBy: { id: userF, currentScore: 400, nickname: 'User F' },
               },
               {
                 id: wishB,
-                createdBy: { id: userB, currentScore: 200 },
+                createdBy: { id: userB, currentScore: 200, nickname: 'User B' },
                 packChoices: [packI],
                 createdAt,
               },
               {
                 id: wishC,
-                createdBy: { id: userC, currentScore: 100 },
+                createdBy: { id: userC, currentScore: 100, nickname: 'User C' },
                 packChoices: [packJ, packK],
                 createdAt,
               },
@@ -86,7 +86,7 @@ describe('AttributionDomainService', () => {
                 id: wishA,
                 packChoices: [packI, packJ, packK],
                 createdAt,
-                createdBy: { id: userA, currentScore: 50 },
+                createdBy: { id: userA, currentScore: 50, nickname: 'User A' },
               },
             ],
             expectedAttributions: [
@@ -115,13 +115,13 @@ describe('AttributionDomainService', () => {
               {
                 id: wishNewer,
                 packChoices: [packI],
-                createdBy: { id: userA, currentScore: 100 },
+                createdBy: { id: userA, currentScore: 100, nickname: 'User A' },
                 createdAt: DateValueObject.fromDate(newerDate),
               },
               {
                 id: wishOlder,
                 packChoices: [packI],
-                createdBy: { id: userB, currentScore: 100 },
+                createdBy: { id: userB, currentScore: 100, nickname: 'User B' },
                 createdAt: DateValueObject.fromDate(olderDate),
               },
             ],

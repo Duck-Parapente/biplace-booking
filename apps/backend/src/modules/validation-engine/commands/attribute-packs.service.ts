@@ -34,12 +34,18 @@ export class AttributePacksService {
       const startingDate = todayNormalized.startOfDayInUTC(dayOffset);
       const endingDate = startingDate.startOfDayInUTC(1);
 
-      this.logger.log(`Processing attributions for ${startingDate.value.toISOString()}`);
+      this.logger.warn(`Will process attributions for ${startingDate.value.toISOString()}`);
 
-      await this.processAttributionsForDate(startingDate, endingDate);
+      try {
+        await this.processAttributionsForDate(startingDate, endingDate);
+      } catch (error) {
+        this.logger.error(
+          `Error processing attributions for ${startingDate.value.toISOString()}: ${
+            (error as Error).message
+          }`,
+        );
+      }
     }
-
-    this.logger.log('Attribution process completed');
   }
 
   private async processAttributionsForDate(
@@ -62,11 +68,22 @@ export class AttributePacksService {
     }
 
     this.logger.log(
-      `Found ${pendingWishes.length} pending wishes and ${availablePacks.length} available packs`,
+      `👤 Found ${pendingWishes.length} pending wishes: ${pendingWishes
+        .map(
+          ({ createdBy: { nickname }, packChoices }) =>
+            `${nickname} (choices: [${packChoices.map((c) => c.label).join(', ')}])`,
+        )
+        .join(', ')}`,
+    );
+
+    this.logger.log(
+      `🪂 Found ${availablePacks.length} available packs: ${availablePacks
+        .map(({ label }) => label)
+        .join(', ')}`,
     );
 
     const attributions = await this.attributionDomainService.getAttributions({
-      availablePacks: availablePacks.map((p) => p.id),
+      availablePacks,
       reservationWishes: pendingWishes,
     });
 
@@ -102,7 +119,7 @@ export class AttributePacksService {
       await this.updateReservationWishService.confirmReservationWish(wish.id);
 
       this.logger.log(
-        `Created reservation for wish ${wish.id.uuid} with pack ${attribution.assignedPackId.uuid}`,
+        `✅ Created reservation for wish ${wish.id.uuid} with pack ${attribution.assignedPackId.uuid}`,
       );
     }
   }

@@ -75,7 +75,7 @@ export class PackRepository implements PackRepositoryPort {
         },
       },
     });
-    return packs.map(({ id }) => ({ id: new UUID({ uuid: id }) }));
+    return packs.map(({ id, label }) => ({ id: new UUID({ uuid: id }), label }));
   }
 
   async findById(id: UUID): Promise<PackEntity | null> {

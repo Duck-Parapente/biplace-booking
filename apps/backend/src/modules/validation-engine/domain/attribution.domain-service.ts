@@ -24,7 +24,7 @@ export class AttributionDomainService {
     for (const wish of sortedWishes) {
       // Étape 2.1 : Filtrer les souhaits en enlevant les packs déjà attribués
       const availablePackChoices = wish.packChoices.filter(
-        (packId) => !assignedPacks.has(packId.uuid),
+        (packId) => !assignedPacks.has(packId.id.uuid),
       );
 
       // Étape 2.5 : Si plus de pack disponible, on passe au suivant
@@ -38,34 +38,34 @@ export class AttributionDomainService {
       for (const packId of availablePackChoices) {
         // Compter le nombre de demandes concurrentes pour ce pack
         const conflictCount = sortedWishes.filter((otherWish) =>
-          otherWish.packChoices.some((choice) => choice.uuid === packId.uuid),
+          otherWish.packChoices.some((choice) => choice.id.uuid === packId.id.uuid),
         ).length;
 
-        packConflicts.set(packId.uuid, conflictCount);
+        packConflicts.set(packId.id.uuid, conflictCount);
       }
 
       // Étape 2.3 : Attribuer le pack avec le moins de demandes concurrentes
       // Si plusieurs packs à égalité, on attribue le "plus voulu" (premier dans la liste des choix)
-      let selectedPack: UUID | null = null;
+      let selectedPackId: UUID | null = null;
       let minConflicts = Infinity;
 
       for (const packId of availablePackChoices) {
-        const conflicts = packConflicts.get(packId.uuid) || 0;
+        const conflicts = packConflicts.get(packId.id.uuid) || 0;
 
         if (conflicts < minConflicts) {
           minConflicts = conflicts;
-          selectedPack = packId;
+          selectedPackId = packId.id;
         }
         // Si égalité de conflits, on garde le premier rencontré (qui est le plus voulu)
       }
 
       // Étape 2.4 : Enregistrer l'attribution
-      if (selectedPack) {
+      if (selectedPackId) {
         attributions.push({
           reservationWishId: wish.id,
-          assignedPackId: selectedPack,
+          assignedPackId: selectedPackId,
         });
-        assignedPacks.add(selectedPack.uuid);
+        assignedPacks.add(selectedPackId.uuid);
       }
     }
 

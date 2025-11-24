@@ -15,12 +15,12 @@ export class AttibutePackCliController {
   })
   async attributePacks() {
     const startTime = Date.now();
-    this.logger.log('Starting packs attribution...');
+    this.logger.log('Starting packs attribution:');
 
     await this.attributePacksService.attributePacks();
 
     const endTime = Date.now();
     const duration = ((endTime - startTime) / 1000).toFixed(2);
-    this.logger.log(`Packs attribution completed in ${duration}s`);
+    this.logger.log(`Completed packs attribution in ${duration}s`);
   }
 }

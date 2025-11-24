@@ -1,17 +1,19 @@
-import { DateValueObject } from "@libs/ddd/date.value-object";
-import { UUID } from "@libs/ddd/uuid.value-object";
+import { DateValueObject } from '@libs/ddd/date.value-object';
+import { UUID } from '@libs/ddd/uuid.value-object';
 
 export interface PackSummary {
   id: UUID;
+  label: string;
 }
 
 export interface ReservationWishSummary {
   id: UUID;
-  packChoices: UUID[];
+  packChoices: { id: UUID; label: string }[];
   createdAt: DateValueObject;
   publicComment?: string;
   createdBy: {
     id: UUID;
+    nickname: string;
     currentScore: number;
   };
 }
