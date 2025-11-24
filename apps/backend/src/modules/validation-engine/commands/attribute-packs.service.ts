@@ -90,27 +90,14 @@ export class AttributePacksService {
         continue;
       }
 
-      // const hasExistingReservation = await this.getReservationsService.existsByPackAndDate(
-      //   attribution.assignedPackId,
-      //   startingDate,
-      //   endingDate,
-      // );
-
-      // if (hasExistingReservation) {
-      //   this.logger.error(
-      //     `Reservation already exists for pack ${attribution.assignedPackId.uuid} on ${startingDate.value.toISOString()}`,
-      //   );
-      //   continue;
-      // }
-
-      // await this.getReservationsService.create({
-      //   packId: attribution.assignedPackId,
-      //   userId: wish.createdBy.id,
-      //   startingDate,
-      //   endingDate,
-      //   reservationWishId: wish.id,
-      //   publicComment: wish.publicComment,
-      // });
+      await this.getReservationsService.create({
+        packId: attribution.assignedPackId,
+        userId: wish.createdBy.id,
+        startingDate,
+        endingDate,
+        reservationWishId: wish.id,
+        publicComment: wish.publicComment,
+      });
 
       await this.updateReservationWishService.confirmReservationWish(wish.id);
 

@@ -21,4 +21,16 @@ export class GetReservationsService {
   ): Promise<boolean> {
     return this.reservationRepository.existsByPackAndDate(packId, startingDate, endingDate);
   }
+
+  create(props: {
+    packId: UUID;
+    userId: UUID;
+    startingDate: DateValueObject;
+    endingDate: DateValueObject;
+    reservationWishId: UUID;
+    publicComment?: string;
+  }): void {
+    this.logger.warn(`Will create reservation with props: ${JSON.stringify(props)}`);
+    throw new Error('Method not implemented.');
+  }
 }
