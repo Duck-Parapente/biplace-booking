@@ -4,8 +4,8 @@ import { AggregateRoot, AggregateID } from '@libs/ddd';
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
-import { ReservationWishStatusUpdatedDomainEvent } from './events/reservation-wish-cancelled.domain-event';
-import { ReservationwishCreatedDomainEvent } from './events/reservation-wish-created.domain-event';
+import { ReservationWishStatusUpdatedDomainEvent } from './events/reservation-wish-updated.domain-event';
+import { ReservationWishCreatedDomainEvent } from './events/reservation-wish-created.domain-event';
 import { CannotUpdateReservationWishStatusError } from './reservation.exceptions';
 import {
   CreateReservationWishProps,
@@ -49,7 +49,7 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
     });
 
     entity.addEvent(
-      new ReservationwishCreatedDomainEvent({
+      new ReservationWishCreatedDomainEvent({
         aggregateId: id,
         reservationWish: props,
       }),

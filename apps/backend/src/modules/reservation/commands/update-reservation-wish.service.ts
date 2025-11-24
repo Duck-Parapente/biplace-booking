@@ -57,6 +57,6 @@ export class UpdateReservationWishService
 
     await this.reservationWishRepository.updateStatus(entity);
 
-    this.logger.log(`ReservationWish ${reservationWishId} updated to ${status}`);
+    this.logger.log(`ReservationWish ${reservationWishId.uuid} updated to ${status}`);
   }
 }

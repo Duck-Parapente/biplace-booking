@@ -3,10 +3,10 @@ import { DomainEvent } from '@libs/ddd';
 
 import { ReservationWishProps } from '../reservation.types';
 
-export class ReservationwishCreatedDomainEvent extends DomainEvent {
+export class ReservationWishCreatedDomainEvent extends DomainEvent {
   readonly reservationWish: ReservationWishProps;
 
-  constructor(props: DomainEventProps<ReservationwishCreatedDomainEvent>) {
+  constructor(props: DomainEventProps<ReservationWishCreatedDomainEvent>) {
     super(props);
     this.reservationWish = props.reservationWish;
   }

@@ -23,3 +23,16 @@ export enum ReservationWishStatus {
   REFUSED = 'REFUSED',
   CONFIRMED = 'CONFIRMED',
 }
+
+interface BaseReservationProps {
+  packId: UUID;
+  userId: UUID;
+  startingDate: DateValueObject;
+  endingDate: DateValueObject;
+  publicComment?: string;
+  reservationWishId?: UUID;
+}
+
+export type CreateReservationProps = BaseReservationProps;
+
+export type ReservationProps = BaseReservationProps;

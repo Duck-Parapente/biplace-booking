@@ -1,8 +1,8 @@
-import { DateValueObject } from '@libs/ddd/date.value-object';
-import { UUID } from '@libs/ddd/uuid.value-object';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
 import { ReservationRepositoryPort } from '../domain/ports/reservation.repository.port';
+import { ReservationEntity } from '../domain/reservation.entity';
+import { CreateReservationProps } from '../domain/reservation.types';
 import { RESERVATION_REPOSITORY } from '../reservation.di-tokens';
 
 @Injectable()
@@ -14,15 +14,8 @@ export class CreateReservationsService {
     protected readonly reservationRepository: ReservationRepositoryPort,
   ) {}
 
-  async create(props: {
-    packId: UUID;
-    userId: UUID;
-    startingDate: DateValueObject;
-    endingDate: DateValueObject;
-    reservationWishId: UUID;
-    publicComment?: string;
-  }): Promise<void> {
-    this.logger.warn(`Will create reservation with props: ${JSON.stringify(props)}`);
-    throw new Error('Method not implemented.');
+  async create(props: CreateReservationProps): Promise<void> {
+    const entity = ReservationEntity.create(props);
+    await this.reservationRepository.create(entity);
   }
 }
