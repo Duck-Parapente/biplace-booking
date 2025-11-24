@@ -17,7 +17,7 @@ Le repo utilise turborepo pour optimiser les builds, etc.
 ## Tooling
 
 - Bruno pour tester nos routes HTTP (cf. dossier bruno)
-- Gmail: l'adresse `gestion.biplace.duckparapente@gmail.com` a été créée pour:
+- Gmail: une adresse a été créée pour:
     - administrer les autres outils (Vercel, Newrelic, Auth0, etc.)
     - éventuellement permettre de recevoir des questions/retours des utilisateurs
     - recevoir les backups de la DB (dans Google Drive)

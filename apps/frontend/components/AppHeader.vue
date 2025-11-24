@@ -86,7 +86,7 @@
         <!-- Footer -->
         <div class="pb-6 text-center">
           <a
-            href="mailto:gestion.biplace.duckparapente@gmail.com"
+            :href="`mailto:${config.public.supportEmail}`"
             class="text-secondary-600 text-sm hover:opacity-80 transition-opacity inline-block px-8 py-3"
           >
             Une question ou remarque ?
@@ -105,6 +105,7 @@ defineOptions({
   inheritAttrs: false,
 });
 
+const config = useRuntimeConfig();
 const { logout, isAuthenticated, hasRole } = useAuth();
 const isMenuOpen = ref(false);
 

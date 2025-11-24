@@ -36,10 +36,10 @@ Pour lancer le projet, il te faut:
 ### Backup de la base de données
 
 Tous les jours, les DB de staging/prod sont backup par [backup.sh](../scripts/backup.sh):
-    - Création d'un dump de la DB + compression
-    - Copie du .env + compression
-    - Upload des 2 archives sur le Google Drive du compte `gestion.biplace.duckparapente@gmail.com`
-    - Suppression des archives qui ont plus de 7 jours
+- Création d'un dump de la DB + compression
+- Copie du .env + compression
+- Upload des 2 archives sur le Google Drive du compte de support (demander l'email à un admin si nécessaire)
+- Suppression des archives qui ont plus de 7 jours
 
 Voici la config du cron:
 

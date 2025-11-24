@@ -16,6 +16,7 @@ export default defineNuxtConfig({
       auth0ClientId: process.env.NUXT_PUBLIC_AUTH0_CLIENT_ID,
       auth0Audience: process.env.NUXT_PUBLIC_AUTH0_AUDIENCE,
       backendDomain: process.env.NUXT_PUBLIC_BACKEND_BASE_URL,
+      supportEmail: process.env.NUXT_PUBLIC_SUPPORT_EMAIL,
     },
   },
   app: {
