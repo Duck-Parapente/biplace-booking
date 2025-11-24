@@ -1,4 +1,6 @@
 // auth/jwt.strategy.ts
+import https from 'https';
+
 import { prisma } from '@libs/database/prisma/prisma';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
@@ -7,7 +9,6 @@ import { PassportStrategy } from '@nestjs/passport';
 import * as jwksRsa from 'jwks-rsa';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { DUCK_ROLES_CLAIM, UserRoles } from 'shared';
-import https from 'https';
 
 const requestAgent = new https.Agent({
   keepAlive: false,

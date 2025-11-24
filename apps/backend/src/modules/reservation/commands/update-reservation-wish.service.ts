@@ -4,11 +4,11 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { ReservationWishRepositoryPort } from '../domain/ports/reservation-wish.repository.port';
 import { ReservationWishDomainService } from '../domain/reservation-wish.domain-service';
+import { ReservationWishNotFoundError } from '../domain/reservation.exceptions';
 import { ReservationWishStatus } from '../domain/reservation.types';
 import { RESERVATION_WISH_REPOSITORY } from '../reservation.di-tokens';
 
 import { UpdateReservationWishCommand } from './update-reservation-wish.command';
-import { ReservationWishNotFoundError } from '../domain/reservation.exceptions';
 
 @CommandHandler(UpdateReservationWishCommand)
 export class UpdateReservationWishService
