@@ -2,7 +2,6 @@ import { AppModule } from '@app.module';
 import { BootstrapConsole } from 'nestjs-console';
 import { Logger } from 'nestjs-pino';
 
-
 const bootstrap = new BootstrapConsole({
   module: AppModule,
   useDecorators: true,

@@ -2,7 +2,7 @@ import { prisma } from '@libs/database/prisma/prisma';
 import { DomainEvent } from '@libs/ddd';
 import { Injectable, Logger } from '@nestjs/common';
 
-import { EventEmitterPort } from '../domain/event-emitter.port';
+import { EventEmitterPort } from '../../events/domain/event-emitter.port';
 
 @Injectable()
 export class EventEmitter implements EventEmitterPort {

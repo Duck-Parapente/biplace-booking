@@ -79,7 +79,7 @@
                 v-if="wish.status === 'PENDING'"
                 @click="handleCancelWish(wish.id)"
                 :disabled="cancelling"
-                class="w-full bg-red-50 hover:bg-red-100 border-t border-red-200 p-3 text-sm font-medium text-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-b-lg"
+                class="w-full bg-red-500 hover:bg-red-600 border-t border-red-600 p-3 text-sm font-medium text-white transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-b-lg"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
