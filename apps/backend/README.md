@@ -22,6 +22,7 @@ Plus de détails sur la [page Notion](https://www.notion.so/Pr-parer-un-event-st
 ## Comment développer en local?
 
 Rien de plus simple:
+
 - Installer les dépendances avec `pnpm install`
 - Lance `pnpm dc:local` pour démarrer un conteneur avec une DB.
 - Lancer `pnpm dev` pour lancer le front et le back.
