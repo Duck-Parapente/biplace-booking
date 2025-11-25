@@ -39,28 +39,29 @@
             <div
               v-for="wish in filteredReservationWishes"
               :key="wish.id"
-              class="border bg-gray-50 border-gray-300 rounded-lg overflow-hidden hover:shadow-md transition"
+              class="border bg-gray-50 border-gray-300 rounded-lg hover:shadow-md transition relative"
             >
-              <div class="p-4">
+              <!-- Status Badge - Top Right Corner -->
+              <div class="absolute top-3 right-3">
+                <span
+                  class="px-2 py-1 text-xs font-medium rounded shadow-sm"
+                  :class="getStatusConfig(wish.status, wish.packChoices.length).classes"
+                >
+                  {{ getStatusConfig(wish.status, wish.packChoices.length).label }}
+                </span>
+              </div>
+
+              <div class="p-4 pr-28">
                 <div class="flex-1">
-                  <div class="flex items-center gap-2 mb-2">
-                    <span
-                      class="px-2 py-1 text-xs font-medium rounded"
-                      :class="getStatusConfig(wish.status).classes"
-                    >
-                      {{ getStatusConfig(wish.status).label }}
-                    </span>
-                    <BaseTooltip v-if="getStatusConfig(wish.status).infoText">
-                      {{ getStatusConfig(wish.status).infoText }}
-                    </BaseTooltip>
-                  </div>
                   <div class="text-sm text-gray-600 space-y-1">
                     <p>
                       <span class="font-medium">Date:</span>
                       {{ formatDateLong(wish.startingDate) }}
                     </p>
                     <div class="flex flex-wrap gap-1 mt-1 items-center">
-                      <span class="text-xs text-gray-500">Mes choix de packs:</span>
+                      <span class="text-xs text-gray-500">
+                        {{ 'Mes préférences:' }}
+                      </span>
                       <BaseTag v-for="packId in wish.packChoices" :key="packId" variant="secondary">
                         {{ getPackLabel(packId) }}
                       </BaseTag>
@@ -78,7 +79,7 @@
                 v-if="wish.status === 'PENDING'"
                 @click="handleCancelWish(wish.id)"
                 :disabled="cancelling"
-                class="w-full bg-red-50 hover:bg-red-100 border-t border-red-200 p-3 text-sm font-medium text-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                class="w-full bg-red-50 hover:bg-red-100 border-t border-red-200 p-3 text-sm font-medium text-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-b-lg"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -93,10 +94,18 @@
                 Annuler cette demande
               </button>
 
+              <!-- Info Text Box - Full Width at Bottom -->
+              <div
+                v-if="getStatusConfig(wish.status, wish.packChoices.length).infoText"
+                class="w-full bg-blue-50 border-t border-blue-200 p-3 text-sm text-blue-800 rounded-b-lg"
+              >
+                {{ getStatusConfig(wish.status, wish.packChoices.length).infoText }}
+              </div>
+
               <!-- Validated Reservation Info - Full Width at Bottom -->
               <div
                 v-if="wish.reservations && wish.reservations.length > 0"
-                class="w-full bg-green-100 border-t border-green-300 p-3 text-center"
+                class="w-full bg-green-100 border-t border-green-300 p-3 text-center rounded-b-lg"
               >
                 <div v-for="reservation in wish.reservations" :key="reservation.id" class="text-sm">
                   <p class="font-medium text-green-800">
@@ -233,7 +242,7 @@ const formatDateLong = (date: Date | string): string => {
   });
 };
 
-const getStatusConfig = (status: ReservationStatusDto) => {
+const getStatusConfig = (status: ReservationStatusDto, packChoicesLength: number = 1) => {
   const DEFAULT_CLASSES = 'bg-gray-200 text-gray-800';
   const configs: Record<
     ReservationStatusDto,
@@ -243,7 +252,10 @@ const getStatusConfig = (status: ReservationStatusDto) => {
     CONFIRMED: { label: 'Confirmée', classes: 'bg-green-200 text-green-800' },
     REFUSED: {
       label: 'Refusée',
-      infoText: `Une autre personne a été choisie pour l'instant sur la date sur le(s) pack(s) sélectionné(s).`,
+      infoText:
+        packChoicesLength > 1
+          ? `Les packs sélectionnés ont été attribués à d'autres pilotes pour le moment.`
+          : `Le pack sélectionné a été attribué à un autre pilote pour le moment.`,
       classes: 'bg-red-200 text-red-800',
     },
     CANCELLED: { label: 'Annulée', classes: DEFAULT_CLASSES },
