@@ -4,24 +4,37 @@ import { ConfigService } from '@nestjs/config';
 import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 
-export interface SendEmailOptions {
+interface BaseEmailOptions {
   to: string | string[];
-  subject: string;
-  text: string;
-  html?: string;
 }
+
+export type SendEmailOptions = BaseEmailOptions & {
+  text: string;
+  subject: string;
+  html?: string;
+};
+
+export type SendTemplateOptions = BaseEmailOptions & {
+  template: string;
+  variables?: Record<string, unknown>;
+};
 
 @Injectable()
 export class MailClient {
   private readonly logger = new Logger(MailClient.name);
   private readonly mailgun: ReturnType<Mailgun['client']>;
   private readonly domain: string;
-  private readonly fromEmail: string;
+  private readonly replyTo: string;
+  private readonly DEFAULT_HEADERS = {
+    'h:X-Mailgun-Track': 'no',
+    'h:X-Mailgun-Track-Clicks': 'no',
+    'h:X-Mailgun-Track-Opens': 'no',
+  } as const;
 
   constructor(private readonly configService: ConfigService) {
     const apiKey = configService.getOrThrow<string>(envKeys.mailgunApiKey);
     this.domain = configService.getOrThrow<string>(envKeys.mailDomain);
-    this.fromEmail = configService.getOrThrow<string>(envKeys.mailSupportRecipient);
+    this.replyTo = configService.getOrThrow<string>(envKeys.mailSupportRecipient);
 
     const mailgunClient = new Mailgun(formData);
     this.mailgun = mailgunClient.client({
@@ -31,15 +44,27 @@ export class MailClient {
     });
   }
 
+  private normalizeRecipients(to: string | string[]): string[] {
+    return Array.isArray(to) ? to : [to];
+  }
+
+  private getBaseMessageData(to: string[]) {
+    return {
+      from: `Duck Biplace <support@${this.domain}>`,
+      to,
+      'h:Reply-To': this.replyTo,
+      ...this.DEFAULT_HEADERS,
+    };
+  }
+
   async sendEmail(options: SendEmailOptions): Promise<void> {
     try {
-      const recipients = Array.isArray(options.to) ? options.to : [options.to];
+      const recipients = this.normalizeRecipients(options.to);
 
       const messageData = {
-        from: this.fromEmail,
-        to: recipients,
-        subject: options.subject,
+        ...this.getBaseMessageData(recipients),
         text: options.text,
+        subject: options.subject,
         ...(options.html && { html: options.html }),
       };
 
@@ -49,6 +74,32 @@ export class MailClient {
     } catch (error) {
       this.logger.error(
         `Failed to send email: ${(error as Error).message}`,
+        (error as Error).stack,
+      );
+      throw error;
+    }
+  }
+
+  async sendTemplate(options: SendTemplateOptions): Promise<void> {
+    try {
+      const recipients = this.normalizeRecipients(options.to);
+
+      const messageData = {
+        ...this.getBaseMessageData(recipients),
+        template: options.template,
+        ...(options.variables && {
+          'h:X-Mailgun-Variables': JSON.stringify(options.variables),
+        }),
+      };
+
+      const result = await this.mailgun.messages.create(this.domain, messageData);
+
+      this.logger.log(
+        `Template email sent successfully to ${recipients.join(', ')}: ${result.id} (template: ${options.template})`,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Failed to send template email: ${(error as Error).message}`,
         (error as Error).stack,
       );
       throw error;
