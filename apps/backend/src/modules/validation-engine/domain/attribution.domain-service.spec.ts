@@ -35,6 +35,57 @@ describe('AttributionDomainService', () => {
     service = new AttributionDomainService();
   });
 
+  const printDebugInfo = (
+    testName: string,
+    wishes,
+    availablePacks,
+    result,
+    expectedAttributions,
+    expectedUnassigned,
+  ): string => {
+    const lines: string[] = [];
+
+    lines.push(`\n=== Debug for failing test: ${testName} ===`);
+    lines.push('Wishes submitted (ordered by score desc):');
+    wishes
+      .sort((a, b) => b.createdBy.currentScore - a.createdBy.currentScore)
+      .forEach((wish) => {
+        lines.push(
+          `  - ${wish.createdBy.nickname} (score: ${wish.createdBy.currentScore}): ${wish.packChoices.map((p) => p.label).join(', ')}`,
+        );
+      });
+
+    lines.push('\nActual attributions:');
+    result.forEach((attr) => {
+      const wish = wishes.find((w) => w.id === attr.reservationWishId);
+      const pack = availablePacks.find((p) => p.id === attr.assignedPackId);
+      if (wish && pack) {
+        lines.push(`  - ${wish.createdBy.nickname} → ${pack.label}`);
+      }
+    });
+
+    lines.push('\nExpected attributions:');
+    expectedAttributions.forEach(({ wishId, pack }) => {
+      const wish = wishes.find((w) => w.id === wishId);
+      if (wish) {
+        lines.push(`  - ${wish.createdBy.nickname} → ${pack.label}`);
+      }
+    });
+
+    lines.push('\nUnassigned wishes:');
+    const assignedWishIds = new Set(result.map((r) => r.reservationWishId));
+    wishes.forEach((wish) => {
+      if (!assignedWishIds.has(wish.id)) {
+        lines.push(
+          `  - ${wish.createdBy.nickname} (expected: ${expectedUnassigned.includes(wish.id) ? 'YES' : 'NO'})`,
+        );
+      }
+    });
+    lines.push('===========================\n');
+
+    return lines.join('\n');
+  };
+
   describe('attributePacks', () => {
     const testCases = [
       {
@@ -90,11 +141,11 @@ describe('AttributionDomainService', () => {
               },
             ],
             expectedAttributions: [
-              { wishId: wishD, packId: packK.id },
-              { wishId: wishE, packId: packL.id },
-              { wishId: wishF, packId: packM.id },
-              { wishId: wishB, packId: packI.id },
-              { wishId: wishC, packId: packJ.id },
+              { wishId: wishD, pack: packK },
+              { wishId: wishE, pack: packL },
+              { wishId: wishF, pack: packM },
+              { wishId: wishB, pack: packI },
+              { wishId: wishC, pack: packJ },
             ],
             expectedUnassigned: [wishA],
           };
@@ -125,7 +176,7 @@ describe('AttributionDomainService', () => {
                 createdAt: DateValueObject.fromDate(olderDate),
               },
             ],
-            expectedAttributions: [{ wishId: wishOlder, packId: packI.id }],
+            expectedAttributions: [{ wishId: wishOlder, pack: packI }],
             expectedUnassigned: [wishNewer],
           };
         },
@@ -143,20 +194,34 @@ describe('AttributionDomainService', () => {
 
         const result = await service.getAttributions(props);
 
-        expect(result).toHaveLength(expectedAttributions.length);
+        try {
+          expect(result).toHaveLength(expectedAttributions.length);
 
-        expectedAttributions.forEach(({ wishId, packId }) => {
-          expect(result).toContainEqual({
-            reservationWishId: wishId,
-            assignedPackId: packId,
+          expectedAttributions.forEach(({ wishId, pack }) => {
+            expect(result).toContainEqual({
+              reservationWishId: wishId,
+              assignedPackId: pack.id,
+            });
           });
-        });
 
-        expectedUnassigned.forEach((wishId) => {
-          expect(
-            result.find(({ reservationWishId }) => reservationWishId === wishId),
-          ).toBeUndefined();
-        });
+          expectedUnassigned.forEach((wishId) => {
+            expect(
+              result.find(({ reservationWishId }) => reservationWishId === wishId),
+            ).toBeUndefined();
+          });
+        } catch (error) {
+          console.log(
+            printDebugInfo(
+              name,
+              wishes,
+              availablePacks,
+              result,
+              expectedAttributions,
+              expectedUnassigned,
+            ),
+          );
+          throw error;
+        }
       });
     });
   });
