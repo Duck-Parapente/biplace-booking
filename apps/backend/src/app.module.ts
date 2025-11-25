@@ -37,6 +37,7 @@ const appModules = [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    FeatureFlagModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     ConsoleModule,
     ...appModules,
