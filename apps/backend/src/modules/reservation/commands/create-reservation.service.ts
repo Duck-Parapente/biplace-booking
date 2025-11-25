@@ -1,3 +1,4 @@
+import { DomainEventMetadata } from '@libs/ddd';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
 import { ReservationRepositoryPort } from '../domain/ports/reservation.repository.port';
@@ -16,9 +17,9 @@ export class CreateReservationsService {
     protected readonly reservationDomainService: ReservationDomainService,
   ) {}
 
-  async create(props: CreateReservationProps): Promise<void> {
+  async create(props: CreateReservationProps, metadata: DomainEventMetadata): Promise<void> {
     await this.reservationDomainService.validateCreateReservationWish(props);
-    const entity = ReservationEntity.create(props);
+    const entity = ReservationEntity.create(props, metadata);
     await this.reservationRepository.create(entity);
   }
 }

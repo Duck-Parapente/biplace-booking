@@ -23,6 +23,7 @@ export class UpdateUserHttpController {
       new UpdateUserCommand({
         userId,
         profile,
+        metadata: { userId: userId.uuid },
       }),
     );
 

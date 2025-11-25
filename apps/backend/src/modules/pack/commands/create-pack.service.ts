@@ -16,8 +16,8 @@ export class CreatePackService implements ICommandHandler<CreatePackCommand, voi
     protected readonly packRepository: PackRepositoryPort,
   ) {}
 
-  async execute({ profile }: CreatePackCommand): Promise<void> {
-    const pack = PackEntity.create(profile);
+  async execute({ profile, metadata }: CreatePackCommand): Promise<void> {
+    const pack = PackEntity.create(profile, metadata);
 
     await this.packRepository.create(pack);
   }

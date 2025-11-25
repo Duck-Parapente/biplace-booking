@@ -37,6 +37,9 @@ export class CreateReservationWishHttpController {
         publicComment,
         createdById,
       },
+      metadata: {
+        userId: createdById.uuid,
+      },
     });
 
     try {

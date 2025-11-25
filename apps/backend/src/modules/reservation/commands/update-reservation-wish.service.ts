@@ -1,3 +1,4 @@
+import { DomainEventMetadata } from '@libs/ddd';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
@@ -26,21 +27,37 @@ export class UpdateReservationWishService
     reservationWishId,
     userId,
     status,
+    metadata,
   }: UpdateReservationWishCommand): Promise<void> {
-    await this.updateReservationWishStatus(reservationWishId, status, userId);
+    await this.updateReservationWishStatus(reservationWishId, status, metadata, userId);
   }
 
-  async confirmReservationWish(reservationWishId: UUID): Promise<void> {
-    await this.updateReservationWishStatus(reservationWishId, ReservationWishStatus.CONFIRMED);
+  async confirmReservationWish(
+    reservationWishId: UUID,
+    metadata: DomainEventMetadata,
+  ): Promise<void> {
+    await this.updateReservationWishStatus(
+      reservationWishId,
+      ReservationWishStatus.CONFIRMED,
+      metadata,
+    );
   }
 
-  async refuseReservationWish(reservationWishId: UUID): Promise<void> {
-    await this.updateReservationWishStatus(reservationWishId, ReservationWishStatus.REFUSED);
+  async refuseReservationWish(
+    reservationWishId: UUID,
+    metadata: DomainEventMetadata,
+  ): Promise<void> {
+    await this.updateReservationWishStatus(
+      reservationWishId,
+      ReservationWishStatus.REFUSED,
+      metadata,
+    );
   }
 
   private async updateReservationWishStatus(
     reservationWishId: UUID,
     status: ReservationWishStatus,
+    metadata: DomainEventMetadata,
     userId?: UUID,
   ): Promise<void> {
     const entity = await this.reservationWishRepository.findById(reservationWishId);
@@ -53,7 +70,7 @@ export class UpdateReservationWishService
       await this.domainService.validateUserCanUpdateReservationWish(entity, userId);
     }
 
-    entity.update(status);
+    entity.update(status, metadata);
 
     await this.reservationWishRepository.updateStatus(entity);
 

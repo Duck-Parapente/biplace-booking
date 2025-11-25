@@ -6,13 +6,13 @@ import { ArgumentNotProvidedException } from '../exceptions';
 
 import { UUID, UuidProps } from './uuid.value-object';
 
-type DomainEventMetadata = {
+export type DomainEventMetadata = {
   /** Timestamp when this domain event occurred */
-  readonly timestamp: number;
+  readonly timestamp?: number;
 
   /** ID for correlation purposes (for Integration Events,logs correlation, etc).
    */
-  readonly correlationId: string;
+  readonly correlationId?: string;
 
   /**
    * Causation id used to reconstruct execution order if needed

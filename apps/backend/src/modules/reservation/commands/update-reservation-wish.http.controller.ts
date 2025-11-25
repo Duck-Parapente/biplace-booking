@@ -38,6 +38,9 @@ export class UpdateReservationWishHttpController {
       reservationWishId: new UUID({ uuid: id }),
       userId,
       status: ReservationWishStatus.CANCELLED,
+      metadata: {
+        userId: userId.uuid,
+      },
     });
 
     try {

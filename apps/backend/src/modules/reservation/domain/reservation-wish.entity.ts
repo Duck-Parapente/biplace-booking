@@ -1,11 +1,11 @@
 import { randomUUID } from 'crypto';
 
-import { AggregateRoot, AggregateID } from '@libs/ddd';
+import { AggregateRoot, AggregateID, DomainEventMetadata } from '@libs/ddd';
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
-import { ReservationWishStatusUpdatedDomainEvent } from './events/reservation-wish-updated.domain-event';
 import { ReservationWishCreatedDomainEvent } from './events/reservation-wish-created.domain-event';
+import { ReservationWishStatusUpdatedDomainEvent } from './events/reservation-wish-updated.domain-event';
 import { CannotUpdateReservationWishStatusError } from './reservation.exceptions';
 import {
   CreateReservationWishProps,
@@ -81,7 +81,7 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
     return this.props.status;
   }
 
-  update(status: ReservationWishStatus): void {
+  update(status: ReservationWishStatus, metadata: DomainEventMetadata): void {
     const allowedTransitions = ReservationWishEntity.ALLOWED_STATUS_TRANSITIONS[status];
 
     if (!allowedTransitions.includes(this.props.status)) {
@@ -94,6 +94,7 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
       new ReservationWishStatusUpdatedDomainEvent({
         aggregateId: this.id,
         status,
+        metadata,
       }),
     );
   }

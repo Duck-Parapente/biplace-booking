@@ -15,14 +15,14 @@ export class UpdatePackService implements ICommandHandler<UpdatePackCommand, voi
     protected readonly packRepository: PackRepositoryPort,
   ) {}
 
-  async execute({ packId, updates }: UpdatePackCommand): Promise<void> {
+  async execute({ packId, updates, metadata }: UpdatePackCommand): Promise<void> {
     const pack = await this.packRepository.findById(packId);
 
     if (!pack) {
       throw new NotFoundException(`Pack with id ${packId.uuid} not found`);
     }
 
-    pack.update(updates);
+    pack.update(updates, metadata);
 
     await this.packRepository.update(pack);
   }

@@ -4,12 +4,12 @@ import { Guard } from '@libs/guards/primitive.guard';
 
 import { ArgumentNotProvidedException } from '../exceptions';
 
-export type CommandProps<T> = Omit<T, 'id' | 'metadata'> & Partial<Command>;
+export type CommandProps<T> = Omit<T, 'id'> & Omit<Command, 'id'>;
 
 type CommandMetadata = {
   /** ID for correlation purposes (for commands that
    *  arrive from other microservices,logs correlation, etc). */
-  readonly correlationId: string;
+  readonly correlationId?: string;
 
   /**
    * Causation id to reconstruct execution order if needed
@@ -25,7 +25,7 @@ type CommandMetadata = {
   /**
    * Time when the command occurred. Mostly for tracing purposes
    */
-  readonly timestamp: number;
+  readonly timestamp?: number;
 };
 
 export class Command {
@@ -41,7 +41,7 @@ export class Command {
     if (Guard.isEmpty(props)) {
       throw new ArgumentNotProvidedException('Command props should not be empty');
     }
-    this.id = props.id || randomUUID();
+    this.id = randomUUID();
     this.metadata = {
       correlationId: props?.metadata?.correlationId,
       causationId: props?.metadata?.causationId,

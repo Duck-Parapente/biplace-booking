@@ -7,7 +7,7 @@ import { UpdateReservationWishService } from '@modules/reservation/commands/upda
 import { Injectable, Logger } from '@nestjs/common';
 
 import { AttributionDomainService } from '../domain/attribution.domain-service';
-import { Attribution } from '../domain/validation-engine.types';
+import { Attribution, VALIDATION_ENGINE_MODULE } from '../domain/validation-engine.types';
 
 @Injectable()
 export class AttributePacksService {
@@ -107,16 +107,22 @@ export class AttributePacksService {
         continue;
       }
 
-      await this.createReservationsService.create({
-        packId: attribution.assignedPackId,
-        userId: wish.createdBy.id,
-        startingDate,
-        endingDate,
-        reservationWishId: wish.id,
-        publicComment: wish.publicComment,
-      });
+      await this.createReservationsService.create(
+        {
+          packId: attribution.assignedPackId,
+          userId: wish.createdBy.id,
+          startingDate,
+          endingDate,
+          reservationWishId: wish.id,
+          publicComment: wish.publicComment,
+        },
+        VALIDATION_ENGINE_MODULE,
+      );
 
-      await this.updateReservationWishService.confirmReservationWish(wish.id);
+      await this.updateReservationWishService.confirmReservationWish(
+        wish.id,
+        VALIDATION_ENGINE_MODULE,
+      );
 
       this.logger.log(
         `✅ Created reservation for wish ${wish.id.uuid} with pack ${attribution.assignedPackId.uuid}`,
@@ -132,7 +138,10 @@ export class AttributePacksService {
 
     for (const wish of pendingWishes) {
       if (!confirmedWishIds.has(wish.id.uuid)) {
-        await this.updateReservationWishService.refuseReservationWish(wish.id);
+        await this.updateReservationWishService.refuseReservationWish(
+          wish.id,
+          VALIDATION_ENGINE_MODULE,
+        );
         this.logger.log(`Refused reservation wish ${wish.id.uuid} (no pack available)`);
       }
     }

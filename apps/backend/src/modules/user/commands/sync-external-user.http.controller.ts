@@ -19,6 +19,7 @@ export class SyncExternalUserHttpController {
     const command = new SyncExternalUserCommand({
       externalAuthId,
       email: new Email({ email }),
+      metadata: { userId: 'auth0-webhook' },
     });
 
     await this.syncExternalUserService.execute(command);

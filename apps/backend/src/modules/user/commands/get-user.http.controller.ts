@@ -18,7 +18,9 @@ export class GetUserHttpController {
   async getUser(@Request() req: { user: AuthenticatedUser }): Promise<UserDto> {
     const { id } = req.user;
 
-    const user = await this.getUserService.execute(new GetUserCommand({ userId: id }));
+    const user = await this.getUserService.execute(
+      new GetUserCommand({ userId: id, metadata: { userId: id.uuid } }),
+    );
     return mapUserToDto(user);
   }
 }
