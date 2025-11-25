@@ -1,7 +1,7 @@
 import { PublicConfigDto } from 'shared';
 import { ref, onMounted, onUnmounted } from 'vue';
 
-const POLLING_INTERVAL_MS = 30_000;
+const POLLING_INTERVAL_MS = 1 * 60 * 1000;
 
 export const usePublicConfig = () => {
   const { callPublicApi } = useApi();
@@ -21,10 +21,8 @@ export const usePublicConfig = () => {
   };
 
   const startPolling = () => {
-    // Fetch immediately
     fetchPublicConfig();
 
-    // Then poll every 10 seconds
     intervalId = setInterval(() => {
       fetchPublicConfig();
     }, POLLING_INTERVAL_MS);
