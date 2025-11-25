@@ -50,6 +50,9 @@
                     >
                       {{ getStatusConfig(wish.status).label }}
                     </span>
+                    <BaseTooltip v-if="getStatusConfig(wish.status).infoText">
+                      {{ getStatusConfig(wish.status).infoText }}
+                    </BaseTooltip>
                   </div>
                   <div class="text-sm text-gray-600 space-y-1">
                     <p>
@@ -141,7 +144,9 @@ const {
 const { packs, getPacks } = usePack();
 
 const showModal = ref(false);
-const selectedStatuses = ref<Set<ReservationStatusDto>>(new Set([ReservationStatusDto.PENDING]));
+const selectedStatuses = ref<Set<ReservationStatusDto>>(
+  new Set([ReservationStatusDto.PENDING, ReservationStatusDto.CONFIRMED]),
+);
 
 const availableStatuses = computed(() => {
   return [...new Set(reservationWishes.value.map(({ status }) => status))];
@@ -216,9 +221,17 @@ const formatDateLong = (date: Date | string): string => {
 
 const getStatusConfig = (status: ReservationStatusDto) => {
   const DEFAULT_CLASSES = 'bg-gray-200 text-gray-800';
-  const configs: Record<ReservationStatusDto, { label: string; classes: string }> = {
+  const configs: Record<
+    ReservationStatusDto,
+    { label: string; classes: string; infoText?: string }
+  > = {
     PENDING: { label: 'En attente', classes: 'bg-yellow-200 text-yellow-800' },
     CONFIRMED: { label: 'Confirmée', classes: 'bg-green-200 text-green-800' },
+    REFUSED: {
+      label: 'Refusée',
+      infoText: 'Une autre personne a été choisie pour cette date sur les packs sélectionnés.',
+      classes: 'bg-red-200 text-red-800',
+    },
     CANCELLED: { label: 'Annulée', classes: DEFAULT_CLASSES },
   };
   return configs[status] || { label: status, classes: DEFAULT_CLASSES };

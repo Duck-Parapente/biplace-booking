@@ -40,26 +40,11 @@
           <div>
             <label for="currentScore" class="block text-sm font-medium text-secondary-600 mb-1">
               Canardos
-              <span class="relative inline-block ml-1">
-                <button
-                  type="button"
-                  @click="showScoreTooltip = !showScoreTooltip"
-                  @mouseenter="showScoreTooltip = true"
-                  @mouseleave="showScoreTooltip = false"
-                  class="w-4 h-4 text-xs leading-4 text-center bg-blue-500 text-white rounded-full cursor-pointer hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                >
-                  !
-                </button>
-                <div
-                  v-if="showScoreTooltip"
-                  @click.stop
-                  class="absolute z-10 w-64 p-2 mt-1 text-xs text-white bg-gray-800 rounded shadow-lg left-0 sm:-translate-x-1/2 sm:left-1/2"
-                >
-                  Le nombre de canardos est mis à jour après chaque réservation. Plus vous réservez,
-                  plus le nombre augmente. Il est utilisé pour attribuer les parapentistes de
-                  manière équitable.
-                </div>
-              </span>
+              <BaseTooltip>
+                Le nombre de canardos est mis à jour après chaque réservation. Plus vous réservez,
+                plus le nombre augmente. Il est utilisé pour attribuer les parapentistes de manière
+                équitable.
+              </BaseTooltip>
             </label>
             <input
               id="currentScore"
@@ -199,23 +184,7 @@ const validationErrors = ref<ValidationErrors>({
   phoneNumber: '',
 });
 
-const showScoreTooltip = ref(false);
-
-// Close tooltip when clicking outside
 onMounted(async () => {
-  const handleClickOutside = (event: MouseEvent) => {
-    const target = event.target as HTMLElement;
-    if (showScoreTooltip.value && !target.closest('.relative.inline-block')) {
-      showScoreTooltip.value = false;
-    }
-  };
-
-  document.addEventListener('click', handleClickOutside);
-
-  onUnmounted(() => {
-    document.removeEventListener('click', handleClickOutside);
-  });
-
   try {
     await getUser();
 
