@@ -1,4 +1,11 @@
 <template>
+  <div
+    v-if="maintenanceMode"
+    class="w-full bg-orange-500 text-white px-6 py-3 text-center font-semibold"
+  >
+    ⚠️ Mode maintenance activé - Des opérations de maintenance sont en cours
+  </div>
+
   <header
     :class="$attrs.class"
     class="w-full flex items-center justify-between px-6 py-4 bg-primary-400 text-secondary-600"
@@ -107,6 +114,7 @@ defineOptions({
 
 const config = useRuntimeConfig();
 const { logout, isAuthenticated, hasRole } = useAuth();
+const { maintenanceMode } = usePublicConfig();
 const isMenuOpen = ref(false);
 
 interface MenuItem {
