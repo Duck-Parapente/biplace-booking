@@ -86,6 +86,16 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
     return this.props.reservations;
   }
 
+  get reservation() {
+    if (this.props.reservations.length === 0) return null;
+
+    if (this.props.reservations.length > 1) {
+      throw new Error(`ReservationWish ${this.id.uuid} has multiple reservations`);
+    }
+
+    return this.props.reservations[0];
+  }
+
   update(status: ReservationWishStatus, metadata: DomainEventMetadata): void {
     const allowedTransitions = ReservationWishEntity.ALLOWED_STATUS_TRANSITIONS[status];
 

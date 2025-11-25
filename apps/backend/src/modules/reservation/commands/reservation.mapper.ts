@@ -29,6 +29,6 @@ export function mapReservationWishToDto(
     packChoices: reservationWish.packChoices.map((packChoice) => packChoice.uuid),
     status: mapStatus(reservationWish.status),
     publicComment: reservationWish.publicComment,
-    reservations: reservationWish.reservations,
+    reservation: reservationWish.reservation,
   };
 }

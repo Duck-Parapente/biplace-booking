@@ -102,14 +102,13 @@
                 {{ getStatusConfig(wish.status, wish.packChoices.length).infoText }}
               </div>
 
-              <!-- Validated Reservation Info - Full Width at Bottom -->
               <div
-                v-if="wish.reservations && wish.reservations.length > 0"
+                v-if="wish.reservation"
                 class="w-full bg-green-100 border-t border-green-300 p-3 text-center rounded-b-lg"
               >
-                <div v-for="reservation in wish.reservations" :key="reservation.id" class="text-sm">
+                <div class="text-sm">
                   <p class="font-medium text-green-800">
-                    ✓ Réservation confirmée pour le pack {{ getPackLabel(reservation.packId) }}
+                    ✓ Réservation confirmée pour le pack {{ getPackLabel(wish.reservation.packId) }}
                   </p>
                 </div>
               </div>
