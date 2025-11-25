@@ -59,14 +59,14 @@
                       <span class="font-medium">Date:</span>
                       {{ formatDateLong(wish.startingDate) }}
                     </p>
-                    <div class="flex flex-wrap gap-1 mt-1">
+                    <div class="flex flex-wrap gap-1 mt-1 items-center">
+                      <span class="text-xs text-gray-500">Mes choix de packs:</span>
                       <BaseTag v-for="packId in wish.packChoices" :key="packId" variant="secondary">
                         {{ getPackLabel(packId) }}
                       </BaseTag>
                     </div>
-                    <p v-if="wish.publicComment">
-                      <span class="font-medium">Commentaire:</span>
-                      {{ wish.publicComment }}
+                    <p v-if="wish.publicComment" class="italic text-gray-700">
+                      "{{ wish.publicComment }}"
                     </p>
                     <p class="text-xs text-gray-500">Créée le {{ formatDate(wish.createdAt) }}</p>
                   </div>
