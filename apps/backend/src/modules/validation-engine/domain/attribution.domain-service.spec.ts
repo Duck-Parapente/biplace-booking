@@ -15,6 +15,11 @@ const packJ = { id: createUUID(), label: 'Pack J' };
 const packK = { id: createUUID(), label: 'Pack K' };
 const packL = { id: createUUID(), label: 'Pack L' };
 const packM = { id: createUUID(), label: 'Pack M' };
+const packN = { id: createUUID(), label: 'Pack N' };
+const packO = { id: createUUID(), label: 'Pack O' };
+const packP = { id: createUUID(), label: 'Pack P' };
+const packQ = { id: createUUID(), label: 'Pack Q' };
+const packR = { id: createUUID(), label: 'Pack R' };
 
 const userA = createUUID();
 const userB = createUUID();
@@ -22,6 +27,10 @@ const userC = createUUID();
 const userD = createUUID();
 const userE = createUUID();
 const userF = createUUID();
+const userG = createUUID();
+const userH = createUUID();
+const userI = createUUID();
+const userJ = createUUID();
 
 // Mock the uuid module to avoid ES module issues
 jest.mock('uuid', () => ({
@@ -127,6 +136,277 @@ describe('AttributionDomainService', () => {
             ],
             expectedAttributions: [{ wishId: wishOlder, packId: packI.id }],
             expectedUnassigned: [wishNewer],
+          };
+        },
+      },
+      {
+        name: 'should attribute packs based on priority and conflict resolution 2',
+        setup: () => {
+          const createdAt = DateValueObject.fromDate(new Date('2025-11-20T10:00:00Z'));
+
+          const wishA = createUUID();
+          const wishB = createUUID();
+          const wishC = createUUID();
+
+          return {
+            availablePacks: [packI, packJ, packK],
+            wishes: [
+              {
+                id: wishA,
+                createdBy: { id: userA, currentScore: 1, nickname: 'User A' },
+                packChoices: [packI, packJ, packK],
+                createdAt,
+              },
+              {
+                id: wishB,
+                createdBy: { id: userB, currentScore: 2, nickname: 'User B' },
+                packChoices: [packI, packJ, packK],
+                createdAt,
+              },
+              {
+                id: wishC,
+                createdBy: { id: userC, currentScore: 3, nickname: 'User C' },
+                packChoices: [packI, packJ, packK],
+                createdAt,
+              },
+            ],
+            expectedAttributions: [
+              { wishId: wishA, packId: packI.id },
+              { wishId: wishB, packId: packJ.id },
+              { wishId: wishC, packId: packK.id },
+            ],
+            expectedUnassigned: [],
+          };
+        },
+      },
+      {
+        name: 'should attribute packs based on priority and conflict resolution 3',
+        setup: () => {
+          const createdAt = DateValueObject.fromDate(new Date('2025-11-20T10:00:00Z'));
+
+          const wishA = createUUID();
+          const wishB = createUUID();
+          const wishC = createUUID();
+
+          return {
+            availablePacks: [packI, packJ, packK],
+            wishes: [
+              {
+                id: wishA,
+                createdBy: { id: userA, currentScore: 1, nickname: 'User A' },
+                packChoices: [packI, packJ, packK],
+                createdAt,
+              },
+              {
+                id: wishB,
+                createdBy: { id: userB, currentScore: 2, nickname: 'User B' },
+                packChoices: [packI, packJ],
+                createdAt,
+              },
+              {
+                id: wishC,
+                createdBy: { id: userC, currentScore: 3, nickname: 'User C' },
+                packChoices: [packI, packJ, packK],
+                createdAt,
+              },
+            ],
+            expectedAttributions: [
+              { wishId: wishA, packId: packI.id },
+              { wishId: wishB, packId: packJ.id },
+              { wishId: wishC, packId: packK.id },
+            ],
+            expectedUnassigned: [],
+          };
+        },
+      },
+      {
+        name: 'should attribute packs based on priority and conflict resolution 4',
+        setup: () => {
+          const createdAt = DateValueObject.fromDate(new Date('2025-11-20T10:00:00Z'));
+
+          const wishA = createUUID();
+          const wishB = createUUID();
+          const wishC = createUUID();
+          const wishD = createUUID();
+
+          return {
+            availablePacks: [packI, packJ, packK, packL],
+            wishes: [
+              {
+                id: wishA,
+                createdBy: { id: userA, currentScore: 1, nickname: 'User A' },
+                packChoices: [packI, packJ, packK, packL],
+                createdAt,
+              },
+              {
+                id: wishB,
+                createdBy: { id: userB, currentScore: 2, nickname: 'User B' },
+                packChoices: [packI, packJ, packL],
+                createdAt,
+              },
+              {
+                id: wishC,
+                createdBy: { id: userC, currentScore: 3, nickname: 'User C' },
+                packChoices: [packI, packJ, packK, packL],
+                createdAt,
+              },
+              {
+                id: wishD,
+                createdBy: { id: userD, currentScore: 4, nickname: 'User D' },
+                packChoices: [packI, packJ, packK, packL],
+                createdAt,
+              },
+            ],
+            expectedAttributions: [
+              { wishId: wishA, packId: packI.id },
+              { wishId: wishB, packId: packJ.id },
+              { wishId: wishC, packId: packK.id },
+              { wishId: wishD, packId: packL.id },
+            ],
+            expectedUnassigned: [],
+          };
+        },
+      },
+      {
+        name: 'should attribute packs based on priority and conflict resolution 5',
+        setup: () => {
+          const createdAt = DateValueObject.fromDate(new Date('2025-11-20T10:00:00Z'));
+
+          const wishA = createUUID();
+          const wishB = createUUID();
+          const wishC = createUUID();
+          const wishD = createUUID();
+          const wishE = createUUID();
+          const wishF = createUUID();
+          const wishG = createUUID();
+          const wishH = createUUID();
+          const wishI = createUUID();
+          const wishJ = createUUID();
+
+          return {
+            availablePacks: [packI, packJ, packK, packL, packM, packN, packO, packP, packQ, packR,],
+            wishes: [
+              {
+                id: wishA,
+                createdBy: { id: userA, currentScore: 1, nickname: 'User A' },
+                packChoices: [packI, packJ, packK, packL, packM, packN, packO, packP, packQ, packR],
+                createdAt,
+              },
+              {
+                id: wishB,
+                createdBy: { id: userB, currentScore: 2, nickname: 'User B' },
+                packChoices: [packI, packJ, packK, packL, packM, packN, packO, packP, packQ, packR],
+                createdAt,
+              },
+              {
+                id: wishC,
+                createdBy: { id: userC, currentScore: 3, nickname: 'User C' },
+                packChoices: [packI, packJ, packK, packL, packM, packN, packP, packQ, packR],
+                createdAt,
+              },
+              {
+                id: wishD,
+                createdBy: { id: userD, currentScore: 4, nickname: 'User D' },
+                packChoices: [packI, packJ, packK, packL, packM, packO, packP, packQ, packR],
+                createdAt,
+              },
+              {
+                id: wishE,
+                createdBy: { id: userE, currentScore: 5, nickname: 'User E' },
+                packChoices: [packI, packJ, packK, packL, packM, packN, packO, packP, packQ, packR],
+                createdAt,
+              },
+              {
+                id: wishF,
+                createdBy: { id: userF, currentScore: 6, nickname: 'User F' },
+                packChoices: [packI, packJ, packK, packL, packM, packN, packO, packP, packQ, packR],
+                createdAt,
+              },
+              {
+                id: wishG,
+                createdBy: { id: userG, currentScore: 7, nickname: 'User G' },
+                packChoices: [packI, packJ, packK, packL, packM, packN, packO, packP, packQ, packR],
+                createdAt,
+              },
+              {
+                id: wishH,
+                createdBy: { id: userH, currentScore: 8, nickname: 'User H' },
+                packChoices: [packI, packJ, packK, packL, packM, packN, packO, packP, packQ, packR],
+                createdAt,
+              },
+              {
+                id: wishI,
+                createdBy: { id: userI, currentScore: 9, nickname: 'User I' },
+                packChoices: [packI, packJ, packK, packL, packM, packN, packO, packP, packQ, packR],
+                createdAt,
+              },
+              {
+                id: wishJ,
+                createdBy: { id: userJ, currentScore: 10, nickname: 'User J' },
+                packChoices: [packI, packJ, packK, packL, packM, packN, packO, packP, packQ, packR],
+                createdAt,
+              },
+            ],
+            expectedAttributions: [
+              { wishId: wishA, packId: packI.id },
+              { wishId: wishB, packId: packJ.id },
+              { wishId: wishC, packId: packK.id },
+              { wishId: wishD, packId: packL.id },
+              { wishId: wishE, packId: packM.id },
+              { wishId: wishF, packId: packN.id },
+              { wishId: wishG, packId: packO.id },
+              { wishId: wishH, packId: packP.id },
+              { wishId: wishI, packId: packQ.id },
+              { wishId: wishJ, packId: packR.id },
+            ],
+            expectedUnassigned: [],
+          };
+        },
+      },
+      {
+        name: 'should attribute packs based on priority and conflict resolution 6',
+        setup: () => {
+          const createdAt = DateValueObject.fromDate(new Date('2025-11-20T10:00:00Z'));
+
+          const wishA = createUUID();
+          const wishB = createUUID();
+          const wishC = createUUID();
+          const wishD = createUUID();
+
+          return {
+            availablePacks: [packI, packJ, packK],
+            wishes: [
+              {
+                id: wishA,
+                createdBy: { id: userA, currentScore: 1, nickname: 'User A' },
+                packChoices: [packK],
+                createdAt,
+              },
+              {
+                id: wishB,
+                createdBy: { id: userB, currentScore: 2, nickname: 'User B' },
+                packChoices: [packI, packJ, packK],
+                createdAt,
+              },
+              {
+                id: wishC,
+                createdBy: { id: userC, currentScore: 3, nickname: 'User C' },
+                packChoices: [packK],
+                createdAt,
+              },
+              {
+                id: wishD,
+                createdBy: { id: userD, currentScore: 4, nickname: 'User D' },
+                packChoices: [packI],
+                createdAt,
+              },
+            ],
+            expectedAttributions: [
+              { wishId: wishA, packId: packK.id },
+              { wishId: wishB, packId: packJ.id },
+              { wishId: wishD, packId: packI.id },
+            ],
+            expectedUnassigned: [wishC],
           };
         },
       },
