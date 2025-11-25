@@ -39,9 +39,9 @@
             <div
               v-for="wish in filteredReservationWishes"
               :key="wish.id"
-              class="border bg-gray-50 border-gray-300 rounded-lg p-4 hover:shadow-md transition"
+              class="border bg-gray-50 border-gray-300 rounded-lg overflow-hidden hover:shadow-md transition"
             >
-              <div class="flex justify-between items-start">
+              <div class="flex justify-between items-start p-4">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 mb-2">
                     <span
@@ -89,6 +89,16 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                   </svg>
                 </button>
+              </div>
+              <div
+                v-if="wish.reservations && wish.reservations.length > 0"
+                class="w-full bg-green-100 border-t border-green-300 p-3"
+              >
+                <div v-for="reservation in wish.reservations" :key="reservation.id" class="text-sm">
+                  <p class="font-medium text-green-800">
+                    ✓ Réservation confirmée pour le pack {{ getPackLabel(reservation.packId) }}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -229,7 +239,7 @@ const getStatusConfig = (status: ReservationStatusDto) => {
     CONFIRMED: { label: 'Confirmée', classes: 'bg-green-200 text-green-800' },
     REFUSED: {
       label: 'Refusée',
-      infoText: 'Une autre personne a été choisie pour cette date sur les packs sélectionnés.',
+      infoText: `Une autre personne a été choisie pour l'instant sur la date sur le(s) pack(s) sélectionné(s).`,
       classes: 'bg-red-200 text-red-800',
     },
     CANCELLED: { label: 'Annulée', classes: DEFAULT_CLASSES },
