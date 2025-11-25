@@ -12,5 +12,6 @@ export class UpdateReservationWishCommand extends Command {
     super(props);
     this.reservationWishId = props.reservationWishId;
     this.userId = props.userId;
+    this.status = props.status;
   }
 }
