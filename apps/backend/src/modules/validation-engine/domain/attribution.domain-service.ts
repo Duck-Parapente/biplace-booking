@@ -14,7 +14,7 @@ export class AttributionDomainService {
     const sortedWishes = [...reservationWishes].sort((a, b) => {
       // Comparer d'abord par score (du plus haut au plus bas)
       if (b.createdBy.currentScore !== a.createdBy.currentScore) {
-        return b.createdBy.currentScore - a.createdBy.currentScore;
+        return a.createdBy.currentScore - b.createdBy.currentScore;
       }
       // En cas d'égalité, comparer par date de création (du plus ancien au plus récent)
       return a.createdAt.value.getTime() - b.createdAt.value.getTime();

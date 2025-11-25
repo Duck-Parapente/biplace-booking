@@ -54,7 +54,7 @@ describe('AttributionDomainService', () => {
             wishes: [
               {
                 id: wishD,
-                createdBy: { id: userD, currentScore: 600, nickname: 'User D' },
+                createdBy: { id: userD, currentScore: 50, nickname: 'User D' },
                 packChoices: [packK],
                 createdAt,
               },
@@ -62,23 +62,23 @@ describe('AttributionDomainService', () => {
                 id: wishE,
                 packChoices: [packI, packJ, packL],
                 createdAt,
-                createdBy: { id: userE, currentScore: 500, nickname: 'User E' },
+                createdBy: { id: userE, currentScore: 100, nickname: 'User E' },
               },
               {
                 id: wishF,
                 packChoices: [packI, packJ, packM],
                 createdAt,
-                createdBy: { id: userF, currentScore: 400, nickname: 'User F' },
+                createdBy: { id: userF, currentScore: 200, nickname: 'User F' },
               },
               {
                 id: wishB,
-                createdBy: { id: userB, currentScore: 200, nickname: 'User B' },
+                createdBy: { id: userB, currentScore: 400, nickname: 'User B' },
                 packChoices: [packI],
                 createdAt,
               },
               {
                 id: wishC,
-                createdBy: { id: userC, currentScore: 100, nickname: 'User C' },
+                createdBy: { id: userC, currentScore: 500, nickname: 'User C' },
                 packChoices: [packJ, packK],
                 createdAt,
               },
@@ -86,7 +86,7 @@ describe('AttributionDomainService', () => {
                 id: wishA,
                 packChoices: [packI, packJ, packK],
                 createdAt,
-                createdBy: { id: userA, currentScore: 50, nickname: 'User A' },
+                createdBy: { id: userA, currentScore: 600, nickname: 'User A' },
               },
             ],
             expectedAttributions: [
