@@ -15,6 +15,7 @@ export const usePublicConfig = () => {
       maintenanceMode.value = data.maintenanceMode;
     } catch (error) {
       console.error('Error fetching public config:', error);
+      maintenanceMode.value = true;
     } finally {
       isLoading.value = false;
     }
