@@ -1,5 +1,6 @@
 import { EventEmitter } from '@libs/database/helpers/event-emitter';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
+import { FeatureFlagModule } from '@modules/feature-flag/feature-flag.module';
 import { Module } from '@nestjs/common';
 
 import { CreateReservationWishHttpController } from './commands/create-reservation-wish.http.controller';
@@ -16,7 +17,7 @@ import { ReservationRepository } from './providers/reservation.repository';
 import { RESERVATION_REPOSITORY, RESERVATION_WISH_REPOSITORY } from './reservation.di-tokens';
 
 @Module({
-  imports: [],
+  imports: [FeatureFlagModule],
   controllers: [
     CreateReservationWishHttpController,
     UpdateReservationWishHttpController,

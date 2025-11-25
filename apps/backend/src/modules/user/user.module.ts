@@ -1,5 +1,6 @@
 import { EventEmitter } from '@libs/database/helpers/event-emitter';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
+import { FeatureFlagModule } from '@modules/feature-flag/feature-flag.module';
 import { Module } from '@nestjs/common';
 
 import { GetUserHttpController } from './commands/get-user.http.controller';
@@ -14,7 +15,7 @@ import { UserRepository } from './providers/user.repository';
 import { USER_REPOSITORY } from './user.di-tokens';
 
 @Module({
-  imports: [],
+  imports: [FeatureFlagModule],
   controllers: [
     SyncExternalUserHttpController,
     GetUserHttpController,

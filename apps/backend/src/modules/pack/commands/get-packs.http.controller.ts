@@ -6,13 +6,13 @@ import { GetPacksService } from './get-packs.service';
 import { mapPackToDto } from './pack.mapper';
 
 @Controller('packs')
+@UseGuards(JwtAuthGuard)
 export class GetPacksHttpController {
   private readonly logger = new Logger(GetPacksHttpController.name);
 
   constructor(private readonly getPacksService: GetPacksService) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   async getPacks(): Promise<PackDto[]> {
     const packs = await this.getPacksService.execute();
     return packs.map(mapPackToDto);

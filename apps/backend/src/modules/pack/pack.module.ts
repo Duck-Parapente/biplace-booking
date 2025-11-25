@@ -1,5 +1,6 @@
 import { EventEmitter } from '@libs/database/helpers/event-emitter';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
+import { FeatureFlagModule } from '@modules/feature-flag/feature-flag.module';
 import { Module } from '@nestjs/common';
 
 import { CreatePackHttpController } from './commands/create-pack.http.controller';
@@ -12,7 +13,7 @@ import { PACK_REPOSITORY } from './pack.di-tokens';
 import { PackRepository } from './providers/pack.repository';
 
 @Module({
-  imports: [],
+  imports: [FeatureFlagModule],
   controllers: [CreatePackHttpController, GetPacksHttpController, UpdatePackHttpController],
   providers: [
     CreatePackService,

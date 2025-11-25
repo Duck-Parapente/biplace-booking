@@ -7,5 +7,6 @@ import { PublicConfigHttpController } from './commands/public-config.http.contro
   imports: [],
   controllers: [PublicConfigHttpController],
   providers: [FeatureFlagProvider],
+  exports: [FeatureFlagProvider],
 })
 export class FeatureFlagModule {}

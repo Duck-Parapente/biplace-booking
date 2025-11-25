@@ -1,4 +1,5 @@
 import { FeatureFlagProvider } from '@libs/database/helpers/feature-flag.provider';
+import { MAINTENANCE_MODE_KEY } from '@libs/guards/maintenance-mode.guard';
 import { Controller, Logger, Get } from '@nestjs/common';
 import { PublicConfigDto } from 'shared';
 
@@ -10,7 +11,7 @@ export class PublicConfigHttpController {
 
   @Get()
   async getPublicConfig(): Promise<PublicConfigDto> {
-    const isActive = await this.featureFlagProvider.isFlagActive('maintenance_mode'); // use key from future guard lib file
+    const isActive = await this.featureFlagProvider.isFlagActive(MAINTENANCE_MODE_KEY);
     return {
       maintenanceMode: isActive,
     };

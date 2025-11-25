@@ -1,5 +1,6 @@
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
+import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
 import { Controller, Logger, Patch, UseGuards, Request, Body } from '@nestjs/common';
 import { UserDto, UserProfileDto } from 'shared';
 
@@ -8,13 +9,13 @@ import { UpdateUserService } from './update-user.service';
 import { mapUserToDto } from './user.mapper';
 
 @Controller('user/me')
+@UseGuards(JwtAuthGuard, MaintenanceModeGuard)
 export class UpdateUserHttpController {
   private readonly logger = new Logger(UpdateUserHttpController.name);
 
   constructor(private readonly updateUserService: UpdateUserService) {}
 
   @Patch()
-  @UseGuards(JwtAuthGuard)
   async updateUser(
     @Request() { user: { id: userId } }: { user: AuthenticatedUser },
     @Body() profile: UserProfileDto,
