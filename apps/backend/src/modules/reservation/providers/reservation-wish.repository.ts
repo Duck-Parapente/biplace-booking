@@ -27,7 +27,10 @@ const mapStatus = (status: ReservationWishStatus): DomainReservationWishStatus =
 };
 
 const toEntity = (
-  record: ReservationWish & { packChoices: { id: string }[] },
+  record: ReservationWish & {
+    packChoices: { id: string }[];
+    reservations?: { id: string; packId: string }[];
+  },
 ): ReservationWishEntity => {
   return new ReservationWishEntity({
     id: new UUID({ uuid: record.id }),
@@ -41,6 +44,10 @@ const toEntity = (
         (packChoice: { id: string }) => new UUID({ uuid: packChoice.id }),
       ),
       publicComment: record.publicComment,
+      reservations: (record.reservations || []).map(({ id, packId }) => ({
+        id,
+        packId,
+      })),
     },
   });
 };
@@ -91,7 +98,10 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
   async findById(reservationWishId: UUID): Promise<ReservationWishEntity | null> {
     const record = await prisma.reservationWish.findUnique({
       where: { id: reservationWishId.uuid },
-      include: { packChoices: true },
+      include: {
+        packChoices: true,
+        reservations: true,
+      },
     });
 
     if (!record) {
@@ -118,7 +128,10 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
       where: {
         createdById: userId.uuid,
       },
-      include: { packChoices: true },
+      include: {
+        packChoices: true,
+        reservations: true,
+      },
     });
 
     return records.map(toEntity);

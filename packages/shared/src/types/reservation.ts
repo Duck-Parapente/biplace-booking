@@ -34,6 +34,16 @@ export class CreateReservationWishDto {
   publicComment?: string;
 }
 
+export class ReservationDto {
+  @IsUUID()
+  @IsNotEmpty()
+  id!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  packId!: string;
+}
+
 export class ReservationWishDto {
   @IsUUID()
   @IsNotEmpty()
@@ -64,4 +74,10 @@ export class ReservationWishDto {
   @IsOptional()
   @IsString()
   publicComment?: string;
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @ArrayMinSize(1)
+  @IsString({ each: true })
+  reservations!: ReservationDto[];
 }

@@ -15,6 +15,10 @@ export type ReservationWishProps = BaseReservationWishProps & {
   startingDate: DateValueObject;
   endingDate: DateValueObject;
   status: ReservationWishStatus;
+  reservations: {
+    id: string;
+    packId: string;
+  }[];
 };
 
 export enum ReservationWishStatus {

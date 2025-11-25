@@ -40,6 +40,7 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
       status: ReservationWishStatus.PENDING,
       startingDate: rawProps.startingDate.startOfDayInUTC(0),
       endingDate: rawProps.startingDate.startOfDayInUTC(1),
+      reservations: [],
     };
 
     const entity = new ReservationWishEntity({
@@ -79,6 +80,10 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
 
   get status() {
     return this.props.status;
+  }
+
+  get reservations() {
+    return this.props.reservations;
   }
 
   update(status: ReservationWishStatus, metadata: DomainEventMetadata): void {
