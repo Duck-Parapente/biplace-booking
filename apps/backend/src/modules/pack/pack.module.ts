@@ -1,4 +1,4 @@
-import { EventEmitter } from '@libs/events/database/event-emitter';
+import { EventEmitter } from '@libs/database/helpers/event-emitter';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { Module } from '@nestjs/common';
 
