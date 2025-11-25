@@ -41,7 +41,7 @@
               :key="wish.id"
               class="border bg-gray-50 border-gray-300 rounded-lg overflow-hidden hover:shadow-md transition"
             >
-              <div class="flex justify-between items-start p-4">
+              <div class="p-4">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 mb-2">
                     <span
@@ -71,28 +71,32 @@
                     <p class="text-xs text-gray-500">Créée le {{ formatDate(wish.createdAt) }}</p>
                   </div>
                 </div>
-                <button
-                  v-if="wish.status === 'PENDING'"
-                  @click="handleCancelWish(wish.id)"
-                  :disabled="cancelling"
-                  class="ml-4 p-2 bg-red-600 text-white hover:bg-red-700 transition rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                  title="Annuler"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-5 h-5"
-                  >
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                  </svg>
-                </button>
               </div>
+
+              <!-- Cancel Button - Full Width at Bottom -->
+              <button
+                v-if="wish.status === 'PENDING'"
+                @click="handleCancelWish(wish.id)"
+                :disabled="cancelling"
+                class="w-full bg-red-50 hover:bg-red-100 border-t border-red-200 p-3 text-sm font-medium text-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-4 h-4"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                Annuler cette demande
+              </button>
+
+              <!-- Validated Reservation Info - Full Width at Bottom -->
               <div
                 v-if="wish.reservations && wish.reservations.length > 0"
-                class="w-full bg-green-100 border-t border-green-300 p-3"
+                class="w-full bg-green-100 border-t border-green-300 p-3 text-center"
               >
                 <div v-for="reservation in wish.reservations" :key="reservation.id" class="text-sm">
                   <p class="font-medium text-green-800">
