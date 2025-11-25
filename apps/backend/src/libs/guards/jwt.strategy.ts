@@ -1,6 +1,6 @@
-// auth/jwt.strategy.ts
 import https from 'https';
 
+import { envKeys } from '@libs/config/env.constants';
 import { prisma } from '@libs/database/prisma/prisma';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
@@ -33,8 +33,8 @@ export interface AuthenticatedUser {
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly configService: ConfigService) {
-    const domain = configService.get<string>('AUTH0_DOMAIN');
-    const audience = configService.get<string>('AUTH0_AUDIENCE');
+    const domain = configService.getOrThrow<string>(envKeys.auth0Domain);
+    const audience = configService.getOrThrow<string>(envKeys.auth0Audience);
 
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

@@ -1,0 +1,1 @@
+export const NOTIFICATION_PORT = Symbol('NOTIFICATION_PORT');
