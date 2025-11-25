@@ -49,7 +49,7 @@
       <button
         type="submit"
         :disabled="submitting"
-        class="flex-1 bg-secondary-600 text-primary-400 hover:bg-secondary-700 transition text-sm px-4 py-2 rounded disabled:opacity-50"
+        class="flex-1 bg-secondary-600 text-white hover:bg-secondary-700 transition text-sm px-4 py-2 rounded disabled:opacity-50"
       >
         {{
           submitting ? currentOperationConfig.submittingButton : currentOperationConfig.submitButton
