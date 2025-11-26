@@ -2,7 +2,7 @@ import { MailClient } from '@libs/mail/mail.client';
 import { Injectable, Logger } from '@nestjs/common';
 
 import { ReservationWishNotificationPort } from '../domain/ports/reservation-wish-notification.port';
-import { ReservationWishNotificationProps } from '../domain/reservation.types';
+import { ReservationWishNotificationProps } from '../domain/reservation-wish.types';
 
 const TEMPLATE_CONFIRMATION = {
   name: 'reservation_wish_confirmed',

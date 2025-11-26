@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { CreateReservationWishDto } from 'shared';
 
-import { UserHasReservationWishOnStartingDateError } from '../domain/reservation.exceptions';
+import { UserHasReservationWishOnStartingDateError } from '../domain/reservation-wish.exceptions';
 
 import { CreateReservationWishCommand } from './create-reservation-wish.command';
 import { CreateReservationWishService } from './create-reservation-wish.service';

@@ -9,8 +9,8 @@ import { ReservationWishEntity } from './reservation-wish.entity';
 import {
   UnauthorizedToCancelReservationWishError,
   UserHasReservationWishOnStartingDateError,
-} from './reservation.exceptions';
-import { CreateReservationWishProps } from './reservation.types';
+} from './reservation-wish.exceptions';
+import { CreateReservationWishProps } from './reservation-wish.types';
 
 @Injectable()
 export class ReservationWishDomainService {

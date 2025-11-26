@@ -75,6 +75,9 @@ export class ReservationWishDto {
   @IsString()
   publicComment?: string;
 
-  @IsOptional()
-  reservation?: ReservationDto;
+  @IsArray()
+  @ArrayNotEmpty()
+  @ArrayMinSize(1)
+  @IsString({ each: true })
+  reservations!: ReservationDto[];
 }

@@ -6,13 +6,12 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 
 import { ReservationWishCreatedDomainEvent } from './events/reservation-wish-created.domain-event';
 import { ReservationWishStatusUpdatedDomainEvent } from './events/reservation-wish-updated.domain-event';
-import { CannotUpdateReservationWishStatusError } from './reservation.exceptions';
+import { CannotUpdateReservationWishStatusError } from './reservation-wish.exceptions';
 import {
   CreateReservationWishProps,
   ReservationWishProps,
   ReservationWishStatus,
-} from './reservation.types';
-
+} from './reservation-wish.types';
 export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
   protected readonly _id: AggregateID;
 
@@ -40,7 +39,6 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
       status: ReservationWishStatus.PENDING,
       startingDate: rawProps.startingDate.startOfDayInUTC(0),
       endingDate: rawProps.startingDate.startOfDayInUTC(1),
-      reservations: [],
     };
 
     const entity = new ReservationWishEntity({
@@ -82,20 +80,6 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
     return this.props.status;
   }
 
-  get reservations() {
-    return this.props.reservations;
-  }
-
-  get reservation() {
-    if (this.props.reservations.length === 0) return null;
-
-    if (this.props.reservations.length > 1) {
-      throw new Error(`ReservationWish ${this.id.uuid} has multiple reservations`);
-    }
-
-    return this.props.reservations[0];
-  }
-
   update(status: ReservationWishStatus, metadata: DomainEventMetadata): void {
     const allowedTransitions = ReservationWishEntity.ALLOWED_STATUS_TRANSITIONS[status];
 
@@ -112,6 +96,14 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
         metadata,
       }),
     );
+  }
+
+  shouldSendNewStatusNotification(newStatus: ReservationWishStatus): boolean {
+    if (this.props.status === newStatus) {
+      return false;
+    }
+
+    return [ReservationWishStatus.CONFIRMED, ReservationWishStatus.REFUSED].includes(newStatus);
   }
 
   validate(): void {

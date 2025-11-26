@@ -1,4 +1,4 @@
-import { ReservationWishNotificationProps } from '../reservation.types';
+import { ReservationWishNotificationProps } from '../reservation-wish.types';
 
 export interface ReservationWishNotificationPort {
   notifyConfirmation(payload: ReservationWishNotificationProps): Promise<void>;

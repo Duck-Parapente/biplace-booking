@@ -79,7 +79,7 @@
                 v-if="wish.status === 'PENDING'"
                 @click="handleCancelWish(wish.id)"
                 :disabled="cancelling"
-                class="w-full bg-red-500 hover:bg-red-600 border-t border-red-600 p-3 text-sm font-medium text-white transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-b-lg"
+                class="w-full bg-red-600 hover:bg-red-700 border-t border-red-700 p-3 text-sm font-medium text-white transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-b-lg"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -103,12 +103,12 @@
               </div>
 
               <div
-                v-if="wish.reservation"
+                v-if="wish.reservations && wish.reservations.length > 0"
                 class="w-full bg-green-100 border-t border-green-300 p-3 text-center rounded-b-lg"
               >
-                <div class="text-sm">
+                <div v-for="reservation in wish.reservations" :key="reservation.id" class="text-sm">
                   <p class="font-medium text-green-800">
-                    ✓ Réservation confirmée pour le pack {{ getPackLabel(wish.reservation.packId) }}
+                    ✓ Réservation confirmée pour le pack {{ getPackLabel(reservation.packId) }}
                   </p>
                 </div>
               </div>

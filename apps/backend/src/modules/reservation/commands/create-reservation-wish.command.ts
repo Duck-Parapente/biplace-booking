@@ -1,6 +1,6 @@
 import { CommandProps, Command } from '@libs/ddd';
 
-import { CreateReservationWishProps } from '../domain/reservation.types';
+import { CreateReservationWishProps } from '../domain/reservation-wish.types';
 
 export class CreateReservationWishCommand extends Command {
   readonly reservationWish: CreateReservationWishProps;

@@ -1,7 +1,7 @@
 import { DomainEventProps } from '@libs/ddd';
 import { DomainEvent } from '@libs/ddd';
 
-import { ReservationWishStatus } from '../reservation.types';
+import { ReservationWishStatus } from '../reservation-wish.types';
 
 export class ReservationWishStatusUpdatedDomainEvent extends DomainEvent {
   readonly status: ReservationWishStatus;

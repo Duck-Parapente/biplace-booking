@@ -1,7 +1,7 @@
 import { CommandProps, Command } from '@libs/ddd';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
-import { ReservationWishStatus } from '../domain/reservation.types';
+import { ReservationWishStatus } from '../domain/reservation-wish.types';
 
 export class UpdateReservationWishCommand extends Command {
   readonly reservationWishId: UUID;

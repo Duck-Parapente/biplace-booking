@@ -1,10 +1,10 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
-import { ReservationWishSummary } from '@libs/types/accross-modules';
+import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
 import { ReservationWishRepositoryPort } from '../domain/ports/reservation-wish.repository.port';
-import { ReservationWishEntity } from '../domain/reservation-wish.entity';
+import { ReservationWishWithReservation } from '../domain/reservation-wish.types';
 import { RESERVATION_WISH_REPOSITORY } from '../reservation.di-tokens';
 
 @Injectable()
@@ -16,13 +16,13 @@ export class GetReservationWishesService {
     protected readonly reservationWishRepository: ReservationWishRepositoryPort,
   ) {}
 
-  async execute(userId: UUID): Promise<ReservationWishEntity[]> {
+  async execute(userId: UUID): Promise<ReservationWishWithReservation[]> {
     return this.reservationWishRepository.findAllForUser(userId);
   }
 
   async findPendingAndRefusedByStartingDate(
     startingDate: DateValueObject,
-  ): Promise<ReservationWishSummary[]> {
+  ): Promise<ReservationWishForAttribution[]> {
     return this.reservationWishRepository.findPendingAndRefusedByStartingDate(startingDate);
   }
 }
