@@ -1,16 +1,19 @@
+import { prisma } from '@libs/database/prisma/prisma';
+import { UUID } from '@libs/ddd/uuid.value-object';
 import { MailClient } from '@libs/mail/mail.client';
 import { Injectable, Logger } from '@nestjs/common';
 
 import { ReservationWishNotificationPort } from '../domain/ports/reservation-wish-notification.port';
-import { ReservationWishNotificationProps } from '../domain/reservation-wish.types';
 
-const TEMPLATE_CONFIRMATION = {
-  name: 'reservation_wish_confirmed',
-  variables: ['nickname', 'selectedPackLabel', 'startingDateLabel'],
-};
-const TEMPLATE_REFUSAL = {
-  name: 'reservation_wish_refused',
-  variables: ['nickname', 'startingDateLabel'],
+const TEMPLATE_CONFIRMATION = 'reservation_wish_confirmed';
+const TEMPLATE_REFUSAL = 'reservation_wish_refused';
+
+const formatDate = (date: Date): string => {
+  return date.toLocaleDateString('fr-FR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
 };
 
 @Injectable()
@@ -19,54 +22,47 @@ export class EmailNotificationAdapter implements ReservationWishNotificationPort
 
   constructor(private readonly mailClient: MailClient) {}
 
-  async notifyConfirmation(payload: ReservationWishNotificationProps): Promise<void> {
-    await this.sendNotificationEmail(
-      payload,
-      TEMPLATE_CONFIRMATION.name,
-      {
-        nickname: payload.user.firstName ?? '',
-        selectedPackLabel: payload.selectedPackLabel,
-        startingDateLabel: this.formatDate(payload.startingDate.value),
-      },
-      'confirmation',
-    );
+  async notifyConfirmation(reservationWishId: UUID): Promise<void> {
+    await this.sendNotificationEmail(reservationWishId, TEMPLATE_CONFIRMATION);
   }
 
-  async notifyRefusal(payload: ReservationWishNotificationProps): Promise<void> {
-    await this.sendNotificationEmail(
-      payload,
-      TEMPLATE_REFUSAL.name,
-      {
-        nickname: payload.user.firstName ?? '',
-        startingDateLabel: this.formatDate(payload.startingDate.value),
-      },
-      'refusal',
-    );
+  async notifyRefusal(reservationWishId: UUID): Promise<void> {
+    await this.sendNotificationEmail(reservationWishId, TEMPLATE_REFUSAL);
   }
 
-  private formatDate(date: Date): string {
-    return date.toLocaleDateString('fr-FR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
-  }
-
-  private async sendNotificationEmail(
-    payload: ReservationWishNotificationProps,
-    template: string,
-    variables: Record<string, string>,
-    emailType: string,
-  ): Promise<void> {
+  private async sendNotificationEmail(reservationWishId: UUID, template: string): Promise<void> {
     try {
+      const { reservations, createdBy, startingDate } =
+        await prisma.reservationWish.findUniqueOrThrow({
+          where: { id: reservationWishId.uuid },
+          include: {
+            createdBy: true,
+            reservations: {
+              orderBy: {
+                createdAt: 'desc',
+              },
+              take: 1,
+              select: {
+                user: true,
+                pack: true,
+                startingDate: true,
+              },
+            },
+          },
+        });
+
       await this.mailClient.sendTemplate({
-        to: payload.user.email.email,
+        to: createdBy.email,
         template,
-        variables,
+        variables: {
+          nickname: createdBy.firstName || '',
+          startingDateLabel: formatDate(startingDate),
+          selectedPackLabel: reservations[0]?.pack.label,
+        },
       });
     } catch (error) {
       this.logger.error(
-        `Failed to send ${emailType} email: ${(error as Error).message}`,
+        `Failed to send ${template} email: ${(error as Error).message}`,
         (error as Error).stack,
       );
     }

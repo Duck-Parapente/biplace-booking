@@ -73,6 +73,8 @@ export class UpdateReservationWishService
       throw new ReservationWishNotFoundError(reservationWishId);
     }
 
+    const previousStatus = entity.status;
+
     if (userId) {
       await this.domainService.validateUserCanUpdateReservationWish(entity, userId);
     }
@@ -83,37 +85,28 @@ export class UpdateReservationWishService
 
     this.logger.log(`ReservationWish ${reservationWishId.uuid} updated to ${status}`);
 
-    if (entity.shouldSendNewStatusNotification(status)) {
+    if (entity.shouldSendNewStatusNotification(previousStatus, status)) {
       await this.sendNotification(entity, status);
     }
   }
 
   private async sendNotification(
-    {
-      id,
-      reservation: { packLabel: selectedPackLabel, startingDate, user },
-    }: ReservationWishEntity,
-    status: ReservationWishStatus,
+    { id: reservationWishId }: ReservationWishEntity,
+    newStatus: ReservationWishStatus,
   ): Promise<void> {
-    const payload = {
-      selectedPackLabel,
-      startingDate,
-      user,
-    };
-
     try {
-      if (status === ReservationWishStatus.CONFIRMED) {
-        await this.notificationPort.notifyConfirmation(payload);
+      if (newStatus === ReservationWishStatus.CONFIRMED) {
+        await this.notificationPort.notifyConfirmation(reservationWishId);
         return;
       }
-      if (status === ReservationWishStatus.REFUSED) {
-        await this.notificationPort.notifyRefusal(payload);
+      if (newStatus === ReservationWishStatus.REFUSED) {
+        await this.notificationPort.notifyRefusal(reservationWishId);
         return;
       }
-      this.logger.error(`Unsupported reservation wish status for notification: ${status}`);
+      this.logger.error(`Unsupported reservation wish status for notification: ${newStatus}`);
     } catch (error) {
       this.logger.error(
-        `Failed to send notification for reservation wish ${id.uuid}: ${(error as Error).message}`,
+        `Failed to send notification for reservation wish ${reservationWishId.uuid}: ${(error as Error).message}`,
         (error as Error).stack,
       );
     }

@@ -1,6 +1,6 @@
-import { ReservationWishNotificationProps } from '../reservation-wish.types';
+import { UUID } from '@libs/ddd/uuid.value-object';
 
 export interface ReservationWishNotificationPort {
-  notifyConfirmation(payload: ReservationWishNotificationProps): Promise<void>;
-  notifyRefusal(payload: ReservationWishNotificationProps): Promise<void>;
+  notifyConfirmation(reservationWishId: UUID): Promise<void>;
+  notifyRefusal(reservationWishId: UUID): Promise<void>;
 }

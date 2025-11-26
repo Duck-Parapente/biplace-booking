@@ -1,4 +1,3 @@
-import { Email } from '@libs/ddd';
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
@@ -26,15 +25,6 @@ export enum ReservationWishStatus {
   CANCELLED = 'CANCELLED',
   REFUSED = 'REFUSED',
   CONFIRMED = 'CONFIRMED',
-}
-
-export interface ReservationWishNotificationProps {
-  selectedPackLabel: string;
-  startingDate: DateValueObject;
-  user: {
-    email: Email;
-    firstName?: string;
-  };
 }
 
 export type ReservationWishWithReservation = {

@@ -31,7 +31,7 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
     [ReservationWishStatus.PENDING]: [],
   };
 
-  static create(rawProps: CreateReservationWishProps) {
+  static create(rawProps: CreateReservationWishProps, metadata: DomainEventMetadata) {
     const id = new UUID({ uuid: randomUUID() });
 
     const props: ReservationWishProps = {
@@ -51,6 +51,7 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
       new ReservationWishCreatedDomainEvent({
         aggregateId: id,
         reservationWish: props,
+        metadata,
       }),
     );
 
@@ -98,8 +99,11 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
     );
   }
 
-  shouldSendNewStatusNotification(newStatus: ReservationWishStatus): boolean {
-    if (this.props.status === newStatus) {
+  shouldSendNewStatusNotification(
+    previousStatus: ReservationWishStatus,
+    newStatus: ReservationWishStatus,
+  ): boolean {
+    if (previousStatus === newStatus) {
       return false;
     }
 
