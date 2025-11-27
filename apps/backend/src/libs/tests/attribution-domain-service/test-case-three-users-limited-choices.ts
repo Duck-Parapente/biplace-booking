@@ -1,11 +1,6 @@
-import { randomUUID } from 'crypto';
-
 import { DateValueObject } from '@libs/ddd/date.value-object';
-import { UUID } from '@libs/ddd/uuid.value-object';
 
-const createUUID = (): UUID => {
-  return new UUID({ uuid: randomUUID() });
-};
+import { createUUID } from '../helpers';
 
 export const testCaseThreeUsersLimitedChoices = () => {
   const packI = { id: createUUID(), label: 'Pack I' };
