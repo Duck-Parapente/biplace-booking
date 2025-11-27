@@ -1,20 +1,20 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
-    <div class="flex-1 p-2 max-w-[800px] mx-auto w-full flex flex-col min-h-0">
+    <div class="flex-1 p-2 max-w-[800px] mx-auto w-full flex flex-col min-h-0 mb-8">
       <!-- Pack Filter Tags -->
       <div class="flex gap-1.5 mb-2 flex-wrap">
         <button
           v-for="pack in packs"
-          :key="pack.id"
-          @click="togglePack(pack.id)"
+          :key="pack.packId"
+          @click="togglePack(pack.packId)"
           class="px-2.5 py-1 text-sm rounded transition"
           :class="
-            selectedPacks.has(pack.id)
+            selectedPacks.has(pack.packId)
               ? 'bg-secondary-600 text-white'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           "
         >
-          {{ pack.label }}
+          {{ pack.packLabel }}
         </button>
       </div>
 
@@ -23,7 +23,7 @@
           <!-- Day Card -->
           <div
             v-for="day in filteredPlanningDays"
-            :key="day.date"
+            :key="day.date.toString()"
             :class="[
               'border bg-white rounded shadow-sm',
               isToday(day.date) ? 'border-blue-500 border-2' : 'border-gray-300',
@@ -38,35 +38,35 @@
             <div class="p-2 space-y-1.5">
               <!-- Pack Slot -->
               <div
-                v-for="slot in day.slots"
-                :key="slot.packId"
+                v-for="pack in day.packs"
+                :key="pack.packId"
                 class="border border-gray-200 rounded p-2 bg-gray-50"
               >
                 <div class="flex items-center justify-between gap-2">
-                  <span class="text-sm text-secondary-600">{{ slot.packLabel }}</span>
+                  <span class="text-sm text-secondary-600">{{ pack.packLabel }}</span>
 
                   <!-- Pending Wishes Count (Orange) -->
                   <div
-                    v-if="slot.pendingWishesCount > 0"
+                    v-if="pack.pendingWishesCount > 0"
                     class="flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-800 rounded text-sm"
                   >
                     <IconClock class="w-3 h-3" />
-                    <span>{{ slot.pendingWishesCount }}</span>
-                    <span>{{ slot.pendingWishesCount > 1 ? 'demandes' : 'demande' }}</span>
+                    <span>{{ pack.pendingWishesCount }}</span>
+                    <span>{{ pack.pendingWishesCount > 1 ? 'demandes' : 'demande' }}</span>
                   </div>
 
                   <!-- Reservation (Red) -->
                   <div
-                    v-if="slot.reservation"
+                    v-if="pack.reservation"
                     class="flex items-center gap-1 px-2 py-1 bg-red-100 text-red-800 rounded text-sm"
                   >
                     <IconUser class="w-3 h-3" />
-                    <span>{{ slot.reservation.userName }}</span>
+                    <span>{{ pack.reservation.username }}</span>
                   </div>
 
                   <!-- Available Slot (Green) -->
                   <div
-                    v-if="!slot.reservation && slot.pendingWishesCount === 0"
+                    v-if="!pack.reservation && pack.pendingWishesCount === 0"
                     class="flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded text-sm"
                   >
                     <IconCheck class="w-3 h-3" />
@@ -75,8 +75,8 @@
                 </div>
 
                 <!-- Public Comment -->
-                <div v-if="slot.reservation?.comment" class="mt-1.5 text-xs text-gray-700 italic">
-                  "{{ slot.reservation.comment }}"
+                <div v-if="pack.reservation?.comment" class="mt-1.5 text-xs text-gray-700 italic">
+                  "{{ pack.reservation.comment }}"
                 </div>
               </div>
             </div>
@@ -120,45 +120,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import type { PackPlanningDto } from 'shared';
+import { ref, computed, watch } from 'vue';
 
 definePageMeta({
   middleware: 'auth',
   pageTitle: 'Planning',
 });
 
-interface Reservation {
-  userName: string;
-  comment?: string;
-}
-
-interface PackSlot {
-  packId: string;
-  packLabel: string;
-  pendingWishesCount: number;
-  reservation: Reservation | null;
-}
-
-interface PlanningDay {
-  date: string;
-  slots: PackSlot[];
-}
-
-interface Pack {
-  id: string;
-  label: string;
-}
-
-// Mock data for packs
-const packs = ref<Pack[]>([
-  { id: 'pack-1', label: 'Takoo 5' },
-  { id: 'pack-2', label: 'Yeti' },
-  { id: 'pack-3', label: 'Sora' },
-  { id: 'pack-4', label: 'BiUFO' },
-]);
+const { packs, planningDays, fetchPlanning } = usePlanning();
 
 // Selected packs filter
-const selectedPacks = ref<Set<string>>(new Set(packs.value.map((p) => p.id)));
+const selectedPacks = ref<Set<string>>(new Set());
 
 // Week management
 const currentWeekStart = ref<Date>(getMonday(new Date()));
@@ -215,201 +188,57 @@ function formatDateToString(date: Date): string {
   return result || '';
 }
 
-// Mock planning data
-const planningDays = ref<PlanningDay[]>([
-  {
-    date: '2025-11-28',
-    slots: [
-      {
-        packId: 'pack-1',
-        packLabel: 'Takoo 5',
-        pendingWishesCount: 3,
-        reservation: null,
-      },
-      {
-        packId: 'pack-2',
-        packLabel: 'Yeti',
-        pendingWishesCount: 0,
-        reservation: {
-          userName: 'Jean Dupont',
-          comment: 'Préférence pour un vol matinal',
-        },
-      },
-      {
-        packId: 'pack-3',
-        packLabel: 'Sora',
-        pendingWishesCount: 0,
-        reservation: null,
-      },
-      {
-        packId: 'pack-4',
-        packLabel: 'BiUFO',
-        pendingWishesCount: 2,
-        reservation: null,
-      },
-    ],
-  },
-  {
-    date: '2025-11-29',
-    slots: [
-      {
-        packId: 'pack-1',
-        packLabel: 'Takoo 5',
-        pendingWishesCount: 0,
-        reservation: {
-          userName: 'Marie Martin',
-        },
-      },
-      {
-        packId: 'pack-2',
-        packLabel: 'Yeti',
-        pendingWishesCount: 5,
-        reservation: null,
-      },
-      {
-        packId: 'pack-3',
-        packLabel: 'Sora',
-        pendingWishesCount: 0,
-        reservation: null,
-      },
-      {
-        packId: 'pack-4',
-        packLabel: 'BiUFO',
-        pendingWishesCount: 0,
-        reservation: {
-          userName: 'Paul Bernard',
-          comment: 'Vol thermique souhaité si conditions favorables',
-        },
-      },
-    ],
-  },
-  {
-    date: '2025-11-30',
-    slots: [
-      {
-        packId: 'pack-1',
-        packLabel: 'Takoo 5',
-        pendingWishesCount: 0,
-        reservation: null,
-      },
-      {
-        packId: 'pack-2',
-        packLabel: 'Yeti',
-        pendingWishesCount: 1,
-        reservation: null,
-      },
-      {
-        packId: 'pack-3',
-        packLabel: 'Sora',
-        pendingWishesCount: 0,
-        reservation: {
-          userName: 'Sophie Laurent',
-          comment: 'Premier vol, un peu stressée',
-        },
-      },
-      {
-        packId: 'pack-4',
-        packLabel: 'BiUFO',
-        pendingWishesCount: 0,
-        reservation: null,
-      },
-    ],
-  },
-  {
-    date: '2025-12-01',
-    slots: [
-      {
-        packId: 'pack-1',
-        packLabel: 'Takoo 5',
-        pendingWishesCount: 4,
-        reservation: null,
-      },
-      {
-        packId: 'pack-2',
-        packLabel: 'Yeti',
-        pendingWishesCount: 0,
-        reservation: null,
-      },
-      {
-        packId: 'pack-3',
-        packLabel: 'Sora',
-        pendingWishesCount: 0,
-        reservation: {
-          userName: 'Luc Moreau',
-        },
-      },
-      {
-        packId: 'pack-4',
-        packLabel: 'BiUFO',
-        pendingWishesCount: 2,
-        reservation: null,
-      },
-    ],
-  },
-  {
-    date: '2025-12-02',
-    slots: [
-      {
-        packId: 'pack-1',
-        packLabel: 'Takoo 5',
-        pendingWishesCount: 0,
-        reservation: {
-          userName: 'Claire Dubois',
-          comment: "Cadeau d'anniversaire",
-        },
-      },
-      {
-        packId: 'pack-2',
-        packLabel: 'Yeti',
-        pendingWishesCount: 6,
-        reservation: null,
-      },
-      {
-        packId: 'pack-3',
-        packLabel: 'Sora',
-        pendingWishesCount: 0,
-        reservation: null,
-      },
-      {
-        packId: 'pack-4',
-        packLabel: 'BiUFO',
-        pendingWishesCount: 0,
-        reservation: {
-          userName: 'Thomas Petit',
-        },
-      },
-    ],
-  },
-]);
+// Fetch planning when week changes
+watch(currentWeekStart, async () => {
+  const weekDays = getWeekDays(currentWeekStart.value);
+  await fetchPlanning(weekDays[0]!, weekDays[6]!);
 
+  // Select all packs by default if none selected
+  if (selectedPacks.value.size === 0) {
+    selectedPacks.value = new Set(packs.value.map((p) => p.packId));
+  }
+});
+
+// Initial fetch
+onMounted(async () => {
+  const weekDays = getWeekDays(currentWeekStart.value);
+  await fetchPlanning(weekDays[0]!, weekDays[6]!);
+
+  // Select all packs by default if none selected
+  if (selectedPacks.value.size === 0) {
+    selectedPacks.value = new Set(packs.value.map((p) => p.packId));
+  }
+});
 const filteredPlanningDays = computed(() => {
   const weekDays = getWeekDays(currentWeekStart.value);
 
   return weekDays.map((date) => {
     const dateString = formatDateToString(date);
-    const existingDay = planningDays.value.find((d) => d.date === dateString);
+    const existingDay = planningDays.value.find(
+      (d) => formatDateToString(new Date(d.date)) === dateString,
+    );
 
     // Get all selected packs and create slots for them
-    const slots: PackSlot[] = Array.from(selectedPacks.value).map((packId) => {
-      const pack = packs.value.find((p) => p.id === packId);
-      const existingSlot = existingDay?.slots.find((s) => s.packId === packId);
+    const filteredPacks: PackPlanningDto[] = Array.from(selectedPacks.value).map((packId) => {
+      const pack = packs.value.find((p) => p.packId === packId);
+      const existingPack = existingDay?.packs.find((p) => p.packId === packId);
 
-      if (existingSlot) {
-        return existingSlot;
+      if (existingPack) {
+        return existingPack;
       }
 
       // Create a default available slot if no data exists
       return {
         packId,
-        packLabel: pack?.label || packId,
+        packLabel: pack?.packLabel || packId,
         pendingWishesCount: 0,
         reservation: null,
       };
     });
 
     return {
-      date: dateString,
-      slots,
+      date,
+      packs: filteredPacks,
     };
   });
 });
