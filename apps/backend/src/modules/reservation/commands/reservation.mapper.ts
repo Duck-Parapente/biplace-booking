@@ -1,7 +1,9 @@
 import { ReservationStatusDto, ReservationWishDto } from 'shared';
 
-import { ReservationWishEntity } from '../domain/reservation-wish.entity';
-import { ReservationWishStatus } from '../domain/reservation.types';
+import {
+  ReservationWishStatus,
+  ReservationWishWithReservation,
+} from '../domain/reservation-wish.types';
 
 const mapStatus = (status: ReservationWishStatus): ReservationStatusDto => {
   switch (status) {
@@ -18,17 +20,22 @@ const mapStatus = (status: ReservationWishStatus): ReservationStatusDto => {
   }
 };
 
-export function mapReservationWishToDto(
-  reservationWish: ReservationWishEntity,
-): ReservationWishDto {
+export function mapReservationWishToDto({
+  reservations,
+  reservationWish,
+}: ReservationWishWithReservation): ReservationWishDto {
   return {
     id: reservationWish.id.uuid,
     createdAt: reservationWish.createdAt.value,
+    isCancelable: reservationWish.isCancelable(),
     startingDate: reservationWish.startingDate.value,
     endingDate: reservationWish.endingDate.value,
     packChoices: reservationWish.packChoices.map((packChoice) => packChoice.uuid),
     status: mapStatus(reservationWish.status),
     publicComment: reservationWish.publicComment,
-    reservations: reservationWish.reservations,
+    reservations: reservations.map(({ id, packId }) => ({
+      id: id.uuid,
+      packId: packId.uuid,
+    })),
   };
 }

@@ -1,6 +1,7 @@
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
+import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
 import {
   Controller,
   Logger,
@@ -16,14 +17,14 @@ import {
   CannotUpdateReservationWishStatusError,
   ReservationWishNotFoundError,
   UnauthorizedToCancelReservationWishError,
-} from '../domain/reservation.exceptions';
-import { ReservationWishStatus } from '../domain/reservation.types';
+} from '../domain/reservation-wish.exceptions';
+import { ReservationWishStatus } from '../domain/reservation-wish.types';
 
 import { UpdateReservationWishCommand } from './update-reservation-wish.command';
 import { UpdateReservationWishService } from './update-reservation-wish.service';
 
 @Controller('reservation-wishes')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, MaintenanceModeGuard)
 export class UpdateReservationWishHttpController {
   private readonly logger = new Logger(UpdateReservationWishHttpController.name);
 

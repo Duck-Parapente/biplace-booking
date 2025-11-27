@@ -54,9 +54,9 @@
               <div class="p-4 pr-28">
                 <div class="flex-1">
                   <div class="text-sm text-gray-600 space-y-1">
-                    <p>
-                      <span class="font-medium">Date:</span>
-                      {{ formatDateLong(wish.startingDate) }}
+                    <p class="flex items-center">
+                      <span class="font-bold">{{ formatDateLong(wish.startingDate) }}</span>
+                      <BaseTooltip>Créée le {{ formatDate(wish.createdAt) }}</BaseTooltip>
                     </p>
                     <div class="flex flex-wrap gap-1 mt-1 items-center">
                       <span class="text-xs text-gray-500">
@@ -69,17 +69,21 @@
                     <p v-if="wish.publicComment" class="italic text-gray-700">
                       "{{ wish.publicComment }}"
                     </p>
-                    <p class="text-xs text-gray-500">Créée le {{ formatDate(wish.createdAt) }}</p>
+                    <!-- <p class="text-xs text-gray-500">Créée le {{ formatDate(wish.createdAt) }}</p> -->
                   </div>
                 </div>
               </div>
-
-              <!-- Cancel Button - Full Width at Bottom -->
+              <div
+                v-if="getStatusConfig(wish.status, wish.packChoices.length).infoText"
+                class="w-full border-t border-gray-200 p-3 text-sm text-gray-700"
+              >
+                {{ getStatusConfig(wish.status, wish.packChoices.length).infoText }}
+              </div>
               <button
-                v-if="wish.status === 'PENDING'"
+                v-if="wish.isCancelable"
                 @click="handleCancelWish(wish.id)"
                 :disabled="cancelling"
-                class="w-full bg-red-500 hover:bg-red-600 border-t border-red-600 p-3 text-sm font-medium text-white transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-b-lg"
+                class="w-full bg-red-100 hover:bg-red-200 border-t border-red-200 p-3 text-sm font-medium text-red-800 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-b-lg"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -93,19 +97,9 @@
                 </svg>
                 Annuler cette demande
               </button>
-
-              <!-- Info Text Box - Full Width at Bottom -->
-              <div
-                v-if="getStatusConfig(wish.status, wish.packChoices.length).infoText"
-                class="w-full bg-blue-50 border-t border-blue-200 p-3 text-sm text-blue-800 rounded-b-lg"
-              >
-                {{ getStatusConfig(wish.status, wish.packChoices.length).infoText }}
-              </div>
-
-              <!-- Validated Reservation Info - Full Width at Bottom -->
               <div
                 v-if="wish.reservations && wish.reservations.length > 0"
-                class="w-full bg-green-100 border-t border-green-300 p-3 text-center rounded-b-lg"
+                class="w-full bg-green-100 border-t border-green-500/30 p-3 text-center rounded-b-lg"
               >
                 <div v-for="reservation in wish.reservations" :key="reservation.id" class="text-sm">
                   <p class="font-medium text-green-800">

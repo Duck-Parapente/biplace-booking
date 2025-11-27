@@ -3,11 +3,16 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
+import { ReservationWishNotificationPort } from '../domain/ports/reservation-wish-notification.port';
 import { ReservationWishRepositoryPort } from '../domain/ports/reservation-wish.repository.port';
 import { ReservationWishDomainService } from '../domain/reservation-wish.domain-service';
-import { ReservationWishNotFoundError } from '../domain/reservation.exceptions';
-import { ReservationWishStatus } from '../domain/reservation.types';
-import { RESERVATION_WISH_REPOSITORY } from '../reservation.di-tokens';
+import { ReservationWishEntity } from '../domain/reservation-wish.entity';
+import { ReservationWishNotFoundError } from '../domain/reservation-wish.exceptions';
+import { ReservationWishStatus } from '../domain/reservation-wish.types';
+import {
+  RESERVATION_WISH_NOTIFICATION_PORT,
+  RESERVATION_WISH_REPOSITORY,
+} from '../reservation.di-tokens';
 
 import { UpdateReservationWishCommand } from './update-reservation-wish.command';
 
@@ -21,6 +26,8 @@ export class UpdateReservationWishService
     @Inject(RESERVATION_WISH_REPOSITORY)
     private readonly reservationWishRepository: ReservationWishRepositoryPort,
     private readonly domainService: ReservationWishDomainService,
+    @Inject(RESERVATION_WISH_NOTIFICATION_PORT)
+    private readonly notificationPort: ReservationWishNotificationPort,
   ) {}
 
   async execute({
@@ -66,6 +73,8 @@ export class UpdateReservationWishService
       throw new ReservationWishNotFoundError(reservationWishId);
     }
 
+    const previousStatus = entity.status;
+
     if (userId) {
       await this.domainService.validateUserCanUpdateReservationWish(entity, userId);
     }
@@ -75,5 +84,31 @@ export class UpdateReservationWishService
     await this.reservationWishRepository.updateStatus(entity);
 
     this.logger.log(`ReservationWish ${reservationWishId.uuid} updated to ${status}`);
+
+    if (entity.shouldSendNewStatusNotification(previousStatus, status)) {
+      await this.sendNotification(entity, status);
+    }
+  }
+
+  private async sendNotification(
+    { id: reservationWishId }: ReservationWishEntity,
+    newStatus: ReservationWishStatus,
+  ): Promise<void> {
+    try {
+      if (newStatus === ReservationWishStatus.CONFIRMED) {
+        await this.notificationPort.notifyConfirmation(reservationWishId);
+        return;
+      }
+      if (newStatus === ReservationWishStatus.REFUSED) {
+        await this.notificationPort.notifyRefusal(reservationWishId);
+        return;
+      }
+      this.logger.error(`Unsupported reservation wish status for notification: ${newStatus}`);
+    } catch (error) {
+      this.logger.error(
+        `Failed to send notification for reservation wish ${reservationWishId.uuid}: ${(error as Error).message}`,
+        (error as Error).stack,
+      );
+    }
   }
 }

@@ -24,6 +24,7 @@
   "scripts": {
     "build": "turbo build",
     "dev": "pnpm dc:local up -d && turbo dev",
+    "attribute:dev": "turbo attribute:dev --filter=backend",
     "lint": "eslint apps && pnpm --filter=backend lint:deps",
     "lint:fix": "eslint apps --fix && prettier apps --write",
     "test": "turbo test",

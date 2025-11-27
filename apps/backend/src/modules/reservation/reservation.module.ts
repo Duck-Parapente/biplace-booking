@@ -11,9 +11,14 @@ import { UpdateReservationWishHttpController } from './commands/update-reservati
 import { UpdateReservationWishService } from './commands/update-reservation-wish.service';
 import { ReservationWishDomainService } from './domain/reservation-wish.domain-service';
 import { ReservationDomainService } from './domain/reservation.domain-service';
+import { EmailNotificationAdapter } from './providers/email-notification.adapter';
 import { ReservationWishRepository } from './providers/reservation-wish.repository';
 import { ReservationRepository } from './providers/reservation.repository';
-import { RESERVATION_REPOSITORY, RESERVATION_WISH_REPOSITORY } from './reservation.di-tokens';
+import {
+  RESERVATION_REPOSITORY,
+  RESERVATION_WISH_NOTIFICATION_PORT,
+  RESERVATION_WISH_REPOSITORY,
+} from './reservation.di-tokens';
 
 @Module({
   imports: [],
@@ -32,6 +37,10 @@ import { RESERVATION_REPOSITORY, RESERVATION_WISH_REPOSITORY } from './reservati
     ReservationDomainService,
     { provide: RESERVATION_WISH_REPOSITORY, useClass: ReservationWishRepository },
     { provide: RESERVATION_REPOSITORY, useClass: ReservationRepository },
+    {
+      provide: RESERVATION_WISH_NOTIFICATION_PORT,
+      useClass: EmailNotificationAdapter,
+    },
     { provide: EVENT_EMITTER, useClass: EventEmitter },
   ],
   exports: [GetReservationWishesService, UpdateReservationWishService, CreateReservationsService],

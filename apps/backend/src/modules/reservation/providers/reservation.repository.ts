@@ -4,9 +4,27 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Reservation } from '@prisma/client';
 
 import { ReservationRepositoryPort } from '../domain/ports/reservation.repository.port';
 import { ReservationEntity } from '../domain/reservation.entity';
+
+export const toEntity = (record: Reservation): ReservationEntity => {
+  return new ReservationEntity({
+    id: new UUID({ uuid: record.id }),
+    createdAt: DateValueObject.fromDate(record.createdAt),
+    props: {
+      startingDate: DateValueObject.fromDate(record.startingDate),
+      endingDate: DateValueObject.fromDate(record.endingDate),
+      publicComment: record.publicComment,
+      packId: new UUID({ uuid: record.packId }),
+      userId: new UUID({ uuid: record.userId }),
+      reservationWishId: record.reservationWishId
+        ? new UUID({ uuid: record.reservationWishId })
+        : undefined,
+    },
+  });
+};
 
 @Injectable()
 export class ReservationRepository implements ReservationRepositoryPort {

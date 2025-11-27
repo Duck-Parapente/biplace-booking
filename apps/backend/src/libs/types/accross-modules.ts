@@ -6,7 +6,7 @@ export interface PackSummary {
   label: string;
 }
 
-export interface ReservationWishSummary {
+export interface ReservationWishForAttribution {
   id: UUID;
   packChoices: { id: UUID; label: string }[];
   createdAt: DateValueObject;

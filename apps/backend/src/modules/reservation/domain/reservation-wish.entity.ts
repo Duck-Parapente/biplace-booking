@@ -6,13 +6,12 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 
 import { ReservationWishCreatedDomainEvent } from './events/reservation-wish-created.domain-event';
 import { ReservationWishStatusUpdatedDomainEvent } from './events/reservation-wish-updated.domain-event';
-import { CannotUpdateReservationWishStatusError } from './reservation.exceptions';
+import { CannotUpdateReservationWishStatusError } from './reservation-wish.exceptions';
 import {
   CreateReservationWishProps,
   ReservationWishProps,
   ReservationWishStatus,
-} from './reservation.types';
-
+} from './reservation-wish.types';
 export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
   protected readonly _id: AggregateID;
 
@@ -32,7 +31,7 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
     [ReservationWishStatus.PENDING]: [],
   };
 
-  static create(rawProps: CreateReservationWishProps) {
+  static create(rawProps: CreateReservationWishProps, metadata: DomainEventMetadata) {
     const id = new UUID({ uuid: randomUUID() });
 
     const props: ReservationWishProps = {
@@ -40,7 +39,6 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
       status: ReservationWishStatus.PENDING,
       startingDate: rawProps.startingDate.startOfDayInUTC(0),
       endingDate: rawProps.startingDate.startOfDayInUTC(1),
-      reservations: [],
     };
 
     const entity = new ReservationWishEntity({
@@ -53,6 +51,7 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
       new ReservationWishCreatedDomainEvent({
         aggregateId: id,
         reservationWish: props,
+        metadata,
       }),
     );
 
@@ -82,8 +81,10 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
     return this.props.status;
   }
 
-  get reservations() {
-    return this.props.reservations;
+  isCancelable(): boolean {
+    return ReservationWishEntity.ALLOWED_STATUS_TRANSITIONS[ReservationWishStatus.REFUSED].includes(
+      this.props.status,
+    );
   }
 
   update(status: ReservationWishStatus, metadata: DomainEventMetadata): void {
@@ -102,6 +103,17 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
         metadata,
       }),
     );
+  }
+
+  shouldSendNewStatusNotification(
+    previousStatus: ReservationWishStatus,
+    newStatus: ReservationWishStatus,
+  ): boolean {
+    if (previousStatus === newStatus) {
+      return false;
+    }
+
+    return [ReservationWishStatus.CONFIRMED, ReservationWishStatus.REFUSED].includes(newStatus);
   }
 
   validate(): void {

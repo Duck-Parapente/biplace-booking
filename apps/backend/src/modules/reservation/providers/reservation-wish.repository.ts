@@ -3,13 +3,18 @@ import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
-import { ReservationWishSummary } from '@libs/types/accross-modules';
+import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
 import { ReservationWishEntity } from '@modules/reservation/domain/reservation-wish.entity';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ReservationWish, ReservationWishStatus } from '@prisma/client';
 
-import { ReservationWishStatus as DomainReservationWishStatus } from '../domain/reservation.types';
+import {
+  ReservationWishStatus as DomainReservationWishStatus,
+  ReservationWishWithReservation,
+} from '../domain/reservation-wish.types';
+
+import { toEntity as toReservationEntity } from './reservation.repository';
 
 const mapStatus = (status: ReservationWishStatus): DomainReservationWishStatus => {
   switch (status) {
@@ -29,7 +34,6 @@ const mapStatus = (status: ReservationWishStatus): DomainReservationWishStatus =
 const toEntity = (
   record: ReservationWish & {
     packChoices: { id: string }[];
-    reservations?: { id: string; packId: string }[];
   },
 ): ReservationWishEntity => {
   return new ReservationWishEntity({
@@ -44,10 +48,6 @@ const toEntity = (
         (packChoice: { id: string }) => new UUID({ uuid: packChoice.id }),
       ),
       publicComment: record.publicComment,
-      reservations: (record.reservations || []).map(({ id, packId }) => ({
-        id,
-        packId,
-      })),
     },
   });
 };
@@ -100,7 +100,6 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
       where: { id: reservationWishId.uuid },
       include: {
         packChoices: true,
-        reservations: true,
       },
     });
 
@@ -123,23 +122,26 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
     this.logger.log(`ReservationWish updated: ${reservationWish.id.uuid}`);
   }
 
-  async findAllForUser(userId: UUID): Promise<ReservationWishEntity[]> {
+  async findAllForUser(userId: UUID): Promise<ReservationWishWithReservation[]> {
     const records = await prisma.reservationWish.findMany({
       where: {
         createdById: userId.uuid,
       },
       include: {
-        packChoices: true,
         reservations: true,
+        packChoices: true,
       },
     });
 
-    return records.map(toEntity);
+    return records.map((record) => ({
+      reservationWish: toEntity(record),
+      reservations: record.reservations.map(toReservationEntity),
+    }));
   }
 
   async findPendingAndRefusedByStartingDate(
     startingDate: DateValueObject,
-  ): Promise<ReservationWishSummary[]> {
+  ): Promise<ReservationWishForAttribution[]> {
     const reservationWishes = await prisma.reservationWish.findMany({
       where: {
         startingDate: startingDate.value,

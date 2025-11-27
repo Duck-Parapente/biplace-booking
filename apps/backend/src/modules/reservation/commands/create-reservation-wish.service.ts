@@ -20,10 +20,10 @@ export class CreateReservationWishService
     private readonly domainService: ReservationWishDomainService,
   ) {}
 
-  async execute({ reservationWish }: CreateReservationWishCommand): Promise<void> {
+  async execute({ reservationWish, metadata }: CreateReservationWishCommand): Promise<void> {
     await this.domainService.validateCreateReservationWish(reservationWish);
 
-    const entity = ReservationWishEntity.create(reservationWish);
+    const entity = ReservationWishEntity.create(reservationWish, metadata);
 
     await this.reservationWishRepository.create(entity);
   }

@@ -1,5 +1,5 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
-import { ReservationWishSummary } from '@libs/types/accross-modules';
+import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 import { GetPacksService } from '@modules/pack/commands/get-packs.service';
 import { CreateReservationsService } from '@modules/reservation/commands/create-reservation.service';
 import { GetReservationWishesService } from '@modules/reservation/commands/get-reservation-wishes.service';
@@ -96,12 +96,12 @@ export class AttributePacksService {
 
   private async createReservations(
     attributions: Attribution[],
-    pendingWishes: ReservationWishSummary[],
+    pendingWishes: ReservationWishForAttribution[],
     startingDate: DateValueObject,
     endingDate: DateValueObject,
   ): Promise<void> {
     for (const attribution of attributions) {
-      const wish = pendingWishes.find((w) => w.id.uuid === attribution.reservationWishId.uuid);
+      const wish = pendingWishes.find((w) => w.id.equals(attribution.reservationWishId));
       if (!wish) {
         this.logger.error(`Wish ${attribution.reservationWishId.uuid} not found`);
         continue;
@@ -132,7 +132,7 @@ export class AttributePacksService {
 
   private async refuseUnattributedWishes(
     attributions: Attribution[],
-    pendingWishes: ReservationWishSummary[],
+    pendingWishes: ReservationWishForAttribution[],
   ): Promise<void> {
     const confirmedWishIds = new Set(attributions.map((a) => a.reservationWishId.uuid));
 

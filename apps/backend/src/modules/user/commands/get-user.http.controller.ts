@@ -8,13 +8,13 @@ import { GetUserService } from './get-user.service';
 import { mapUserToDto } from './user.mapper';
 
 @Controller('user/me')
+@UseGuards(JwtAuthGuard)
 export class GetUserHttpController {
   private readonly logger = new Logger(GetUserHttpController.name);
 
   constructor(private readonly getUserService: GetUserService) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   async getUser(@Request() req: { user: AuthenticatedUser }): Promise<UserDto> {
     const { id } = req.user;
 

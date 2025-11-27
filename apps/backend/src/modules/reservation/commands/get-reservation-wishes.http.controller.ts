@@ -7,13 +7,13 @@ import { GetReservationWishesService } from './get-reservation-wishes.service';
 import { mapReservationWishToDto } from './reservation.mapper';
 
 @Controller('reservation-wishes')
+@UseGuards(JwtAuthGuard)
 export class GetReservationWishesHttpController {
   private readonly logger = new Logger(GetReservationWishesHttpController.name);
 
   constructor(private readonly getReservationWishesService: GetReservationWishesService) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   async getReservationWishes(
     @Request() { user: { id } }: { user: AuthenticatedUser },
   ): Promise<ReservationWishDto[]> {

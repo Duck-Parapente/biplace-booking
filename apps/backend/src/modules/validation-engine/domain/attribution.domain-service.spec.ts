@@ -461,6 +461,26 @@ describe('AttributionDomainService', () => {
           };
         },
       },
+      {
+        name: 'should not attribute an unwanted pack',
+        setup: () => {
+          const mainWish = createUUID();
+
+          return {
+            availablePacks: [packJ],
+            wishes: [
+              {
+                id: mainWish,
+                packChoices: [packI],
+                createdBy: { id: userA, currentScore: 100, nickname: 'User A' },
+                createdAt: DateValueObject.fromDate(new Date('2025-11-20T08:00:00Z')),
+              },
+            ],
+            expectedAttributions: [],
+            expectedUnassigned: [mainWish],
+          };
+        },
+      },
     ];
 
     testCases.forEach(({ name, setup }) => {
