@@ -52,7 +52,7 @@ export class MailClient {
     return {
       from: `Duck Biplace <support@${this.domain}>`,
       to,
-      'h:Reply-To': this.replyTo,
+      'h:Reply-To': `Support Biplace <${this.replyTo}>`,
       ...this.DEFAULT_HEADERS,
     };
   }
