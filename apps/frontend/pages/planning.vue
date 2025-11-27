@@ -1,44 +1,13 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
-    <div class="flex-1 p-4 max-w-6xl mx-auto w-full flex flex-col min-h-0">
-      <!-- Week Selector -->
-      <div
-        class="flex items-center justify-between mb-4 bg-white p-3 rounded-lg border border-gray-300"
-      >
-        <button
-          @click="previousWeek"
-          class="px-3 py-2 text-secondary-600 hover:bg-gray-100 rounded transition"
-          aria-label="Semaine précédente"
-        >
-          <IconChevronLeft class="w-5 h-5" />
-        </button>
-        <div class="text-center">
-          <p class="font-semibold text-secondary-600">
-            {{ formatWeekRange(currentWeekStart) }}
-          </p>
-          <button
-            @click="goToCurrentWeek"
-            class="text-xs text-gray-600 hover:text-secondary-600 transition mt-1"
-          >
-            Semaine actuelle
-          </button>
-        </div>
-        <button
-          @click="nextWeek"
-          class="px-3 py-2 text-secondary-600 hover:bg-gray-100 rounded transition"
-          aria-label="Semaine suivante"
-        >
-          <IconChevronRight class="w-5 h-5" />
-        </button>
-      </div>
-
+    <div class="flex-1 p-2 max-w-[800px] mx-auto w-full flex flex-col min-h-0">
       <!-- Pack Filter Tags -->
-      <div class="flex gap-2 mb-4 flex-wrap">
+      <div class="flex gap-1.5 mb-2 flex-wrap">
         <button
           v-for="pack in packs"
           :key="pack.id"
           @click="togglePack(pack.id)"
-          class="px-3 py-1.5 text-sm font-medium rounded-lg transition"
+          class="px-2.5 py-1 text-sm rounded transition"
           :class="
             selectedPacks.has(pack.id)
               ? 'bg-secondary-600 text-white'
@@ -49,72 +18,102 @@
         </button>
       </div>
 
-      <div class="flex-1 overflow-y-auto pb-4">
-        <div class="space-y-4">
+      <div class="flex-1 overflow-y-auto pb-2">
+        <div class="space-y-1.5">
           <!-- Day Card -->
           <div
             v-for="day in filteredPlanningDays"
             :key="day.date"
-            class="border bg-white border-gray-300 rounded-lg shadow-sm"
+            :class="[
+              'border bg-white rounded shadow-sm',
+              isToday(day.date) ? 'border-blue-500 border-2' : 'border-gray-300',
+            ]"
           >
-            <div class="p-4 border-b border-gray-200">
-              <h3 class="text-lg font-semibold text-secondary-600">
+            <div class="px-3 py-1.5 border-b border-gray-200">
+              <h3 class="text-base font-semibold text-secondary-600">
                 {{ formatDateLong(day.date) }}
               </h3>
             </div>
 
-            <div class="p-4 space-y-3">
+            <div class="p-2 space-y-1.5">
               <!-- Pack Slot -->
               <div
                 v-for="slot in day.slots"
                 :key="slot.packId"
-                class="border border-gray-200 rounded-lg p-3 bg-gray-50"
+                class="border border-gray-200 rounded p-2 bg-gray-50"
               >
-                <div class="flex items-center justify-between mb-2">
-                  <span class="font-medium text-secondary-600">{{ slot.packLabel }}</span>
-                </div>
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-sm text-secondary-600">{{ slot.packLabel }}</span>
 
-                <div class="flex flex-wrap gap-2">
                   <!-- Pending Wishes Count (Orange) -->
                   <div
                     v-if="slot.pendingWishesCount > 0"
-                    class="flex items-center gap-1.5 px-2.5 py-1.5 bg-orange-100 text-orange-800 rounded text-sm"
+                    class="flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-800 rounded text-sm"
                   >
-                    <IconClock class="w-4 h-4" />
-                    <span class="font-medium">{{ slot.pendingWishesCount }}</span>
+                    <IconClock class="w-3 h-3" />
+                    <span>{{ slot.pendingWishesCount }}</span>
                     <span>{{ slot.pendingWishesCount > 1 ? 'demandes' : 'demande' }}</span>
                   </div>
 
                   <!-- Reservation (Red) -->
                   <div
                     v-if="slot.reservation"
-                    class="flex items-center gap-1.5 px-2.5 py-1.5 bg-red-100 text-red-800 rounded text-sm"
+                    class="flex items-center gap-1 px-2 py-1 bg-red-100 text-red-800 rounded text-sm"
                   >
-                    <IconUser class="w-4 h-4" />
-                    <span class="font-medium">{{ slot.reservation.userName }}</span>
+                    <IconUser class="w-3 h-3" />
+                    <span>{{ slot.reservation.userName }}</span>
                   </div>
 
                   <!-- Available Slot (Green) -->
                   <div
                     v-if="!slot.reservation && slot.pendingWishesCount === 0"
-                    class="flex items-center gap-1.5 px-2.5 py-1.5 bg-green-100 text-green-800 rounded text-sm"
+                    class="flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded text-sm"
                   >
-                    <IconCheck class="w-4 h-4" />
-                    <span class="font-medium">Disponible</span>
+                    <IconCheck class="w-3 h-3" />
+                    <span>Disponible</span>
                   </div>
                 </div>
 
-                <!-- Reservation Comment -->
-                <div
-                  v-if="slot.reservation?.comment"
-                  class="mt-2 text-sm text-gray-700 italic border-t border-gray-200 pt-2"
-                >
+                <!-- Public Comment -->
+                <div v-if="slot.reservation?.comment" class="mt-1.5 text-xs text-gray-700 italic">
                   "{{ slot.reservation.comment }}"
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Week Selector - Fixed at bottom -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 shadow-lg">
+      <div class="flex items-center justify-between p-2 max-w-[800px] mx-auto">
+        <button
+          @click="previousWeek"
+          class="px-2 py-1 text-secondary-600 hover:bg-gray-100 rounded transition"
+          aria-label="Semaine précédente"
+        >
+          <IconChevronLeft class="w-4 h-4" />
+        </button>
+        <div class="flex items-center gap-2">
+          <p class="text-base text-secondary-600">
+            {{ formatWeekRange(currentWeekStart) }}
+          </p>
+          <button
+            @click="goToCurrentWeek"
+            class="text-blue-500 hover:text-blue-600 transition p-1 hover:bg-gray-100 rounded"
+            aria-label="Revenir à la semaine actuelle"
+          >
+            <IconTarget class="w-4 h-4" />
+          </button>
+        </div>
+        <button
+          @click="nextWeek"
+          class="px-2 py-1 text-secondary-600 hover:bg-gray-100 rounded transition"
+          aria-label="Semaine suivante"
+        >
+          <IconChevronRight class="w-4 h-4" />
+        </button>
       </div>
     </div>
   </main>
@@ -428,5 +427,15 @@ const formatDateLong = (date: Date | string): string => {
     month: 'long',
     year: 'numeric',
   });
+};
+
+const isToday = (date: Date | string): boolean => {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  const today = new Date();
+  return (
+    d.getDate() === today.getDate() &&
+    d.getMonth() === today.getMonth() &&
+    d.getFullYear() === today.getFullYear()
+  );
 };
 </script>
