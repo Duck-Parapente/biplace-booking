@@ -1,8 +1,6 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
     <div class="flex-1 p-4 max-w-6xl mx-auto w-full flex flex-col min-h-0">
-      <h2 class="text-2xl font-semibold mb-4 text-secondary-600">Planning</h2>
-
       <!-- Week Selector -->
       <div
         class="flex items-center justify-between mb-4 bg-white p-3 rounded-lg border border-gray-300"
@@ -127,6 +125,7 @@ import { ref, computed } from 'vue';
 
 definePageMeta({
   middleware: 'auth',
+  pageTitle: 'Planning',
 });
 
 interface Reservation {

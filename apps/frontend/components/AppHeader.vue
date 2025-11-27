@@ -10,13 +10,17 @@
     :class="$attrs.class"
     class="w-full flex items-center justify-between px-6 py-4 bg-primary-400 text-secondary-600"
   >
-    <NuxtLink
-      to="/"
-      class="flex items-center gap-2 text-xl font-semibold hover:opacity-80 transition-opacity -my-2 py-2 -ml-2 pl-2 pr-4"
-    >
-      <img src="/duck-logo.png" alt="Duck Logo" class="h-8 w-8" />
-      <span>Biplace</span>
-    </NuxtLink>
+    <div class="flex items-center gap-3 text-xl font-semibold">
+      <NuxtLink
+        to="/"
+        class="hover:opacity-80 transition-opacity -my-2 -ml-2 p-2"
+        aria-label="Accueil"
+      >
+        <IconHome class="h-6 w-6" />
+      </NuxtLink>
+      <span class="text-secondary-600/50">/</span>
+      <span>{{ pageTitle }}</span>
+    </div>
 
     <div v-if="isAuthenticated" class="flex items-center gap-3">
       <button
@@ -89,6 +93,7 @@ defineOptions({
 const config = useRuntimeConfig();
 const { logout, isAuthenticated, hasRole } = useAuth();
 const { maintenanceMode } = usePublicConfig();
+const { pageTitle } = usePageTitle();
 const isMenuOpen = ref(false);
 
 interface MenuItem {

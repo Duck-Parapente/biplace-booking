@@ -10,5 +10,10 @@
 </template>
 <script setup lang="ts">
 import { useAuth } from '~/composables/useAuth';
+
+definePageMeta({
+  pageTitle: 'Connexion',
+});
+
 const { login } = useAuth();
 </script>

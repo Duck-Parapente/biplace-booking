@@ -1,8 +1,6 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
     <div class="flex-1 p-4 max-w-4xl mx-auto w-full flex flex-col min-h-0">
-      <h2 class="text-2xl font-semibold mb-4 text-secondary-600">Mes demandes de réservation</h2>
-
       <!-- Status Filter Tags -->
       <div class="flex gap-2 mb-4 flex-wrap">
         <button
@@ -133,6 +131,7 @@ import { ReservationStatusDto } from 'shared';
 
 definePageMeta({
   middleware: 'auth',
+  pageTitle: 'Mes demandes',
 });
 
 const {
