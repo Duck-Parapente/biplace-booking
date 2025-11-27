@@ -85,16 +85,7 @@
                 :disabled="cancelling"
                 class="w-full bg-red-100 hover:bg-red-200 border-t border-red-200 p-3 text-sm font-medium text-red-800 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-b-lg"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-4 h-4"
-                >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                </svg>
+                <IconX class="w-4 h-4" />
                 Annuler cette demande
               </button>
               <div
