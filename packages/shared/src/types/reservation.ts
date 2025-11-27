@@ -86,3 +86,32 @@ export class ReservationWishDto {
   @IsString({ each: true })
   reservations!: ReservationDto[];
 }
+
+export class PackPlanningDto {
+  @IsNotEmpty()
+  @IsUUID()
+  packId!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  packLabel!: string;
+
+  @IsNotEmpty()
+  pendingWishesCount!: number;
+
+  @IsOptional()
+  reservation?: {
+    username: string;
+    comment: string;
+  } | null;
+}
+
+export class PlanningDayDto {
+  @IsNotEmpty()
+  @IsDate()
+  date!: Date;
+
+  @IsArray()
+  @ArrayNotEmpty()
+  packs!: PackPlanningDto[];
+}
