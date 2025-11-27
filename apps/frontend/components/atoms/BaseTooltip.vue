@@ -5,9 +5,9 @@
       @click="isVisible = !isVisible"
       @mouseenter="isVisible = true"
       @mouseleave="isVisible = false"
-      class="w-4 h-4 text-xs leading-4 text-center bg-blue-500 text-white rounded-full cursor-pointer hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+      class="w-4 h-4 text-xs leading-4 text-center bg-gray-400 text-white rounded-full cursor-pointer hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
     >
-      !
+      i
     </button>
     <div
       v-if="isVisible"
