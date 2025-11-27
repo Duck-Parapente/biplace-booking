@@ -5,6 +5,8 @@ import { Module } from '@nestjs/common';
 import { CreateReservationWishHttpController } from './commands/create-reservation-wish.http.controller';
 import { CreateReservationWishService } from './commands/create-reservation-wish.service';
 import { CreateReservationsService } from './commands/create-reservation.service';
+import { GetPlanningHttpController } from './commands/get-planning.http.controller';
+import { GetPlanningService } from './commands/get-planning.service';
 import { GetReservationWishesHttpController } from './commands/get-reservation-wishes.http.controller';
 import { GetReservationWishesService } from './commands/get-reservation-wishes.service';
 import { UpdateReservationWishHttpController } from './commands/update-reservation-wish.http.controller';
@@ -26,12 +28,14 @@ import {
     CreateReservationWishHttpController,
     UpdateReservationWishHttpController,
     GetReservationWishesHttpController,
+    GetPlanningHttpController,
   ],
   providers: [
     CreateReservationWishService,
     UpdateReservationWishService,
     GetReservationWishesService,
     GetReservationWishesService,
+    GetPlanningService,
     CreateReservationsService,
     ReservationWishDomainService,
     ReservationDomainService,

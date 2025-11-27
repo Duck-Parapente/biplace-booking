@@ -1,9 +1,10 @@
-import { ReservationStatusDto, ReservationWishDto } from 'shared';
+import { ReservationStatusDto, ReservationWishDto, PlanningDayDto } from 'shared';
 
 import {
   ReservationWishStatus,
   ReservationWishWithReservation,
 } from '../domain/reservation-wish.types';
+import { PlanningData } from '../domain/reservation.types';
 
 const mapStatus = (status: ReservationWishStatus): ReservationStatusDto => {
   switch (status) {
@@ -38,4 +39,16 @@ export function mapReservationWishToDto({
       packId: packId.uuid,
     })),
   };
+}
+
+export function mapPlanningDataToDto(planningData: PlanningData[]): PlanningDayDto[] {
+  return planningData.map(({ date, packs }) => ({
+    date: date.value,
+    packs: packs.map(({ packId, packLabel, pendingWishesCount, reservation }) => ({
+      packId: packId.uuid,
+      packLabel,
+      pendingWishesCount,
+      reservation,
+    })),
+  }));
 }
