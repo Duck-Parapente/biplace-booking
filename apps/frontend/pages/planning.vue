@@ -123,6 +123,15 @@
 import type { PackPlanningDto } from 'shared';
 import { ref, computed, watch } from 'vue';
 
+import {
+  formatDateLong,
+  isToday,
+  formatWeekRange,
+  formatDateToString,
+  getMonday,
+  getWeekDays,
+} from '~/composables/useDateHelpers';
+
 definePageMeta({
   middleware: 'auth',
   pageTitle: 'Planning',
@@ -135,23 +144,6 @@ const selectedPacks = ref<Set<string>>(new Set());
 
 // Week management
 const currentWeekStart = ref<Date>(getMonday(new Date()));
-
-function getMonday(date: Date): Date {
-  const d = new Date(date);
-  const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is Sunday
-  return new Date(d.setDate(diff));
-}
-
-function getWeekDays(monday: Date): Date[] {
-  const days: Date[] = [];
-  for (let i = 0; i < 7; i++) {
-    const day = new Date(monday);
-    day.setDate(monday.getDate() + i);
-    days.push(day);
-  }
-  return days;
-}
 
 function previousWeek() {
   const newDate = new Date(currentWeekStart.value);
@@ -167,25 +159,6 @@ function nextWeek() {
 
 function goToCurrentWeek() {
   currentWeekStart.value = getMonday(new Date());
-}
-
-function formatWeekRange(monday: Date): string {
-  const sunday = new Date(monday);
-  sunday.setDate(monday.getDate() + 6);
-
-  const mondayStr = monday.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long' });
-  const sundayStr = sunday.toLocaleDateString('fr-FR', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  });
-
-  return `${mondayStr} - ${sundayStr}`;
-}
-
-function formatDateToString(date: Date): string {
-  const result = date.toISOString().split('T')[0];
-  return result || '';
 }
 
 // Fetch planning when week changes
@@ -246,25 +219,5 @@ const filteredPlanningDays = computed(() => {
 const togglePack = (packId: string) => {
   const set = selectedPacks.value;
   set.has(packId) ? set.delete(packId) : set.add(packId);
-};
-
-const formatDateLong = (date: Date | string): string => {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleDateString('fr-FR', {
-    weekday: 'long',
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  });
-};
-
-const isToday = (date: Date | string): boolean => {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  const today = new Date();
-  return (
-    d.getDate() === today.getDate() &&
-    d.getMonth() === today.getMonth() &&
-    d.getFullYear() === today.getFullYear()
-  );
 };
 </script>

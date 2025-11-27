@@ -129,6 +129,8 @@
 <script setup lang="ts">
 import { ReservationStatusDto } from 'shared';
 
+import { formatDate, formatDateLong } from '~/composables/useDateHelpers';
+
 definePageMeta({
   middleware: 'auth',
   pageTitle: 'Mes demandes',
@@ -206,24 +208,6 @@ const handleCancelWish = async (wishId: string) => {
   if (confirm('Êtes-vous sûr de vouloir annuler cette demande de réservation ?')) {
     await cancelReservationWish(wishId);
   }
-};
-
-const formatDate = (date: Date | string): string => {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleDateString('fr-FR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  });
-};
-
-const formatDateLong = (date: Date | string): string => {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleDateString('fr-FR', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  });
 };
 
 const getStatusConfig = (status: ReservationStatusDto, packChoicesLength: number = 1) => {
