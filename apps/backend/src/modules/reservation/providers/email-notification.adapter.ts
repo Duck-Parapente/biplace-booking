@@ -32,6 +32,8 @@ export class EmailNotificationAdapter implements ReservationWishNotificationPort
 
   private async sendNotificationEmail(reservationWishId: UUID, template: string): Promise<void> {
     try {
+      // TODO: create a command handler to fetch reservation wish details
+      // This handler should be listening to reservation wish events
       const { reservations, createdBy, startingDate } =
         await prisma.reservationWish.findUniqueOrThrow({
           where: { id: reservationWishId.uuid },
