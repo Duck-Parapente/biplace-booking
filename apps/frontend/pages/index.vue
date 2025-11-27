@@ -73,10 +73,14 @@
                   </div>
                 </div>
               </div>
-
-              <!-- Cancel Button - Full Width at Bottom -->
+              <div
+                v-if="getStatusConfig(wish.status, wish.packChoices.length).infoText"
+                class="w-full border-t border-gray-200 p-3 text-sm text-gray-700"
+              >
+                {{ getStatusConfig(wish.status, wish.packChoices.length).infoText }}
+              </div>
               <button
-                v-if="wish.status === 'PENDING'"
+                v-if="wish.isCancelable"
                 @click="handleCancelWish(wish.id)"
                 :disabled="cancelling"
                 class="w-full bg-red-100 hover:bg-red-200 border-t border-red-200 p-3 text-sm font-medium text-red-800 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-b-lg"
@@ -93,15 +97,6 @@
                 </svg>
                 Annuler cette demande
               </button>
-
-              <!-- Info Text Box - Full Width at Bottom -->
-              <div
-                v-if="getStatusConfig(wish.status, wish.packChoices.length).infoText"
-                class="w-full bg-white border-t border-gray-200 p-3 text-sm text-gray-700 rounded-b-lg"
-              >
-                {{ getStatusConfig(wish.status, wish.packChoices.length).infoText }}
-              </div>
-
               <div
                 v-if="wish.reservations && wish.reservations.length > 0"
                 class="w-full bg-green-100 border-t border-green-500/30 p-3 text-center rounded-b-lg"

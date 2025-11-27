@@ -2,6 +2,7 @@ import {
   ArrayMinSize,
   ArrayNotEmpty,
   IsArray,
+  IsBoolean,
   IsDate,
   IsDateString,
   IsEnum,
@@ -70,6 +71,10 @@ export class ReservationWishDto {
   @IsNotEmpty()
   @IsEnum(ReservationStatusDto)
   status!: ReservationStatusDto;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isCancelable!: boolean;
 
   @IsOptional()
   @IsString()
