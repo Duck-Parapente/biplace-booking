@@ -101,7 +101,7 @@ export class AttributePacksService {
     endingDate: DateValueObject,
   ): Promise<void> {
     for (const attribution of attributions) {
-      const wish = pendingWishes.find((w) => w.id.uuid === attribution.reservationWishId.uuid);
+      const wish = pendingWishes.find((w) => w.id.equals(attribution.reservationWishId));
       if (!wish) {
         this.logger.error(`Wish ${attribution.reservationWishId.uuid} not found`);
         continue;

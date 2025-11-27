@@ -18,6 +18,11 @@ export class UUID extends ValueObject<UuidProps> {
     return this.props.uuid;
   }
 
+  public equals(comparedTo?: UUID): boolean {
+    if (!comparedTo) return false;
+    return this.uuid === comparedTo.uuid;
+  }
+
   protected validate({ uuid }: UuidProps): void {
     if (!validate(uuid)) throw new ArgumentInvalidException(`UUID is not valid: ${uuid}`);
   }

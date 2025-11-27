@@ -104,7 +104,7 @@
 
               <div
                 v-if="wish.reservations && wish.reservations.length > 0"
-                class="w-full bg-green-100/10 border-t border-green-500/30 p-3 text-center rounded-b-lg"
+                class="w-full bg-green-100 border-t border-green-500/30 p-3 text-center rounded-b-lg"
               >
                 <div v-for="reservation in wish.reservations" :key="reservation.id" class="text-sm">
                   <p class="font-medium text-green-800">

@@ -22,9 +22,11 @@ export class AttributionDomainService {
 
     // Étape 2 : Boucler sur les souhaits (du plus prioritaire au moins prioritaire)
     for (const wish of sortedWishes) {
-      // Étape 2.1 : Filtrer les souhaits en enlevant les packs déjà attribués
+      // Étape 2.1 : Filtrer les souhaits en enlevant les packs déjà attribués et ceux qui ne sont pas disponibles
       const availablePackChoices = wish.packChoices.filter(
-        (packId) => !assignedPacks.has(packId.id.uuid),
+        (pack) =>
+          !assignedPacks.has(pack.id.uuid) &&
+          props.availablePacks.some(({ id }) => id.equals(pack.id)),
       );
 
       // Étape 2.5 : Si plus de pack disponible, on passe au suivant
@@ -38,7 +40,7 @@ export class AttributionDomainService {
       for (const packId of availablePackChoices) {
         // Compter le nombre de demandes concurrentes pour ce pack
         const conflictCount = sortedWishes.filter((otherWish) =>
-          otherWish.packChoices.some((choice) => choice.id.uuid === packId.id.uuid),
+          otherWish.packChoices.some((choice) => choice.id.equals(packId.id)),
         ).length;
 
         packConflicts.set(packId.id.uuid, conflictCount);
