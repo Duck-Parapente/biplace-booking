@@ -97,14 +97,14 @@
               <!-- Info Text Box - Full Width at Bottom -->
               <div
                 v-if="getStatusConfig(wish.status, wish.packChoices.length).infoText"
-                class="w-full bg-blue-50 border-t border-blue-200 p-3 text-sm text-blue-800 rounded-b-lg"
+                class="w-full bg-white border-t border-gray-200 p-3 text-sm text-gray-700 rounded-b-lg"
               >
                 {{ getStatusConfig(wish.status, wish.packChoices.length).infoText }}
               </div>
 
               <div
                 v-if="wish.reservations && wish.reservations.length > 0"
-                class="w-full bg-green-100 border-t border-green-300 p-3 text-center rounded-b-lg"
+                class="w-full bg-green-100/10 border-t border-green-500/30 p-3 text-center rounded-b-lg"
               >
                 <div v-for="reservation in wish.reservations" :key="reservation.id" class="text-sm">
                   <p class="font-medium text-green-800">
