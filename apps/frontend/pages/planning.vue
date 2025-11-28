@@ -154,6 +154,9 @@
 import type { PackPlanningDto, UserDto } from 'shared';
 import { ref, computed, watch, onMounted } from 'vue';
 
+import IconCheck from '~/components/icons/IconCheck.vue';
+import IconClock from '~/components/icons/IconClock.vue';
+import IconUser from '~/components/icons/IconUser.vue';
 import {
   formatDateLong,
   isToday,
@@ -259,7 +262,7 @@ const getPackStatusConfig = (pack: PackPlanningDto) => {
     const user = getReservedUser(pack.reservation.userId);
     return {
       backgroundClass: 'bg-red-100 text-red-800',
-      icon: 'IconUser',
+      icon: IconUser,
       label: getUserDisplayName(user),
       phone: user?.phoneNumber,
       email: user?.email,
@@ -268,13 +271,13 @@ const getPackStatusConfig = (pack: PackPlanningDto) => {
   if (pack.pendingWishesCount > 0) {
     return {
       backgroundClass: 'bg-orange-100 text-orange-800',
-      icon: 'IconClock',
+      icon: IconClock,
       label: `${pack.pendingWishesCount} ${pack.pendingWishesCount > 1 ? 'demandes' : 'demande'}`,
     };
   }
   return {
     backgroundClass: 'bg-green-100 text-green-800',
-    icon: 'IconCheck',
+    icon: IconCheck,
     label: 'Disponible',
   };
 };
