@@ -79,15 +79,37 @@
                 :key="pack.packId"
                 class="border border-gray-200 rounded p-2 bg-gray-50"
               >
-                <div class="flex items-center justify-between gap-2">
+                <div class="flex items-start justify-between gap-2">
                   <span class="text-sm text-secondary-600">{{ pack.packLabel }}</span>
 
-                  <div
-                    class="flex items-center gap-1 px-2 py-1 rounded text-sm"
-                    :class="getPackStatusConfig(pack).backgroundClass"
-                  >
-                    <component :is="getPackStatusConfig(pack).icon" class="w-3 h-3" />
-                    <span>{{ getPackStatusConfig(pack).label }}</span>
+                  <div class="flex flex-col items-end gap-1">
+                    <div
+                      class="flex items-center gap-1 px-2 py-1 rounded text-sm"
+                      :class="getPackStatusConfig(pack).backgroundClass"
+                    >
+                      <component :is="getPackStatusConfig(pack).icon" class="w-3 h-3" />
+                      <span>{{ getPackStatusConfig(pack).label }}</span>
+                    </div>
+
+                    <!-- User Contact Info -->
+                    <div
+                      v-if="pack.reservation"
+                      class="space-y-0.5 text-xs text-gray-600 text-right"
+                    >
+                      <div v-if="getPackStatusConfig(pack).email">
+                        <a
+                          :href="`mailto:${getPackStatusConfig(pack).email}`"
+                          class="hover:underline"
+                        >
+                          {{ getPackStatusConfig(pack).email }}
+                        </a>
+                      </div>
+                      <div v-if="getPackStatusConfig(pack).phone">
+                        <a :href="`tel:${getPackStatusConfig(pack).phone}`" class="hover:underline">
+                          {{ getPackStatusConfig(pack).phone }}
+                        </a>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -227,12 +249,20 @@ const toggleDay = (dateKey: string) => {
   set.has(dateKey) ? set.delete(dateKey) : set.add(dateKey);
 };
 
+const getReservedUser = (userId: string | undefined) => {
+  if (!userId) return undefined;
+  return users.value.find((u) => u.id === userId);
+};
+
 const getPackStatusConfig = (pack: PackPlanningDto) => {
   if (pack.reservation) {
+    const user = getReservedUser(pack.reservation.userId);
     return {
       backgroundClass: 'bg-red-100 text-red-800',
       icon: 'IconUser',
-      label: getUserDisplayName(users.value.find((u) => u.id === pack.reservation?.userId)),
+      label: getUserDisplayName(user),
+      phone: user?.phoneNumber,
+      email: user?.email,
     };
   }
   if (pack.pendingWishesCount > 0) {
