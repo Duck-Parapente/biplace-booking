@@ -44,13 +44,35 @@
               isToday(day.date) ? 'border-blue-300 border-2' : 'border-gray-300',
             ]"
           >
-            <div class="px-3 py-1.5 border-b border-gray-200">
-              <h3 class="text-base font-semibold text-secondary-600">
-                {{ formatDateLong(day.date) }}
-              </h3>
+            <div
+              @click="toggleDay(day.date.toString())"
+              class="px-3 py-1.5 cursor-pointer hover:bg-gray-50 transition"
+              :class="expandedDays.has(day.date.toString()) ? 'border-b border-gray-200' : ''"
+            >
+              <div class="flex items-center justify-between">
+                <h3 class="text-base font-semibold text-secondary-600">
+                  {{ formatDateLong(day.date) }}
+                </h3>
+                <IconChevronRight
+                  class="w-4 h-4 transition-transform"
+                  :class="expandedDays.has(day.date.toString()) ? 'rotate-90' : ''"
+                />
+              </div>
+
+              <!-- Pack Status Tags (when collapsed) -->
+              <div v-if="!expandedDays.has(day.date.toString())" class="flex flex-wrap gap-1 mt-2">
+                <span
+                  v-for="pack in day.packs"
+                  :key="pack.packId"
+                  class="px-2 py-0.5 text-xs rounded"
+                  :class="getPackStatusConfig(pack).backgroundClass"
+                >
+                  {{ pack.packLabel }}
+                </span>
+              </div>
             </div>
 
-            <div class="p-2 space-y-1.5">
+            <div v-show="expandedDays.has(day.date.toString())" class="p-2 space-y-1.5">
               <!-- Pack Slot -->
               <div
                 v-for="pack in day.packs"
@@ -60,34 +82,12 @@
                 <div class="flex items-center justify-between gap-2">
                   <span class="text-sm text-secondary-600">{{ pack.packLabel }}</span>
 
-                  <!-- Reservation (Red) - Priority 1 -->
                   <div
-                    v-if="pack.reservation"
-                    class="flex items-center gap-1 px-2 py-1 bg-red-100 text-red-800 rounded text-sm"
+                    class="flex items-center gap-1 px-2 py-1 rounded text-sm"
+                    :class="getPackStatusConfig(pack).backgroundClass"
                   >
-                    <IconUser class="w-3 h-3" />
-                    <span>{{
-                      getUserDisplayName(users.find((u) => u.id === pack.reservation?.userId))
-                    }}</span>
-                  </div>
-
-                  <!-- Pending Wishes Count (Orange) - Priority 2 -->
-                  <div
-                    v-else-if="pack.pendingWishesCount > 0"
-                    class="flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-800 rounded text-sm"
-                  >
-                    <IconClock class="w-3 h-3" />
-                    <span>{{ pack.pendingWishesCount }}</span>
-                    <span>{{ pack.pendingWishesCount > 1 ? 'demandes' : 'demande' }}</span>
-                  </div>
-
-                  <!-- Available Slot (Green) - Priority 3 -->
-                  <div
-                    v-else
-                    class="flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded text-sm"
-                  >
-                    <IconCheck class="w-3 h-3" />
-                    <span>Disponible</span>
+                    <component :is="getPackStatusConfig(pack).icon" class="w-3 h-3" />
+                    <span>{{ getPackStatusConfig(pack).label }}</span>
                   </div>
                 </div>
 
@@ -129,8 +129,8 @@
 </template>
 
 <script setup lang="ts">
-import type { UserDto } from 'shared';
-import { ref, computed, watch } from 'vue';
+import type { PackPlanningDto, UserDto } from 'shared';
+import { ref, computed, watch, onMounted } from 'vue';
 
 import {
   formatDateLong,
@@ -215,8 +215,37 @@ const filteredPlanningDays = computed(() => {
   });
 });
 
+const expandedDays = ref<Set<string>>(new Set());
+
 const togglePack = (packId: string) => {
   const set = selectedPacks.value;
   set.has(packId) ? set.delete(packId) : set.add(packId);
+};
+
+const toggleDay = (dateKey: string) => {
+  const set = expandedDays.value;
+  set.has(dateKey) ? set.delete(dateKey) : set.add(dateKey);
+};
+
+const getPackStatusConfig = (pack: PackPlanningDto) => {
+  if (pack.reservation) {
+    return {
+      backgroundClass: 'bg-red-100 text-red-800',
+      icon: 'IconUser',
+      label: getUserDisplayName(users.value.find((u) => u.id === pack.reservation?.userId)),
+    };
+  }
+  if (pack.pendingWishesCount > 0) {
+    return {
+      backgroundClass: 'bg-orange-100 text-orange-800',
+      icon: 'IconClock',
+      label: `${pack.pendingWishesCount} ${pack.pendingWishesCount > 1 ? 'demandes' : 'demande'}`,
+    };
+  }
+  return {
+    backgroundClass: 'bg-green-100 text-green-800',
+    icon: 'IconCheck',
+    label: 'Disponible',
+  };
 };
 </script>
