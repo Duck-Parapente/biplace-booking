@@ -40,8 +40,8 @@
             v-for="day in filteredPlanningDays"
             :key="day.date.toString()"
             :class="[
-              'border bg-white rounded shadow-sm',
-              isToday(day.date) ? 'border-blue-300 border-2' : 'border-gray-300',
+              'border rounded shadow-sm',
+              isToday(day.date) ? 'bg-gray-200 border-gray-400' : 'bg-white border-gray-300',
             ]"
           >
             <div
