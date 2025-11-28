@@ -61,7 +61,9 @@
                     class="flex items-center gap-1 px-2 py-1 bg-red-100 text-red-800 rounded text-sm"
                   >
                     <IconUser class="w-3 h-3" />
-                    <span>{{ pack.reservation.username }}</span>
+                    <span>{{
+                      getUserDisplayName(users.find((u) => u.id === pack.reservation?.userId))
+                    }}</span>
                   </div>
 
                   <!-- Available Slot (Green) -->
@@ -90,7 +92,7 @@
 
     <!-- Week Selector - Fixed at bottom -->
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 shadow-lg">
-      <div class="flex items-center justify-between p-2 max-w-[800px] mx-auto">
+      <div class="flex items-center justify-between p-3 max-w-[800px] mx-auto">
         <button
           @click="previousWeek"
           class="px-2 py-1 text-secondary-600 hover:bg-gray-100 rounded transition"
@@ -123,14 +125,13 @@
 </template>
 
 <script setup lang="ts">
-import type { PackPlanningDto } from 'shared';
+import type { UserDto } from 'shared';
 import { ref, computed, watch } from 'vue';
 
 import {
   formatDateLong,
   isToday,
   formatWeekRange,
-  formatDateToString,
   getMonday,
   getWeekDays,
 } from '~/composables/useDateHelpers';
@@ -141,6 +142,10 @@ definePageMeta({
 });
 
 const { packs, planningDays, fetchPlanning } = usePlanning();
+const { getUsers } = useUser();
+const { getUserDisplayName } = useUserHelpers();
+
+const users = ref<UserDto[]>([]);
 
 // Selected packs filter
 const selectedPacks = ref<Set<string>>(new Set());
@@ -178,39 +183,21 @@ watch(currentWeekStart, async () => {
 // Initial fetch
 onMounted(async () => {
   const weekDays = getWeekDays(currentWeekStart.value);
-  await fetchPlanning(weekDays[0]!, weekDays[6]!);
+  await Promise.all([
+    fetchPlanning(weekDays[0]!, weekDays[6]!),
+    getUsers().then((data) => (users.value = data)),
+  ]);
 
   // Select all packs by default if none selected
   if (selectedPacks.value.size === 0) {
     selectedPacks.value = new Set(packs.value.map((p) => p.packId));
   }
 });
+
 const filteredPlanningDays = computed(() => {
-  const weekDays = getWeekDays(currentWeekStart.value);
-
-  return weekDays.map((date) => {
-    const dateString = formatDateToString(date);
-    const existingDay = planningDays.value.find(
-      (d) => formatDateToString(new Date(d.date)) === dateString,
-    );
-
-    // Get all selected packs and create slots for them
-    const filteredPacks: PackPlanningDto[] = Array.from(selectedPacks.value).map((packId) => {
-      const pack = packs.value.find((p) => p.packId === packId);
-      const existingPack = existingDay?.packs.find((p) => p.packId === packId);
-
-      if (existingPack) {
-        return existingPack;
-      }
-
-      // Create a default available slot if no data exists
-      return {
-        packId,
-        packLabel: pack?.packLabel || packId,
-        pendingWishesCount: 0,
-        reservation: null,
-      };
-    });
+  return planningDays.value.map(({ packs, date }) => {
+    // Filter packs based on selected packs
+    const filteredPacks = packs.filter((pack) => selectedPacks.value.has(pack.packId));
 
     return {
       date,
