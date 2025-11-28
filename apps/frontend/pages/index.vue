@@ -49,13 +49,13 @@
                 </span>
               </div>
 
-              <div class="p-4 pr-28">
+              <div class="p-4">
                 <div class="flex-1">
                   <div class="text-sm text-gray-600 space-y-1">
                     <p class="flex items-center gap-2">
                       <span class="font-bold">{{ formatDateLong(wish.startingDate) }}</span>
                     </p>
-                    <div class="flex flex-wrap gap-1 mt-1 items-center">
+                    <div class="flex flex-wrap gap-1 mt-2 items-center">
                       <span class="text-xs text-gray-500">
                         {{ 'Mes préférences:' }}
                       </span>
