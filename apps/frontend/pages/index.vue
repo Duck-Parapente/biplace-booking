@@ -201,7 +201,7 @@ const availableStatuses = computed(() => {
 const filteredReservationWishes = computed(() => {
   return reservationWishes.value
     .sort((a, b) => {
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      return new Date(b.startingDate).getTime() - new Date(a.startingDate).getTime();
     })
     .filter(({ status }) => selectedStatuses.value.has(status));
 });
