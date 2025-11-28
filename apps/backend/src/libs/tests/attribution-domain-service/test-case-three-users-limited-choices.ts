@@ -7,7 +7,7 @@ export const testCaseThreeUsersLimitedChoices = () => {
   let i: number = 0;
 
   let testBuilder: TestBuilder = new TestBuilder(
-    'should attribute packs based on priority and conflict resolution 9b',
+    'should attribute first choice when limited users have alternatives',
   );
 
   testBuilder.addWish('A', i++, createdAt, ['I', 'J', 'K'], 'I');

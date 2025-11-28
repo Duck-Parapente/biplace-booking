@@ -7,7 +7,7 @@ export const testCaseFourUsersAllChoices1 = () => {
   let i: number = 0;
 
   let testBuilder: TestBuilder = new TestBuilder(
-    'should attribute packs based on priority and conflict resolution 1',
+    'should attribute packs to four users with all choices available',
   );
 
   testBuilder.addWish('A', i++, createdAt, ['I', 'J', 'K', 'L'], 'I');
@@ -23,7 +23,7 @@ export const testCaseFourUsersSomeChoices1 = () => {
   let i: number = 0;
 
   let testBuilder: TestBuilder = new TestBuilder(
-    'should attribute packs based on priority and conflict resolution 2',
+    'should leave lowest priority user unassigned when limited packs',
   );
 
   testBuilder.addWish('A', i++, createdAt, ['I', 'J', 'K'], 'K');
@@ -39,7 +39,7 @@ export const testCaseFourUsersSomeChoices2 = () => {
   let i: number = 0;
 
   let testBuilder: TestBuilder = new TestBuilder(
-    'should attribute packs based on priority and conflict resolution 3',
+    'should leave lowest priority user unassigned with different pack order',
   );
 
   testBuilder.addWish('A', i++, createdAt, ['I', 'J', 'K'], 'K');
@@ -55,7 +55,7 @@ export const testCaseFourUsersSomeChoices3 = () => {
   let i: number = 0;
 
   let testBuilder: TestBuilder = new TestBuilder(
-    'should attribute packs based on priority and conflict resolution 4',
+    'should avoid taking unpopular packs when everyone has many choices',
   );
 
   testBuilder.addWish('A', i++, createdAt, ['I', 'K', 'J', 'L', 'N'], 'I');

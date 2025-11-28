@@ -6,7 +6,7 @@ export const testCaseSixUsersLimitedChoices1 = () => {
   const createdAt = DateValueObject.fromDate(new Date('2025-11-20T10:00:00Z'));
 
   let testBuilder: TestBuilder = new TestBuilder(
-    'should attribute packs based on priority and conflict resolution 7',
+    'should yield to single-choice users even with lower priority',
   );
 
   testBuilder.addWish('A', 1, createdAt, ['I', 'J', 'K'], 'J');
@@ -23,7 +23,7 @@ export const testCaseSixUsersLimitedChoices1 = () => {
 export const testCaseSixUsersLimitedChoices2 = () => {
   const createdAt = DateValueObject.fromDate(new Date('2025-11-20T10:00:00Z'));
   let testBuilder: TestBuilder = new TestBuilder(
-    'should attribute packs based on priority and conflict resolution 9',
+    'should yield to single-choice users with different submission order',
   );
 
   testBuilder.addWish('A', 1, createdAt, ['I', 'J', 'K'], 'J');

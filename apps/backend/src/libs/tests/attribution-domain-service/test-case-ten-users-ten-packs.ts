@@ -7,7 +7,7 @@ export const testCaseTenUsersTenPacks = () => {
   let i: number = 0;
 
   let testBuilder: TestBuilder = new TestBuilder(
-    'should attribute packs based on priority and conflict resolution 10',
+    'should attribute first choice to all users when enough packs',
   );
 
   testBuilder.addWish('A', i++, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'I');

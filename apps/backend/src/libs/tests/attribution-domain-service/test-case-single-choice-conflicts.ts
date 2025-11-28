@@ -7,7 +7,7 @@ export const testCaseSingleChoiceConflicts = () => {
   let i: number = 0;
 
   let testBuilder: TestBuilder = new TestBuilder(
-    'should attribute packs based on priority and conflict resolution 6',
+    'should handle conflicts when multiple users have single choice',
   );
 
   testBuilder.addWish('A', i++, createdAt, ['K'], 'K');

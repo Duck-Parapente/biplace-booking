@@ -7,7 +7,7 @@ export const testCaseSameScoreOlderWins1 = () => {
   const newerDate = DateValueObject.fromDate(new Date('2025-11-20T12:00:00Z'));
 
   let testBuilder: TestBuilder = new TestBuilder(
-    'should prioritize older wish when userScore is equal 1',
+    'should prioritize older wish when userScore is equal - newer first',
   );
 
   testBuilder.addWish('A', 42, newerDate, ['I'], undefined);
@@ -21,7 +21,7 @@ export const testCaseSameScoreOlderWins2 = () => {
   const newerDate = DateValueObject.fromDate(new Date('2025-11-20T12:00:00Z'));
 
   let testBuilder: TestBuilder = new TestBuilder(
-    'should prioritize older wish when userScore is equal 2',
+    'should prioritize older wish when userScore is equal - older first',
   );
 
   testBuilder.addWish('A', 42, olderDate, ['I'], 'I');

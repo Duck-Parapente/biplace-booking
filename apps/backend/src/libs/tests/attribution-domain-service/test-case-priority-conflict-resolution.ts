@@ -7,7 +7,7 @@ export const testCasePriorityConflictResolution = () => {
   let i: number = 0;
 
   let testBuilder: TestBuilder = new TestBuilder(
-    'should attribute packs based on priority and conflict resolution 5',
+    'should respect single-choice users and leave low priority without pack',
   );
 
   testBuilder.addWish('D', i++, createdAt, ['K'], 'K');
