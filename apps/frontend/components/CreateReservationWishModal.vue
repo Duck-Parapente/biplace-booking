@@ -13,6 +13,7 @@
           label="Date"
           type="date"
           required
+          :min="today"
         />
 
         <div>
@@ -95,6 +96,8 @@
 <script setup lang="ts">
 import type { CreateReservationWishDto, PackDto } from 'shared';
 
+import { formatDateToString } from '~/composables/useDateHelpers';
+
 interface Props {
   show: boolean;
   packs: PackDto[];
@@ -119,6 +122,8 @@ const localForm = computed({
 
 const packSearch = ref('');
 const selectedPacks = ref<PackDto[]>([]);
+
+const today = computed(() => formatDateToString(new Date()));
 
 const packOptions = computed(() =>
   props.packs
