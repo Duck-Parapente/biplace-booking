@@ -1,0 +1,21 @@
+meta {
+  name: planning
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{BACKEND_DOMAIN}}/planning?startDate=2025-11-24&endDate=2025-11-30
+  body: none
+  auth: bearer
+}
+
+params:query {
+  startDate: 2025-11-24
+  endDate: 2025-11-30
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,8 +1,6 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
     <div class="flex-1 p-4 max-w-4xl mx-auto w-full flex flex-col min-h-0">
-      <h2 class="text-2xl font-semibold mb-4 text-secondary-600">Contacts</h2>
-
       <div v-if="loading" class="text-center py-8">
         <p class="text-gray-500">Chargement...</p>
       </div>
@@ -72,6 +70,7 @@ import type { UserDto } from 'shared';
 
 definePageMeta({
   middleware: 'auth',
+  pageTitle: 'Contacts',
 });
 
 const { getUsers, isProfileComplete } = useUser();

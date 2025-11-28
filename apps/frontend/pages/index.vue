@@ -1,8 +1,6 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
     <div class="flex-1 p-4 max-w-4xl mx-auto w-full flex flex-col min-h-0">
-      <h2 class="text-2xl font-semibold mb-4 text-secondary-600">Mes demandes de réservation</h2>
-
       <!-- Status Filter Tags -->
       <div class="flex gap-2 mb-4 flex-wrap">
         <button
@@ -85,16 +83,7 @@
                 :disabled="cancelling"
                 class="w-full bg-red-100 hover:bg-red-200 border-t border-red-200 p-3 text-sm font-medium text-red-800 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-b-lg"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-4 h-4"
-                >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                </svg>
+                <IconX class="w-4 h-4" />
                 Annuler cette demande
               </button>
               <div
@@ -140,8 +129,11 @@
 <script setup lang="ts">
 import { ReservationStatusDto } from 'shared';
 
+import { formatDate, formatDateLong } from '~/composables/useDateHelpers';
+
 definePageMeta({
   middleware: 'auth',
+  pageTitle: 'Mes demandes',
 });
 
 const {
@@ -216,24 +208,6 @@ const handleCancelWish = async (wishId: string) => {
   if (confirm('Êtes-vous sûr de vouloir annuler cette demande de réservation ?')) {
     await cancelReservationWish(wishId);
   }
-};
-
-const formatDate = (date: Date | string): string => {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleDateString('fr-FR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  });
-};
-
-const formatDateLong = (date: Date | string): string => {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleDateString('fr-FR', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  });
 };
 
 const getStatusConfig = (status: ReservationStatusDto, packChoicesLength: number = 1) => {

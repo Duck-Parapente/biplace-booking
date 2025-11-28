@@ -12,6 +12,8 @@ import {
   ReservationWishProps,
   ReservationWishStatus,
 } from './reservation-wish.types';
+
+export const PENDING_STATUSES = [ReservationWishStatus.PENDING, ReservationWishStatus.REFUSED];
 export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
   protected readonly _id: AggregateID;
 
@@ -19,15 +21,9 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
     ReservationWishStatus,
     ReservationWishStatus[]
   > = {
-    [ReservationWishStatus.CANCELLED]: [
-      ReservationWishStatus.PENDING,
-      ReservationWishStatus.REFUSED,
-    ],
-    [ReservationWishStatus.CONFIRMED]: [
-      ReservationWishStatus.PENDING,
-      ReservationWishStatus.REFUSED,
-    ],
-    [ReservationWishStatus.REFUSED]: [ReservationWishStatus.PENDING, ReservationWishStatus.REFUSED],
+    [ReservationWishStatus.CANCELLED]: PENDING_STATUSES,
+    [ReservationWishStatus.CONFIRMED]: PENDING_STATUSES,
+    [ReservationWishStatus.REFUSED]: PENDING_STATUSES,
     [ReservationWishStatus.PENDING]: [],
   };
 

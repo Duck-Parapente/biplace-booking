@@ -1,7 +1,7 @@
 import { FeatureFlagProvider } from '@libs/database/helpers/feature-flag.provider';
 import { Global, Module } from '@nestjs/common';
 
-import { PublicConfigHttpController } from './commands/public-config.http.controller';
+import { PublicConfigHttpController } from './infrastructure/http/controllers/public-config.http.controller';
 
 @Global()
 @Module({
