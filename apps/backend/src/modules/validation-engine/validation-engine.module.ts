@@ -2,7 +2,7 @@ import { PackModule } from '@modules/pack/pack.module';
 import { ReservationModule } from '@modules/reservation/reservation.module';
 import { Module } from '@nestjs/common';
 
-import { AttributePacksService } from './application/commands/attribute-packs/attribute-packs.handler';
+import { AttributePacksService } from './application/commands/attribute-packs/attribute-packs.service';
 import { AttributionDomainService } from './domain/attribution.domain-service';
 import { EmailNotificationAdapter } from './infrastructure/adapters/email-notification.adapter';
 import { AttibutePackCliController } from './infrastructure/cli/attribute-packs.cli.controller';

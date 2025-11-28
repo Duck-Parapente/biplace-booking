@@ -1,6 +1,5 @@
+import { UserEntity } from '@modules/user/domain/user.entity';
 import { UserDto } from 'shared';
-
-import { UserEntity } from '../../../domain/user.entity';
 
 export function mapUserToDto(user: UserEntity): UserDto {
   return {

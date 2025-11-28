@@ -1,9 +1,8 @@
 import { Email } from '@libs/ddd';
 import { ApiKeyGuard } from '@libs/guards/api-key.guard';
+import { SyncExternalUserCommand } from '@modules/user/application/commands/sync-external-user/sync-external-user.command';
+import { SyncExternalUserService } from '@modules/user/application/commands/sync-external-user/sync-external-user.service';
 import { Controller, Post, Body, Logger, UseGuards } from '@nestjs/common';
-
-import { SyncExternalUserCommand } from '../../../application/commands/sync-external-user/sync-external-user.command';
-import { SyncExternalUserService } from '../../../application/commands/sync-external-user/sync-external-user.handler';
 
 @Controller('user/sync')
 @UseGuards(ApiKeyGuard)

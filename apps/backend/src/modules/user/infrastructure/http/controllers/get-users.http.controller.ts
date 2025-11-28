@@ -1,8 +1,8 @@
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
+import { GetUsersService } from '@modules/user/application/queries/get-users/get-users.service';
 import { Controller, Logger, Get, UseGuards } from '@nestjs/common';
 import { UserDto } from 'shared';
 
-import { GetUsersService } from '../../../application/queries/get-users/get-users.handler';
 import { mapUserToDto } from '../mappers/user.mapper';
 
 @Controller('users')

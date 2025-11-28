@@ -1,5 +1,5 @@
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
-import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.handler';
+import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.service';
 import { Controller, Logger, Get, UseGuards } from '@nestjs/common';
 import { PackDto } from 'shared';
 

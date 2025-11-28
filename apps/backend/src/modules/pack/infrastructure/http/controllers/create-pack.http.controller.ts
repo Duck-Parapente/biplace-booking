@@ -5,7 +5,7 @@ import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
 import { Roles } from '@libs/guards/roles.decorator';
 import { RolesGuard } from '@libs/guards/roles.guard';
 import { CreatePackCommand } from '@modules/pack/application/commands/create-pack/create-pack.command';
-import { CreatePackService } from '@modules/pack/application/commands/create-pack/create-pack.handler';
+import { CreatePackService } from '@modules/pack/application/commands/create-pack/create-pack.service';
 import { Controller, Post, Body, Logger, UseGuards, Request } from '@nestjs/common';
 import { CreatePackDto, UserRoles } from 'shared';
 

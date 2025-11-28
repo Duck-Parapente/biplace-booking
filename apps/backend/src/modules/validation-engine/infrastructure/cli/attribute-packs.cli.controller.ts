@@ -1,11 +1,10 @@
 import { FeatureFlagProvider } from '@libs/database/helpers/feature-flag.provider';
 import { MAINTENANCE_MODE_KEY } from '@libs/guards/maintenance-mode.guard';
+import { AttributePacksService } from '@modules/validation-engine/application/commands/attribute-packs/attribute-packs.service';
+import { NotificationPort } from '@modules/validation-engine/domain/ports/notification.port';
+import { NOTIFICATION_PORT } from '@modules/validation-engine/validation-engine.di-tokens';
 import { BadRequestException, Inject, Logger } from '@nestjs/common';
 import { Command, Console } from 'nestjs-console';
-
-import { AttributePacksService } from '../../application/commands/attribute-packs/attribute-packs.handler';
-import { NotificationPort } from '../../domain/notification.port';
-import { NOTIFICATION_PORT } from '../../validation-engine.di-tokens';
 
 const COMMAND_NAME = 'run:attribute-packs';
 @Console()

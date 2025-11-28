@@ -4,11 +4,10 @@ import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID, UuidProps } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
+import { UserRepositoryPort } from '@modules/user/domain/ports/user.repository.port';
+import { UserEntity } from '@modules/user/domain/user.entity';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { User } from '@prisma/client';
-
-import { UserRepositoryPort } from '../../domain/ports/user.repository.port';
-import { UserEntity } from '../../domain/user.entity';
 
 const toEntity = (user: User): UserEntity => {
   const { id, email, externalAuthId, ...otherProps } = user;

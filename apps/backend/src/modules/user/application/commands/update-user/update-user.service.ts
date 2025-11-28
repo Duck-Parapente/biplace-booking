@@ -1,8 +1,7 @@
+import { UserRepositoryPort } from '@modules/user/domain/ports/user.repository.port';
+import { UserEntity } from '@modules/user/domain/user.entity';
+import { USER_REPOSITORY } from '@modules/user/user.di-tokens';
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-
-import { UserRepositoryPort } from '../../../domain/ports/user.repository.port';
-import { UserEntity } from '../../../domain/user.entity';
-import { USER_REPOSITORY } from '../../../user.di-tokens';
 
 import { UpdateUserCommand } from './update-user.command';
 

@@ -1,11 +1,11 @@
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
+import { UpdateUserCommand } from '@modules/user/application/commands/update-user/update-user.command';
+import { UpdateUserService } from '@modules/user/application/commands/update-user/update-user.service';
 import { Controller, Logger, Patch, UseGuards, Request, Body } from '@nestjs/common';
 import { UserDto, UserProfileDto } from 'shared';
 
-import { UpdateUserCommand } from '../../../application/commands/update-user/update-user.command';
-import { UpdateUserService } from '../../../application/commands/update-user/update-user.handler';
 import { mapUserToDto } from '../mappers/user.mapper';
 
 @Controller('user/me')

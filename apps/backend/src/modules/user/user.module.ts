@@ -2,10 +2,10 @@ import { EventEmitter } from '@libs/database/helpers/event-emitter';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { Module } from '@nestjs/common';
 
-import { SyncExternalUserService } from './application/commands/sync-external-user/sync-external-user.handler';
-import { UpdateUserService } from './application/commands/update-user/update-user.handler';
-import { GetUserService } from './application/queries/get-user/get-user.handler';
-import { GetUsersService } from './application/queries/get-users/get-users.handler';
+import { SyncExternalUserService } from './application/commands/sync-external-user/sync-external-user.service';
+import { UpdateUserService } from './application/commands/update-user/update-user.service';
+import { GetUserService } from './application/queries/get-user/get-user.service';
+import { GetUsersService } from './application/queries/get-users/get-users.service';
 import { GetUserHttpController } from './infrastructure/http/controllers/get-user.http.controller';
 import { GetUsersHttpController } from './infrastructure/http/controllers/get-users.http.controller';
 import { SyncExternalUserHttpController } from './infrastructure/http/controllers/sync-external-user.http.controller';

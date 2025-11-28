@@ -3,12 +3,11 @@ import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
+import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
+import { ReservationEntity } from '@modules/reservation/domain/reservation.entity';
+import { ReservationProps } from '@modules/reservation/domain/reservation.types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Reservation } from '@prisma/client';
-
-import { ReservationRepositoryPort } from '../../domain/ports/reservation.repository.port';
-import { ReservationEntity } from '../../domain/reservation.entity';
-import { ReservationProps } from '../../domain/reservation.types';
 
 export const toEntity = (record: Reservation): ReservationEntity => {
   return new ReservationEntity({

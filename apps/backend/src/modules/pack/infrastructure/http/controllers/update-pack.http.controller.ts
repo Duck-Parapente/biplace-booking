@@ -5,7 +5,7 @@ import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
 import { Roles } from '@libs/guards/roles.decorator';
 import { RolesGuard } from '@libs/guards/roles.guard';
 import { UpdatePackCommand } from '@modules/pack/application/commands/update-pack/update-pack.command';
-import { UpdatePackService } from '@modules/pack/application/commands/update-pack/update-pack.handler';
+import { UpdatePackService } from '@modules/pack/application/commands/update-pack/update-pack.service';
 import { Controller, Patch, Body, Logger, UseGuards, Param, Request } from '@nestjs/common';
 import { UpdatePackDto, UserRoles } from 'shared';
 

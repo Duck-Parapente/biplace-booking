@@ -4,15 +4,17 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { ReservationWish, ReservationWishStatus } from '@prisma/client';
-
-import { ReservationWishRepositoryPort } from '../../domain/ports/reservation-wish.repository.port';
-import { PENDING_STATUSES, ReservationWishEntity } from '../../domain/reservation-wish.entity';
+import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
+import {
+  PENDING_STATUSES,
+  ReservationWishEntity,
+} from '@modules/reservation/domain/reservation-wish.entity';
 import {
   ReservationWishStatus as DomainReservationWishStatus,
   ReservationWishWithReservation,
-} from '../../domain/reservation-wish.types';
+} from '@modules/reservation/domain/reservation-wish.types';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ReservationWish, ReservationWishStatus } from '@prisma/client';
 
 import { toEntity as toReservationEntity } from './reservation.repository';
 

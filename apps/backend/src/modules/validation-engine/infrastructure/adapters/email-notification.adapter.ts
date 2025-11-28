@@ -1,9 +1,8 @@
 import { envKeys } from '@libs/config/env.constants';
 import { MailClient } from '@libs/mail/mail.client';
+import { NotificationPort } from '@modules/validation-engine/domain/ports/notification.port';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-
-import { NotificationPort } from '../../domain/notification.port';
 
 @Injectable()
 export class EmailNotificationAdapter implements NotificationPort {
