@@ -52,9 +52,8 @@
               <div class="p-4 pr-28">
                 <div class="flex-1">
                   <div class="text-sm text-gray-600 space-y-1">
-                    <p class="flex items-center">
+                    <p class="flex items-center gap-2">
                       <span class="font-bold">{{ formatDateLong(wish.startingDate) }}</span>
-                      <BaseTooltip>Créée le {{ formatDate(wish.createdAt) }}</BaseTooltip>
                     </p>
                     <div class="flex flex-wrap gap-1 mt-1 items-center">
                       <span class="text-xs text-gray-500">
@@ -64,10 +63,12 @@
                         {{ getPackLabel(packId) }}
                       </BaseTag>
                     </div>
+                    <p class="text-xs text-gray-500">
+                      Créée le {{ formatDateTime(wish.createdAt) }}
+                    </p>
                     <p v-if="wish.publicComment" class="italic text-gray-700">
                       "{{ wish.publicComment }}"
                     </p>
-                    <!-- <p class="text-xs text-gray-500">Créée le {{ formatDate(wish.createdAt) }}</p> -->
                   </div>
                 </div>
               </div>
@@ -129,7 +130,7 @@
 <script setup lang="ts">
 import { ReservationStatusDto } from 'shared';
 
-import { formatDate, formatDateLong } from '~/composables/useDateHelpers';
+import { formatDateLong, formatDateTime } from '~/composables/useDateHelpers';
 
 definePageMeta({
   middleware: 'auth',

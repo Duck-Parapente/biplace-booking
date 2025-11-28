@@ -3,11 +3,17 @@
  */
 
 /**
+ * Convert string or Date to Date object
+ */
+function toDate(date: Date | string): Date {
+  return typeof date === 'string' ? new Date(date) : date;
+}
+
+/**
  * Format a date to a long French format (e.g., "mardi 28 novembre 2023")
  */
 export function formatDateLong(date: Date | string): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleDateString('fr-FR', {
+  return toDate(date).toLocaleDateString('fr-FR', {
     weekday: 'long',
     day: '2-digit',
     month: 'long',
@@ -19,8 +25,7 @@ export function formatDateLong(date: Date | string): string {
  * Format a date to a short French format (e.g., "28/11/2023")
  */
 export function formatDate(date: Date | string): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleDateString('fr-FR', {
+  return toDate(date).toLocaleDateString('fr-FR', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
@@ -28,10 +33,23 @@ export function formatDate(date: Date | string): string {
 }
 
 /**
+ * Format a date with time (e.g., "28/11/2023 à 14:30")
+ */
+export function formatDateTime(date: Date | string): string {
+  const d = toDate(date);
+  const dateStr = formatDate(d);
+  const timeStr = d.toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  return `${dateStr} à ${timeStr}`;
+}
+
+/**
  * Check if a date is today
  */
 export function isToday(date: Date | string): boolean {
-  const d = typeof date === 'string' ? new Date(date) : date;
+  const d = toDate(date);
   const today = new Date();
   return (
     d.getDate() === today.getDate() &&
@@ -44,8 +62,7 @@ export function isToday(date: Date | string): boolean {
  * Format a date to ISO string format (YYYY-MM-DD)
  */
 export function formatDateToString(date: Date): string {
-  const result = date.toISOString().split('T')[0];
-  return result || '';
+  return date.toISOString().split('T')[0] || '';
 }
 
 /**
@@ -71,7 +88,7 @@ export function formatWeekRange(monday: Date): string {
 export function getMonday(date: Date): Date {
   const d = new Date(date);
   const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is Sunday
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
   return new Date(d.setDate(diff));
 }
 
