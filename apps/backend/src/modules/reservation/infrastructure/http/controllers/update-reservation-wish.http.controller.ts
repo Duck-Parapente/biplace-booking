@@ -47,8 +47,9 @@ export class UpdateReservationWishHttpController {
 
       return { message: 'Reservation wish cancelled' };
     } catch (error) {
+      this.logger.error('Error cancelling reservation wish', error);
+
       if (error instanceof ReservationWishNotFoundError) {
-        this.logger.warn(`Reservation wish not found: ${error.message}`);
         throw new NotFoundException(error.message);
       }
 
@@ -57,11 +58,9 @@ export class UpdateReservationWishHttpController {
       }
 
       if (error instanceof UnauthorizedToCancelReservationWishError) {
-        this.logger.warn(`Unauthorized cancellation attempt: ${error.message}`);
         throw new NotFoundException('Reservation wish not found');
       }
 
-      this.logger.error('Error cancelling reservation wish', error);
       throw error;
     }
   }

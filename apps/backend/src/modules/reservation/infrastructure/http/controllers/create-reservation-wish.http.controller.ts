@@ -46,11 +46,11 @@ export class CreateReservationWishHttpController {
 
       return { message: 'Reservation wish created' };
     } catch (error) {
+      this.logger.error('Error creating reservation wish', error);
       if (error instanceof UserHasReservationWishOnStartingDateError) {
         throw new BadRequestException(error.message);
       }
 
-      this.logger.error('Error creating reservation wish', error);
       throw error;
     }
   }
