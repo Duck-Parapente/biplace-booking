@@ -32,7 +32,18 @@ export const useApi = () => {
     });
 
     if (!response.ok) {
-      throw new Error(`API call failed: ${response.statusText}`);
+      let errorMessage = response.statusText;
+
+      // Try to parse JSON error response
+      try {
+        const errorData = await response.json();
+        // Extract the message if it exists, otherwise show full error
+        errorMessage = errorData.message || JSON.stringify(errorData, null, 2);
+      } catch {
+        // If not JSON, keep the default message
+      }
+
+      throw new Error(errorMessage);
     }
 
     return await response.json();
