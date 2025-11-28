@@ -9,6 +9,6 @@ export { testCaseFourUsersSomeChoices3 } from './test-case-four-users-all-choice
 export { testCaseTenUsersTenPacks } from './test-case-ten-users-ten-packs';
 export { testCaseSingleChoiceConflicts } from './test-case-single-choice-conflicts';
 export { testCaseUnwantedPack } from './test-case-unwanted-pack';
-export { testCaseTwoUsersAllChoices } from './test-case-two-users-all-choices'
-export { testCaseSixUsersLimitedChoices1 } from './test-case-six-users-limited-choices'
-export { testCaseSixUsersLimitedChoices2 } from './test-case-six-users-limited-choices'
+export { testCaseTwoUsersAllChoices } from './test-case-two-users-all-choices';
+export { testCaseSixUsersLimitedChoices1 } from './test-case-six-users-limited-choices';
+export { testCaseSixUsersLimitedChoices2 } from './test-case-six-users-limited-choices';
