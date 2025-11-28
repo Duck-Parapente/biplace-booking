@@ -8,16 +8,16 @@ export const testCaseTenUsersTenPacks = () => {
 
   let testBuilder: TestBuilder = new TestBuilder('should attribute packs based on priority and conflict resolution 5');
 
-  testBuilder.addWish("User A", i++, createdAt, ['Pack I', 'Pack J', 'Pack K', 'Pack L', 'Pack M', 'Pack N', 'Pack O', 'Pack P', 'Pack Q', 'Pack R'], 'Pack I');
-  testBuilder.addWish("User B", i++, createdAt, ['Pack I', 'Pack J', 'Pack K', 'Pack L', 'Pack M', 'Pack N', 'Pack O', 'Pack P', 'Pack Q', 'Pack R'], 'Pack J');
-  testBuilder.addWish("User C", i++, createdAt, ['Pack I', 'Pack J', 'Pack K', 'Pack L', 'Pack M', 'Pack N', 'Pack O', 'Pack P', 'Pack Q', 'Pack R'], 'Pack K');
-  testBuilder.addWish("User D", i++, createdAt, ['Pack I', 'Pack J', 'Pack K', 'Pack L', 'Pack M', 'Pack N', 'Pack O', 'Pack P', 'Pack Q', 'Pack R'], 'Pack L');
-  testBuilder.addWish("User E", i++, createdAt, ['Pack I', 'Pack J', 'Pack K', 'Pack L', 'Pack M', 'Pack N', 'Pack O', 'Pack P', 'Pack Q', 'Pack R'], 'Pack M');
-  testBuilder.addWish("User F", i++, createdAt, ['Pack I', 'Pack J', 'Pack K', 'Pack L', 'Pack M', 'Pack N', 'Pack O', 'Pack P', 'Pack Q', 'Pack R'], 'Pack N');
-  testBuilder.addWish("User G", i++, createdAt, ['Pack I', 'Pack J', 'Pack K', 'Pack L', 'Pack M', 'Pack N', 'Pack O', 'Pack P', 'Pack Q', 'Pack R'], 'Pack O');
-  testBuilder.addWish("User H", i++, createdAt, ['Pack I', 'Pack J', 'Pack K', 'Pack L', 'Pack M', 'Pack N', 'Pack O', 'Pack P', 'Pack Q', 'Pack R'], 'Pack P');
-  testBuilder.addWish("User I", i++, createdAt, ['Pack I', 'Pack J', 'Pack K', 'Pack L', 'Pack M', 'Pack N', 'Pack O', 'Pack P', 'Pack Q', 'Pack R'], 'Pack Q');
-  testBuilder.addWish("User J", i++, createdAt, ['Pack I', 'Pack J', 'Pack K', 'Pack L', 'Pack M', 'Pack N', 'Pack O', 'Pack P', 'Pack Q', 'Pack R'], 'Pack R');
+  testBuilder.addWish("A", i++, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'I');
+  testBuilder.addWish("B", i++, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'J');
+  testBuilder.addWish("C", i++, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'K');
+  testBuilder.addWish("D", i++, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'L');
+  testBuilder.addWish("E", i++, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'M');
+  testBuilder.addWish("F", i++, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'N');
+  testBuilder.addWish("G", i++, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'O');
+  testBuilder.addWish("H", i++, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'P');
+  testBuilder.addWish("I", i++, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'Q');
+  testBuilder.addWish("J", i++, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'R');
 
   return testBuilder.buildTest();
 }

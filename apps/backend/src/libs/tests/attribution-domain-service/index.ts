@@ -1,5 +1,6 @@
 export { testCasePriorityConflictResolution } from './test-case-priority-conflict-resolution';
-export { testCaseSameScoreOlderWins } from './test-case-same-score-older-wins';
+export { testCaseSameScoreOlderWins1 } from './test-case-same-score-older-wins';
+export { testCaseSameScoreOlderWins2 } from './test-case-same-score-older-wins';
 export { testCaseThreeUsersAllChoices } from './test-case-three-users-all-choices';
 export { testCaseThreeUsersLimitedChoices } from './test-case-three-users-limited-choices';
 export { testCaseFourUsersAllChoices } from './test-case-four-users-all-choices';

@@ -1,42 +1,30 @@
-import { randomUUID } from 'crypto';
-
 import { DateValueObject } from '@libs/ddd/date.value-object';
-import { UUID } from '@libs/ddd/uuid.value-object';
+import { TestBuilder } from "./test-builder"
 
-const createUUID = (): UUID => {
-  return new UUID({ uuid: randomUUID() });
+export const testCaseSameScoreOlderWins1 = () => {
+
+  const olderDate = DateValueObject.fromDate(new Date('2025-11-20T08:00:00Z'));
+  const newerDate = DateValueObject.fromDate(new Date('2025-11-20T12:00:00Z'));
+
+  let testBuilder: TestBuilder = new TestBuilder('should prioritize older wish when userScore is equal 1');
+
+  testBuilder.addWish("A", 42, newerDate, ['I'], undefined);
+  testBuilder.addWish("B", 42, olderDate, ['I'], 'I');
+
+  return testBuilder.buildTest();
 };
 
-export const testCaseSameScoreOlderWins = () => {
-  const packI = { id: createUUID(), label: 'Pack I' };
 
-  const userA = createUUID();
-  const userB = createUUID();
 
-  const olderDate = new Date('2025-11-20T08:00:00Z');
-  const newerDate = new Date('2025-11-20T12:00:00Z');
+export const testCaseSameScoreOlderWins2 = () => {
 
-  const wishOlder = createUUID();
-  const wishNewer = createUUID();
+  const olderDate = DateValueObject.fromDate(new Date('2025-11-20T08:00:00Z'));
+  const newerDate = DateValueObject.fromDate(new Date('2025-11-20T12:00:00Z'));
 
-  return {
-    name: 'should prioritize older wish when userScore is equal',
-    availablePacks: [packI],
-    wishes: [
-      {
-        id: wishNewer,
-        packChoices: [packI],
-        createdBy: { id: userA, currentScore: 100, nickname: 'User A' },
-        createdAt: DateValueObject.fromDate(newerDate),
-      },
-      {
-        id: wishOlder,
-        packChoices: [packI],
-        createdBy: { id: userB, currentScore: 100, nickname: 'User B' },
-        createdAt: DateValueObject.fromDate(olderDate),
-      },
-    ],
-    expectedAttributions: [{ wishId: wishOlder, pack: packI }],
-    expectedUnassigned: [wishNewer],
-  };
+  let testBuilder: TestBuilder = new TestBuilder('should prioritize older wish when userScore is equal 2');
+
+  testBuilder.addWish("A", 42, olderDate, ['I'], 'I');
+  testBuilder.addWish("B", 42, newerDate, ['I'], undefined);
+
+  return testBuilder.buildTest();
 };

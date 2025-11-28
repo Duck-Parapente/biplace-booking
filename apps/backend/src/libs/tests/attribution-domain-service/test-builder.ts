@@ -5,102 +5,96 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 import { PackSummary } from '@libs/types/accross-modules';
-import { Injectable } from '@nestjs/common';
+import assert from 'assert';
+
 
 const createUUID = (): UUID => {
     return new UUID({ uuid: randomUUID() });
 };
 
 
-class Pilot {
-    packs: string[] = [];
-    name: string;
+class Wish {
+    pilotName: string;
+    packNames: string[] = [];
     score: number;
     date: DateValueObject | undefined;
     expected: string;
 }
 
 
-@Injectable()
 export class TestBuilder {
-    private pilots: Pilot[] = [];
-    private removedPacks: string[] = [];
+    private wishes: Wish[] = [];
     private title: string;
+    private packs = new Map<string, PackSummary>();
 
     constructor(title: string) {
         this.title = title;
     }
 
     addWish(pilotName: string, score: number, date: DateValueObject | undefined, packs: string[], expected: string | undefined) {
-        let pilot = new Pilot();
-        pilot.name = pilotName;
+        assert(expected === undefined || packs.includes(expected));
+
+        let pilot = new Wish();
+        pilot.pilotName = pilotName;
         pilot.score = score;
-        pilot.packs = packs;
+        pilot.packNames = packs;
         pilot.date = date;
         pilot.expected = expected;
 
-        this.pilots.push(pilot);
+        this.wishes.push(pilot);
     }
 
-    removePack(packName: string) {
-        this.removedPacks.push(packName);
+    addPack(packName: string) {
+        if (!this.packs.has(packName))
+            this.packs.set(packName, { id: createUUID(), label: packName });
     }
-
 
     buildTest() {
-        let expectedAttributions_: { wishId: UUID, pack: PackSummary }[] = [];
-        let expectedUnassigned_: UUID[] = [];
+        let expectedAttributions: { wishId: UUID, pack: PackSummary }[] = [];
+        let expectedUnassigned: UUID[] = [];
         let wishes_: ReservationWishForAttribution[] = [];
-        let packs = new Map<string, PackSummary>();
 
-        // Pour chaque pilote
-        this.pilots.forEach((pilot) => {
+        // Pour chaque souhait
+        this.wishes.forEach((wish) => {
             const wishId = createUUID();
 
             let packChoices_: PackSummary[] = [];
 
             // Pour chaque pack demandé
-            pilot.packs.forEach((pack) => {
+            wish.packNames.forEach((pack) => {
                 // Crée le pack s'il n'existe pas.
-                if (!packs.has(pack)) {
-                    packs.set(pack, { id: createUUID(), label: pack });
-                }
+                this.addPack(pack);
                 // Ajoute le pack à la liste
-                packChoices_.push(packs.get(pack));
+                packChoices_.push(this.packs.get(pack));
             });
 
             // Affecte le résultat au bon tableau
-            if (pilot.expected === undefined)
-                expectedUnassigned_.push(wishId);
+            if (wish.expected === undefined)
+                expectedUnassigned.push(wishId);
             else
-                expectedAttributions_.push({ wishId: wishId, pack: packs.get(pilot.expected) });
+                expectedAttributions.push({ wishId: wishId, pack: this.packs.get(wish.expected) });
 
             // Ajoute le souhait au tableau de souhaits.
             wishes_.push({
                 id: wishId,
-                createdBy: { id: createUUID(), currentScore: pilot.score, nickname: pilot.name },
+                createdBy: { id: createUUID(), currentScore: wish.score, nickname: wish.pilotName },
                 packChoices: packChoices_,
-                createdAt: pilot.date,
+                createdAt: wish.date,
             })
         });
 
         // Crée la liste des packs 
-        //// Supprime les packs supprimés de la map
-        this.removedPacks.forEach((pack) => {
-            packs.delete(pack);
-        });
-        //// convertit le reste en tableau
-        const availablePacks_ = [];
-        packs.forEach((pack) => {
-            availablePacks_.push(pack);
+        const availablePacks = [];
+        this.packs.forEach((pack) => {
+            availablePacks.push(pack);
         });
 
         return {
             name: this.title,
-            availablePacks: availablePacks_,
+            availablePacks: availablePacks,
             wishes: wishes_,
-            expectedAttributions: expectedAttributions_,
-            expectedUnassigned: expectedUnassigned_,
+            expectedAttributions: expectedAttributions,
+            expectedUnassigned: expectedUnassigned,
         };
     }
 }
