@@ -3,7 +3,8 @@
     v-if="maintenanceMode"
     class="w-full bg-orange-500 text-white px-6 py-3 text-center font-semibold"
   >
-    ⚠️ Mode maintenance activé - Des opérations de maintenance sont en cours
+    ⚠️ Des opérations de maintenance sont en cours, certaines fonctionnalités peuvent être
+    indisponibles.
   </div>
 
   <header
