@@ -48,7 +48,12 @@ export function mapPlanningDataToDto(planningData: PlanningData[]): PlanningDayD
       packId: packId.uuid,
       packLabel,
       pendingWishesCount,
-      reservation,
+      reservation: reservation
+        ? {
+            userId: reservation.userId.uuid,
+            publicComment: reservation.publicComment || null,
+          }
+        : null,
     })),
   }));
 }

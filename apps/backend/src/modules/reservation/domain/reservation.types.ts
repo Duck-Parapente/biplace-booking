@@ -17,11 +17,9 @@ export interface PlanningPackData {
   packId: UuidProps;
   packLabel: string;
   pendingWishesCount: number;
-  reservation: {
-    username: string;
-    comment: string | null;
-  } | null;
+  reservation: ReservationProps | null;
 }
+
 export interface PlanningData {
   date: DateValueObject;
   packs: PlanningPackData[];

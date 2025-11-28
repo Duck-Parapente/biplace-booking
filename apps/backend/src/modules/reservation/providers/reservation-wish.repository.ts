@@ -5,7 +5,10 @@ import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
-import { ReservationWishEntity } from '@modules/reservation/domain/reservation-wish.entity';
+import {
+  PENDING_STATUSES,
+  ReservationWishEntity,
+} from '@modules/reservation/domain/reservation-wish.entity';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ReservationWish, ReservationWishStatus } from '@prisma/client';
 
@@ -145,7 +148,7 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
     const reservationWishes = await prisma.reservationWish.findMany({
       where: {
         startingDate: startingDate.value,
-        status: { in: [ReservationWishStatus.PENDING, ReservationWishStatus.REFUSED] },
+        status: { in: PENDING_STATUSES },
       },
       include: {
         packChoices: true,
@@ -169,5 +172,29 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
         },
       }),
     );
+  }
+
+  async findPendingWishesByDateRange(startDate: DateValueObject, endDate: DateValueObject) {
+    const pendingWishes = await prisma.reservationWish.findMany({
+      where: {
+        startingDate: {
+          gte: startDate.value,
+          lte: endDate.value,
+        },
+        status: { in: PENDING_STATUSES },
+      },
+      include: {
+        packChoices: true,
+      },
+    });
+
+    return pendingWishes.map((w) => ({
+      startingDate: DateValueObject.fromDate(w.startingDate),
+      packChoices: w.packChoices.map((pc) => new UUID({ uuid: pc.id })),
+      endingDate: DateValueObject.fromDate(w.endingDate),
+      status: mapStatus(w.status),
+      publicComment: w.publicComment,
+      createdById: new UUID({ uuid: w.createdById }),
+    }));
   }
 }

@@ -2,6 +2,8 @@ import { EventEmitter } from '@libs/database/helpers/event-emitter';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { Module } from '@nestjs/common';
 
+import { PackModule } from '../pack/pack.module';
+
 import { CreateReservationWishHttpController } from './commands/create-reservation-wish.http.controller';
 import { CreateReservationWishService } from './commands/create-reservation-wish.service';
 import { CreateReservationsService } from './commands/create-reservation.service';
@@ -11,6 +13,7 @@ import { GetReservationWishesHttpController } from './commands/get-reservation-w
 import { GetReservationWishesService } from './commands/get-reservation-wishes.service';
 import { UpdateReservationWishHttpController } from './commands/update-reservation-wish.http.controller';
 import { UpdateReservationWishService } from './commands/update-reservation-wish.service';
+import { PlanningDomainService } from './domain/planning.domain-service';
 import { ReservationWishDomainService } from './domain/reservation-wish.domain-service';
 import { ReservationDomainService } from './domain/reservation.domain-service';
 import { EmailNotificationAdapter } from './providers/email-notification.adapter';
@@ -23,7 +26,7 @@ import {
 } from './reservation.di-tokens';
 
 @Module({
-  imports: [],
+  imports: [PackModule],
   controllers: [
     CreateReservationWishHttpController,
     UpdateReservationWishHttpController,
@@ -39,6 +42,7 @@ import {
     CreateReservationsService,
     ReservationWishDomainService,
     ReservationDomainService,
+    PlanningDomainService,
     { provide: RESERVATION_WISH_REPOSITORY, useClass: ReservationWishRepository },
     { provide: RESERVATION_REPOSITORY, useClass: ReservationRepository },
     {

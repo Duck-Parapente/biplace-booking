@@ -75,8 +75,11 @@
                 </div>
 
                 <!-- Public Comment -->
-                <div v-if="pack.reservation?.comment" class="mt-1.5 text-xs text-gray-700 italic">
-                  "{{ pack.reservation.comment }}"
+                <div
+                  v-if="pack.reservation?.publicComment"
+                  class="mt-1.5 text-xs text-gray-700 italic"
+                >
+                  "{{ pack.reservation.publicComment }}"
                 </div>
               </div>
             </div>

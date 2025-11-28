@@ -3,7 +3,7 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 
 import { ReservationWishEntity } from '../reservation-wish.entity';
-import { ReservationWishWithReservation } from '../reservation-wish.types';
+import { ReservationWishProps, ReservationWishWithReservation } from '../reservation-wish.types';
 
 export interface ReservationWishRepositoryPort {
   create(reservationWishEntity: ReservationWishEntity): Promise<void>;
@@ -17,4 +17,8 @@ export interface ReservationWishRepositoryPort {
   findPendingAndRefusedByStartingDate(
     startingDate: DateValueObject,
   ): Promise<ReservationWishForAttribution[]>;
+  findPendingWishesByDateRange(
+    startDate: DateValueObject,
+    endDate: DateValueObject,
+  ): Promise<ReservationWishProps[]>;
 }

@@ -4,11 +4,11 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Reservation, ReservationWishStatus } from '@prisma/client';
+import { Reservation } from '@prisma/client';
 
 import { ReservationRepositoryPort } from '../domain/ports/reservation.repository.port';
 import { ReservationEntity } from '../domain/reservation.entity';
-import { PlanningData } from '../domain/reservation.types';
+import { ReservationProps } from '../domain/reservation.types';
 
 export const toEntity = (record: Reservation): ReservationEntity => {
   return new ReservationEntity({
@@ -72,19 +72,10 @@ export class ReservationRepository implements ReservationRepositoryPort {
     return count > 0;
   }
 
-  async findPlanningData(
+  async findReservationsByDateRange(
     startDate: DateValueObject,
     endDate: DateValueObject,
-  ): Promise<PlanningData[]> {
-    // Get all packs
-    const packs = await prisma.pack.findMany({
-      select: {
-        id: true,
-        label: true,
-      },
-    });
-
-    // Get all reservations in the date range
+  ): Promise<ReservationProps[]> {
     const reservations = await prisma.reservation.findMany({
       where: {
         AND: [{ startingDate: { lte: endDate.value } }, { endingDate: { gte: startDate.value } }],
@@ -94,69 +85,12 @@ export class ReservationRepository implements ReservationRepositoryPort {
       },
     });
 
-    // Get all pending wishes in the date range
-    const pendingWishes = await prisma.reservationWish.findMany({
-      where: {
-        startingDate: {
-          gte: startDate.value,
-          lte: endDate.value,
-        },
-        status: ReservationWishStatus.PENDING,
-      },
-      include: {
-        packChoices: true,
-      },
-    });
-
-    // Generate all dates in the range
-    const dates: Date[] = [];
-    const currentDate = new Date(startDate.value);
-    const endDateTime = endDate.value.getTime();
-
-    while (currentDate.getTime() <= endDateTime) {
-      dates.push(new Date(currentDate));
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-
-    // Build planning data grouped by date
-    const planningData: PlanningData[] = [];
-
-    for (const date of dates) {
-      const packsForDate = packs.map((pack) => {
-        // Find reservation for this pack on this date
-        const reservation = reservations.find(
-          (r) => r.packId === pack.id && r.startingDate <= date && r.endingDate >= date,
-        );
-
-        // Count pending wishes for this pack on this date
-        const pendingWishesCount = pendingWishes.filter(
-          (w) =>
-            w.startingDate.getTime() === date.getTime() &&
-            w.packChoices.some((pc) => pc.id === pack.id),
-        ).length;
-
-        return {
-          packId: { uuid: pack.id },
-          packLabel: pack.label,
-          pendingWishesCount,
-          reservation: reservation
-            ? {
-                username:
-                  reservation.user.firstName && reservation.user.lastName
-                    ? `${reservation.user.firstName} ${reservation.user.lastName}`
-                    : reservation.user.email,
-                comment: reservation.publicComment,
-              }
-            : null,
-        };
-      });
-
-      planningData.push({
-        date: DateValueObject.fromDate(date),
-        packs: packsForDate,
-      });
-    }
-
-    return planningData;
+    return reservations.map((r) => ({
+      packId: new UUID({ uuid: r.packId }),
+      userId: new UUID({ uuid: r.userId }),
+      startingDate: DateValueObject.fromDate(r.startingDate),
+      endingDate: DateValueObject.fromDate(r.endingDate),
+      publicComment: r.publicComment,
+    }));
   }
 }

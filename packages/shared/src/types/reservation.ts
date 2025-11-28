@@ -87,6 +87,16 @@ export class ReservationWishDto {
   reservations!: ReservationDto[];
 }
 
+export class PlanningReservationDto {
+  @IsNotEmpty()
+  @IsString()
+  userId!: string;
+
+  @IsOptional()
+  @IsString()
+  publicComment?: string | null;
+}
+
 export class PackPlanningDto {
   @IsNotEmpty()
   @IsUUID()
@@ -100,10 +110,7 @@ export class PackPlanningDto {
   pendingWishesCount!: number;
 
   @IsOptional()
-  reservation?: {
-    username: string;
-    comment: string;
-  } | null;
+  reservation?: PlanningReservationDto | null;
 }
 
 export class PlanningDayDto {
