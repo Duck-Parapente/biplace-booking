@@ -45,6 +45,16 @@ export class ReservationDto {
   packId!: string;
 }
 
+export class ReservationWishEventDto {
+  @IsNotEmpty()
+  @IsEnum(ReservationStatusDto)
+  status!: ReservationStatusDto;
+
+  @IsNotEmpty()
+  @IsDate()
+  date!: Date;
+}
+
 export class ReservationWishDto {
   @IsUUID()
   @IsNotEmpty()
@@ -67,6 +77,12 @@ export class ReservationWishDto {
   @ArrayMinSize(1)
   @IsString({ each: true })
   packChoices!: string[];
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @ArrayMinSize(1)
+  @IsString({ each: true })
+  events!: ReservationWishEventDto[];
 
   @IsNotEmpty()
   @IsEnum(ReservationStatusDto)

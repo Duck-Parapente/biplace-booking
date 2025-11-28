@@ -4,6 +4,7 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
+import { ReservationWishStatusUpdatedDomainEvent } from '@modules/reservation/domain/events/reservation-wish-updated.domain-event';
 import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
 import {
   PENDING_STATUSES,
@@ -135,9 +136,34 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
       },
     });
 
+    const allStatusEvents = await prisma.event.findMany({
+      where: {
+        aggregateId: { in: records.map(({ id }) => id) },
+        name: ReservationWishStatusUpdatedDomainEvent.name,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
     return records.map((record) => ({
       reservationWish: toEntity(record),
       reservations: record.reservations.map(toReservationEntity),
+      events: [
+        {
+          status: DomainReservationWishStatus.PENDING,
+          date: DateValueObject.fromDate(record.createdAt),
+        },
+        ...allStatusEvents
+          .filter(({ aggregateId }) => aggregateId === record.id)
+          .map(({ payload, createdAt }) => {
+            const payloadTyped = payload as { status: string };
+            return {
+              status: payloadTyped.status as DomainReservationWishStatus,
+              date: DateValueObject.fromDate(createdAt),
+            };
+          }),
+      ],
     }));
   }
 

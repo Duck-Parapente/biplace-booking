@@ -23,6 +23,7 @@ const mapStatus = (status: ReservationWishStatus): ReservationStatusDto => {
 export function mapReservationWishToDto({
   reservations,
   reservationWish,
+  events,
 }: ReservationWishWithReservation): ReservationWishDto {
   return {
     id: reservationWish.id.uuid,
@@ -36,6 +37,10 @@ export function mapReservationWishToDto({
     reservations: reservations.map(({ id, packId }) => ({
       id: id.uuid,
       packId: packId.uuid,
+    })),
+    events: events.map(({ status, date }) => ({
+      status: mapStatus(status),
+      date: date.value,
     })),
   };
 }

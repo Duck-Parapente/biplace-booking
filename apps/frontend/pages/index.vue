@@ -67,12 +67,43 @@
                         {{ getPackLabel(packId) }}
                       </BaseTag>
                     </div>
-                    <p class="text-xs text-gray-500">
-                      Créée le {{ formatDateTime(wish.createdAt) }}
-                    </p>
                     <p v-if="wish.publicComment" class="italic text-gray-700">
                       "{{ wish.publicComment }}"
                     </p>
+
+                    <!-- Event History Toggle -->
+                    <button
+                      @click="toggleEventHistory(wish.id)"
+                      class="text-xs text-gray-600 hover:text-gray-800 hover:underline mt-2 flex items-center gap-1"
+                    >
+                      <IconChevronRight
+                        class="w-3 h-3 transition-transform"
+                        :class="expandedWishes.has(wish.id) ? 'rotate-90' : ''"
+                      />
+                      {{ expandedWishes.has(wish.id) ? 'Masquer' : 'Voir' }} l'historique
+                    </button>
+
+                    <!-- Event History Details -->
+                    <div
+                      v-if="expandedWishes.has(wish.id)"
+                      class="mt-2 p-2 bg-white rounded border border-gray-200 space-y-1"
+                    >
+                      <div
+                        v-for="(event, index) in wish.events"
+                        :key="index"
+                        class="flex items-center justify-between text-xs"
+                      >
+                        <span
+                          class="px-2 py-0.5 rounded text-xs"
+                          :class="getStatusConfig(event.status).classes"
+                        >
+                          {{ getStatusConfig(event.status).label }}
+                        </span>
+                        <span class="text-gray-500">
+                          {{ formatDateTime(event.date) }}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -158,6 +189,7 @@ const {
 const { packs, getPacks } = usePack();
 
 const showModal = ref(false);
+const expandedWishes = ref<Set<string>>(new Set());
 const selectedStatuses = ref<Set<ReservationStatusDto>>(
   new Set([ReservationStatusDto.PENDING, ReservationStatusDto.CONFIRMED]),
 );
@@ -177,6 +209,11 @@ const filteredReservationWishes = computed(() => {
 const toggleStatus = (status: ReservationStatusDto) => {
   const set = selectedStatuses.value;
   set.has(status) ? set.delete(status) : set.add(status);
+};
+
+const toggleEventHistory = (wishId: string) => {
+  const set = expandedWishes.value;
+  set.has(wishId) ? set.delete(wishId) : set.add(wishId);
 };
 
 const getPackLabel = (packId: string): string => {
