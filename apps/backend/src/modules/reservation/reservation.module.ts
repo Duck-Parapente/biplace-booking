@@ -4,21 +4,21 @@ import { Module } from '@nestjs/common';
 
 import { PackModule } from '../pack/pack.module';
 
-import { CreateReservationWishHttpController } from './commands/create-reservation-wish.http.controller';
-import { CreateReservationWishService } from './commands/create-reservation-wish.service';
-import { CreateReservationsService } from './commands/create-reservation.service';
-import { GetPlanningHttpController } from './commands/get-planning.http.controller';
-import { GetPlanningService } from './commands/get-planning.service';
-import { GetReservationWishesHttpController } from './commands/get-reservation-wishes.http.controller';
-import { GetReservationWishesService } from './commands/get-reservation-wishes.service';
-import { UpdateReservationWishHttpController } from './commands/update-reservation-wish.http.controller';
-import { UpdateReservationWishService } from './commands/update-reservation-wish.service';
+import { CreateReservationsService } from './application/commands/create-reservation/create-reservation.service';
+import { CreateReservationWishService } from './application/commands/create-reservation-wish/create-reservation-wish.service';
+import { UpdateReservationWishService } from './application/commands/update-reservation-wish/update-reservation-wish.service';
+import { GetPlanningService } from './application/queries/get-planning/get-planning.service';
+import { GetReservationWishesService } from './application/queries/get-reservation-wishes/get-reservation-wishes.service';
 import { PlanningDomainService } from './domain/planning.domain-service';
 import { ReservationWishDomainService } from './domain/reservation-wish.domain-service';
 import { ReservationDomainService } from './domain/reservation.domain-service';
-import { EmailNotificationAdapter } from './providers/email-notification.adapter';
-import { ReservationWishRepository } from './providers/reservation-wish.repository';
-import { ReservationRepository } from './providers/reservation.repository';
+import { EmailNotificationAdapter } from './infrastructure/adapters/email-notification.adapter';
+import { CreateReservationWishHttpController } from './infrastructure/http/controllers/create-reservation-wish.http.controller';
+import { GetPlanningHttpController } from './infrastructure/http/controllers/get-planning.http.controller';
+import { GetReservationWishesHttpController } from './infrastructure/http/controllers/get-reservation-wishes.http.controller';
+import { UpdateReservationWishHttpController } from './infrastructure/http/controllers/update-reservation-wish.http.controller';
+import { ReservationWishRepository } from './infrastructure/persistence/reservation-wish.repository';
+import { ReservationRepository } from './infrastructure/persistence/reservation.repository';
 import {
   RESERVATION_REPOSITORY,
   RESERVATION_WISH_NOTIFICATION_PORT,

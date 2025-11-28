@@ -1,11 +1,10 @@
 import { DomainEventMetadata } from '@libs/ddd';
+import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
+import { ReservationDomainService } from '@modules/reservation/domain/reservation.domain-service';
+import { ReservationEntity } from '@modules/reservation/domain/reservation.entity';
+import { CreateReservationProps } from '@modules/reservation/domain/reservation.types';
+import { RESERVATION_REPOSITORY } from '@modules/reservation/reservation.di-tokens';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-
-import { ReservationRepositoryPort } from '../domain/ports/reservation.repository.port';
-import { ReservationDomainService } from '../domain/reservation.domain-service';
-import { ReservationEntity } from '../domain/reservation.entity';
-import { CreateReservationProps } from '../domain/reservation.types';
-import { RESERVATION_REPOSITORY } from '../reservation.di-tokens';
 
 @Injectable()
 export class CreateReservationsService {

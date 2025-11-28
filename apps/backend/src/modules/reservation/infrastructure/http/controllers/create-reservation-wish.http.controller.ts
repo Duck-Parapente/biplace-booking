@@ -3,6 +3,9 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
+import { CreateReservationWishCommand } from '@modules/reservation/application/commands/create-reservation-wish/create-reservation-wish.command';
+import { CreateReservationWishService } from '@modules/reservation/application/commands/create-reservation-wish/create-reservation-wish.service';
+import { UserHasReservationWishOnStartingDateError } from '@modules/reservation/domain/reservation-wish.exceptions';
 import {
   Controller,
   Post,
@@ -13,11 +16,6 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { CreateReservationWishDto } from 'shared';
-
-import { UserHasReservationWishOnStartingDateError } from '../domain/reservation-wish.exceptions';
-
-import { CreateReservationWishCommand } from './create-reservation-wish.command';
-import { CreateReservationWishService } from './create-reservation-wish.service';
 
 @Controller('reservation-wishes')
 @UseGuards(JwtAuthGuard, MaintenanceModeGuard)

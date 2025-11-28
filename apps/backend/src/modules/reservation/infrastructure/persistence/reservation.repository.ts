@@ -6,9 +6,9 @@ import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Reservation } from '@prisma/client';
 
-import { ReservationRepositoryPort } from '../domain/ports/reservation.repository.port';
-import { ReservationEntity } from '../domain/reservation.entity';
-import { ReservationProps } from '../domain/reservation.types';
+import { ReservationRepositoryPort } from '../../domain/ports/reservation.repository.port';
+import { ReservationEntity } from '../../domain/reservation.entity';
+import { ReservationProps } from '../../domain/reservation.types';
 
 export const toEntity = (record: Reservation): ReservationEntity => {
   return new ReservationEntity({

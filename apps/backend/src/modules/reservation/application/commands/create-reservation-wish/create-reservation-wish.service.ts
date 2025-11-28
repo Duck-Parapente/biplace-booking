@@ -1,10 +1,9 @@
+import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
+import { ReservationWishDomainService } from '@modules/reservation/domain/reservation-wish.domain-service';
+import { ReservationWishEntity } from '@modules/reservation/domain/reservation-wish.entity';
+import { RESERVATION_WISH_REPOSITORY } from '@modules/reservation/reservation.di-tokens';
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-
-import { ReservationWishRepositoryPort } from '../domain/ports/reservation-wish.repository.port';
-import { ReservationWishDomainService } from '../domain/reservation-wish.domain-service';
-import { ReservationWishEntity } from '../domain/reservation-wish.entity';
-import { RESERVATION_WISH_REPOSITORY } from '../reservation.di-tokens';
 
 import { CreateReservationWishCommand } from './create-reservation-wish.command';
 

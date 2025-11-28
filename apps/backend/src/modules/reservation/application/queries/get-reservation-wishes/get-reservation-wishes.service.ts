@@ -1,11 +1,10 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
+import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
+import { ReservationWishWithReservation } from '@modules/reservation/domain/reservation-wish.types';
+import { RESERVATION_WISH_REPOSITORY } from '@modules/reservation/reservation.di-tokens';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-
-import { ReservationWishRepositoryPort } from '../domain/ports/reservation-wish.repository.port';
-import { ReservationWishWithReservation } from '../domain/reservation-wish.types';
-import { RESERVATION_WISH_REPOSITORY } from '../reservation.di-tokens';
 
 @Injectable()
 export class GetReservationWishesService {

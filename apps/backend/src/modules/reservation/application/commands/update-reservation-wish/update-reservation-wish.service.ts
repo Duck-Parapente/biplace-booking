@@ -1,18 +1,17 @@
 import { DomainEventMetadata } from '@libs/ddd';
 import { UUID } from '@libs/ddd/uuid.value-object';
-import { Inject, Logger } from '@nestjs/common';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-
-import { ReservationWishNotificationPort } from '../domain/ports/reservation-wish-notification.port';
-import { ReservationWishRepositoryPort } from '../domain/ports/reservation-wish.repository.port';
-import { ReservationWishDomainService } from '../domain/reservation-wish.domain-service';
-import { ReservationWishEntity } from '../domain/reservation-wish.entity';
-import { ReservationWishNotFoundError } from '../domain/reservation-wish.exceptions';
-import { ReservationWishStatus } from '../domain/reservation-wish.types';
+import { ReservationWishNotificationPort } from '@modules/reservation/domain/ports/reservation-wish-notification.port';
+import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
+import { ReservationWishDomainService } from '@modules/reservation/domain/reservation-wish.domain-service';
+import { ReservationWishEntity } from '@modules/reservation/domain/reservation-wish.entity';
+import { ReservationWishNotFoundError } from '@modules/reservation/domain/reservation-wish.exceptions';
+import { ReservationWishStatus } from '@modules/reservation/domain/reservation-wish.types';
 import {
   RESERVATION_WISH_NOTIFICATION_PORT,
   RESERVATION_WISH_REPOSITORY,
-} from '../reservation.di-tokens';
+} from '@modules/reservation/reservation.di-tokens';
+import { Inject, Logger } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { UpdateReservationWishCommand } from './update-reservation-wish.command';
 

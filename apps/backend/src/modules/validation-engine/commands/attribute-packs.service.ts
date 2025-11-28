@@ -1,9 +1,9 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 import { GetPacksService } from '@modules/pack/commands/get-packs.service';
-import { CreateReservationsService } from '@modules/reservation/commands/create-reservation.service';
-import { GetReservationWishesService } from '@modules/reservation/commands/get-reservation-wishes.service';
-import { UpdateReservationWishService } from '@modules/reservation/commands/update-reservation-wish.service';
+import { CreateReservationsService } from '@modules/reservation/application/commands/create-reservation/create-reservation.service';
+import { UpdateReservationWishService } from '@modules/reservation/application/commands/update-reservation-wish/update-reservation-wish.service';
+import { GetReservationWishesService } from '@modules/reservation/application/queries/get-reservation-wishes/get-reservation-wishes.service';
 import { Injectable, Logger } from '@nestjs/common';
 
 import { AttributionDomainService } from '../domain/attribution.domain-service';

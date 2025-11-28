@@ -2,6 +2,14 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
+import { UpdateReservationWishCommand } from '@modules/reservation/application/commands/update-reservation-wish/update-reservation-wish.command';
+import { UpdateReservationWishService } from '@modules/reservation/application/commands/update-reservation-wish/update-reservation-wish.service';
+import {
+  CannotUpdateReservationWishStatusError,
+  ReservationWishNotFoundError,
+  UnauthorizedToCancelReservationWishError,
+} from '@modules/reservation/domain/reservation-wish.exceptions';
+import { ReservationWishStatus } from '@modules/reservation/domain/reservation-wish.types';
 import {
   Controller,
   Logger,
@@ -12,16 +20,6 @@ import {
   NotFoundException,
   Request,
 } from '@nestjs/common';
-
-import {
-  CannotUpdateReservationWishStatusError,
-  ReservationWishNotFoundError,
-  UnauthorizedToCancelReservationWishError,
-} from '../domain/reservation-wish.exceptions';
-import { ReservationWishStatus } from '../domain/reservation-wish.types';
-
-import { UpdateReservationWishCommand } from './update-reservation-wish.command';
-import { UpdateReservationWishService } from './update-reservation-wish.service';
 
 @Controller('reservation-wishes')
 @UseGuards(JwtAuthGuard, MaintenanceModeGuard)

@@ -1,10 +1,10 @@
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
+import { GetReservationWishesService } from '@modules/reservation/application/queries/get-reservation-wishes/get-reservation-wishes.service';
 import { Controller, Logger, Get, UseGuards, Request } from '@nestjs/common';
 import { ReservationWishDto } from 'shared';
 
-import { GetReservationWishesService } from './get-reservation-wishes.service';
-import { mapReservationWishToDto } from './reservation.mapper';
+import { mapReservationWishToDto } from '../mappers/reservation.mapper';
 
 @Controller('reservation-wishes')
 @UseGuards(JwtAuthGuard)

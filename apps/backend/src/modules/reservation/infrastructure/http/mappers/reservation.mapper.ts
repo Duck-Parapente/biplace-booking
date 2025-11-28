@@ -1,10 +1,9 @@
-import { ReservationStatusDto, ReservationWishDto, PlanningDayDto } from 'shared';
-
 import {
   ReservationWishStatus,
   ReservationWishWithReservation,
-} from '../domain/reservation-wish.types';
-import { PlanningData } from '../domain/reservation.types';
+} from '@modules/reservation/domain/reservation-wish.types';
+import { PlanningData } from '@modules/reservation/domain/reservation.types';
+import { ReservationStatusDto, ReservationWishDto, PlanningDayDto } from 'shared';
 
 const mapStatus = (status: ReservationWishStatus): ReservationStatusDto => {
   switch (status) {

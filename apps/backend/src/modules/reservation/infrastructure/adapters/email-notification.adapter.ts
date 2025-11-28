@@ -3,7 +3,7 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { MailClient } from '@libs/mail/mail.client';
 import { Injectable, Logger } from '@nestjs/common';
 
-import { ReservationWishNotificationPort } from '../domain/ports/reservation-wish-notification.port';
+import { ReservationWishNotificationPort } from '../../domain/ports/reservation-wish-notification.port';
 
 const TEMPLATE_CONFIRMATION = 'reservation_wish_confirmed';
 const TEMPLATE_REFUSAL = 'reservation_wish_refused';
