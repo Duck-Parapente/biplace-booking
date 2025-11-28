@@ -1,65 +1,63 @@
-import { randomUUID } from 'crypto';
-
 import { DateValueObject } from '@libs/ddd/date.value-object';
-import { UUID } from '@libs/ddd/uuid.value-object';
+import { TestBuilder } from "./test-builder"
 
-const createUUID = (): UUID => {
-  return new UUID({ uuid: randomUUID() });
-};
 
-export const testCaseFourUsersAllChoices = () => {
-  const packI = { id: createUUID(), label: 'Pack I' };
-  const packJ = { id: createUUID(), label: 'Pack J' };
-  const packK = { id: createUUID(), label: 'Pack K' };
-  const packL = { id: createUUID(), label: 'Pack L' };
-
-  const userA = createUUID();
-  const userB = createUUID();
-  const userC = createUUID();
-  const userD = createUUID();
-
+export const testCaseFourUsersAllChoices1 = () => {
   const createdAt = DateValueObject.fromDate(new Date('2025-11-20T10:00:00Z'));
+  let i: number = 0;
 
-  const wishA = createUUID();
-  const wishB = createUUID();
-  const wishC = createUUID();
-  const wishD = createUUID();
+  let testBuilder: TestBuilder = new TestBuilder('should attribute packs based on priority and conflict resolution 1');
 
-  return {
-    name: 'should attribute packs based on priority and conflict resolution 4',
-    availablePacks: [packI, packJ, packK, packL],
-    wishes: [
-      {
-        id: wishA,
-        createdBy: { id: userA, currentScore: 1, nickname: 'User A' },
-        packChoices: [packI, packJ, packK, packL],
-        createdAt,
-      },
-      {
-        id: wishB,
-        createdBy: { id: userB, currentScore: 2, nickname: 'User B' },
-        packChoices: [packI, packJ, packL],
-        createdAt,
-      },
-      {
-        id: wishC,
-        createdBy: { id: userC, currentScore: 3, nickname: 'User C' },
-        packChoices: [packI, packJ, packK, packL],
-        createdAt,
-      },
-      {
-        id: wishD,
-        createdBy: { id: userD, currentScore: 4, nickname: 'User D' },
-        packChoices: [packI, packJ, packK, packL],
-        createdAt,
-      },
-    ],
-    expectedAttributions: [
-      { wishId: wishA, pack: packI },
-      { wishId: wishB, pack: packJ },
-      { wishId: wishC, pack: packK },
-      { wishId: wishD, pack: packL },
-    ],
-    expectedUnassigned: [],
-  };
+  testBuilder.addWish("A", i++, createdAt, ['I', 'J', 'K', 'L'], 'I');
+  testBuilder.addWish("B", i++, createdAt, ['I', 'J', 'L'], 'J');
+  testBuilder.addWish("C", i++, createdAt, ['I', 'J', 'K', 'L'], 'K');
+  testBuilder.addWish("D", i++, createdAt, ['I', 'J', 'K', 'L'], 'L');
+
+  return testBuilder.buildTest();
 };
+
+
+export const testCaseFourUsersSomeChoices1 = () => {
+  const createdAt = DateValueObject.fromDate(new Date('2025-11-20T10:00:00Z'));
+  let i: number = 0;
+
+  let testBuilder: TestBuilder = new TestBuilder('should attribute packs based on priority and conflict resolution 2');
+
+  testBuilder.addWish("A", i++, createdAt, ['I', 'J', 'K'], 'K');
+  testBuilder.addWish("B", i++, createdAt, ['I', 'J'], 'I');
+  testBuilder.addWish("C", i++, createdAt, ['I', 'J'], 'J');
+  testBuilder.addWish("D", i++, createdAt, ['I', 'J', 'K'], undefined);
+
+  return testBuilder.buildTest();
+};
+
+
+export const testCaseFourUsersSomeChoices2 = () => {
+  const createdAt = DateValueObject.fromDate(new Date('2025-11-20T10:00:00Z'));
+  let i: number = 0;
+
+  let testBuilder: TestBuilder = new TestBuilder('should attribute packs based on priority and conflict resolution 3');
+
+  testBuilder.addWish("A", i++, createdAt, ['I', 'J', 'K'], 'K');
+  testBuilder.addWish("B", i++, createdAt, ['I', 'J'], 'I');
+  testBuilder.addWish("C", i++, createdAt, ['I', 'J'], 'J');
+  testBuilder.addWish("D", i++, createdAt, ['K', 'J', 'I'], undefined);
+
+  return testBuilder.buildTest();
+};
+
+
+export const testCaseFourUsersSomeChoices3 = () => {
+  const createdAt = DateValueObject.fromDate(new Date('2025-11-20T10:00:00Z'));
+  let i: number = 0;
+
+  let testBuilder: TestBuilder = new TestBuilder('should attribute packs based on priority and conflict resolution 4');
+
+  testBuilder.addWish("A", i++, createdAt, ['I', 'K', 'J', 'L', 'N'], 'I');
+  testBuilder.addWish("B", i++, createdAt, ['I', 'K', 'J', 'L', 'N'], 'K');
+  testBuilder.addWish("C", i++, createdAt, ['I', 'K', 'J', 'L', 'N'], 'J');
+  testBuilder.addWish("D", i++, createdAt, ['I', 'K', 'J', 'L'], 'L');
+
+  return testBuilder.buildTest();
+};
+

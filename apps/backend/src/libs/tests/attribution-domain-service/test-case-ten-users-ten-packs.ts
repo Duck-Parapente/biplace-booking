@@ -6,7 +6,7 @@ export const testCaseTenUsersTenPacks = () => {
   const createdAt = DateValueObject.fromDate(new Date('2025-11-20T10:00:00Z'));
   let i: number = 0;
 
-  let testBuilder: TestBuilder = new TestBuilder('should attribute packs based on priority and conflict resolution 5');
+  let testBuilder: TestBuilder = new TestBuilder('should attribute packs based on priority and conflict resolution 10');
 
   testBuilder.addWish("A", i++, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'I');
   testBuilder.addWish("B", i++, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'J');
