@@ -25,6 +25,7 @@ export class MailClient {
   private readonly mailgun: ReturnType<Mailgun['client']>;
   private readonly domain: string;
   private readonly replyTo: string;
+  private readonly env: string;
   private readonly DEFAULT_HEADERS = {
     'h:X-Mailgun-Track': 'no',
     'h:X-Mailgun-Track-Clicks': 'no',
@@ -35,6 +36,7 @@ export class MailClient {
     const apiKey = configService.getOrThrow<string>(envKeys.mailgunApiKey);
     this.domain = configService.getOrThrow<string>(envKeys.mailDomain);
     this.replyTo = configService.getOrThrow<string>(envKeys.mailSupportRecipient);
+    this.env = configService.getOrThrow<string>(envKeys.env);
 
     const mailgunClient = new Mailgun(formData);
     this.mailgun = mailgunClient.client({
@@ -50,7 +52,7 @@ export class MailClient {
 
   private getBaseMessageData(to: string[]) {
     return {
-      from: `Duck Biplace <support@${this.domain}>`,
+      from: `Duck Biplace <support-${this.env}@${this.domain}>`,
       to,
       'h:Reply-To': `Support Biplace <${this.replyTo}>`,
       ...this.DEFAULT_HEADERS,
