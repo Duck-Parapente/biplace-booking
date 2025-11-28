@@ -84,7 +84,7 @@ export class AttributePacksService {
         .join(', ')}`,
     );
 
-    const attributions = await this.attributionDomainService.getAttributions({
+    const attributions = this.attributionDomainService.getAttributions({
       availablePacks,
       reservationWishes: pendingWishes,
     });

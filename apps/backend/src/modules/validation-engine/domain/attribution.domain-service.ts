@@ -8,7 +8,7 @@ type PackId = Pack['id'];
 
 @Injectable()
 export class AttributionDomainService {
-  async getAttributions(props: BaseValidationEngineProps): Promise<Attribution[]> {
+  getAttributions(props: BaseValidationEngineProps): Attribution[] {
     const { reservationWishes } = props;
     const attributions: Attribution[] = [];
     const assignedPacks = new Set<string>();
