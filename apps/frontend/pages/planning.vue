@@ -1,23 +1,38 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
-    <div class="flex-1 p-2 max-w-[800px] mx-auto w-full flex flex-col min-h-0 mb-8">
-      <!-- Pack Filter Tags -->
-      <div class="flex gap-1.5 mb-2 flex-wrap">
+    <!-- Week Selector - Fixed at top -->
+    <div class="bg-white border-b border-gray-300 shadow-sm">
+      <div class="flex items-center justify-between p-3 max-w-[800px] mx-auto">
         <button
-          v-for="pack in packs"
-          :key="pack.packId"
-          @click="togglePack(pack.packId)"
-          class="px-2.5 py-1 text-sm rounded transition"
-          :class="
-            selectedPacks.has(pack.packId)
-              ? 'bg-secondary-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          "
+          @click="previousWeek"
+          class="px-2 py-1 text-secondary-600 hover:bg-gray-100 rounded transition"
+          aria-label="Semaine précédente"
         >
-          {{ pack.packLabel }}
+          <IconChevronLeft class="w-4 h-4" />
+        </button>
+        <div class="flex items-center gap-2">
+          <p class="text-base text-secondary-600">
+            {{ formatWeekRange(currentWeekStart) }}
+          </p>
+          <button
+            @click="goToCurrentWeek"
+            class="text-blue-500 hover:text-blue-600 transition p-1 hover:bg-gray-100 rounded"
+            aria-label="Revenir à la semaine actuelle"
+          >
+            <IconTarget class="w-4 h-4" />
+          </button>
+        </div>
+        <button
+          @click="nextWeek"
+          class="px-2 py-1 text-secondary-600 hover:bg-gray-100 rounded transition"
+          aria-label="Semaine suivante"
+        >
+          <IconChevronRight class="w-4 h-4" />
         </button>
       </div>
+    </div>
 
+    <div class="flex-1 p-2 max-w-[800px] mx-auto w-full flex flex-col min-h-0 mb-16">
       <div class="flex-1 overflow-y-auto pb-2">
         <div class="space-y-1.5">
           <!-- Day Card -->
@@ -26,7 +41,7 @@
             :key="day.date.toString()"
             :class="[
               'border bg-white rounded shadow-sm',
-              isToday(day.date) ? 'border-blue-500 border-2' : 'border-gray-300',
+              isToday(day.date) ? 'border-blue-300 border-2' : 'border-gray-300',
             ]"
           >
             <div class="px-3 py-1.5 border-b border-gray-200">
@@ -90,35 +105,24 @@
       </div>
     </div>
 
-    <!-- Week Selector - Fixed at bottom -->
+    <!-- Pack Filter Tags - Fixed at bottom -->
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 shadow-lg">
-      <div class="flex items-center justify-between p-3 max-w-[800px] mx-auto">
-        <button
-          @click="previousWeek"
-          class="px-2 py-1 text-secondary-600 hover:bg-gray-100 rounded transition"
-          aria-label="Semaine précédente"
-        >
-          <IconChevronLeft class="w-4 h-4" />
-        </button>
-        <div class="flex items-center gap-2">
-          <p class="text-base text-secondary-600">
-            {{ formatWeekRange(currentWeekStart) }}
-          </p>
+      <div class="overflow-x-auto px-3 py-2 max-w-[800px] mx-auto">
+        <div class="flex gap-1.5 min-w-min">
           <button
-            @click="goToCurrentWeek"
-            class="text-blue-500 hover:text-blue-600 transition p-1 hover:bg-gray-100 rounded"
-            aria-label="Revenir à la semaine actuelle"
+            v-for="pack in sortedPacks"
+            :key="pack.packId"
+            @click="togglePack(pack.packId)"
+            class="px-2.5 py-1 text-sm rounded transition whitespace-nowrap flex-shrink-0"
+            :class="
+              selectedPacks.has(pack.packId)
+                ? 'bg-secondary-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            "
           >
-            <IconTarget class="w-4 h-4" />
+            {{ pack.packLabel }}
           </button>
         </div>
-        <button
-          @click="nextWeek"
-          class="px-2 py-1 text-secondary-600 hover:bg-gray-100 rounded transition"
-          aria-label="Semaine suivante"
-        >
-          <IconChevronRight class="w-4 h-4" />
-        </button>
       </div>
     </div>
   </main>
@@ -149,6 +153,11 @@ const users = ref<UserDto[]>([]);
 
 // Selected packs filter
 const selectedPacks = ref<Set<string>>(new Set());
+
+// Sorted packs for display
+const sortedPacks = computed(() => {
+  return [...packs.value].sort((a, b) => a.packLabel.localeCompare(b.packLabel));
+});
 
 // Week management
 const currentWeekStart = ref<Date>(getMonday(new Date()));
