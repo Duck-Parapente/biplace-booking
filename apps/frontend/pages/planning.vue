@@ -45,17 +45,7 @@
                 <div class="flex items-center justify-between gap-2">
                   <span class="text-sm text-secondary-600">{{ pack.packLabel }}</span>
 
-                  <!-- Pending Wishes Count (Orange) -->
-                  <div
-                    v-if="pack.pendingWishesCount > 0"
-                    class="flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-800 rounded text-sm"
-                  >
-                    <IconClock class="w-3 h-3" />
-                    <span>{{ pack.pendingWishesCount }}</span>
-                    <span>{{ pack.pendingWishesCount > 1 ? 'demandes' : 'demande' }}</span>
-                  </div>
-
-                  <!-- Reservation (Red) -->
+                  <!-- Reservation (Red) - Priority 1 -->
                   <div
                     v-if="pack.reservation"
                     class="flex items-center gap-1 px-2 py-1 bg-red-100 text-red-800 rounded text-sm"
@@ -66,9 +56,19 @@
                     }}</span>
                   </div>
 
-                  <!-- Available Slot (Green) -->
+                  <!-- Pending Wishes Count (Orange) - Priority 2 -->
                   <div
-                    v-if="!pack.reservation && pack.pendingWishesCount === 0"
+                    v-else-if="pack.pendingWishesCount > 0"
+                    class="flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-800 rounded text-sm"
+                  >
+                    <IconClock class="w-3 h-3" />
+                    <span>{{ pack.pendingWishesCount }}</span>
+                    <span>{{ pack.pendingWishesCount > 1 ? 'demandes' : 'demande' }}</span>
+                  </div>
+
+                  <!-- Available Slot (Green) - Priority 3 -->
+                  <div
+                    v-else
                     class="flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded text-sm"
                   >
                     <IconCheck class="w-3 h-3" />
