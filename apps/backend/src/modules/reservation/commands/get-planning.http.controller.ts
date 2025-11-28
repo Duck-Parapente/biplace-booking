@@ -1,10 +1,10 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
+import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { Controller, Logger, Get, Query, UseGuards } from '@nestjs/common';
 import { PlanningDayDto } from 'shared';
 
 import { GetPlanningService } from './get-planning.service';
 import { mapPlanningDataToDto } from './reservation.mapper';
-import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 
 @Controller('planning')
 @UseGuards(JwtAuthGuard)
