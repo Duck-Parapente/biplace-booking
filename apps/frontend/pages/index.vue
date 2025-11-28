@@ -59,7 +59,11 @@
                       <span class="text-xs text-gray-500">
                         {{ 'Mes préférences:' }}
                       </span>
-                      <BaseTag v-for="packId in wish.packChoices" :key="packId" variant="secondary">
+                      <BaseTag
+                        v-for="packId in wish.packChoices"
+                        :key="packId"
+                        :variant="hasReservation(wish, packId) ? 'success' : 'secondary'"
+                      >
                         {{ getPackLabel(packId) }}
                       </BaseTag>
                     </div>
@@ -87,7 +91,7 @@
                 <IconX class="w-4 h-4" />
                 Annuler cette demande
               </button>
-              <div
+              <!-- <div
                 v-if="wish.reservations && wish.reservations.length > 0"
                 class="w-full bg-green-100 border-t border-green-500/30 p-3 text-center rounded-b-lg"
               >
@@ -96,7 +100,7 @@
                     ✓ Réservation confirmée pour le pack {{ getPackLabel(reservation.packId) }}
                   </p>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -128,7 +132,7 @@
 </template>
 
 <script setup lang="ts">
-import { ReservationStatusDto } from 'shared';
+import { ReservationStatusDto, ReservationWishDto } from 'shared';
 
 import { formatDateLong, formatDateTime } from '~/composables/useDateHelpers';
 
@@ -178,6 +182,10 @@ const toggleStatus = (status: ReservationStatusDto) => {
 const getPackLabel = (packId: string): string => {
   const pack = packs.value.find(({ id }) => id === packId);
   return pack ? pack.label : packId;
+};
+
+const hasReservation = (wish: ReservationWishDto, packId: string): boolean => {
+  return wish.reservations?.some((reservation: any) => reservation.packId === packId) || false;
 };
 
 const openCreateModal = () => {
