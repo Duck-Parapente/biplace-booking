@@ -1,5 +1,5 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
-import { GetPacksService } from '@modules/pack/commands/get-packs.service';
+import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.service';
 import { PlanningDomainService } from '@modules/reservation/domain/planning.domain-service';
 import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
 import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
