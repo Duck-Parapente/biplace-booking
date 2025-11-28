@@ -73,7 +73,7 @@
         <div class="flex gap-3 pt-2">
           <button
             type="submit"
-            :disabled="submitting"
+            :disabled="submitting || selectedPacks.length === 0 || !localForm.startingDate"
             class="flex-1 bg-secondary-600 text-white hover:bg-secondary-700 transition text-sm px-4 py-2 rounded disabled:opacity-50"
           >
             {{ submitting ? 'Création...' : 'Créer' }}
