@@ -63,13 +63,9 @@ export class PackRepository implements PackRepositoryPort {
       where: {
         reservations: {
           none: {
-            OR: [
-              {
-                AND: [
-                  { startingDate: { lte: endingDate.value } },
-                  { endingDate: { gte: startingDate.value } },
-                ],
-              },
+            AND: [
+              { startingDate: { lte: endingDate.value } },
+              { endingDate: { gte: startingDate.value } },
             ],
           },
         },
