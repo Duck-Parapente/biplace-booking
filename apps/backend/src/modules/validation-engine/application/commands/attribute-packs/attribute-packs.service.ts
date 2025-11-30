@@ -66,7 +66,7 @@ export class AttributePacksService {
     this.logger.log(
       `👤 Found ${pendingWishes.length} pending wishes: ${pendingWishes
         .map(
-          ({ createdBy: { nickname }, packChoices }) =>
+          ({ user: { nickname }, packChoices }) =>
             `${nickname} (choices: [${packChoices.map((c) => c.label).join(', ')}])`,
         )
         .join(', ')}`,
@@ -117,7 +117,7 @@ export class AttributePacksService {
         new CreateReservationCommand({
           reservation: {
             packId: attribution.assignedPackId,
-            userId: wish.createdBy.id,
+            userId: wish.user.id,
             startingDate,
             endingDate,
             reservationWishId: wish.id,

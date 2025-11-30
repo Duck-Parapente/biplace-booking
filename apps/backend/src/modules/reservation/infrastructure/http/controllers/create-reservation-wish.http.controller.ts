@@ -34,7 +34,7 @@ export class CreateReservationWishHttpController {
         startingDate: DateValueObject.fromDateString(startingDate),
         packChoices: packChoices.map((uuid) => new UUID({ uuid })),
         publicComment,
-        createdById,
+        userId: createdById,
       },
       metadata: {
         userId: createdById.uuid,

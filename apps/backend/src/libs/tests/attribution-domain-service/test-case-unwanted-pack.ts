@@ -22,7 +22,7 @@ export const testCaseUnwantedPack = () => {
       {
         id: mainWish,
         packChoices: [packI],
-        createdBy: { id: userA, currentScore: 100, nickname: 'User A' },
+        user: { id: userA, currentScore: 100, nickname: 'User A' },
         createdAt: DateValueObject.fromDate(new Date('2025-11-20T08:00:00Z')),
       },
     ],

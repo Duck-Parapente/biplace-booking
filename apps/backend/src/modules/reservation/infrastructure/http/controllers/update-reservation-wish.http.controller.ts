@@ -75,7 +75,7 @@ export class UpdateReservationWishHttpController {
   ): Promise<void> {
     const reservationWish = await this.reservationWishRepository.findById(reservationWishId);
 
-    if (reservationWish && reservationWish.createdById.equals(userId)) {
+    if (reservationWish && reservationWish.userId.equals(userId)) {
       return;
     }
 

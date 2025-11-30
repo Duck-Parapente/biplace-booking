@@ -43,7 +43,7 @@ const toEntity = (
     id: new UUID({ uuid: record.id }),
     createdAt: DateValueObject.fromDate(record.createdAt),
     props: {
-      createdById: new UUID({ uuid: record.createdById }),
+      userId: new UUID({ uuid: record.userId }),
       status: mapStatus(record.status),
       startingDate: DateValueObject.fromDate(record.startingDate),
       endingDate: DateValueObject.fromDate(record.endingDate),
@@ -76,8 +76,8 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
         packChoices: {
           connect: reservationWish.packChoices.map(({ uuid: id }) => ({ id })),
         },
-        createdBy: {
-          connect: { id: reservationWish.createdById.uuid },
+        user: {
+          connect: { id: reservationWish.userId.uuid },
         },
       },
     });
@@ -90,7 +90,7 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
     const count = await prisma.reservationWish.count({
       where: {
         startingDate: startingDate.value,
-        createdById: userId.uuid,
+        userId: userId.uuid,
         status: { not: ReservationWishStatus.CANCELLED },
       },
     });
@@ -128,7 +128,7 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
   async findAllForUser(userId: UUID): Promise<ReservationWishWithReservation[]> {
     const records = await prisma.reservationWish.findMany({
       where: {
-        createdById: userId.uuid,
+        userId: userId.uuid,
       },
       include: {
         reservations: true,
@@ -177,26 +177,22 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
       },
       include: {
         packChoices: true,
-        createdBy: true,
+        user: true,
       },
     });
 
-    return reservationWishes.map(
-      ({ id: uuid, packChoices, createdAt, publicComment, createdBy }) => ({
-        id: new UUID({ uuid }),
-        packChoices: packChoices.map(({ id, label }) => ({ id: new UUID({ uuid: id }), label })),
-        createdAt: DateValueObject.fromDate(createdAt),
-        publicComment,
-        createdBy: {
-          id: new UUID({ uuid: createdBy.id }),
-          nickname:
-            createdBy.firstName && createdBy.lastName
-              ? `${createdBy.firstName} ${createdBy.lastName}`
-              : createdBy.email,
-          currentScore: createdBy.currentScore,
-        },
-      }),
-    );
+    return reservationWishes.map(({ id: uuid, packChoices, createdAt, publicComment, user }) => ({
+      id: new UUID({ uuid }),
+      packChoices: packChoices.map(({ id, label }) => ({ id: new UUID({ uuid: id }), label })),
+      createdAt: DateValueObject.fromDate(createdAt),
+      publicComment,
+      user: {
+        id: new UUID({ uuid: user.id }),
+        nickname:
+          user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email,
+        currentScore: user.currentScore,
+      },
+    }));
   }
 
   async findPendingWishesByDateRange(startDate: DateValueObject, endDate: DateValueObject) {
@@ -219,7 +215,7 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
       endingDate: DateValueObject.fromDate(w.endingDate),
       status: mapStatus(w.status),
       publicComment: w.publicComment,
-      createdById: new UUID({ uuid: w.createdById }),
+      userId: new UUID({ uuid: w.userId }),
     }));
   }
 }

@@ -67,8 +67,8 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
     return this.props.packChoices;
   }
 
-  get createdById() {
-    return this.props.createdById;
+  get userId() {
+    return this.props.userId;
   }
 
   get status() {

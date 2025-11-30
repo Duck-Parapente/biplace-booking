@@ -33,30 +33,29 @@ export class EmailNotificationAdapter implements ReservationWishNotificationPort
     try {
       // TODO: create a command handler to fetch reservation wish details
       // This handler should be listening to reservation wish events
-      const { reservations, createdBy, startingDate } =
-        await prisma.reservationWish.findUniqueOrThrow({
-          where: { id: reservationWishId.uuid },
-          include: {
-            createdBy: true,
-            reservations: {
-              orderBy: {
-                createdAt: 'desc',
-              },
-              take: 1,
-              select: {
-                user: true,
-                pack: true,
-                startingDate: true,
-              },
+      const { reservations, user, startingDate } = await prisma.reservationWish.findUniqueOrThrow({
+        where: { id: reservationWishId.uuid },
+        include: {
+          user: true,
+          reservations: {
+            orderBy: {
+              createdAt: 'desc',
+            },
+            take: 1,
+            select: {
+              user: true,
+              pack: true,
+              startingDate: true,
             },
           },
-        });
+        },
+      });
 
       await this.mailClient.sendTemplate({
-        to: createdBy.email,
+        to: user.email,
         template,
         variables: {
-          nickname: createdBy.firstName || '',
+          nickname: user.firstName || '',
           startingDateLabel: formatDate(startingDate),
           selectedPackLabel: reservations[0]?.pack.label,
         },

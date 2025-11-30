@@ -7,7 +7,7 @@ import { ReservationEntity } from './reservation.entity';
 interface BaseReservationWishProps {
   packChoices: UUID[];
   publicComment?: string;
-  createdById: UUID;
+  userId: UUID;
 }
 
 export type CreateReservationWishProps = BaseReservationWishProps & {

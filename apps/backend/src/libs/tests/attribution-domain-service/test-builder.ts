@@ -71,7 +71,7 @@ export class TestBuilder {
       // Ajoute le souhait au tableau de souhaits.
       wishes_.push({
         id: wishId,
-        createdBy: { id: UUID.random(), currentScore: wish.score, nickname: wish.pilotName },
+        user: { id: UUID.random(), currentScore: wish.score, nickname: wish.pilotName },
         packChoices: packChoices_,
         createdAt: wish.date,
       });

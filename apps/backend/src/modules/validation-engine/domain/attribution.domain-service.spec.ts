@@ -28,10 +28,10 @@ describe('AttributionDomainService', () => {
     lines.push(`\n=== Debug for failing test: ${testName} ===`);
     lines.push('Wishes submitted (ordered by score desc):');
     wishes
-      .sort((a, b) => b.createdBy.currentScore - a.createdBy.currentScore)
+      .sort((a, b) => b.user.currentScore - a.user.currentScore)
       .forEach((wish) => {
         lines.push(
-          `  - ${wish.createdBy.nickname} (score: ${wish.createdBy.currentScore}): ${wish.packChoices.map((p) => p.label).join(', ')}`,
+          `  - ${wish.user.nickname} (score: ${wish.user.currentScore}): ${wish.packChoices.map((p) => p.label).join(', ')}`,
         );
       });
 
@@ -40,7 +40,7 @@ describe('AttributionDomainService', () => {
       const wish = wishes.find((w) => w.id === attr.reservationWishId);
       const pack = availablePacks.find((p) => p.id === attr.assignedPackId);
       if (wish && pack) {
-        lines.push(`  - ${wish.createdBy.nickname} → ${pack.label}`);
+        lines.push(`  - ${wish.user.nickname} → ${pack.label}`);
       }
     });
 
@@ -48,7 +48,7 @@ describe('AttributionDomainService', () => {
     expectedAttributions.forEach(({ wishId, pack }) => {
       const wish = wishes.find((w) => w.id === wishId);
       if (wish) {
-        lines.push(`  - ${wish.createdBy.nickname} → ${pack.label}`);
+        lines.push(`  - ${wish.user.nickname} → ${pack.label}`);
       }
     });
 
@@ -57,7 +57,7 @@ describe('AttributionDomainService', () => {
     wishes.forEach((wish) => {
       if (!assignedWishIds.has(wish.id)) {
         lines.push(
-          `  - ${wish.createdBy.nickname} (expected: ${expectedUnassigned.includes(wish.id) ? 'YES' : 'NO'})`,
+          `  - ${wish.user.nickname} (expected: ${expectedUnassigned.includes(wish.id) ? 'YES' : 'NO'})`,
         );
       }
     });

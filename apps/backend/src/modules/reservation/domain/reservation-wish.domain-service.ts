@@ -16,7 +16,7 @@ export class ReservationWishDomainService {
   ) {}
 
   async validateCreateReservationWish(props: CreateReservationWishProps): Promise<void> {
-    await this.checkNoDuplicateWishForUser(props.startingDate, props.createdById);
+    await this.checkNoDuplicateWishForUser(props.startingDate, props.userId);
   }
 
   private async checkNoDuplicateWishForUser(

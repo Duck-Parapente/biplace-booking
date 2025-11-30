@@ -11,7 +11,7 @@ export interface ReservationWishForAttribution {
   packChoices: { id: UUID; label: string }[];
   createdAt: DateValueObject;
   publicComment?: string;
-  createdBy: {
+  user: {
     id: UUID;
     nickname: string;
     currentScore: number;

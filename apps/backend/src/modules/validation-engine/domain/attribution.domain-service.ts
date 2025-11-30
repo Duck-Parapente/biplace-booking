@@ -50,8 +50,8 @@ export class AttributionDomainService {
   private sortWishesByPriority(reservationWishes: ReservationWish[]): ReservationWish[] {
     return [...reservationWishes].sort((a, b) => {
       // Comparer d'abord par score (du plus bas au plus haut = plus prioritaire d'abord)
-      if (a.createdBy.currentScore !== b.createdBy.currentScore) {
-        return a.createdBy.currentScore - b.createdBy.currentScore;
+      if (a.user.currentScore !== b.user.currentScore) {
+        return a.user.currentScore - b.user.currentScore;
       }
       // En cas d'égalité, comparer par date de création (du plus ancien au plus récent)
       return a.createdAt.value.getTime() - b.createdAt.value.getTime();
