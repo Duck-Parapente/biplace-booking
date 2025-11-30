@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto';
+
 import { validate } from 'uuid';
 
 import { ArgumentInvalidException } from '../exceptions/exceptions';
@@ -19,8 +21,7 @@ export class UUID extends ValueObject<UuidProps> {
   }
 
   static random(): UUID {
-    const uuid = crypto.randomUUID();
-    return new UUID({ uuid });
+    return new UUID({ uuid: randomUUID() });
   }
 
   public equals(comparedTo?: UUID): boolean {

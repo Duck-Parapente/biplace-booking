@@ -1,14 +1,9 @@
 import assert from 'assert';
-import { randomUUID } from 'crypto';
 
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 import { PackSummary } from '@libs/types/accross-modules';
-
-const createUUID = (): UUID => {
-  return new UUID({ uuid: randomUUID() });
-};
 
 class Wish {
   pilotName: string;
@@ -47,7 +42,7 @@ export class TestBuilder {
   }
 
   addPack(packName: string) {
-    if (!this.packs.has(packName)) this.packs.set(packName, { id: createUUID(), label: packName });
+    if (!this.packs.has(packName)) this.packs.set(packName, { id: UUID.random(), label: packName });
   }
 
   buildTest() {
@@ -57,7 +52,7 @@ export class TestBuilder {
 
     // Pour chaque souhait
     this.wishes.forEach((wish) => {
-      const wishId = createUUID();
+      const wishId = UUID.random();
 
       let packChoices_: PackSummary[] = [];
 
@@ -76,7 +71,7 @@ export class TestBuilder {
       // Ajoute le souhait au tableau de souhaits.
       wishes_.push({
         id: wishId,
-        createdBy: { id: createUUID(), currentScore: wish.score, nickname: wish.pilotName },
+        createdBy: { id: UUID.random(), currentScore: wish.score, nickname: wish.pilotName },
         packChoices: packChoices_,
         createdAt: wish.date,
       });
