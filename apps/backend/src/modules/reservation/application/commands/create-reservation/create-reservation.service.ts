@@ -59,7 +59,7 @@ export class CreateReservationsService implements ICommandHandler<CreateReservat
     reservation: CreateReservationProps,
     metadata: DomainEventMetadata,
   ): Promise<CreateReservationProps> {
-    if (reservation.reservationWishId) return reservation;
+    if (reservation.reservationWishId || !reservation.userId) return reservation;
 
     this.logger.log(
       `No reservation wish associated with the reservation for user ${reservation.userId}. Creating a new wish.`,

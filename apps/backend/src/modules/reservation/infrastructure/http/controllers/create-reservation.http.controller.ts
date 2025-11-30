@@ -40,7 +40,7 @@ export class CreateReservationHttpController {
     const command = new CreateReservationCommand({
       reservation: {
         packId: new UUID({ uuid: packId }),
-        userId: new UUID({ uuid: userId }),
+        userId: userId ? new UUID({ uuid: userId }) : undefined,
         startingDate: DateValueObject.fromDateString(startingDate).startOfDayInUTC(0),
         endingDate: DateValueObject.fromDateString(startingDate).startOfDayInUTC(1),
         publicComment: publicComment,

@@ -45,8 +45,8 @@ export class CreateReservationDto {
   packId!: string;
 
   @IsUUID()
-  @IsNotEmpty()
-  userId!: string;
+  @IsOptional()
+  userId?: string;
 
   @IsOptional()
   @IsString()
@@ -122,9 +122,9 @@ export class ReservationWishDto {
 }
 
 export class PlanningReservationDto {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  userId!: string;
+  userId?: string;
 
   @IsOptional()
   @IsString()

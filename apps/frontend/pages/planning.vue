@@ -263,7 +263,7 @@ const getPackStatusConfig = (pack: PackPlanningDto) => {
     return {
       backgroundClass: 'bg-red-100 text-red-800',
       icon: IconUser,
-      label: getUserDisplayName(user),
+      label: getUserDisplayName(user) ?? 'Admin',
       phone: user?.phoneNumber,
       email: user?.email,
     };

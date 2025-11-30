@@ -77,8 +77,8 @@ model Reservation {
     endingDate        DateTime
     pack              Pack             @relation(fields: [packId], references: [id])
     packId            String
-    user              User             @relation(fields: [userId], references: [id])
-    userId            String
+    user              User?             @relation(fields: [userId], references: [id])
+    userId            String?
     publicComment     String?
     createdAt         DateTime
     reservationWish   ReservationWish? @relation(fields: [reservationWishId], references: [id])
