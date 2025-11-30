@@ -18,10 +18,7 @@ export const toEntity = (record: Reservation): ReservationEntity => {
       endingDate: DateValueObject.fromDate(record.endingDate),
       publicComment: record.publicComment,
       packId: new UUID({ uuid: record.packId }),
-      userId: new UUID({ uuid: record.userId }),
-      reservationWishId: record.reservationWishId
-        ? new UUID({ uuid: record.reservationWishId })
-        : undefined,
+      userId: new UUID({ uuid: record.userId })
     },
   });
 };

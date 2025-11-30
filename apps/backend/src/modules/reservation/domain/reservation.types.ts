@@ -10,7 +10,7 @@ interface BaseReservationProps {
   reservationWishId?: UUID;
 }
 
-export type CreateReservationProps = BaseReservationProps;
+export type CreateReservationProps = BaseReservationProps
 export type ReservationProps = BaseReservationProps;
 
 export interface PlanningPackData {
