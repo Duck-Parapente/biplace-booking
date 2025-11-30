@@ -1,15 +1,19 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
+import { UUID } from '@libs/ddd/uuid.value-object';
+import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
+import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.service';
 import { CreateReservationsService } from '@modules/reservation/application/commands/create-reservation/create-reservation.service';
 import { UpdateReservationWishService } from '@modules/reservation/application/commands/update-reservation-wish/update-reservation-wish.service';
 import { GetReservationWishesService } from '@modules/reservation/application/queries/get-reservation-wishes/get-reservation-wishes.service';
 import { AttributionDomainService } from '@modules/validation-engine/domain/attribution.domain-service';
+import { ValidationEngineRunDomainEvent } from '@modules/validation-engine/domain/events/validation-engine-run.domain-event';
 import {
   Attribution,
   VALIDATION_ENGINE_MODULE,
 } from '@modules/validation-engine/domain/validation-engine.types';
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class AttributePacksService {
@@ -23,6 +27,8 @@ export class AttributePacksService {
     private readonly updateReservationWishService: UpdateReservationWishService,
     private readonly createReservationsService: CreateReservationsService,
     private readonly attributionDomainService: AttributionDomainService,
+    @Inject(EVENT_EMITTER)
+    private readonly eventEmitter: EventEmitterPort,
   ) {}
 
   async attributePacks(): Promise<void> {
@@ -56,18 +62,7 @@ export class AttributePacksService {
   ): Promise<void> {
     const pendingWishes =
       await this.getReservationWishesService.findPendingAndRefusedByStartingDate(startingDate);
-
-    if (pendingWishes.length === 0) {
-      this.logger.log(`No pending wishes for ${startingDate.value.toISOString()}`);
-      return;
-    }
-
     const availablePacks = await this.getPacksService.findAvailablePacks(startingDate, endingDate);
-
-    if (availablePacks.length === 0) {
-      this.logger.log(`No available packs for ${startingDate.value.toISOString()}`);
-      return;
-    }
 
     this.logger.log(
       `👤 Found ${pendingWishes.length} pending wishes: ${pendingWishes
@@ -84,16 +79,28 @@ export class AttributePacksService {
         .join(', ')}`,
     );
 
-    const attributions = await this.attributionDomainService.getAttributions({
+    const engineInput = {
       availablePacks,
       reservationWishes: pendingWishes,
-    });
+    };
+
+    const attributions = await this.attributionDomainService.getAttributions(engineInput);
 
     this.logger.log(`Generated ${attributions.length} attributions`);
 
     await this.createReservations(attributions, pendingWishes, startingDate, endingDate);
 
     await this.refuseUnattributedWishes(attributions, pendingWishes);
+
+    await this.eventEmitter.logDomainEvent(
+      new ValidationEngineRunDomainEvent({
+        aggregateId: UUID.random(),
+        engineInput,
+        attributions,
+        startingDate,
+        endingDate,
+      }),
+    );
   }
 
   private async createReservations(

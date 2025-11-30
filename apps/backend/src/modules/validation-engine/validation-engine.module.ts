@@ -1,3 +1,5 @@
+import { EventEmitter } from '@libs/database/helpers/event-emitter';
+import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { PackModule } from '@modules/pack/pack.module';
 import { ReservationModule } from '@modules/reservation/reservation.module';
 import { Module } from '@nestjs/common';
@@ -19,6 +21,7 @@ import { NOTIFICATION_PORT } from './validation-engine.di-tokens';
       provide: NOTIFICATION_PORT,
       useClass: EmailNotificationAdapter,
     },
+    { provide: EVENT_EMITTER, useClass: EventEmitter },
   ],
 })
 export class ValidationEngineModule {}
