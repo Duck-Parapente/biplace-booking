@@ -18,6 +18,11 @@ export class UUID extends ValueObject<UuidProps> {
     return this.props.uuid;
   }
 
+  static random(): UUID {
+    const uuid = crypto.randomUUID();
+    return new UUID({ uuid });
+  }
+
   public equals(comparedTo?: UUID): boolean {
     if (!comparedTo) return false;
     return this.uuid === comparedTo.uuid;

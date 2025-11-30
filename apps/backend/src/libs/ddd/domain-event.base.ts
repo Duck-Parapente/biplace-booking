@@ -1,5 +1,3 @@
-import { randomUUID } from 'crypto';
-
 import { Guard } from '@libs/guards/primitive.guard';
 
 import { ArgumentNotProvidedException } from '../exceptions';
@@ -42,7 +40,7 @@ export abstract class DomainEvent {
     if (Guard.isEmpty(props)) {
       throw new ArgumentNotProvidedException('DomainEvent props should not be empty');
     }
-    this.id = new UUID({ uuid: randomUUID() });
+    this.id = UUID.random();
     this.aggregateId = props.aggregateId;
     this.metadata = {
       correlationId: props?.metadata?.correlationId,

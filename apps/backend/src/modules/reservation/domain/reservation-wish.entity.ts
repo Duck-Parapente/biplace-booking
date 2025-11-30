@@ -1,5 +1,3 @@
-import { randomUUID } from 'crypto';
-
 import { AggregateRoot, AggregateID, DomainEventMetadata } from '@libs/ddd';
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
@@ -28,7 +26,7 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
   };
 
   static create(rawProps: CreateReservationWishProps, metadata: DomainEventMetadata) {
-    const id = new UUID({ uuid: randomUUID() });
+    const id = UUID.random();
 
     const props: ReservationWishProps = {
       ...rawProps,

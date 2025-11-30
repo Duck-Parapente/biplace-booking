@@ -1,5 +1,3 @@
-import { randomUUID } from 'crypto';
-
 import { AggregateRoot, AggregateID } from '@libs/ddd';
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
@@ -12,7 +10,7 @@ export class UserEntity extends AggregateRoot<UserProps> {
   protected readonly _id: AggregateID;
 
   static create(props: CreateUserProps): UserEntity {
-    const id = new UUID({ uuid: randomUUID() });
+    const id = UUID.random();
     const user = new UserEntity({
       id,
       createdAt: DateValueObject.fromDate(new Date()),

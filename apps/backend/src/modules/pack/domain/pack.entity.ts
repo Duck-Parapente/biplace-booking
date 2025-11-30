@@ -1,5 +1,3 @@
-import { randomUUID } from 'crypto';
-
 import { AggregateRoot, AggregateID, DomainEventMetadata } from '@libs/ddd';
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
@@ -12,7 +10,7 @@ export class PackEntity extends AggregateRoot<PackProps> {
   protected readonly _id: AggregateID;
 
   static create(profile: CreatePackProps, metadata: DomainEventMetadata): PackEntity {
-    const id = new UUID({ uuid: randomUUID() });
+    const id = UUID.random();
     const user = new PackEntity({
       id,
       createdAt: DateValueObject.fromDate(new Date()),
