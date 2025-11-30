@@ -84,7 +84,7 @@ export class AttributePacksService {
       reservationWishes: pendingWishes,
     };
 
-    const attributions = await this.attributionDomainService.getAttributions(engineInput);
+    const attributions = this.attributionDomainService.getAttributions(engineInput);
 
     this.logger.log(`Generated ${attributions.length} attributions`);
 

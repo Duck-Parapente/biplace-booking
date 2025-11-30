@@ -1,27 +1,7 @@
-import { randomUUID } from 'crypto';
-
-import { DateValueObject } from '@libs/ddd/date.value-object';
-import { UUID } from '@libs/ddd/uuid.value-object';
+import * as testCases from '@libs/tests/attribution-domain-service';
 
 import { AttributionDomainService } from './attribution.domain-service';
 import { BaseValidationEngineProps } from './validation-engine.types';
-
-const createUUID = (): UUID => {
-  return new UUID({ uuid: randomUUID() });
-};
-
-const packI = { id: createUUID(), label: 'Pack I' };
-const packJ = { id: createUUID(), label: 'Pack J' };
-const packK = { id: createUUID(), label: 'Pack K' };
-const packL = { id: createUUID(), label: 'Pack L' };
-const packM = { id: createUUID(), label: 'Pack M' };
-
-const userA = createUUID();
-const userB = createUUID();
-const userC = createUUID();
-const userD = createUUID();
-const userE = createUUID();
-const userF = createUUID();
 
 // Mock the uuid module to avoid ES module issues
 jest.mock('uuid', () => ({
@@ -87,123 +67,10 @@ describe('AttributionDomainService', () => {
   };
 
   describe('attributePacks', () => {
-    const testCases = [
-      {
-        name: 'should attribute packs based on priority and conflict resolution',
-        setup: () => {
-          const createdAt = DateValueObject.fromDate(new Date('2025-11-20T10:00:00Z'));
+    const testFunctions = Object.values(testCases);
 
-          const wishD = createUUID();
-          const wishE = createUUID();
-          const wishF = createUUID();
-          const wishB = createUUID();
-          const wishC = createUUID();
-          const wishA = createUUID();
-
-          return {
-            availablePacks: [packI, packJ, packK, packL, packM],
-            wishes: [
-              {
-                id: wishD,
-                createdBy: { id: userD, currentScore: 50, nickname: 'User D' },
-                packChoices: [packK],
-                createdAt,
-              },
-              {
-                id: wishE,
-                packChoices: [packI, packJ, packL],
-                createdAt,
-                createdBy: { id: userE, currentScore: 100, nickname: 'User E' },
-              },
-              {
-                id: wishF,
-                packChoices: [packI, packJ, packM],
-                createdAt,
-                createdBy: { id: userF, currentScore: 200, nickname: 'User F' },
-              },
-              {
-                id: wishB,
-                createdBy: { id: userB, currentScore: 400, nickname: 'User B' },
-                packChoices: [packI],
-                createdAt,
-              },
-              {
-                id: wishC,
-                createdBy: { id: userC, currentScore: 500, nickname: 'User C' },
-                packChoices: [packJ, packK],
-                createdAt,
-              },
-              {
-                id: wishA,
-                packChoices: [packI, packJ, packK],
-                createdAt,
-                createdBy: { id: userA, currentScore: 600, nickname: 'User A' },
-              },
-            ],
-            expectedAttributions: [
-              { wishId: wishD, pack: packK },
-              { wishId: wishE, pack: packL },
-              { wishId: wishF, pack: packM },
-              { wishId: wishB, pack: packI },
-              { wishId: wishC, pack: packJ },
-            ],
-            expectedUnassigned: [wishA],
-          };
-        },
-      },
-      {
-        name: 'should prioritize older wish when userScore is equal',
-        setup: () => {
-          const olderDate = new Date('2025-11-20T08:00:00Z');
-          const newerDate = new Date('2025-11-20T12:00:00Z');
-
-          const wishOlder = createUUID();
-          const wishNewer = createUUID();
-
-          return {
-            availablePacks: [packI],
-            wishes: [
-              {
-                id: wishNewer,
-                packChoices: [packI],
-                createdBy: { id: userA, currentScore: 100, nickname: 'User A' },
-                createdAt: DateValueObject.fromDate(newerDate),
-              },
-              {
-                id: wishOlder,
-                packChoices: [packI],
-                createdBy: { id: userB, currentScore: 100, nickname: 'User B' },
-                createdAt: DateValueObject.fromDate(olderDate),
-              },
-            ],
-            expectedAttributions: [{ wishId: wishOlder, pack: packI }],
-            expectedUnassigned: [wishNewer],
-          };
-        },
-      },
-      {
-        name: 'should not attribute an unwanted pack',
-        setup: () => {
-          const mainWish = createUUID();
-
-          return {
-            availablePacks: [packJ],
-            wishes: [
-              {
-                id: mainWish,
-                packChoices: [packI],
-                createdBy: { id: userA, currentScore: 100, nickname: 'User A' },
-                createdAt: DateValueObject.fromDate(new Date('2025-11-20T08:00:00Z')),
-              },
-            ],
-            expectedAttributions: [],
-            expectedUnassigned: [mainWish],
-          };
-        },
-      },
-    ];
-
-    testCases.forEach(({ name, setup }) => {
+    testFunctions.forEach((setup) => {
+      const { name } = setup();
       it(name, async () => {
         const { availablePacks, wishes, expectedAttributions, expectedUnassigned } = setup();
 
@@ -212,7 +79,7 @@ describe('AttributionDomainService', () => {
           reservationWishes: wishes,
         };
 
-        const result = await service.getAttributions(props);
+        const result = service.getAttributions(props);
 
         try {
           expect(result).toHaveLength(expectedAttributions.length);

@@ -1,76 +1,176 @@
-import { UUID } from '@libs/ddd/uuid.value-object';
 import { Injectable } from '@nestjs/common';
 
 import { Attribution, BaseValidationEngineProps } from './validation-engine.types';
 
+type ReservationWish = BaseValidationEngineProps['reservationWishes'][number];
+type Pack = BaseValidationEngineProps['availablePacks'][number];
+type PackId = Pack['id'];
+
 @Injectable()
 export class AttributionDomainService {
-  async getAttributions(props: BaseValidationEngineProps): Promise<Attribution[]> {
+  getAttributions(props: BaseValidationEngineProps): Attribution[] {
     const { reservationWishes } = props;
     const attributions: Attribution[] = [];
     const assignedPacks = new Set<string>();
 
-    // Étape 1 : Trier par ordre de priorité (userScore décroissant), puis par date de demande (croissant)
-    const sortedWishes = [...reservationWishes].sort((a, b) => {
-      // Comparer d'abord par score (du plus haut au plus bas)
-      if (b.createdBy.currentScore !== a.createdBy.currentScore) {
+    const sortedWishes = this.sortWishesByPriority(reservationWishes);
+
+    for (let i = 0; i < sortedWishes.length; i++) {
+      const wish = sortedWishes[i];
+      const availablePackChoices = this.filterAvailablePackChoices(
+        wish,
+        assignedPacks,
+        props.availablePacks,
+      );
+
+      if (availablePackChoices.length === 0) {
+        continue;
+      }
+
+      const remainingWishes = sortedWishes.slice(i + 1);
+      const packScores = this.calculatePackImpactScores(
+        availablePackChoices,
+        remainingWishes,
+        assignedPacks,
+        props.availablePacks,
+      );
+
+      const selectedPackId = this.selectOptimalPack(availablePackChoices, packScores);
+
+      attributions.push({
+        reservationWishId: wish.id,
+        assignedPackId: selectedPackId,
+      });
+      assignedPacks.add(selectedPackId.uuid);
+    }
+
+    return attributions;
+  }
+
+  private sortWishesByPriority(reservationWishes: ReservationWish[]): ReservationWish[] {
+    return [...reservationWishes].sort((a, b) => {
+      // Comparer d'abord par score (du plus bas au plus haut = plus prioritaire d'abord)
+      if (a.createdBy.currentScore !== b.createdBy.currentScore) {
         return a.createdBy.currentScore - b.createdBy.currentScore;
       }
       // En cas d'égalité, comparer par date de création (du plus ancien au plus récent)
       return a.createdAt.value.getTime() - b.createdAt.value.getTime();
     });
+  }
 
-    // Étape 2 : Boucler sur les souhaits (du plus prioritaire au moins prioritaire)
-    for (const wish of sortedWishes) {
-      // Étape 2.1 : Filtrer les souhaits en enlevant les packs déjà attribués et ceux qui ne sont pas disponibles
-      const availablePackChoices = wish.packChoices.filter(
-        (pack) =>
-          !assignedPacks.has(pack.id.uuid) &&
-          props.availablePacks.some(({ id }) => id.equals(pack.id)),
+  private filterAvailablePackChoices(
+    wish: ReservationWish,
+    assignedPacks: Set<string>,
+    availablePacks: Pack[],
+  ): Pack[] {
+    return wish.packChoices.filter(
+      (pack) =>
+        !assignedPacks.has(pack.id.uuid) && availablePacks.some(({ id }) => id.equals(pack.id)),
+    );
+  }
+
+  private calculatePackImpactScores(
+    availablePackChoices: Pack[],
+    remainingWishes: ReservationWish[],
+    assignedPacks: Set<string>,
+    availablePacks: Pack[],
+  ): Map<string, number> {
+    const packScores = new Map<string, number>();
+
+    for (const pack of availablePackChoices) {
+      const score = this.calculateSelfishnessScore(
+        pack,
+        remainingWishes,
+        assignedPacks,
+        availablePacks,
       );
+      packScores.set(pack.id.uuid, score);
+    }
 
-      // Étape 2.5 : Si plus de pack disponible, on passe au suivant
-      if (availablePackChoices.length === 0) {
+    return packScores;
+  }
+
+  private calculateSelfishnessScore(
+    pack: Pack,
+    remainingWishes: ReservationWish[],
+    assignedPacks: Set<string>,
+    availablePacks: Pack[],
+  ): number {
+    let score = 0;
+
+    for (const otherWish of remainingWishes) {
+      if (!this.wishIncludesPack(otherWish, pack.id)) {
         continue;
       }
 
-      // Étape 2.2 : Pour chaque pack voulu, calculer le niveau de conflits
-      const packConflicts = new Map<string, number>();
+      const remainingOptionsCount = this.countRemainingOptions(
+        otherWish,
+        pack.id,
+        assignedPacks,
+        availablePacks,
+      );
 
-      for (const packId of availablePackChoices) {
-        // Compter le nombre de demandes concurrentes pour ce pack
-        const conflictCount = sortedWishes.filter((otherWish) =>
-          otherWish.packChoices.some((choice) => choice.id.equals(packId.id)),
-        ).length;
+      score += this.getPenaltyForRemainingOptions(remainingOptionsCount);
+    }
 
-        packConflicts.set(packId.id.uuid, conflictCount);
-      }
+    return score;
+  }
 
-      // Étape 2.3 : Attribuer le pack avec le moins de demandes concurrentes
-      // Si plusieurs packs à égalité, on attribue le "plus voulu" (premier dans la liste des choix)
-      let selectedPackId: UUID | null = null;
-      let minConflicts = Infinity;
+  private wishIncludesPack(wish: ReservationWish, packId: PackId): boolean {
+    return wish.packChoices.some((choice) => choice.id.equals(packId));
+  }
 
-      for (const packId of availablePackChoices) {
-        const conflicts = packConflicts.get(packId.id.uuid) || 0;
+  private countRemainingOptions(
+    wish: ReservationWish,
+    excludedPackId: PackId,
+    assignedPacks: Set<string>,
+    availablePacks: Pack[],
+  ): number {
+    return wish.packChoices.filter(
+      (p) =>
+        !p.id.equals(excludedPackId) &&
+        !assignedPacks.has(p.id.uuid) &&
+        availablePacks.some(({ id }) => id.equals(p.id)),
+    ).length;
+  }
 
-        if (conflicts < minConflicts) {
-          minConflicts = conflicts;
-          selectedPackId = packId.id;
-        }
-        // Si égalité de conflits, on garde le premier rencontré (qui est le plus voulu)
-      }
+  private getPenaltyForRemainingOptions(remainingOptionsCount: number): number {
+    if (remainingOptionsCount === 0) {
+      return 1000; // Les laisserait sans option : pénalité maximale
+    } else if (remainingOptionsCount === 1) {
+      return 100; // Ne leur laisserait qu'une seule option : pénalité forte
+    } else if (remainingOptionsCount === 2) {
+      return 10; // Ne leur laisserait que 2 options : pénalité modérée
+    } else {
+      return 1; // Ont encore beaucoup d'options : pénalité faible
+    }
+  }
 
-      // Étape 2.4 : Enregistrer l'attribution
-      if (selectedPackId) {
-        attributions.push({
-          reservationWishId: wish.id,
-          assignedPackId: selectedPackId,
-        });
-        assignedPacks.add(selectedPackId.uuid);
+  private selectOptimalPack(availablePackChoices: Pack[], packScores: Map<string, number>): PackId {
+    const firstChoiceScore = packScores.get(availablePackChoices[0].id.uuid) || 0;
+
+    if (firstChoiceScore < 200) {
+      // Le premier choix n'a pas d'impact significatif sur les autres
+      return availablePackChoices[0].id;
+    }
+
+    // Le premier choix limiterait trop les autres, trouver une alternative
+    return this.findPackWithLowestScore(availablePackChoices, packScores);
+  }
+
+  private findPackWithLowestScore(
+    availablePackChoices: Pack[],
+    packScores: Map<string, number>,
+  ): PackId {
+    const minScore = Math.min(...Array.from(packScores.values()));
+
+    for (const pack of availablePackChoices) {
+      if ((packScores.get(pack.id.uuid) || 0) === minScore) {
+        return pack.id;
       }
     }
 
-    return attributions;
+    // Fallback (should never happen)
+    return availablePackChoices[0].id;
   }
 }
