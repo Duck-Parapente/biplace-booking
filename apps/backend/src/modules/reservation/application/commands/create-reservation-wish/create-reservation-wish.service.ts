@@ -1,3 +1,4 @@
+import { UUID } from '@libs/ddd/uuid.value-object';
 import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
 import { ReservationWishDomainService } from '@modules/reservation/domain/reservation-wish.domain-service';
 import { ReservationWishEntity } from '@modules/reservation/domain/reservation-wish.entity';
@@ -9,7 +10,7 @@ import { CreateReservationWishCommand } from './create-reservation-wish.command'
 
 @CommandHandler(CreateReservationWishCommand)
 export class CreateReservationWishService
-  implements ICommandHandler<CreateReservationWishCommand, void>
+  implements ICommandHandler<CreateReservationWishCommand, UUID>
 {
   private readonly logger = new Logger(CreateReservationWishService.name);
 
@@ -19,11 +20,13 @@ export class CreateReservationWishService
     private readonly domainService: ReservationWishDomainService,
   ) {}
 
-  async execute({ reservationWish, metadata }: CreateReservationWishCommand): Promise<void> {
+  async execute({ reservationWish, metadata }: CreateReservationWishCommand): Promise<UUID> {
     await this.domainService.validateCreateReservationWish(reservationWish);
 
     const entity = ReservationWishEntity.create(reservationWish, metadata);
 
     await this.reservationWishRepository.create(entity);
+
+    return entity.id;
   }
 }

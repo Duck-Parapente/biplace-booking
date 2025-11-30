@@ -9,6 +9,7 @@ import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { GetReservationWishesService } from '../../queries/get-reservation-wishes/get-reservation-wishes.service';
+import { CreateReservationWishCommand } from '../create-reservation-wish/create-reservation-wish.command';
 import { CreateReservationWishService } from '../create-reservation-wish/create-reservation-wish.service';
 import { UpdateReservationWishService } from '../update-reservation-wish/update-reservation-wish.service';
 
@@ -27,9 +28,12 @@ export class CreateReservationsService implements ICommandHandler<CreateReservat
     protected readonly getReservationWishesService: GetReservationWishesService,
   ) {}
 
-  async execute({ reservation, metadata }: CreateReservationCommand): Promise<void> {
-    await this.reservationDomainService.validateCreateReservation(reservation);
-    const updatedReservation = this.createWishIfNeeded(reservation, metadata);
+  async execute({
+    reservation: inputReservation,
+    metadata,
+  }: CreateReservationCommand): Promise<void> {
+    await this.reservationDomainService.validateCreateReservation(inputReservation);
+    const reservation = await this.createWishIfNeeded(inputReservation, metadata);
     const entity = ReservationEntity.create(reservation, metadata);
     await this.reservationRepository.create(entity);
     await this.updateReservationWishService.confirmReservationWish(
@@ -51,24 +55,31 @@ export class CreateReservationsService implements ICommandHandler<CreateReservat
     }
   }
 
-  private createWishIfNeeded(
+  private async createWishIfNeeded(
     reservation: CreateReservationProps,
     metadata: DomainEventMetadata,
-  ): CreateReservationProps {
+  ): Promise<CreateReservationProps> {
     if (reservation.reservationWishId) return reservation;
 
     this.logger.log(
       `No reservation wish associated with the reservation for user ${reservation.userId}. Creating a new wish.`,
     );
-    const wish = this.createReservationWishService.execute(
-      reservation.userId,
-      reservation.startingDate,
+
+    const command = new CreateReservationWishCommand({
+      reservationWish: {
+        startingDate: reservation.startingDate,
+        packChoices: [reservation.packId],
+        publicComment: reservation.publicComment,
+        userId: reservation.userId,
+      },
       metadata,
-    );
+    });
+
+    const wishId = await this.createReservationWishService.execute(command);
 
     return {
       ...reservation,
-      reservationWishId: wish.id,
+      reservationWishId: wishId,
     };
   }
 }
