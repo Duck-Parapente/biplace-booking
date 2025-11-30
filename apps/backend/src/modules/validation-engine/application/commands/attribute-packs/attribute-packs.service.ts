@@ -4,6 +4,7 @@ import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.service';
+import { CreateReservationCommand } from '@modules/reservation/application/commands/create-reservation/create-reservation.command';
 import { CreateReservationsService } from '@modules/reservation/application/commands/create-reservation/create-reservation.service';
 import { UpdateReservationWishService } from '@modules/reservation/application/commands/update-reservation-wish/update-reservation-wish.service';
 import { GetReservationWishesService } from '@modules/reservation/application/queries/get-reservation-wishes/get-reservation-wishes.service';
@@ -116,16 +117,18 @@ export class AttributePacksService {
         continue;
       }
 
-      await this.createReservationsService.create(
-        {
-          packId: attribution.assignedPackId,
-          userId: wish.createdBy.id,
-          startingDate,
-          endingDate,
-          reservationWishId: wish.id,
-          publicComment: wish.publicComment,
-        },
-        VALIDATION_ENGINE_MODULE,
+      await this.createReservationsService.execute(
+        new CreateReservationCommand({
+          reservation: {
+            packId: attribution.assignedPackId,
+            userId: wish.createdBy.id,
+            startingDate,
+            endingDate,
+            reservationWishId: wish.id,
+            publicComment: wish.publicComment,
+          },
+          metadata: VALIDATION_ENGINE_MODULE,
+        }),
       );
 
       await this.updateReservationWishService.confirmReservationWish(

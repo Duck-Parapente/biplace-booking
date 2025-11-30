@@ -14,6 +14,7 @@ import { ReservationWishDomainService } from './domain/reservation-wish.domain-s
 import { ReservationDomainService } from './domain/reservation.domain-service';
 import { EmailNotificationAdapter } from './infrastructure/adapters/email-notification.adapter';
 import { CreateReservationWishHttpController } from './infrastructure/http/controllers/create-reservation-wish.http.controller';
+import { CreateReservationHttpController } from './infrastructure/http/controllers/create-reservation.http.controller';
 import { GetPlanningHttpController } from './infrastructure/http/controllers/get-planning.http.controller';
 import { GetReservationWishesHttpController } from './infrastructure/http/controllers/get-reservation-wishes.http.controller';
 import { UpdateReservationWishHttpController } from './infrastructure/http/controllers/update-reservation-wish.http.controller';
@@ -28,6 +29,7 @@ import {
 @Module({
   imports: [PackModule],
   controllers: [
+    CreateReservationHttpController,
     CreateReservationWishHttpController,
     UpdateReservationWishHttpController,
     GetReservationWishesHttpController,
