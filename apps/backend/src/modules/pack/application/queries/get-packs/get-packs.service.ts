@@ -1,4 +1,5 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
+import { UUID } from '@libs/ddd/uuid.value-object';
 import { PackSummary } from '@libs/types/accross-modules';
 import { PackEntity } from '@modules/pack/domain/pack.entity';
 import { PackRepositoryPort } from '@modules/pack/domain/ports/pack.repository.port';
@@ -23,5 +24,9 @@ export class GetPacksService {
     endingDate: DateValueObject,
   ): Promise<PackSummary[]> {
     return this.packRepository.findAvailablePacks(startingDate, endingDate);
+  }
+
+  async isPackOwnedByUser(packId: UUID, userId: UUID): Promise<boolean> {
+    return this.packRepository.isPackOwnedByUser(packId, userId);
   }
 }

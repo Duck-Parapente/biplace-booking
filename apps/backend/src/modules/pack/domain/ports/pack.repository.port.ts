@@ -13,4 +13,5 @@ export interface PackRepositoryPort {
   ): Promise<PackSummary[]>;
   findById(id: UUID): Promise<PackEntity | null>;
   update(pack: PackEntity): Promise<void>;
+  isPackOwnedByUser(packId: UUID, userId: UUID): Promise<boolean>;
 }

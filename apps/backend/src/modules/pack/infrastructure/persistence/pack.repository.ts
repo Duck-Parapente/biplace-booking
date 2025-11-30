@@ -98,4 +98,13 @@ export class PackRepository implements PackRepositoryPort {
     await pack.publishEvents(this.eventEmitter);
     this.logger.log(`Pack updated: ${pack.id.uuid}`);
   }
+
+  async isPackOwnedByUser(packId: UUID, userId: UUID): Promise<boolean> {
+    const pack = await prisma.pack.findUnique({
+      where: { id: packId.uuid },
+      select: { ownerId: true },
+    });
+
+    return pack?.ownerId === userId.uuid;
+  }
 }

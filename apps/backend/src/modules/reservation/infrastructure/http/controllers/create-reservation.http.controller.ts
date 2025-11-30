@@ -5,6 +5,7 @@ import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
 import { Roles } from '@libs/guards/roles.decorator';
 import { RolesGuard } from '@libs/guards/roles.guard';
+import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.service';
 import { CreateReservationCommand } from '@modules/reservation/application/commands/create-reservation/create-reservation.command';
 import { CreateReservationsService } from '@modules/reservation/application/commands/create-reservation/create-reservation.service';
 import { CannotCreateReservationError } from '@modules/reservation/domain/reservation.exceptions';
@@ -16,6 +17,7 @@ import {
   UseGuards,
   Request,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { CreateReservationDto, UserRoles } from 'shared';
 
@@ -25,11 +27,14 @@ import { CreateReservationDto, UserRoles } from 'shared';
 export class CreateReservationHttpController {
   private readonly logger = new Logger(CreateReservationHttpController.name);
 
-  constructor(private readonly createReservationService: CreateReservationsService) {}
+  constructor(
+    private readonly createReservationService: CreateReservationsService,
+    private readonly getPacksService: GetPacksService,
+  ) {}
 
   @Post()
   async createReservationWish(
-    @Request() { user: { id: createdById } }: { user: AuthenticatedUser },
+    @Request() { user: { id: createdById, roles } }: { user: AuthenticatedUser },
     @Body() { startingDate, packId, userId, publicComment }: CreateReservationDto,
   ) {
     const command = new CreateReservationCommand({
@@ -44,6 +49,11 @@ export class CreateReservationHttpController {
     });
 
     try {
+      await this.checkUserIsAllowedToCreateReservation(
+        command.reservation.packId,
+        command.reservation.userId,
+        roles,
+      );
       await this.createReservationService.execute(command);
 
       return { message: 'Reservation created' };
@@ -55,5 +65,21 @@ export class CreateReservationHttpController {
 
       throw error;
     }
+  }
+
+  private async checkUserIsAllowedToCreateReservation(
+    packId: UUID,
+    userId: UUID,
+    roles: UserRoles[],
+  ): Promise<void> {
+    if (roles.includes(UserRoles.ADMIN)) {
+      return;
+    }
+
+    if (await this.getPacksService.isPackOwnedByUser(packId, userId)) {
+      return;
+    }
+
+    throw new ForbiddenException('User is not allowed to create reservation for this pack');
   }
 }
