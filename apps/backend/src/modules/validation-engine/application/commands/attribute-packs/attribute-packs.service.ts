@@ -6,7 +6,6 @@ import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.service';
 import { CreateReservationCommand } from '@modules/reservation/application/commands/create-reservation/create-reservation.command';
 import { CreateReservationsService } from '@modules/reservation/application/commands/create-reservation/create-reservation.service';
-import { UpdateReservationWishService } from '@modules/reservation/application/commands/update-reservation-wish/update-reservation-wish.service';
 import { GetReservationWishesService } from '@modules/reservation/application/queries/get-reservation-wishes/get-reservation-wishes.service';
 import { AttributionDomainService } from '@modules/validation-engine/domain/attribution.domain-service';
 import { ValidationEngineRunDomainEvent } from '@modules/validation-engine/domain/events/validation-engine-run.domain-event';
@@ -25,7 +24,6 @@ export class AttributePacksService {
   constructor(
     private readonly getPacksService: GetPacksService,
     private readonly getReservationWishesService: GetReservationWishesService,
-    private readonly updateReservationWishService: UpdateReservationWishService,
     private readonly createReservationsService: CreateReservationsService,
     private readonly attributionDomainService: AttributionDomainService,
     @Inject(EVENT_EMITTER)
@@ -91,8 +89,6 @@ export class AttributePacksService {
 
     await this.createReservations(attributions, pendingWishes, startingDate, endingDate);
 
-    await this.refuseUnattributedWishes(attributions, pendingWishes);
-
     await this.eventEmitter.logDomainEvent(
       new ValidationEngineRunDomainEvent({
         aggregateId: UUID.random(),
@@ -131,31 +127,9 @@ export class AttributePacksService {
         }),
       );
 
-      await this.updateReservationWishService.confirmReservationWish(
-        wish.id,
-        VALIDATION_ENGINE_MODULE,
-      );
-
       this.logger.log(
         `✅ Created reservation for wish ${wish.id.uuid} with pack ${attribution.assignedPackId.uuid}`,
       );
-    }
-  }
-
-  private async refuseUnattributedWishes(
-    attributions: Attribution[],
-    pendingWishes: ReservationWishForAttribution[],
-  ): Promise<void> {
-    const confirmedWishIds = new Set(attributions.map((a) => a.reservationWishId.uuid));
-
-    for (const wish of pendingWishes) {
-      if (!confirmedWishIds.has(wish.id.uuid)) {
-        await this.updateReservationWishService.refuseReservationWish(
-          wish.id,
-          VALIDATION_ENGINE_MODULE,
-        );
-        this.logger.log(`Refused reservation wish ${wish.id.uuid} (no pack available)`);
-      }
     }
   }
 }
