@@ -20,6 +20,10 @@ export class DateValueObject extends ValueObject<DateProps> {
     return new DateValueObject({ value: startOfDay });
   }
 
+  isInTheFuture(): boolean {
+    return this.value > new Date();
+  }
+
   static now(): DateValueObject {
     return DateValueObject.fromDate(new Date());
   }

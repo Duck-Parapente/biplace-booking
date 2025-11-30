@@ -76,15 +76,20 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
   }
 
   isCancelable(): boolean {
-    return ReservationWishEntity.ALLOWED_STATUS_TRANSITIONS[ReservationWishStatus.REFUSED].includes(
-      this.props.status,
+    return (
+      ReservationWishEntity.ALLOWED_STATUS_TRANSITIONS[ReservationWishStatus.REFUSED].includes(
+        this.props.status,
+      ) && this.startingDate.isInTheFuture()
     );
   }
 
   update(status: ReservationWishStatus, metadata: DomainEventMetadata): void {
     const allowedTransitions = ReservationWishEntity.ALLOWED_STATUS_TRANSITIONS[status];
 
-    if (!allowedTransitions.includes(this.props.status)) {
+    if (
+      !allowedTransitions.includes(this.props.status) ||
+      (status === ReservationWishStatus.REFUSED && !this.isCancelable())
+    ) {
       throw new CannotUpdateReservationWishStatusError(this.id, this.props.status, status);
     }
 
