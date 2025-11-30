@@ -15,7 +15,7 @@ export class ReservationDomainService {
     private readonly reservationRepository: ReservationRepositoryPort,
   ) {}
 
-  async validateCreateReservationWish(props: CreateReservationProps): Promise<void> {
+  async validateCreateReservation(props: CreateReservationProps): Promise<void> {
     await this.checkNoExistingReservation(props.packId, props.startingDate, props.endingDate);
   }
 

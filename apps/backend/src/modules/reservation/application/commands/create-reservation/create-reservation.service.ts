@@ -24,7 +24,7 @@ export class CreateReservationsService {
   ) {}
 
   async execute({ reservation, metadata }: CreateReservationCommand): Promise<void> {
-    await this.reservationDomainService.validateCreateReservationWish(reservation);
+    await this.reservationDomainService.validateCreateReservation(reservation);
     const entity = ReservationEntity.create(reservation, metadata);
     await this.reservationRepository.create(entity);
     await this.updateReservationWishService.confirmReservationWish(
