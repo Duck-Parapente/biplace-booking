@@ -31,11 +31,10 @@ export class UpdateReservationWishService
 
   async execute({
     reservationWishId,
-    userId,
     status,
     metadata,
   }: UpdateReservationWishCommand): Promise<void> {
-    await this.updateReservationWishStatus(reservationWishId, status, metadata, userId);
+    await this.updateReservationWishStatus(reservationWishId, status, metadata);
   }
 
   async confirmReservationWish(
@@ -64,7 +63,6 @@ export class UpdateReservationWishService
     reservationWishId: UUID,
     status: ReservationWishStatus,
     metadata: DomainEventMetadata,
-    userId?: UUID,
   ): Promise<void> {
     const entity = await this.reservationWishRepository.findById(reservationWishId);
 
@@ -74,14 +72,8 @@ export class UpdateReservationWishService
 
     const previousStatus = entity.status;
 
-    if (userId) {
-      await this.domainService.validateUserCanUpdateReservationWish(entity, userId);
-    }
-
     entity.update(status, metadata);
-
     await this.reservationWishRepository.updateStatus(entity);
-
     this.logger.log(`ReservationWish ${reservationWishId.uuid} updated to ${status}`);
 
     if (entity.shouldSendNewStatusNotification(previousStatus, status)) {

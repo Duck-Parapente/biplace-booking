@@ -5,11 +5,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { RESERVATION_WISH_REPOSITORY } from '../reservation.di-tokens';
 
 import { ReservationWishRepositoryPort } from './ports/reservation-wish.repository.port';
-import { ReservationWishEntity } from './reservation-wish.entity';
-import {
-  UnauthorizedToCancelReservationWishError,
-  UserHasReservationWishOnStartingDateError,
-} from './reservation-wish.exceptions';
+import { UserHasReservationWishOnStartingDateError } from './reservation-wish.exceptions';
 import { CreateReservationWishProps } from './reservation-wish.types';
 
 @Injectable()
@@ -21,15 +17,6 @@ export class ReservationWishDomainService {
 
   async validateCreateReservationWish(props: CreateReservationWishProps): Promise<void> {
     await this.checkNoDuplicateWishForUser(props.startingDate, props.createdById);
-  }
-
-  async validateUserCanUpdateReservationWish(
-    entity: ReservationWishEntity,
-    userId: UUID,
-  ): Promise<void> {
-    if (entity.createdById.uuid !== userId.uuid) {
-      throw new UnauthorizedToCancelReservationWishError(userId, entity.id);
-    }
   }
 
   private async checkNoDuplicateWishForUser(
