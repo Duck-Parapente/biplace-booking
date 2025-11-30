@@ -51,7 +51,7 @@ export class CreateReservationHttpController {
     try {
       await this.checkUserIsAllowedToCreateReservation(
         command.reservation.packId,
-        command.reservation.userId,
+        createdById,
         roles,
       );
       await this.createReservationService.execute(command);
