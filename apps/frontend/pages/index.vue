@@ -89,7 +89,9 @@
                       class="mt-2 p-2 bg-white rounded border border-gray-200 space-y-1"
                     >
                       <div
-                        v-for="(event, index) in wish.events"
+                        v-for="(event, index) in wish.events.sort(
+                          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+                        )"
                         :key="index"
                         class="flex items-center justify-between text-xs"
                       >
