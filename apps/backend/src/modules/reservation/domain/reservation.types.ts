@@ -11,7 +11,9 @@ interface BaseReservationProps {
 }
 
 export type CreateReservationProps = BaseReservationProps;
-export type ReservationProps = BaseReservationProps;
+export type ReservationProps = BaseReservationProps & {
+  status: ReservationStatus;
+};
 
 export interface PlanningPackData {
   packId: UuidProps;
@@ -23,4 +25,9 @@ export interface PlanningPackData {
 export interface PlanningData {
   date: DateValueObject;
   packs: PlanningPackData[];
+}
+
+export enum ReservationStatus {
+  CONFIRMED = 'CONFIRMED',
+  CANCELLED = 'CANCELLED',
 }

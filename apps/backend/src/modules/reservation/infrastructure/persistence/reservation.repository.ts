@@ -6,8 +6,20 @@ import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
 import { ReservationEntity } from '@modules/reservation/domain/reservation.entity';
 import { ReservationProps } from '@modules/reservation/domain/reservation.types';
+import { ReservationStatus as DomainReservationStatus } from '@modules/reservation/domain/reservation.types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Reservation } from '@prisma/client';
+import { Reservation, ReservationStatus } from '@prisma/client';
+
+const mapStatus = (status: ReservationStatus): DomainReservationStatus => {
+  switch (status) {
+    case ReservationStatus.CONFIRMED:
+      return DomainReservationStatus.CONFIRMED;
+    case ReservationStatus.CANCELLED:
+      return DomainReservationStatus.CANCELLED;
+    default:
+      throw new Error(`Unknown ReservationStatus: ${status}`);
+  }
+};
 
 export const toEntity = (record: Reservation): ReservationEntity => {
   return new ReservationEntity({
@@ -15,6 +27,7 @@ export const toEntity = (record: Reservation): ReservationEntity => {
     createdAt: DateValueObject.fromDate(record.createdAt),
     props: {
       startingDate: DateValueObject.fromDate(record.startingDate),
+      status: mapStatus(record.status),
       endingDate: DateValueObject.fromDate(record.endingDate),
       publicComment: record.publicComment ?? undefined,
       packId: new UUID({ uuid: record.packId }),
@@ -36,6 +49,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
     await prisma.reservation.create({
       data: {
         id: reservation.id.uuid,
+        status: reservation.status,
         createdAt: reservation.createdAt.value,
         startingDate: reservation.startingDate.value,
         endingDate: reservation.endingDate.value,
@@ -83,6 +97,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
 
     return reservations.map((r) => ({
       packId: new UUID({ uuid: r.packId }),
+      status: mapStatus(r.status),
       userId: r.userId ? new UUID({ uuid: r.userId }) : undefined,
       startingDate: DateValueObject.fromDate(r.startingDate),
       endingDate: DateValueObject.fromDate(r.endingDate),

@@ -3,24 +3,27 @@ import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
 import { ReservationCreatedDomainEvent } from './events/reservation-created.domain-event';
-import { CreateReservationProps, ReservationProps } from './reservation.types';
+import { CreateReservationProps, ReservationProps, ReservationStatus } from './reservation.types';
 
 export class ReservationEntity extends AggregateRoot<ReservationProps> {
   protected readonly _id!: AggregateID;
 
   static create(props: CreateReservationProps, metadata: DomainEventMetadata) {
     const id = UUID.random();
-
+    const fullPros = {
+      ...props,
+      status: ReservationStatus.CONFIRMED,
+    };
     const entity = new ReservationEntity({
       id,
       createdAt: DateValueObject.fromDate(new Date()),
-      props,
+      props: fullPros,
     });
 
     entity.addEvent(
       new ReservationCreatedDomainEvent({
         aggregateId: id,
-        reservation: props,
+        reservation: fullPros,
         metadata,
       }),
     );
@@ -50,6 +53,10 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
 
   get reservationWishId() {
     return this.props.reservationWishId;
+  }
+
+  get status() {
+    return this.props.status;
   }
 
   validate(): void {

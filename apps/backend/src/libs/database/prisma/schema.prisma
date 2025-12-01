@@ -33,7 +33,7 @@ model User {
     phoneNumber       String?
     address           String?
     currentScore      Int
-    createdAt         DateTime @db.Timestamptz(3)
+    createdAt         DateTime          @db.Timestamptz(3)
     ownedPacks        Pack[]
     reservationWishes ReservationWish[]
     reservations      Reservation[]
@@ -46,7 +46,7 @@ model Pack {
     label             String
     flightsHours      Int
     flightsCount      Int
-    createdAt         DateTime @db.Timestamptz(3)
+    createdAt         DateTime          @db.Timestamptz(3)
     reservationWishes ReservationWish[]
     reservations      Reservation[]
 }
@@ -55,6 +55,11 @@ enum ReservationWishStatus {
     PENDING
     CONFIRMED
     REFUSED
+    CANCELLED
+}
+
+enum ReservationStatus {
+    CONFIRMED
     CANCELLED
 }
 
@@ -72,15 +77,16 @@ model ReservationWish {
 }
 
 model Reservation {
-    id                String           @id
-    startingDate      DateTime         @db.Timestamptz(3)
-    endingDate        DateTime         @db.Timestamptz(3)
-    pack              Pack             @relation(fields: [packId], references: [id])
+    id                String            @id
+    status            ReservationStatus
+    startingDate      DateTime          @db.Timestamptz(3)
+    endingDate        DateTime          @db.Timestamptz(3)
+    pack              Pack              @relation(fields: [packId], references: [id])
     packId            String
-    user              User?            @relation(fields: [userId], references: [id])
+    user              User?             @relation(fields: [userId], references: [id])
     userId            String?
     publicComment     String?
-    createdAt         DateTime         @db.Timestamptz(3)
-    reservationWish   ReservationWish? @relation(fields: [reservationWishId], references: [id])
+    createdAt         DateTime          @db.Timestamptz(3)
+    reservationWish   ReservationWish?  @relation(fields: [reservationWishId], references: [id])
     reservationWishId String?
 }
