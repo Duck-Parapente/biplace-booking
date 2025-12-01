@@ -13,15 +13,15 @@ model Event {
     name        String
     payload     Json
     metadata    Json?
-    createdAt   DateTime @default(now())
+    createdAt   DateTime @default(now()) @db.Timestamptz(3)
 }
 
 model FeatureFlag {
     id        String   @id
     key       String   @unique
     isActive  Boolean
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now()) @db.Timestamptz(3)
+    updatedAt DateTime @updatedAt @db.Timestamptz(3)
 }
 
 model User {
@@ -33,7 +33,7 @@ model User {
     phoneNumber       String?
     address           String?
     currentScore      Int
-    createdAt         DateTime
+    createdAt         DateTime @db.Timestamptz(3)
     ownedPacks        Pack[]
     reservationWishes ReservationWish[]
     reservations      Reservation[]
@@ -46,7 +46,7 @@ model Pack {
     label             String
     flightsHours      Int
     flightsCount      Int
-    createdAt         DateTime
+    createdAt         DateTime @db.Timestamptz(3)
     reservationWishes ReservationWish[]
     reservations      Reservation[]
 }
@@ -60,27 +60,27 @@ enum ReservationWishStatus {
 
 model ReservationWish {
     id            String                @id
-    startingDate  DateTime
-    endingDate    DateTime
+    startingDate  DateTime              @db.Timestamptz(3)
+    endingDate    DateTime              @db.Timestamptz(3)
     packChoices   Pack[]
     publicComment String?
     user          User                  @relation(fields: [userId], references: [id])
     userId        String
-    createdAt     DateTime
+    createdAt     DateTime              @db.Timestamptz(3)
     status        ReservationWishStatus
     reservations  Reservation[]
 }
 
 model Reservation {
     id                String           @id
-    startingDate      DateTime
-    endingDate        DateTime
+    startingDate      DateTime         @db.Timestamptz(3)
+    endingDate        DateTime         @db.Timestamptz(3)
     pack              Pack             @relation(fields: [packId], references: [id])
     packId            String
     user              User?            @relation(fields: [userId], references: [id])
     userId            String?
     publicComment     String?
-    createdAt         DateTime
+    createdAt         DateTime         @db.Timestamptz(3)
     reservationWish   ReservationWish? @relation(fields: [reservationWishId], references: [id])
     reservationWishId String?
 }
