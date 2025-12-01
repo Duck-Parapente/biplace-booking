@@ -120,7 +120,7 @@ export abstract class Entity<EntityProps> {
     if (typeof props !== 'object') {
       throw new ArgumentInvalidException('Entity props should be an object');
     }
-    if (Object.keys(props).length > MAX_PROPS) {
+    if (Object.keys(props ?? {}).length > MAX_PROPS) {
       throw new ArgumentOutOfRangeException(
         `Entity props should not have more than ${MAX_PROPS} properties`,
       );

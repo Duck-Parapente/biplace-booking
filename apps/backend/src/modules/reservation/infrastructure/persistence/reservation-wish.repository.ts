@@ -50,7 +50,7 @@ const toEntity = (
       packChoices: record.packChoices.map(
         (packChoice: { id: string }) => new UUID({ uuid: packChoice.id }),
       ),
-      publicComment: record.publicComment,
+      publicComment: record.publicComment ?? undefined,
     },
   });
 };
@@ -185,7 +185,7 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
       id: new UUID({ uuid }),
       packChoices: packChoices.map(({ id, label }) => ({ id: new UUID({ uuid: id }), label })),
       createdAt: DateValueObject.fromDate(createdAt),
-      publicComment,
+      publicComment: publicComment ?? undefined,
       user: {
         id: new UUID({ uuid: user.id }),
         nickname:
@@ -214,7 +214,7 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
       packChoices: w.packChoices.map((pc) => new UUID({ uuid: pc.id })),
       endingDate: DateValueObject.fromDate(w.endingDate),
       status: mapStatus(w.status),
-      publicComment: w.publicComment,
+      publicComment: w.publicComment ?? undefined,
       userId: new UUID({ uuid: w.userId }),
     }));
   }

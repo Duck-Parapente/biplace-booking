@@ -41,8 +41,8 @@ model User {
 
 model Pack {
     id                String            @id
-    ownerId           String?
-    owner             User?             @relation(fields: [ownerId], references: [id])
+    ownerId           String
+    owner             User              @relation(fields: [ownerId], references: [id])
     label             String
     flightsHours      Int
     flightsCount      Int
@@ -77,7 +77,7 @@ model Reservation {
     endingDate        DateTime
     pack              Pack             @relation(fields: [packId], references: [id])
     packId            String
-    user              User?             @relation(fields: [userId], references: [id])
+    user              User?            @relation(fields: [userId], references: [id])
     userId            String?
     publicComment     String?
     createdAt         DateTime

@@ -65,6 +65,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    return { id: new UUID({ uuid: user.id }), roles: payload[DUCK_ROLES_CLAIM] };
+    return { id: new UUID({ uuid: user.id }), roles: payload[DUCK_ROLES_CLAIM] ?? [] };
   }
 }

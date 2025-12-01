@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto';
 
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
+import { PackSummary } from '@libs/types/accross-modules';
 
 const createUUID = (): UUID => {
   return new UUID({ uuid: randomUUID() });
@@ -26,7 +27,7 @@ export const testCaseUnwantedPack = () => {
         createdAt: DateValueObject.fromDate(new Date('2025-11-20T08:00:00Z')),
       },
     ],
-    expectedAttributions: [],
+    expectedAttributions: [] as { wishId: UUID; pack: PackSummary }[],
     expectedUnassigned: [mainWish],
   };
 };

@@ -10,14 +10,19 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { User } from '@prisma/client';
 
 const toEntity = (user: User): UserEntity => {
-  const { id, email, externalAuthId, ...otherProps } = user;
+  const { id, email, externalAuthId, firstName, lastName, phoneNumber, address, currentScore } =
+    user;
   return new UserEntity({
     id: new UUID({ uuid: id }),
     createdAt: DateValueObject.fromDate(user.createdAt),
     props: {
       email: new Email({ email }),
       externalAuthId,
-      ...otherProps,
+      firstName: firstName ?? undefined,
+      lastName: lastName ?? undefined,
+      phoneNumber: phoneNumber ?? undefined,
+      address: address ?? undefined,
+      currentScore,
     },
   });
 };

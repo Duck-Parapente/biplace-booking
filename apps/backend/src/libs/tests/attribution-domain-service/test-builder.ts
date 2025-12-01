@@ -9,8 +9,8 @@ class Wish {
   pilotName: string;
   packNames: string[] = [];
   score: number;
-  date: DateValueObject | undefined;
-  expected: string;
+  date: DateValueObject;
+  expected: string | undefined;
 }
 
 export class TestBuilder {
@@ -25,13 +25,13 @@ export class TestBuilder {
   addWish(
     pilotName: string,
     score: number,
-    date: DateValueObject | undefined,
+    date: DateValueObject,
     packs: string[],
     expected: string | undefined,
-  ) {
+  ): void {
     assert(expected === undefined || packs.includes(expected));
 
-    let pilot = new Wish();
+    const pilot = new Wish();
     pilot.pilotName = pilotName;
     pilot.score = score;
     pilot.packNames = packs;
@@ -41,32 +41,43 @@ export class TestBuilder {
     this.wishes.push(pilot);
   }
 
-  addPack(packName: string) {
-    if (!this.packs.has(packName)) this.packs.set(packName, { id: UUID.random(), label: packName });
+  addPack(packName: string): void {
+    if (!this.packs.has(packName)) {
+      this.packs.set(packName, { id: UUID.random(), label: packName });
+    }
   }
 
   buildTest() {
-    let expectedAttributions: { wishId: UUID; pack: PackSummary }[] = [];
-    let expectedUnassigned: UUID[] = [];
-    let wishes_: ReservationWishForAttribution[] = [];
+    const expectedAttributions: { wishId: UUID; pack: PackSummary }[] = [];
+    const expectedUnassigned: UUID[] = [];
+    const wishes_: ReservationWishForAttribution[] = [];
 
     // Pour chaque souhait
     this.wishes.forEach((wish) => {
       const wishId = UUID.random();
 
-      let packChoices_: PackSummary[] = [];
+      const packChoices_: PackSummary[] = [];
 
       // Pour chaque pack demandé
-      wish.packNames.forEach((pack) => {
+      wish.packNames.forEach((packName) => {
         // Crée le pack s'il n'existe pas.
-        this.addPack(pack);
+        this.addPack(packName);
         // Ajoute le pack à la liste
-        packChoices_.push(this.packs.get(pack));
+        const pack = this.packs.get(packName);
+        if (pack) {
+          packChoices_.push(pack);
+        }
       });
 
       // Affecte le résultat au bon tableau
-      if (wish.expected === undefined) expectedUnassigned.push(wishId);
-      else expectedAttributions.push({ wishId: wishId, pack: this.packs.get(wish.expected) });
+      if (!wish.expected) {
+        expectedUnassigned.push(wishId);
+      } else {
+        const expectedPack = this.packs.get(wish.expected);
+        if (expectedPack) {
+          expectedAttributions.push({ wishId: wishId, pack: expectedPack });
+        }
+      }
 
       // Ajoute le souhait au tableau de souhaits.
       wishes_.push({
@@ -78,7 +89,7 @@ export class TestBuilder {
     });
 
     // Crée la liste des packs
-    const availablePacks = [];
+    const availablePacks: PackSummary[] = [];
     this.packs.forEach((pack) => {
       availablePacks.push(pack);
     });

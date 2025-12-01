@@ -16,9 +16,9 @@ export const toEntity = (record: Reservation): ReservationEntity => {
     props: {
       startingDate: DateValueObject.fromDate(record.startingDate),
       endingDate: DateValueObject.fromDate(record.endingDate),
-      publicComment: record.publicComment,
+      publicComment: record.publicComment ?? undefined,
       packId: new UUID({ uuid: record.packId }),
-      userId: new UUID({ uuid: record.userId })
+      userId: record.userId ? new UUID({ uuid: record.userId }) : undefined,
     },
   });
 };
@@ -41,7 +41,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
         endingDate: reservation.endingDate.value,
         publicComment: reservation.publicComment ?? null,
         packId: reservation.packId.uuid,
-        userId: reservation.userId.uuid,
+        userId: reservation.userId?.uuid ?? null,
         reservationWishId: reservation.reservationWishId?.uuid ?? null,
       },
     });
@@ -83,10 +83,10 @@ export class ReservationRepository implements ReservationRepositoryPort {
 
     return reservations.map((r) => ({
       packId: new UUID({ uuid: r.packId }),
-      userId: new UUID({ uuid: r.userId }),
+      userId: r.userId ? new UUID({ uuid: r.userId }) : undefined,
       startingDate: DateValueObject.fromDate(r.startingDate),
       endingDate: DateValueObject.fromDate(r.endingDate),
-      publicComment: r.publicComment,
+      publicComment: r.publicComment ?? undefined,
     }));
   }
 }
