@@ -15,9 +15,39 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   const { getUser, isProfileComplete } = useUser();
 
+  // Check localStorage cache first
+  const CACHE_KEY = 'profile_complete_check';
+  const CACHE_DURATION = 12 * 60 * 60 * 1000; // 12 hours
+
+  const cachedCheck = localStorage.getItem(CACHE_KEY);
+  if (cachedCheck) {
+    try {
+      const { timestamp, isComplete } = JSON.parse(cachedCheck);
+      const isExpired = Date.now() - timestamp > CACHE_DURATION;
+
+      if (!isExpired && isComplete) {
+        return;
+      }
+    } catch (e) {
+      console.warn('Invalid cache data for profile completion check:', e);
+      localStorage.removeItem(CACHE_KEY);
+    }
+  }
+
   try {
     const user = await getUser();
-    if (!isProfileComplete(user)) {
+    const profileComplete = isProfileComplete(user);
+
+    // Cache the result
+    localStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify({
+        timestamp: Date.now(),
+        isComplete: profileComplete,
+      }),
+    );
+
+    if (!profileComplete) {
       return navigateTo('/mon-compte');
     }
   } catch (error) {
