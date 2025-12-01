@@ -152,7 +152,7 @@
     <button
       v-if="isAdminOrManager"
       @click="openCreateReservationModal"
-      class="fixed bottom-20 right-4 bg-secondary-600 text-white rounded-full p-4 shadow-lg hover:bg-secondary-700 transition z-50"
+      class="fixed bottom-4 right-4 bg-secondary-600 text-white rounded-full p-4 shadow-lg hover:bg-secondary-700 transition z-50"
       aria-label="Créer une réservation"
     >
       <IconPlus class="w-6 h-6" />

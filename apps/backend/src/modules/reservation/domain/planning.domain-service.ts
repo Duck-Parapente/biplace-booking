@@ -12,11 +12,6 @@ type PackInfo = {
 
 @Injectable()
 export class PlanningDomainService {
-  /**
-   * Build planning data from raw data sources
-   * - For past dates (<= today): only show packs with reservations
-   * - For current/future dates (>= today): show all packs with reservations and wishes
-   */
   buildPlanningData(
     startDate: DateValueObject,
     endDate: DateValueObject,
@@ -101,8 +96,8 @@ export class PlanningDomainService {
     return reservations.find(
       (r) =>
         r.packId.uuid === packId.uuid &&
-        r.startingDate.value <= date.value &&
-        r.endingDate.value >= date.value,
+        r.startingDate.equals(date.startOfDayInUTC(0)) &&
+        r.endingDate.equals(date.startOfDayInUTC(1)),
     );
   }
 
