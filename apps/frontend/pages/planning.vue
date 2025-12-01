@@ -147,15 +147,35 @@
         </div>
       </div>
     </div>
+
+    <!-- Create Reservation Button - Fixed bottom right (only for Admin/Manager) -->
+    <button
+      v-if="isAdminOrManager"
+      @click="openCreateReservationModal"
+      class="fixed bottom-20 right-4 bg-secondary-600 text-white rounded-full p-4 shadow-lg hover:bg-secondary-700 transition z-50"
+      aria-label="Créer une réservation"
+    >
+      <IconPlus class="w-6 h-6" />
+    </button>
+
+    <!-- Create Reservation Modal -->
+    <CreateReservationModal
+      :show="showCreateReservationModal"
+      v-model="createReservationForm"
+      @close="closeCreateReservationModal"
+      @submit="handleReservationCreated"
+    />
   </main>
 </template>
 
 <script setup lang="ts">
-import type { PackPlanningDto, UserDto } from 'shared';
+import type { PackPlanningDto, UserDto, CreateReservationDto } from 'shared';
+import { UserRoles } from 'shared';
 import { ref, computed, watch, onMounted } from 'vue';
 
 import IconCheck from '~/components/icons/IconCheck.vue';
 import IconClock from '~/components/icons/IconClock.vue';
+import IconPlus from '~/components/icons/IconPlus.vue';
 import IconUser from '~/components/icons/IconUser.vue';
 import {
   formatDateLong,
@@ -163,6 +183,7 @@ import {
   formatWeekRange,
   getMonday,
   getWeekDays,
+  formatDateToString,
 } from '~/composables/useDateHelpers';
 
 definePageMeta({
@@ -173,8 +194,39 @@ definePageMeta({
 const { packs, planningDays, fetchPlanning } = usePlanning();
 const { getUsers } = useUser();
 const { getUserDisplayName } = useUserHelpers();
+const { hasRole } = useAuth();
 
 const users = ref<UserDto[]>([]);
+
+// Check if user has Admin or Manager role
+const isAdminOrManager = computed(() => {
+  return hasRole(UserRoles.ADMIN) || hasRole(UserRoles.MANAGER);
+});
+
+// Create Reservation Modal
+const showCreateReservationModal = ref(false);
+const createReservationForm = ref<CreateReservationDto>({
+  startingDate: formatDateToString(new Date()),
+  packId: '',
+});
+
+const openCreateReservationModal = () => {
+  createReservationForm.value = {
+    startingDate: formatDateToString(new Date()),
+    packId: '',
+  };
+  showCreateReservationModal.value = true;
+};
+
+const closeCreateReservationModal = () => {
+  showCreateReservationModal.value = false;
+};
+
+const handleReservationCreated = async () => {
+  // Refresh planning after creating a reservation
+  const weekDays = getWeekDays(currentWeekStart.value);
+  await fetchPlanning(weekDays[0]!, weekDays[6]!);
+};
 
 // Selected packs filter
 const selectedPacks = ref<Set<string>>(new Set());

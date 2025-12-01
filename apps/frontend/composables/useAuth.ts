@@ -37,7 +37,7 @@ export const useAuth = (): UseAuth => {
     }
   };
 
-  const hasRole = (role: string): boolean => {
+  const hasRole = (role: UserRoles): boolean => {
     if (!isAuthenticated.value || !idTokenClaims.value) return false;
 
     try {

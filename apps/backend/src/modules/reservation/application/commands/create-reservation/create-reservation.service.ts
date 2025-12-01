@@ -35,17 +35,15 @@ export class CreateReservationsService implements ICommandHandler<CreateReservat
     await this.reservationDomainService.validateCreateReservation(inputReservation);
     const reservation = await this.createWishIfNeeded(inputReservation, metadata);
 
-    if (!reservation.reservationWishId) {
-      throw new Error('Reservation wish ID is required to create a reservation');
-    }
-
     const entity = ReservationEntity.create(reservation, metadata);
     await this.reservationRepository.create(entity);
 
-    await this.updateReservationWishService.confirmReservationWish(
-      reservation.reservationWishId,
-      metadata,
-    );
+    if (reservation.reservationWishId) {
+      await this.updateReservationWishService.confirmReservationWish(
+        reservation.reservationWishId,
+        metadata,
+      );
+    }
 
     await this.refuseUnattributedWishes(reservation.startingDate, metadata);
   }
