@@ -1,7 +1,7 @@
 import { PublicConfigDto } from 'shared';
 import { ref, onMounted, onUnmounted } from 'vue';
 
-const POLLING_INTERVAL_MS = 1 * 60 * 1000;
+const POLLING_INTERVAL_MS = 15 * 60 * 1000;
 
 export const usePublicConfig = () => {
   const { callPublicApi } = useApi();
