@@ -7,7 +7,7 @@ import { UserUpdatedDomainEvent } from './events/user-updated.domain-event';
 import { CreateUserProps, UpdateUserProps, UserProps } from './user.types';
 
 export class UserEntity extends AggregateRoot<UserProps> {
-  protected readonly _id: AggregateID;
+  protected readonly _id!: AggregateID;
 
   static create(props: CreateUserProps): UserEntity {
     const id = UUID.random();

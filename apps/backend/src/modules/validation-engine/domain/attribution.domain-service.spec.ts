@@ -1,7 +1,9 @@
+import { UUID } from '@libs/ddd/uuid.value-object';
 import * as testCases from '@libs/tests/attribution-domain-service';
+import { ReservationWishForAttribution, PackSummary } from '@libs/types/accross-modules';
 
 import { AttributionDomainService } from './attribution.domain-service';
-import { BaseValidationEngineProps } from './validation-engine.types';
+import { BaseValidationEngineProps, Attribution } from './validation-engine.types';
 
 // Mock the uuid module to avoid ES module issues
 jest.mock('uuid', () => ({
@@ -17,44 +19,49 @@ describe('AttributionDomainService', () => {
 
   const printDebugInfo = (
     testName: string,
-    wishes,
-    availablePacks,
-    result,
-    expectedAttributions,
-    expectedUnassigned,
+    wishes: ReservationWishForAttribution[],
+    availablePacks: PackSummary[],
+    result: Attribution[],
+    expectedAttributions: { wishId: UUID; pack: PackSummary }[],
+    expectedUnassigned: UUID[],
   ): string => {
     const lines: string[] = [];
 
     lines.push(`\n=== Debug for failing test: ${testName} ===`);
     lines.push('Wishes submitted (ordered by score desc):');
     wishes
-      .sort((a, b) => b.user.currentScore - a.user.currentScore)
-      .forEach((wish) => {
+      .sort(
+        (a: ReservationWishForAttribution, b: ReservationWishForAttribution) =>
+          b.user.currentScore - a.user.currentScore,
+      )
+      .forEach((wish: ReservationWishForAttribution) => {
         lines.push(
-          `  - ${wish.user.nickname} (score: ${wish.user.currentScore}): ${wish.packChoices.map((p) => p.label).join(', ')}`,
+          `  - ${wish.user.nickname} (score: ${wish.user.currentScore}): ${wish.packChoices.map((p: PackSummary) => p.label).join(', ')}`,
         );
       });
 
     lines.push('\nActual attributions:');
-    result.forEach((attr) => {
-      const wish = wishes.find((w) => w.id === attr.reservationWishId);
-      const pack = availablePacks.find((p) => p.id === attr.assignedPackId);
+    result.forEach((attr: Attribution) => {
+      const wish = wishes.find(
+        (w: ReservationWishForAttribution) => w.id === attr.reservationWishId,
+      );
+      const pack = availablePacks.find((p: PackSummary) => p.id === attr.assignedPackId);
       if (wish && pack) {
         lines.push(`  - ${wish.user.nickname} → ${pack.label}`);
       }
     });
 
     lines.push('\nExpected attributions:');
-    expectedAttributions.forEach(({ wishId, pack }) => {
-      const wish = wishes.find((w) => w.id === wishId);
+    expectedAttributions.forEach(({ wishId, pack }: { wishId: UUID; pack: PackSummary }) => {
+      const wish = wishes.find((w: ReservationWishForAttribution) => w.id === wishId);
       if (wish) {
         lines.push(`  - ${wish.user.nickname} → ${pack.label}`);
       }
     });
 
     lines.push('\nUnassigned wishes:');
-    const assignedWishIds = new Set(result.map((r) => r.reservationWishId));
-    wishes.forEach((wish) => {
+    const assignedWishIds = new Set(result.map((r: Attribution) => r.reservationWishId));
+    wishes.forEach((wish: ReservationWishForAttribution) => {
       if (!assignedWishIds.has(wish.id)) {
         lines.push(
           `  - ${wish.user.nickname} (expected: ${expectedUnassigned.includes(wish.id) ? 'YES' : 'NO'})`,

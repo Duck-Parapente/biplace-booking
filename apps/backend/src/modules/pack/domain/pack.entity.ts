@@ -7,7 +7,7 @@ import { PackUpdatedDomainEvent } from './events/pack-updated.domain-event';
 import { CreatePackProps, PackProps, UpdatePackProps } from './pack.types';
 
 export class PackEntity extends AggregateRoot<PackProps> {
-  protected readonly _id: AggregateID;
+  protected readonly _id!: AggregateID;
 
   static create(profile: CreatePackProps, metadata: DomainEventMetadata): PackEntity {
     const id = UUID.random();

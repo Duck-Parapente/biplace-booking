@@ -6,7 +6,7 @@ import { ReservationCreatedDomainEvent } from './events/reservation-created.doma
 import { CreateReservationProps, ReservationProps } from './reservation.types';
 
 export class ReservationEntity extends AggregateRoot<ReservationProps> {
-  protected readonly _id: AggregateID;
+  protected readonly _id!: AggregateID;
 
   static create(props: CreateReservationProps, metadata: DomainEventMetadata) {
     const id = UUID.random();

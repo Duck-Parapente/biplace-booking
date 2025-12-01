@@ -13,7 +13,7 @@ import {
 
 export const PENDING_STATUSES = [ReservationWishStatus.PENDING, ReservationWishStatus.REFUSED];
 export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
-  protected readonly _id: AggregateID;
+  protected readonly _id!: AggregateID;
 
   private static readonly ALLOWED_STATUS_TRANSITIONS: Record<
     ReservationWishStatus,

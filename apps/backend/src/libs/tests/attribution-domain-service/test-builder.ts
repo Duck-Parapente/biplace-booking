@@ -6,10 +6,10 @@ import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 import { PackSummary } from '@libs/types/accross-modules';
 
 class Wish {
-  pilotName: string;
+  pilotName: string = '';
   packNames: string[] = [];
-  score: number;
-  date: DateValueObject;
+  score: number = 0;
+  date: DateValueObject = DateValueObject.now();
   expected: string | undefined;
 }
 

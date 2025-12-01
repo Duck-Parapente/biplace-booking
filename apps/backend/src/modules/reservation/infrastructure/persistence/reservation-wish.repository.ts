@@ -86,7 +86,10 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
     this.logger.log(`ReservationWish created: ${reservationWish.id.uuid}`);
   }
 
-  async existsNotCancelledForStartingDateAndUser(startingDate, userId): Promise<boolean> {
+  async existsNotCancelledForStartingDateAndUser(
+    startingDate: DateValueObject,
+    userId: UUID,
+  ): Promise<boolean> {
     const count = await prisma.reservationWish.count({
       where: {
         startingDate: startingDate.value,
