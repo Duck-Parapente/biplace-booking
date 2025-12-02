@@ -83,12 +83,22 @@
                   <span class="text-sm text-secondary-600">{{ pack.packLabel }}</span>
 
                   <div class="flex flex-col items-end gap-1">
-                    <div
-                      class="flex items-center gap-1 px-2 py-1 rounded text-sm"
-                      :class="getPackStatusConfig(pack).backgroundClass"
-                    >
-                      <component :is="getPackStatusConfig(pack).icon" class="w-3 h-3" />
-                      <span>{{ getPackStatusConfig(pack).label }}</span>
+                    <div class="flex items-stretch gap-1">
+                      <div
+                        class="flex items-center gap-1 px-2 py-1 rounded text-sm"
+                        :class="getPackStatusConfig(pack).backgroundClass"
+                      >
+                        <component :is="getPackStatusConfig(pack).icon" class="w-3 h-3" />
+                        <span>{{ getPackStatusConfig(pack).label }}</span>
+                      </div>
+                      <button
+                        v-if="pack.reservation && canCancelReservation(pack)"
+                        @click="handleCancelReservation(pack.reservation.id)"
+                        class="flex items-center justify-center px-2 rounded bg-red-100 hover:bg-red-200 transition text-red-800"
+                        aria-label="Annuler la réservation"
+                      >
+                        <IconX class="w-3 h-3" />
+                      </button>
                     </div>
 
                     <!-- User Contact Info -->
@@ -177,6 +187,7 @@ import IconCheck from '~/components/icons/IconCheck.vue';
 import IconClock from '~/components/icons/IconClock.vue';
 import IconPlus from '~/components/icons/IconPlus.vue';
 import IconUser from '~/components/icons/IconUser.vue';
+import IconX from '~/components/icons/IconX.vue';
 import {
   formatDateLong,
   isToday,
@@ -192,9 +203,11 @@ definePageMeta({
 });
 
 const { packs, planningDays, fetchPlanning } = usePlanning();
-const { getUsers } = useUser();
+const { getUsers, userData: currentUser, getUser } = useUser();
 const { getUserDisplayName } = useUserHelpers();
 const { hasRole } = useAuth();
+const { cancelReservation } = useReservation();
+const { packs: allPacks, getPacks } = usePack();
 
 const users = ref<UserDto[]>([]);
 
@@ -226,6 +239,39 @@ const handleReservationCreated = async () => {
   // Refresh planning after creating a reservation
   const weekDays = getWeekDays(currentWeekStart.value);
   await fetchPlanning(weekDays[0]!, weekDays[6]!);
+};
+
+const canCancelReservation = (pack: PackPlanningDto): boolean => {
+  if (!pack.reservation) return false;
+
+  // User can cancel their own reservation
+  if (pack.reservation.userId === currentUser.value?.id) return true;
+
+  // Admin can delete any reservation
+  if (hasRole(UserRoles.ADMIN)) return true;
+
+  // Manager can delete reservations on packs they own
+  if (hasRole(UserRoles.MANAGER)) {
+    const packDetails = allPacks.value.find((p) => p.id === pack.packId);
+    return packDetails?.ownerId === currentUser.value?.id;
+  }
+
+  return false;
+};
+
+const handleCancelReservation = async (reservationId: string) => {
+  if (!confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) return;
+
+  try {
+    await cancelReservation(reservationId);
+
+    // Refresh planning after deleting
+    const weekDays = getWeekDays(currentWeekStart.value);
+    await fetchPlanning(weekDays[0]!, weekDays[6]!);
+  } catch (error) {
+    console.error('Error deleting reservation:', error);
+    alert('Erreur lors de la suppression de la réservation');
+  }
 };
 
 // Selected packs filter
@@ -272,6 +318,8 @@ onMounted(async () => {
   await Promise.all([
     fetchPlanning(weekDays[0]!, weekDays[6]!),
     getUsers().then((data) => (users.value = data)),
+    getUser(),
+    getPacks(),
   ]);
 
   // Select all packs by default if none selected

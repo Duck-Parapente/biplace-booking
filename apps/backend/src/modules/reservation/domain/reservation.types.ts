@@ -12,6 +12,7 @@ interface BaseReservationProps {
 
 export type CreateReservationProps = BaseReservationProps;
 export type ReservationProps = BaseReservationProps & {
+  id: UUID;
   status: ReservationStatus;
 };
 

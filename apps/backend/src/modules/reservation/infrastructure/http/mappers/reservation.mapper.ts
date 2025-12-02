@@ -76,6 +76,7 @@ export function mapPlanningDataToDto(planningData: PlanningData[]): PlanningDayD
       pendingWishesCount,
       reservation: reservation
         ? {
+            id: reservation.id.uuid,
             userId: reservation.userId?.uuid,
             publicComment: reservation.publicComment || null,
           }

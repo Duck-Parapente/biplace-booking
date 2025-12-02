@@ -103,6 +103,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
     });
 
     return reservations.map((r) => ({
+      id: new UUID({ uuid: r.id }),
       packId: new UUID({ uuid: r.packId }),
       status: mapStatus(r.status),
       userId: r.userId ? new UUID({ uuid: r.userId }) : undefined,

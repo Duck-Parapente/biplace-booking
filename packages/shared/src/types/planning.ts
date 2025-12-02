@@ -9,6 +9,10 @@ import {
 } from 'class-validator';
 
 export class PlanningReservationDto {
+  @IsNotEmpty()
+  @IsUUID()
+  id!: string;
+
   @IsOptional()
   @IsString()
   userId?: string;
