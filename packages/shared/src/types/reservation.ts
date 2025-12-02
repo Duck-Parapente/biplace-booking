@@ -4,7 +4,6 @@ import {
   IsArray,
   IsBoolean,
   IsDate,
-  IsDateString,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -24,40 +23,6 @@ export enum ReservationWishStatusDto {
   CANCELLED = 'CANCELLED',
 }
 
-export class CreateReservationWishDto {
-  @IsNotEmpty()
-  @IsDateString()
-  startingDate!: string;
-
-  @IsArray()
-  @ArrayNotEmpty()
-  @ArrayMinSize(1)
-  @IsString({ each: true })
-  packChoices!: string[];
-
-  @IsOptional()
-  @IsString()
-  publicComment?: string;
-}
-
-export class CreateReservationDto {
-  @IsNotEmpty()
-  @IsDateString()
-  startingDate!: string;
-
-  @IsUUID()
-  @IsNotEmpty()
-  packId!: string;
-
-  @IsUUID()
-  @IsOptional()
-  userId?: string;
-
-  @IsOptional()
-  @IsString()
-  publicComment?: string;
-}
-
 export class ReservationDto {
   @IsUUID()
   @IsNotEmpty()
@@ -66,16 +31,34 @@ export class ReservationDto {
   @IsNotEmpty()
   @IsString()
   packId!: string;
+}
 
-  @IsNotEmpty()
-  @IsEnum(ReservationStatusDto)
-  status!: ReservationStatusDto;
+export enum ReservationEventTypeDto {
+  WISH = 'WISH',
+  RESERVATION = 'RESERVATION',
 }
 
 export class ReservationWishEventDto {
   @IsNotEmpty()
   @IsEnum(ReservationWishStatusDto)
   status!: ReservationWishStatusDto;
+
+  @IsNotEmpty()
+  type!: ReservationEventTypeDto.WISH;
+
+  @IsNotEmpty()
+  @IsDate()
+  date!: Date;
+}
+
+export class ReservationEventDto {
+  @IsNotEmpty()
+  @IsEnum(ReservationStatusDto)
+  status!: ReservationStatusDto;
+
+  @IsNotEmpty()
+  @IsEnum(ReservationEventTypeDto)
+  type!: ReservationEventTypeDto.RESERVATION;
 
   @IsNotEmpty()
   @IsDate()
@@ -108,12 +91,7 @@ export class ReservationWishDto {
   @IsArray()
   @ArrayNotEmpty()
   @ArrayMinSize(1)
-  @IsString({ each: true })
-  events!: ReservationWishEventDto[];
-
-  @IsNotEmpty()
-  @IsEnum(ReservationWishStatusDto)
-  status!: ReservationWishStatusDto;
+  events!: (ReservationEventDto | ReservationWishEventDto)[];
 
   @IsNotEmpty()
   @IsBoolean()
@@ -123,45 +101,6 @@ export class ReservationWishDto {
   @IsString()
   publicComment?: string;
 
-  @IsArray()
-  @ArrayNotEmpty()
-  @ArrayMinSize(1)
-  @IsString({ each: true })
+  @IsOptional()
   reservation!: ReservationDto | null;
-}
-
-export class PlanningReservationDto {
-  @IsOptional()
-  @IsString()
-  userId?: string;
-
-  @IsOptional()
-  @IsString()
-  publicComment?: string | null;
-}
-
-export class PackPlanningDto {
-  @IsNotEmpty()
-  @IsUUID()
-  packId!: string;
-
-  @IsNotEmpty()
-  @IsString()
-  packLabel!: string;
-
-  @IsNotEmpty()
-  pendingWishesCount!: number;
-
-  @IsOptional()
-  reservation?: PlanningReservationDto | null;
-}
-
-export class PlanningDayDto {
-  @IsNotEmpty()
-  @IsDate()
-  date!: Date;
-
-  @IsArray()
-  @ArrayNotEmpty()
-  packs!: PackPlanningDto[];
 }

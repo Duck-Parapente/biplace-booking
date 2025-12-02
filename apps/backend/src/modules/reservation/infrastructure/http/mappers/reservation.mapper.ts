@@ -8,6 +8,7 @@ import {
   ReservationWishDto,
   PlanningDayDto,
   ReservationWishStatusDto,
+  ReservationEventTypeDto,
 } from 'shared';
 
 const mapWishStatus = (status: ReservationWishStatus): ReservationWishStatusDto => {
@@ -38,8 +39,7 @@ const mapReservationStatus = (status: ReservationStatus): ReservationStatusDto =
 
 export function mapReservationWishToDto({
   reservation,
-  reservationWish,
-  events,
+  reservationWish: { entity: reservationWish, events },
 }: ReservationWishWithReservation): ReservationWishDto {
   return {
     id: reservationWish.id.uuid,
@@ -48,19 +48,27 @@ export function mapReservationWishToDto({
     startingDate: reservationWish.startingDate.value,
     endingDate: reservationWish.endingDate.value,
     packChoices: reservationWish.packChoices.map((packChoice) => packChoice.uuid),
-    status: mapWishStatus(reservationWish.status),
     publicComment: reservationWish.publicComment,
     reservation: reservation
       ? {
-          id: reservation.id.uuid,
-          packId: reservation.packId.uuid,
-          status: mapReservationStatus(reservation.status),
+          id: reservation.entity.id.uuid,
+          packId: reservation.entity.packId.uuid,
         }
-      : null  ,
-    events: events.map(({ status, date }) => ({
-      status: mapWishStatus(status),
-      date: date.value,
-    })),
+      : null,
+    events: [
+      ...events.map((event) => ({
+        status: mapWishStatus(event.status),
+        type: 'WISH' as ReservationEventTypeDto.WISH,
+        date: event.date.value,
+      })),
+      ...(reservation
+        ? reservation.events.map((event) => ({
+            status: mapReservationStatus(event.status),
+            type: 'RESERVATION' as ReservationEventTypeDto.RESERVATION,
+            date: event.date.value,
+          }))
+        : []),
+    ],
   };
 }
 

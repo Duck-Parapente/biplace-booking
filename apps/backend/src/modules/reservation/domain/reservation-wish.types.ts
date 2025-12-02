@@ -3,6 +3,7 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 
 import { ReservationWishEntity } from './reservation-wish.entity';
 import { ReservationEntity } from './reservation.entity';
+import { ReservationStatus } from './reservation.types';
 
 interface BaseReservationWishProps {
   packChoices: UUID[];
@@ -28,7 +29,12 @@ export enum ReservationWishStatus {
 }
 
 export type ReservationWishWithReservation = {
-  reservationWish: ReservationWishEntity;
-  reservation: ReservationEntity | null;
-  events: { status: ReservationWishStatus; date: DateValueObject }[];
+  reservationWish: {
+    entity: ReservationWishEntity;
+    events: { status: ReservationWishStatus; date: DateValueObject }[];
+  };
+  reservation: {
+    entity: ReservationEntity;
+    events: { status: ReservationStatus; date: DateValueObject }[];
+  } | null;
 };
