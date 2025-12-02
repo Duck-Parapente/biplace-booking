@@ -16,8 +16,8 @@ import { UpdateReservationWishService } from '../update-reservation-wish/update-
 import { CreateReservationCommand } from './create-reservation.command';
 
 @CommandHandler(CreateReservationCommand)
-export class CreateReservationsService implements ICommandHandler<CreateReservationCommand, void> {
-  private readonly logger = new Logger(CreateReservationsService.name);
+export class CreateReservationService implements ICommandHandler<CreateReservationCommand, void> {
+  private readonly logger = new Logger(CreateReservationService.name);
 
   constructor(
     @Inject(RESERVATION_REPOSITORY)

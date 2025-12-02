@@ -5,7 +5,7 @@ import { Module } from '@nestjs/common';
 import { PackModule } from '../pack/pack.module';
 
 import { CancelReservationService } from './application/commands/cancel-reservation/cancel-reservation.service';
-import { CreateReservationsService } from './application/commands/create-reservation/create-reservation.service';
+import { CreateReservationService } from './application/commands/create-reservation/create-reservation.service';
 import { CreateReservationWishService } from './application/commands/create-reservation-wish/create-reservation-wish.service';
 import { UpdateReservationWishService } from './application/commands/update-reservation-wish/update-reservation-wish.service';
 import { GetPlanningService } from './application/queries/get-planning/get-planning.service';
@@ -44,7 +44,7 @@ import {
     GetReservationWishesService,
     GetReservationWishesService,
     GetPlanningService,
-    CreateReservationsService,
+    CreateReservationService,
     CancelReservationService,
     ReservationWishDomainService,
     ReservationDomainService,
@@ -57,6 +57,6 @@ import {
     },
     { provide: EVENT_EMITTER, useClass: EventEmitter },
   ],
-  exports: [GetReservationWishesService, UpdateReservationWishService, CreateReservationsService],
+  exports: [GetReservationWishesService, UpdateReservationWishService, CreateReservationService],
 })
 export class ReservationModule {}

@@ -2,7 +2,6 @@ import { DomainEventMetadata } from '@libs/ddd';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { ReservationWishNotificationPort } from '@modules/reservation/domain/ports/reservation-wish-notification.port';
 import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
-import { ReservationWishDomainService } from '@modules/reservation/domain/reservation-wish.domain-service';
 import { ReservationWishEntity } from '@modules/reservation/domain/reservation-wish.entity';
 import { ReservationWishNotFoundError } from '@modules/reservation/domain/reservation-wish.exceptions';
 import { ReservationWishStatus } from '@modules/reservation/domain/reservation-wish.types';
@@ -24,7 +23,6 @@ export class UpdateReservationWishService
   constructor(
     @Inject(RESERVATION_WISH_REPOSITORY)
     private readonly reservationWishRepository: ReservationWishRepositoryPort,
-    private readonly domainService: ReservationWishDomainService,
     @Inject(RESERVATION_WISH_NOTIFICATION_PORT)
     private readonly notificationPort: ReservationWishNotificationPort,
   ) {}

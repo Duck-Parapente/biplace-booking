@@ -5,7 +5,7 @@ import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.service';
 import { CreateReservationCommand } from '@modules/reservation/application/commands/create-reservation/create-reservation.command';
-import { CreateReservationsService } from '@modules/reservation/application/commands/create-reservation/create-reservation.service';
+import { CreateReservationService } from '@modules/reservation/application/commands/create-reservation/create-reservation.service';
 import { GetReservationWishesService } from '@modules/reservation/application/queries/get-reservation-wishes/get-reservation-wishes.service';
 import { AttributionDomainService } from '@modules/validation-engine/domain/attribution.domain-service';
 import { ValidationEngineRunDomainEvent } from '@modules/validation-engine/domain/events/validation-engine-run.domain-event';
@@ -24,7 +24,7 @@ export class AttributePacksService {
   constructor(
     private readonly getPacksService: GetPacksService,
     private readonly getReservationWishesService: GetReservationWishesService,
-    private readonly createReservationsService: CreateReservationsService,
+    private readonly createReservationService: CreateReservationService,
     private readonly attributionDomainService: AttributionDomainService,
     @Inject(EVENT_EMITTER)
     private readonly eventEmitter: EventEmitterPort,
@@ -113,7 +113,7 @@ export class AttributePacksService {
         continue;
       }
 
-      await this.createReservationsService.execute(
+      await this.createReservationService.execute(
         new CreateReservationCommand({
           reservation: {
             packId: attribution.assignedPackId,

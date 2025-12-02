@@ -7,7 +7,7 @@ import { Roles } from '@libs/guards/roles.decorator';
 import { RolesGuard } from '@libs/guards/roles.guard';
 import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.service';
 import { CreateReservationCommand } from '@modules/reservation/application/commands/create-reservation/create-reservation.command';
-import { CreateReservationsService } from '@modules/reservation/application/commands/create-reservation/create-reservation.service';
+import { CreateReservationService } from '@modules/reservation/application/commands/create-reservation/create-reservation.service';
 import { CannotCreateReservationError } from '@modules/reservation/domain/reservation.exceptions';
 import {
   Controller,
@@ -28,7 +28,7 @@ export class CreateReservationHttpController {
   private readonly logger = new Logger(CreateReservationHttpController.name);
 
   constructor(
-    private readonly createReservationService: CreateReservationsService,
+    private readonly createReservationService: CreateReservationService,
     private readonly getPacksService: GetPacksService,
   ) {}
 
