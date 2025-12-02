@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 
 import { PackModule } from '../pack/pack.module';
 
+import { CancelReservationService } from './application/commands/cancel-reservation/cancel-reservation.service';
 import { CreateReservationsService } from './application/commands/create-reservation/create-reservation.service';
 import { CreateReservationWishService } from './application/commands/create-reservation-wish/create-reservation-wish.service';
 import { UpdateReservationWishService } from './application/commands/update-reservation-wish/update-reservation-wish.service';
@@ -13,6 +14,7 @@ import { PlanningDomainService } from './domain/planning.domain-service';
 import { ReservationWishDomainService } from './domain/reservation-wish.domain-service';
 import { ReservationDomainService } from './domain/reservation.domain-service';
 import { EmailNotificationAdapter } from './infrastructure/adapters/email-notification.adapter';
+import { CancelReservationHttpController } from './infrastructure/http/controllers/cancel-reservation.http.controller';
 import { CreateReservationWishHttpController } from './infrastructure/http/controllers/create-reservation-wish.http.controller';
 import { CreateReservationHttpController } from './infrastructure/http/controllers/create-reservation.http.controller';
 import { GetPlanningHttpController } from './infrastructure/http/controllers/get-planning.http.controller';
@@ -34,6 +36,7 @@ import {
     UpdateReservationWishHttpController,
     GetReservationWishesHttpController,
     GetPlanningHttpController,
+    CancelReservationHttpController,
   ],
   providers: [
     CreateReservationWishService,
@@ -42,6 +45,7 @@ import {
     GetReservationWishesService,
     GetPlanningService,
     CreateReservationsService,
+    CancelReservationService,
     ReservationWishDomainService,
     ReservationDomainService,
     PlanningDomainService,

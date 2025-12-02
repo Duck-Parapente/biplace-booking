@@ -15,4 +15,6 @@ export interface ReservationRepositoryPort {
     startDate: DateValueObject,
     endDate: DateValueObject,
   ): Promise<ReservationProps[]>;
+  findById(id: UUID): Promise<ReservationEntity | null>;
+  updateStatus(reservation: ReservationEntity): Promise<void>;
 }

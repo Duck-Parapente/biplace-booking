@@ -19,7 +19,7 @@ export class CannotUpdateReservationWishStatusError extends Error {
     newStatus: ReservationWishStatus,
   ) {
     super(
-      `Cannot up reservation wish with ID ${reservationWishId.uuid} from status ${previousStatus} to ${newStatus}.`,
+      `Cannot update reservation wish with ID ${reservationWishId.uuid} from status ${previousStatus} to ${newStatus}.`,
     );
     this.name = CannotUpdateReservationWishStatusError.name;
   }

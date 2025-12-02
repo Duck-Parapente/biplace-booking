@@ -3,6 +3,8 @@ import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
 import { ReservationCreatedDomainEvent } from './events/reservation-created.domain-event';
+import { ReservationUpdatedDomainEvent } from './events/reservation-updated.domain-event';
+import { CannotCancelReservationError } from './reservation.exceptions';
 import { CreateReservationProps, ReservationProps, ReservationStatus } from './reservation.types';
 
 export class ReservationEntity extends AggregateRoot<ReservationProps> {
@@ -57,6 +59,21 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
 
   get status() {
     return this.props.status;
+  }
+
+  cancel(metadata: DomainEventMetadata): void {
+    if (this.props.status !== ReservationStatus.CONFIRMED) {
+      throw new CannotCancelReservationError(this.id, this.props.status);
+    }
+    this.props.status = ReservationStatus.CANCELLED;
+
+    this.addEvent(
+      new ReservationUpdatedDomainEvent({
+        aggregateId: this.id,
+        status: this.props.status,
+        metadata,
+      }),
+    );
   }
 
   validate(): void {

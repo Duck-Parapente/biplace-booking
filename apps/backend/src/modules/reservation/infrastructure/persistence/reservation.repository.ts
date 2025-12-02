@@ -32,6 +32,9 @@ export const toEntity = (record: Reservation): ReservationEntity => {
       publicComment: record.publicComment ?? undefined,
       packId: new UUID({ uuid: record.packId }),
       userId: record.userId ? new UUID({ uuid: record.userId }) : undefined,
+      reservationWishId: record.reservationWishId
+        ? new UUID({ uuid: record.reservationWishId })
+        : undefined,
     },
   });
 };
@@ -103,5 +106,29 @@ export class ReservationRepository implements ReservationRepositoryPort {
       endingDate: DateValueObject.fromDate(r.endingDate),
       publicComment: r.publicComment ?? undefined,
     }));
+  }
+
+  async findById(id: UUID): Promise<ReservationEntity | null> {
+    const reservation = await prisma.reservation.findUnique({
+      where: { id: id.uuid },
+    });
+
+    if (!reservation) {
+      return null;
+    }
+
+    return toEntity(reservation);
+  }
+
+  async updateStatus(reservation: ReservationEntity): Promise<void> {
+    await prisma.reservation.update({
+      where: { id: reservation.id.uuid },
+      data: {
+        status: reservation.status,
+      },
+    });
+
+    await reservation.publishEvents(this.eventEmitter);
+    this.logger.log(`Reservation status updated: ${reservation.id.uuid} to ${reservation.status}`);
   }
 }
