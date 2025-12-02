@@ -134,7 +134,7 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
         userId: userId.uuid,
       },
       include: {
-        reservations: true,
+        reservation: true,
         packChoices: true,
       },
     });
@@ -151,7 +151,7 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
 
     return records.map((record) => ({
       reservationWish: toEntity(record),
-      reservations: record.reservations.map(toReservationEntity),
+      reservation: record.reservation ? toReservationEntity(record.reservation) : null,
       events: [
         {
           status: DomainReservationWishStatus.PENDING,

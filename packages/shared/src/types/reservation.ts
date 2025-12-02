@@ -127,7 +127,7 @@ export class ReservationWishDto {
   @ArrayNotEmpty()
   @ArrayMinSize(1)
   @IsString({ each: true })
-  reservations!: ReservationDto[];
+  reservation!: ReservationDto | null;
 }
 
 export class PlanningReservationDto {

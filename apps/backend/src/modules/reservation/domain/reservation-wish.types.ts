@@ -29,6 +29,6 @@ export enum ReservationWishStatus {
 
 export type ReservationWishWithReservation = {
   reservationWish: ReservationWishEntity;
-  reservations: ReservationEntity[];
+  reservation: ReservationEntity | null;
   events: { status: ReservationWishStatus; date: DateValueObject }[];
 };

@@ -73,7 +73,7 @@ model ReservationWish {
     userId        String
     createdAt     DateTime              @db.Timestamptz(3)
     status        ReservationWishStatus
-    reservations  Reservation[]
+    reservation   Reservation?
 }
 
 model Reservation {
@@ -88,5 +88,5 @@ model Reservation {
     publicComment     String?
     createdAt         DateTime          @db.Timestamptz(3)
     reservationWish   ReservationWish?  @relation(fields: [reservationWishId], references: [id])
-    reservationWishId String?
+    reservationWishId String?           @unique
 }

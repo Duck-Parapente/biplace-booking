@@ -37,7 +37,7 @@ const mapReservationStatus = (status: ReservationStatus): ReservationStatusDto =
 };
 
 export function mapReservationWishToDto({
-  reservations,
+  reservation,
   reservationWish,
   events,
 }: ReservationWishWithReservation): ReservationWishDto {
@@ -50,11 +50,13 @@ export function mapReservationWishToDto({
     packChoices: reservationWish.packChoices.map((packChoice) => packChoice.uuid),
     status: mapWishStatus(reservationWish.status),
     publicComment: reservationWish.publicComment,
-    reservations: reservations.map(({ id, packId, status }) => ({
-      id: id.uuid,
-      packId: packId.uuid,
-      status: mapReservationStatus(status),
-    })),
+    reservation: reservation
+      ? {
+          id: reservation.id.uuid,
+          packId: reservation.packId.uuid,
+          status: mapReservationStatus(reservation.status),
+        }
+      : null  ,
     events: events.map(({ status, date }) => ({
       status: mapWishStatus(status),
       date: date.value,
