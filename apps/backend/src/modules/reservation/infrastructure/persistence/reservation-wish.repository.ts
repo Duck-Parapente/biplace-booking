@@ -180,10 +180,6 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
         ? {
             entity: toReservationEntity(record.reservation),
             events: [
-              {
-                status: DomainReservationStatus.CONFIRMED,
-                date: DateValueObject.fromDate(record.reservation.createdAt),
-              },
               ...allStatusEvents
                 .filter(({ aggregateId }) => aggregateId === record.reservation?.id)
                 .map(({ payload, createdAt }) => {

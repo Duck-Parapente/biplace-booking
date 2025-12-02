@@ -3,35 +3,30 @@ import {
   ReservationWishWithReservation,
 } from '@modules/reservation/domain/reservation-wish.types';
 import { PlanningData, ReservationStatus } from '@modules/reservation/domain/reservation.types';
-import {
-  ReservationStatusDto,
-  ReservationWishDto,
-  PlanningDayDto,
-  ReservationWishStatusDto,
-  ReservationEventTypeDto,
-} from 'shared';
+import { ReservationOrWishStatusDto } from 'shared';
+import { ReservationWishDto, PlanningDayDto, ReservationEventTypeDto } from 'shared';
 
-const mapWishStatus = (status: ReservationWishStatus): ReservationWishStatusDto => {
+const mapWishStatus = (status: ReservationWishStatus): ReservationOrWishStatusDto => {
   switch (status) {
     case ReservationWishStatus.PENDING:
-      return ReservationWishStatusDto.PENDING;
+      return ReservationOrWishStatusDto.PENDING;
     case ReservationWishStatus.CONFIRMED:
-      return ReservationWishStatusDto.CONFIRMED;
+      return ReservationOrWishStatusDto.CONFIRMED;
     case ReservationWishStatus.REFUSED:
-      return ReservationWishStatusDto.REFUSED;
+      return ReservationOrWishStatusDto.REFUSED;
     case ReservationWishStatus.CANCELLED:
-      return ReservationWishStatusDto.CANCELLED;
+      return ReservationOrWishStatusDto.CANCELLED;
     default:
       throw new Error(`Unknown ReservationWishStatus: ${status}`);
   }
 };
 
-const mapReservationStatus = (status: ReservationStatus): ReservationStatusDto => {
+const mapReservationStatus = (status: ReservationStatus): ReservationOrWishStatusDto => {
   switch (status) {
     case ReservationStatus.CONFIRMED:
-      return ReservationStatusDto.CONFIRMED;
+      return ReservationOrWishStatusDto.CONFIRMED;
     case ReservationStatus.CANCELLED:
-      return ReservationStatusDto.CANCELLED;
+      return ReservationOrWishStatusDto.CANCELLED;
     default:
       throw new Error(`Unknown ReservationStatus: ${status}`);
   }
@@ -58,13 +53,13 @@ export function mapReservationWishToDto({
     events: [
       ...events.map((event) => ({
         status: mapWishStatus(event.status),
-        type: 'WISH' as ReservationEventTypeDto.WISH,
+        type: ReservationEventTypeDto.WISH,
         date: event.date.value,
       })),
       ...(reservation
         ? reservation.events.map((event) => ({
             status: mapReservationStatus(event.status),
-            type: 'RESERVATION' as ReservationEventTypeDto.RESERVATION,
+            type: ReservationEventTypeDto.RESERVATION,
             date: event.date.value,
           }))
         : []),

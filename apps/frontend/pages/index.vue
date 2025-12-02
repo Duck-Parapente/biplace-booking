@@ -1,7 +1,6 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
     <div class="flex-1 p-4 max-w-4xl mx-auto w-full flex flex-col min-h-0">
-      <!-- Status Filter Tags -->
       <div class="flex gap-2 mb-4 flex-wrap">
         <button
           v-for="status in availableStatuses"
@@ -14,7 +13,7 @@
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           "
         >
-          {{ getStatusConfig(status).label }}
+          {{ getConfigFromStatus(status).label }}
         </button>
       </div>
 
@@ -28,7 +27,6 @@
 
       <div v-else class="flex-1 overflow-y-auto pb-20">
         <div class="rounded-lg shadow-sm">
-          <!-- Reservation Wishes List -->
           <div v-if="filteredReservationWishes.length === 0" class="text-gray-500 text-sm">
             <p>Aucune demande de réservation pour le moment.</p>
           </div>
@@ -43,9 +41,9 @@
               <div class="absolute top-3 right-3">
                 <span
                   class="px-2 py-1 text-xs font-medium rounded shadow-sm"
-                  :class="getWishStatusInfo(wish).classes"
+                  :class="getConfigFromWish(wish).classes"
                 >
-                  {{ getWishStatusInfo(wish).label }}
+                  {{ getConfigFromWish(wish).label }}
                 </span>
               </div>
 
@@ -89,17 +87,15 @@
                       class="mt-2 p-2 bg-white rounded border border-gray-200 space-y-1"
                     >
                       <div
-                        v-for="(event, index) in wish.events.sort(
-                          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-                        )"
+                        v-for="(event, index) in getEvents(wish)"
                         :key="index"
                         class="flex items-center justify-between text-xs"
                       >
                         <span
                           class="px-2 py-0.5 rounded text-xs"
-                          :class="getStatusConfig(event.status).classes"
+                          :class="getConfigFromStatus(event.status).classes"
                         >
-                          {{ getStatusConfig(event.status).label }}
+                          {{ getEventLabel(event) }}
                         </span>
                         <span class="text-gray-500">
                           {{ formatDateTime(event.date) }}
@@ -110,10 +106,10 @@
                 </div>
               </div>
               <div
-                v-if="getWishStatusInfo(wish).infoText"
+                v-if="getConfigFromWish(wish).infoText"
                 class="w-full border-t border-gray-200 p-3 text-sm text-gray-700"
               >
-                {{ getWishStatusInfo(wish).infoText }}
+                {{ getConfigFromWish(wish).infoText }}
               </div>
               <button
                 v-if="wish.isCancelable"
@@ -124,16 +120,6 @@
                 <IconX class="w-4 h-4" />
                 Annuler cette demande
               </button>
-              <!-- <div
-                v-if="wish.reservations && wish.reservations.length > 0"
-                class="w-full bg-green-100 border-t border-green-500/30 p-3 text-center rounded-b-lg"
-              >
-                <div v-for="reservation in wish.reservations" :key="reservation.id" class="text-sm">
-                  <p class="font-medium text-green-800">
-                    ✓ Réservation confirmée pour le pack {{ getPackLabel(reservation.packId) }}
-                  </p>
-                </div>
-              </div> -->
             </div>
           </div>
         </div>
@@ -165,7 +151,12 @@
 </template>
 
 <script setup lang="ts">
-import { ReservationStatusDto, ReservationWishDto } from 'shared';
+import {
+  ReservationEventTypeDto,
+  ReservationOrWishStatusDto,
+  ReservationWishDto,
+  ReservationWishEventDto,
+} from 'shared';
 
 import { formatDateLong, formatDateTime } from '~/composables/useDateHelpers';
 
@@ -192,12 +183,20 @@ const { packs, getPacks } = usePack();
 
 const showModal = ref(false);
 const expandedWishes = ref<Set<string>>(new Set());
-const selectedStatuses = ref<Set<ReservationStatusDto>>(
-  new Set([ReservationStatusDto.PENDING, ReservationStatusDto.CONFIRMED]),
+const selectedStatuses = ref<Set<ReservationOrWishStatusDto>>(
+  new Set([ReservationOrWishStatusDto.PENDING, ReservationOrWishStatusDto.CONFIRMED]),
 );
 
+const getEvents = (wish: ReservationWishDto) => {
+  return [...wish.events].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+};
+
+const getCurrentStatus = (wish: ReservationWishDto) => {
+  return getEvents(wish)[0]?.status ?? ReservationOrWishStatusDto.PENDING;
+};
+
 const availableStatuses = computed(() => {
-  return [...new Set(reservationWishes.value.map(({ status }) => status))];
+  return [...new Set(reservationWishes.value.map((wish) => getCurrentStatus(wish)))];
 });
 
 const filteredReservationWishes = computed(() => {
@@ -205,10 +204,10 @@ const filteredReservationWishes = computed(() => {
     .sort((a, b) => {
       return new Date(b.startingDate).getTime() - new Date(a.startingDate).getTime();
     })
-    .filter(({ status }) => selectedStatuses.value.has(status));
+    .filter((wish) => selectedStatuses.value.has(getCurrentStatus(wish)));
 });
 
-const toggleStatus = (status: ReservationStatusDto) => {
+const toggleStatus = (status: ReservationOrWishStatusDto) => {
   const set = selectedStatuses.value;
   set.has(status) ? set.delete(status) : set.add(status);
 };
@@ -224,7 +223,10 @@ const getPackLabel = (packId: string): string => {
 };
 
 const hasReservation = (wish: ReservationWishDto, packId: string): boolean => {
-  return wish.reservations?.some((reservation: any) => reservation.packId === packId) || false;
+  return (
+    wish.reservation?.packId === packId &&
+    getCurrentStatus(wish) === ReservationOrWishStatusDto.CONFIRMED
+  );
 };
 
 const openCreateModal = () => {
@@ -258,45 +260,48 @@ const handleCancelWish = async (wishId: string) => {
   }
 };
 
-const getStatusConfig = (status: ReservationStatusDto, packChoicesLength: number = 1) => {
-  const DEFAULT_CLASSES = 'bg-gray-200 text-gray-800';
-  const configs: Record<
-    ReservationStatusDto,
-    { label: string; classes: string; infoText?: string }
-  > = {
-    PENDING: { label: 'En attente', classes: 'bg-yellow-200 text-yellow-800' },
-    CONFIRMED: { label: 'Confirmée', classes: 'bg-green-200 text-green-800' },
-    REFUSED: {
-      label: 'Refusée',
-      infoText:
-        packChoicesLength > 1
-          ? `Les packs sélectionnés ont été attribués à d'autres pilotes pour le moment.`
-          : `Le pack sélectionné a été attribué à un autre pilote pour le moment.`,
-      classes: 'bg-red-200 text-red-800',
-    },
-    CANCELLED: { label: 'Annulée', classes: DEFAULT_CLASSES },
-  };
-  return configs[status] || { label: status, classes: DEFAULT_CLASSES };
+const STATUS_CONFIG: Record<
+  ReservationOrWishStatusDto,
+  { label: string; classes: string; infoText?: string }
+> = {
+  [ReservationOrWishStatusDto.PENDING]: {
+    label: 'En attente',
+    classes: 'bg-yellow-200 text-yellow-800',
+  },
+  [ReservationOrWishStatusDto.CONFIRMED]: {
+    label: 'Confirmée',
+    classes: 'bg-green-200 text-green-800',
+  },
+  [ReservationOrWishStatusDto.REFUSED]: {
+    label: 'Refusée',
+    classes: 'bg-red-200 text-red-800',
+    infoText: "Les packs sélectionnés ont été attribués à d'autres pilotes pour le moment.",
+  },
+  [ReservationOrWishStatusDto.CANCELLED]: {
+    label: 'Annulée',
+    classes: 'bg-gray-200 text-gray-800',
+  },
 };
 
-const getWishStatusInfo = (wish: ReservationWishDto) => {
-  const statusConfig = getStatusConfig(wish.status, wish.packChoices.length);
+const getEventLabel = (event: ReservationWishEventDto): string => {
+  return [
+    event.type === ReservationEventTypeDto.WISH ? 'Demande' : 'Réservation',
+    getConfigFromStatus(event.status).label.toLowerCase(),
+  ].join(' ');
+};
 
-  // Check if there are any cancelled reservations
-  const hasCancelledReservation = wish.reservations?.some(
-    (r: any) => r.status === ReservationStatusDto.CANCELLED,
+const getConfigFromStatus = (status: ReservationOrWishStatusDto) => {
+  return STATUS_CONFIG[status] || STATUS_CONFIG[ReservationOrWishStatusDto.CANCELLED];
+};
+
+const getConfigFromWish = (wish: ReservationWishDto) => {
+  const currentStatus = getCurrentStatus(wish);
+  return (
+    STATUS_CONFIG[currentStatus] || {
+      label: currentStatus,
+      classes: STATUS_CONFIG[ReservationOrWishStatusDto.CANCELLED].classes,
+    }
   );
-
-  if (wish.status === ReservationStatusDto.CONFIRMED && hasCancelledReservation) {
-    return {
-      ...statusConfig,
-      label: 'Confirmée (Résa annulée)',
-      classes: 'bg-orange-200 text-orange-800',
-      infoText: 'Votre demande a été confirmée mais la réservation associée a été annulée.',
-    };
-  }
-
-  return statusConfig;
 };
 
 onMounted(() => {
