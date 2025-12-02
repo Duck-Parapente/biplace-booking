@@ -26,7 +26,7 @@ export class GetPlanningService {
   async execute(startDate: DateValueObject, endDate: DateValueObject): Promise<PlanningData[]> {
     const [packs, reservations, pendingWishes] = await Promise.all([
       this.getPacksService.execute(),
-      this.reservationRepository.findReservationsByDateRange(startDate, endDate),
+      this.reservationRepository.findConfirmedReservationsByDateRange(startDate, endDate),
       this.reservationWishRepository.findPendingWishesByDateRange(startDate, endDate),
     ]);
 

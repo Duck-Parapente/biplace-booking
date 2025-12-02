@@ -85,13 +85,17 @@ export class ReservationRepository implements ReservationRepositoryPort {
     return count > 0;
   }
 
-  async findReservationsByDateRange(
+  async findConfirmedReservationsByDateRange(
     startDate: DateValueObject,
     endDate: DateValueObject,
   ): Promise<ReservationProps[]> {
     const reservations = await prisma.reservation.findMany({
       where: {
-        AND: [{ startingDate: { lte: endDate.value } }, { endingDate: { gte: startDate.value } }],
+        AND: [
+          { startingDate: { lte: endDate.value } },
+          { endingDate: { gte: startDate.value } },
+          { status: ReservationStatus.CONFIRMED },
+        ],
       },
       include: {
         user: true,
