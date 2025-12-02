@@ -23,7 +23,7 @@ import { CreateReservationDto, UserRoles } from 'shared';
 
 @Controller('reservations')
 @UseGuards(JwtAuthGuard, RolesGuard, MaintenanceModeGuard)
-@Roles(UserRoles.ADMIN)
+@Roles(UserRoles.ADMIN, UserRoles.MANAGER)
 export class CreateReservationHttpController {
   private readonly logger = new Logger(CreateReservationHttpController.name);
 
