@@ -13,6 +13,11 @@ import {
 } from 'class-validator';
 
 export enum ReservationStatusDto {
+  CONFIRMED = 'CONFIRMED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum ReservationWishStatusDto {
   PENDING = 'PENDING',
   CONFIRMED = 'CONFIRMED',
   REFUSED = 'REFUSED',
@@ -61,12 +66,16 @@ export class ReservationDto {
   @IsNotEmpty()
   @IsString()
   packId!: string;
+
+  @IsNotEmpty()
+  @IsEnum(ReservationStatusDto)
+  status!: ReservationStatusDto;
 }
 
 export class ReservationWishEventDto {
   @IsNotEmpty()
-  @IsEnum(ReservationStatusDto)
-  status!: ReservationStatusDto;
+  @IsEnum(ReservationWishStatusDto)
+  status!: ReservationWishStatusDto;
 
   @IsNotEmpty()
   @IsDate()
@@ -103,8 +112,8 @@ export class ReservationWishDto {
   events!: ReservationWishEventDto[];
 
   @IsNotEmpty()
-  @IsEnum(ReservationStatusDto)
-  status!: ReservationStatusDto;
+  @IsEnum(ReservationWishStatusDto)
+  status!: ReservationWishStatusDto;
 
   @IsNotEmpty()
   @IsBoolean()

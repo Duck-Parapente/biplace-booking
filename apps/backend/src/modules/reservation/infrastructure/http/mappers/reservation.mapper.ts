@@ -2,21 +2,37 @@ import {
   ReservationWishStatus,
   ReservationWishWithReservation,
 } from '@modules/reservation/domain/reservation-wish.types';
-import { PlanningData } from '@modules/reservation/domain/reservation.types';
-import { ReservationStatusDto, ReservationWishDto, PlanningDayDto } from 'shared';
+import { PlanningData, ReservationStatus } from '@modules/reservation/domain/reservation.types';
+import {
+  ReservationStatusDto,
+  ReservationWishDto,
+  PlanningDayDto,
+  ReservationWishStatusDto,
+} from 'shared';
 
-const mapStatus = (status: ReservationWishStatus): ReservationStatusDto => {
+const mapWishStatus = (status: ReservationWishStatus): ReservationWishStatusDto => {
   switch (status) {
     case ReservationWishStatus.PENDING:
-      return ReservationStatusDto.PENDING;
+      return ReservationWishStatusDto.PENDING;
     case ReservationWishStatus.CONFIRMED:
-      return ReservationStatusDto.CONFIRMED;
+      return ReservationWishStatusDto.CONFIRMED;
     case ReservationWishStatus.REFUSED:
-      return ReservationStatusDto.REFUSED;
+      return ReservationWishStatusDto.REFUSED;
     case ReservationWishStatus.CANCELLED:
-      return ReservationStatusDto.CANCELLED;
+      return ReservationWishStatusDto.CANCELLED;
     default:
       throw new Error(`Unknown ReservationWishStatus: ${status}`);
+  }
+};
+
+const mapReservationStatus = (status: ReservationStatus): ReservationStatusDto => {
+  switch (status) {
+    case ReservationStatus.CONFIRMED:
+      return ReservationStatusDto.CONFIRMED;
+    case ReservationStatus.CANCELLED:
+      return ReservationStatusDto.CANCELLED;
+    default:
+      throw new Error(`Unknown ReservationStatus: ${status}`);
   }
 };
 
@@ -32,14 +48,15 @@ export function mapReservationWishToDto({
     startingDate: reservationWish.startingDate.value,
     endingDate: reservationWish.endingDate.value,
     packChoices: reservationWish.packChoices.map((packChoice) => packChoice.uuid),
-    status: mapStatus(reservationWish.status),
+    status: mapWishStatus(reservationWish.status),
     publicComment: reservationWish.publicComment,
-    reservations: reservations.map(({ id, packId }) => ({
+    reservations: reservations.map(({ id, packId, status }) => ({
       id: id.uuid,
       packId: packId.uuid,
+      status: mapReservationStatus(status),
     })),
     events: events.map(({ status, date }) => ({
-      status: mapStatus(status),
+      status: mapWishStatus(status),
       date: date.value,
     })),
   };

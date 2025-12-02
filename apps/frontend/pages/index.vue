@@ -43,9 +43,9 @@
               <div class="absolute top-3 right-3">
                 <span
                   class="px-2 py-1 text-xs font-medium rounded shadow-sm"
-                  :class="getStatusConfig(wish.status, wish.packChoices.length).classes"
+                  :class="getWishStatusInfo(wish).classes"
                 >
-                  {{ getStatusConfig(wish.status, wish.packChoices.length).label }}
+                  {{ getWishStatusInfo(wish).label }}
                 </span>
               </div>
 
@@ -110,10 +110,10 @@
                 </div>
               </div>
               <div
-                v-if="getStatusConfig(wish.status, wish.packChoices.length).infoText"
+                v-if="getWishStatusInfo(wish).infoText"
                 class="w-full border-t border-gray-200 p-3 text-sm text-gray-700"
               >
-                {{ getStatusConfig(wish.status, wish.packChoices.length).infoText }}
+                {{ getWishStatusInfo(wish).infoText }}
               </div>
               <button
                 v-if="wish.isCancelable"
@@ -277,6 +277,26 @@ const getStatusConfig = (status: ReservationStatusDto, packChoicesLength: number
     CANCELLED: { label: 'Annulée', classes: DEFAULT_CLASSES },
   };
   return configs[status] || { label: status, classes: DEFAULT_CLASSES };
+};
+
+const getWishStatusInfo = (wish: ReservationWishDto) => {
+  const statusConfig = getStatusConfig(wish.status, wish.packChoices.length);
+
+  // Check if there are any cancelled reservations
+  const hasCancelledReservation = wish.reservations?.some(
+    (r: any) => r.status === ReservationStatusDto.CANCELLED,
+  );
+
+  if (wish.status === ReservationStatusDto.CONFIRMED && hasCancelledReservation) {
+    return {
+      ...statusConfig,
+      label: 'Confirmée (Résa annulée)',
+      classes: 'bg-orange-200 text-orange-800',
+      infoText: 'Votre demande a été confirmée mais la réservation associée a été annulée.',
+    };
+  }
+
+  return statusConfig;
 };
 
 onMounted(() => {

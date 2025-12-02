@@ -19,7 +19,7 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
     ReservationWishStatus,
     ReservationWishStatus[]
   > = {
-    [ReservationWishStatus.CANCELLED]: [...PENDING_STATUSES, ReservationWishStatus.CONFIRMED],
+    [ReservationWishStatus.CANCELLED]: PENDING_STATUSES,
     [ReservationWishStatus.CONFIRMED]: PENDING_STATUSES,
     [ReservationWishStatus.REFUSED]: PENDING_STATUSES,
     [ReservationWishStatus.PENDING]: [],
