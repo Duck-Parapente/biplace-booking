@@ -10,15 +10,20 @@ function toDate(date: Date | string): Date {
 }
 
 /**
- * Format a date to a long French format (e.g., "mardi 28 novembre 2023")
+ * Format a date to a long French format with separate parts
+ * Returns an object with day, month, and weekday
  */
-export function formatDateLong(date: Date | string): string {
-  return toDate(date).toLocaleDateString('fr-FR', {
-    weekday: 'long',
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  });
+export function formatDateLong(date: Date | string): {
+  day: string;
+  month: string;
+  weekday: string;
+} {
+  const dateObj = toDate(date);
+  const day = dateObj.toLocaleDateString('fr-FR', { day: '2-digit' });
+  const month = dateObj.toLocaleDateString('fr-FR', { month: 'long' });
+  const weekday = dateObj.toLocaleDateString('fr-FR', { weekday: 'long' });
+
+  return { day, month, weekday };
 }
 
 /**

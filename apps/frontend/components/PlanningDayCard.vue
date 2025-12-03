@@ -11,8 +11,13 @@
       :class="isExpanded ? 'border-b border-gray-200' : ''"
     >
       <div class="flex items-center justify-between">
-        <h3 class="text-base font-semibold text-secondary-600">
-          {{ formatDateLong(day.date) }}
+        <h3 class="text-base font-semibold">
+          <span class="text-secondary-600"
+            >{{ formatDateLong(day.date).day }} {{ formatDateLong(day.date).month }}</span
+          >
+          <span class="text-gray-400 font-normal text-sm ml-1"
+            >({{ formatDateLong(day.date).weekday }})</span
+          >
         </h3>
         <IconChevronRight
           class="w-4 h-4 transition-transform"
