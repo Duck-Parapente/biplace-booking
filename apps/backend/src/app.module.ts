@@ -7,6 +7,7 @@ import { UserModule } from '@modules/user/user.module';
 import { ValidationEngineModule } from '@modules/validation-engine/validation-engine.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { CqrsModule } from '@nestjs/cqrs';
 import { PassportModule } from '@nestjs/passport';
 import { ConsoleModule } from 'nestjs-console';
 import { LoggerModule } from 'nestjs-pino';
@@ -42,6 +43,7 @@ const appModules = [UserModule, PackModule, ReservationModule, ValidationEngineM
       isGlobal: true,
     }),
     FeatureFlagModule,
+    CqrsModule.forRoot(),
     MailModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     ConsoleModule,
