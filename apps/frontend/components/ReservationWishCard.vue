@@ -55,7 +55,7 @@
       {{ statusConfig.infoText }}
     </div>
     <button
-      v-if="wish.reservation?.isCancelable || wish.isCancelable"
+      v-if="canCancel"
       @click="handleCancel(wish)"
       :disabled="cancelling"
       class="w-full bg-red-100 hover:bg-red-200 border-t border-red-200 p-3 text-sm font-medium text-red-800 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-b-lg"
@@ -102,8 +102,18 @@ const getPackLabel = (packId: string): string => {
 const statusConfig = getConfigFromStatus(props.currentStatus);
 
 const hasReservation = (packId: string): boolean => {
-  return props.wish.reservation?.packId === packId && props.currentStatus === 'CONFIRMED';
+  return (
+    props.wish.reservation?.packId === packId &&
+    props.currentStatus === ReservationWishStatusDto.CONFIRMED
+  );
 };
+
+const canCancel = computed(() => {
+  if (!props.wish.reservation) return props.wish.isCancelable;
+
+  const isAfterNow = props.wish.startingDate > new Date();
+  return isAfterNow && props.wish.reservation.isCancelable;
+});
 
 const handleCancel = async (wish: ReservationWishDto) => {
   if (

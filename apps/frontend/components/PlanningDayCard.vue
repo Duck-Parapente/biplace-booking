@@ -133,8 +133,10 @@ const canCancelReservation = (pack: PackPlanningDto): boolean => {
   if (!pack.reservation) return false;
   if (!pack.reservation.isCancelable) return false;
 
+  const isAfterNow = props.day.date > new Date();
+
   // User can cancel their own reservation
-  if (pack.reservation.userId === currentUser.value?.id) return true;
+  if (pack.reservation.userId === currentUser.value?.id && isAfterNow) return true;
 
   // Admin can delete any reservation
   if (hasRole(UserRoles.ADMIN)) return true;
