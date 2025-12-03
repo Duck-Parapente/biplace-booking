@@ -8,6 +8,7 @@ export const useUser = () => {
 
   // State management
   const userData = ref<UserDto | null>(null);
+  const users = ref<UserDto[]>([]);
   const loading = ref(false);
   const error = ref<string | null>(null);
   const updating = ref(false);
@@ -40,8 +41,9 @@ export const useUser = () => {
    */
   const getUsers = async (): Promise<UserDto[]> => {
     try {
-      const users = await callApi<UserDto[]>('/users');
-      return users;
+      const fetchedUsers = await callApi<UserDto[]>('/users');
+      users.value = fetchedUsers;
+      return fetchedUsers;
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Impossible de charger la liste des utilisateurs';
@@ -125,6 +127,7 @@ export const useUser = () => {
   return {
     // State
     userData,
+    users,
     loading,
     error,
     updating,

@@ -7,103 +7,14 @@
       <div class="flex-1 overflow-y-auto pb-2">
         <div class="space-y-1.5">
           <!-- Day Card -->
-          <div
+          <PlanningDayCard
             v-for="day in filteredPlanningDays"
             :key="day.date.toString()"
-            :class="[
-              'border rounded shadow-sm',
-              isToday(day.date) ? 'bg-gray-200 border-gray-400' : 'bg-white border-gray-300',
-            ]"
-          >
-            <div
-              @click="toggleDay(day.date.toString())"
-              class="px-3 py-1.5 cursor-pointer hover:bg-gray-50 transition"
-              :class="expandedDays.has(day.date.toString()) ? 'border-b border-gray-200' : ''"
-            >
-              <div class="flex items-center justify-between">
-                <h3 class="text-base font-semibold text-secondary-600">
-                  {{ formatDateLong(day.date) }}
-                </h3>
-                <IconChevronRight
-                  class="w-4 h-4 transition-transform"
-                  :class="expandedDays.has(day.date.toString()) ? 'rotate-90' : ''"
-                />
-              </div>
-
-              <!-- Pack Status Tags (when collapsed) -->
-              <div v-if="!expandedDays.has(day.date.toString())" class="flex flex-wrap gap-1 mt-2">
-                <span
-                  v-for="pack in day.packs"
-                  :key="pack.packId"
-                  class="px-2 py-0.5 text-xs rounded"
-                  :class="getPackStatusConfig(pack).backgroundClass"
-                >
-                  {{ pack.packLabel }}
-                </span>
-              </div>
-            </div>
-
-            <div v-show="expandedDays.has(day.date.toString())" class="p-2 space-y-1.5">
-              <!-- Pack Slot -->
-              <div
-                v-for="pack in day.packs"
-                :key="pack.packId"
-                class="border border-gray-200 rounded p-2 bg-gray-50"
-              >
-                <div class="flex items-start justify-between gap-2">
-                  <span class="text-sm text-secondary-600">{{ pack.packLabel }}</span>
-
-                  <div class="flex flex-col items-end gap-1">
-                    <div class="flex items-stretch gap-1">
-                      <div
-                        class="flex items-center gap-1 px-2 py-1 rounded text-sm"
-                        :class="getPackStatusConfig(pack).backgroundClass"
-                      >
-                        <component :is="getPackStatusConfig(pack).icon" class="w-3 h-3" />
-                        <span>{{ getPackStatusConfig(pack).label }}</span>
-                      </div>
-                      <button
-                        v-if="pack.reservation && canCancelReservation(pack)"
-                        @click="handleCancelReservation(pack.reservation.id)"
-                        class="flex items-center justify-center px-2 rounded bg-red-100 hover:bg-red-200 transition text-red-800"
-                        aria-label="Annuler la réservation"
-                      >
-                        <IconX class="w-3 h-3" />
-                      </button>
-                    </div>
-
-                    <!-- User Contact Info -->
-                    <div
-                      v-if="pack.reservation"
-                      class="space-y-0.5 text-xs text-gray-600 text-right"
-                    >
-                      <div v-if="getPackStatusConfig(pack).email">
-                        <a
-                          :href="`mailto:${getPackStatusConfig(pack).email}`"
-                          class="hover:underline"
-                        >
-                          {{ getPackStatusConfig(pack).email }}
-                        </a>
-                      </div>
-                      <div v-if="getPackStatusConfig(pack).phone">
-                        <a :href="`tel:${getPackStatusConfig(pack).phone}`" class="hover:underline">
-                          {{ getPackStatusConfig(pack).phone }}
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Public Comment -->
-                <div
-                  v-if="pack.reservation?.publicComment"
-                  class="mt-1.5 text-xs text-gray-700 italic"
-                >
-                  "{{ pack.reservation.publicComment }}"
-                </div>
-              </div>
-            </div>
-          </div>
+            :day="day"
+            :is-expanded="expandedDays.has(day.date.toString())"
+            @toggle-expanded="toggleDay(day.date.toString())"
+            @after-cancel-reservation="refreshPlanning"
+          />
         </div>
       </div>
     </div>
@@ -130,28 +41,18 @@
       :show="showCreateReservationModal"
       v-model="createReservationForm"
       @close="closeCreateReservationModal"
-      @submit="handleReservationCreated"
+      @submit="refreshPlanning"
     />
   </main>
 </template>
 
 <script setup lang="ts">
-import type { PackPlanningDto, UserDto, CreateReservationDto } from 'shared';
+import type { CreateReservationDto } from 'shared';
 import { UserRoles } from 'shared';
 import { ref, computed, watch, onMounted } from 'vue';
 
-import IconCheck from '~/components/icons/IconCheck.vue';
-import IconClock from '~/components/icons/IconClock.vue';
 import IconPlus from '~/components/icons/IconPlus.vue';
-import IconUser from '~/components/icons/IconUser.vue';
-import IconX from '~/components/icons/IconX.vue';
-import {
-  formatDateLong,
-  isToday,
-  getMonday,
-  getWeekDays,
-  formatDateToString,
-} from '~/composables/useDateHelpers';
+import { getMonday, getWeekDays, formatDateToString } from '~/composables/useDateHelpers';
 
 definePageMeta({
   middleware: 'auth',
@@ -159,13 +60,10 @@ definePageMeta({
 });
 
 const { packs, planningDays, fetchPlanning } = usePlanning();
-const { getUsers, userData: currentUser, getUser } = useUser();
-const { getUserDisplayName } = useUserHelpers();
+const { getUsers, getUser } = useUser();
 const { hasRole } = useAuth();
-const { cancelReservation } = useReservation();
-const { packs: allPacks, getPacks } = usePack();
+const { getPacks } = usePack();
 
-const users = ref<UserDto[]>([]);
 const currentWeekStart = ref<Date>(getMonday(new Date()));
 const week = computed(() => getWeekDays(currentWeekStart.value));
 
@@ -193,40 +91,8 @@ const closeCreateReservationModal = () => {
   showCreateReservationModal.value = false;
 };
 
-const handleReservationCreated = async () => {
+const refreshPlanning = async () => {
   await fetchPlanning(week.value.monday, week.value.sunday);
-};
-
-const canCancelReservation = (pack: PackPlanningDto): boolean => {
-  if (!pack.reservation) return false;
-
-  // User can cancel their own reservation
-  if (pack.reservation.userId === currentUser.value?.id) return true;
-
-  // Admin can delete any reservation
-  if (hasRole(UserRoles.ADMIN)) return true;
-
-  // Manager can delete reservations on packs they own
-  if (hasRole(UserRoles.MANAGER)) {
-    const packDetails = allPacks.value.find((p) => p.id === pack.packId);
-    return packDetails?.ownerId === currentUser.value?.id;
-  }
-
-  return false;
-};
-
-const handleCancelReservation = async (reservationId: string) => {
-  if (!confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) return;
-
-  try {
-    await cancelReservation(reservationId);
-
-    // Refresh planning after deleting
-    await fetchPlanning(week.value.monday, week.value.sunday);
-  } catch (error) {
-    console.error('Error deleting reservation:', error);
-    alert('Erreur lors de la suppression de la réservation');
-  }
 };
 
 // Selected packs filter
@@ -239,7 +105,7 @@ const sortedPacks = computed(() => {
 
 // Fetch planning when week changes
 watch(currentWeekStart, async () => {
-  await fetchPlanning(week.value.monday, week.value.sunday);
+  await refreshPlanning();
 
   // Select all packs by default if none selected
   if (selectedPacks.value.size === 0) {
@@ -249,12 +115,7 @@ watch(currentWeekStart, async () => {
 
 // Initial fetch
 onMounted(async () => {
-  await Promise.all([
-    fetchPlanning(week.value.monday, week.value.sunday),
-    getUsers().then((data) => (users.value = data)),
-    getUser(),
-    getPacks(),
-  ]);
+  await Promise.all([refreshPlanning(), getUsers(), getUser(), getPacks()]);
 
   // Select all packs by default if none selected
   if (selectedPacks.value.size === 0) {
@@ -284,35 +145,5 @@ const togglePack = (packId: string) => {
 const toggleDay = (dateKey: string) => {
   const set = expandedDays.value;
   set.has(dateKey) ? set.delete(dateKey) : set.add(dateKey);
-};
-
-const getReservedUser = (userId: string | undefined) => {
-  if (!userId) return undefined;
-  return users.value.find((u) => u.id === userId);
-};
-
-const getPackStatusConfig = (pack: PackPlanningDto) => {
-  if (pack.reservation) {
-    const user = getReservedUser(pack.reservation.userId);
-    return {
-      backgroundClass: 'bg-red-100 text-red-800',
-      icon: IconUser,
-      label: getUserDisplayName(user) ?? 'Admin',
-      phone: user?.phoneNumber,
-      email: user?.email,
-    };
-  }
-  if (pack.pendingWishesCount > 0) {
-    return {
-      backgroundClass: 'bg-orange-100 text-orange-800',
-      icon: IconClock,
-      label: `${pack.pendingWishesCount} ${pack.pendingWishesCount > 1 ? 'demandes' : 'demande'}`,
-    };
-  }
-  return {
-    backgroundClass: 'bg-green-100 text-green-800',
-    icon: IconCheck,
-    label: 'Disponible',
-  };
 };
 </script>
