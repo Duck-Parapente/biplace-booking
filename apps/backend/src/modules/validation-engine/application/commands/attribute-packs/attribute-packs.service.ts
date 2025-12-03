@@ -1,3 +1,4 @@
+import { DomainEventMetadata } from '@libs/ddd';
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
@@ -6,6 +7,7 @@ import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.service';
 import { CreateReservationCommand } from '@modules/reservation/application/commands/create-reservation/create-reservation.command';
 import { CreateReservationService } from '@modules/reservation/application/commands/create-reservation/create-reservation.service';
+import { UpdateReservationWishService } from '@modules/reservation/application/commands/update-reservation-wish/update-reservation-wish.service';
 import { GetReservationWishesService } from '@modules/reservation/application/queries/get-reservation-wishes/get-reservation-wishes.service';
 import { AttributionDomainService } from '@modules/validation-engine/domain/attribution.domain-service';
 import { ValidationEngineRunDomainEvent } from '@modules/validation-engine/domain/events/validation-engine-run.domain-event';
@@ -24,6 +26,7 @@ export class AttributePacksService {
   constructor(
     private readonly getPacksService: GetPacksService,
     private readonly getReservationWishesService: GetReservationWishesService,
+    private readonly updateReservationWishService: UpdateReservationWishService,
     private readonly createReservationService: CreateReservationService,
     private readonly attributionDomainService: AttributionDomainService,
     @Inject(EVENT_EMITTER)
@@ -88,6 +91,7 @@ export class AttributePacksService {
     this.logger.log(`Generated ${attributions.length} attributions`);
 
     await this.createReservations(attributions, pendingWishes, startingDate, endingDate);
+    await this.refuseUnattributedWishes(startingDate, VALIDATION_ENGINE_MODULE);
 
     await this.eventEmitter.logDomainEvent(
       new ValidationEngineRunDomainEvent({
@@ -130,6 +134,18 @@ export class AttributePacksService {
       this.logger.log(
         `✅ Created reservation for wish ${wish.id.uuid} with pack ${attribution.assignedPackId.uuid}`,
       );
+    }
+  }
+
+  private async refuseUnattributedWishes(
+    startingDate: DateValueObject,
+    metadata: DomainEventMetadata,
+  ): Promise<void> {
+    const pendingWishes =
+      await this.getReservationWishesService.findPendingAndRefusedByStartingDate(startingDate);
+
+    for (const wish of pendingWishes) {
+      await this.updateReservationWishService.refuseReservationWish(wish.id, metadata);
     }
   }
 }
