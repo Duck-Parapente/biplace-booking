@@ -38,10 +38,7 @@
             />
             {{ showHistory ? 'Masquer' : 'Voir' }} l'historique
           </button>
-          <ReservationWishEventHistory
-            v-if="showHistory"
-            :events="sortedEvents"
-          />
+          <ReservationWishEventHistory v-if="showHistory" :events="sortedEvents" />
         </div>
       </div>
     </div>
@@ -64,14 +61,14 @@
 </template>
 
 <script setup lang="ts">
-import { ReservationOrWishStatusDto, type ReservationWishDto, type PackDto } from 'shared';
+import { type ReservationWishDto, type PackDto, ReservationWishStatusDto } from 'shared';
 
 import { formatDateLong } from '~/composables/useDateHelpers';
 
 interface Props {
   wish: ReservationWishDto;
   packs: PackDto[];
-  currentStatus: ReservationOrWishStatusDto;
+  currentStatus: ReservationWishStatusDto;
 }
 
 const { getConfigFromStatus } = useReservationWishStatus();

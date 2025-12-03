@@ -17,19 +17,18 @@
 </template>
 
 <script setup lang="ts">
-import type { ReservationOrWishStatusDto } from 'shared';
+import type { ReservationWishStatusDto } from 'shared';
 
 interface Props {
-  availableStatuses: ReservationOrWishStatusDto[];
-  selectedStatuses: Set<ReservationOrWishStatusDto>;
+  availableStatuses: ReservationWishStatusDto[];
+  selectedStatuses: Set<ReservationWishStatusDto>;
 }
 
 defineProps<Props>();
 
 defineEmits<{
-  toggle: [status: ReservationOrWishStatusDto];
+  toggle: [status: ReservationWishStatusDto];
 }>();
 
 const { getStatusLabel } = useReservationWishStatus();
-
 </script>

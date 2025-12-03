@@ -1,36 +1,37 @@
-import { ReservationOrWishStatusDto } from 'shared';
+import { ReservationWishStatusDto } from 'shared';
+
+export type ConfigType = { label: string; classes: string; infoText?: string };
 
 export const useReservationWishStatus = () => {
-  const STATUS_CONFIG: Record<
-    ReservationOrWishStatusDto,
-    { label: string; classes: string; infoText?: string }
-  > = {
-    [ReservationOrWishStatusDto.PENDING]: {
+  const STATUS_CONFIG: Record<ReservationWishStatusDto, ConfigType> = {
+    [ReservationWishStatusDto.PENDING]: {
       label: 'En attente',
       classes: 'bg-yellow-200 text-yellow-800',
     },
-    [ReservationOrWishStatusDto.CONFIRMED]: {
+    [ReservationWishStatusDto.CONFIRMED]: {
       label: 'Confirmée',
       classes: 'bg-green-200 text-green-800',
     },
-    [ReservationOrWishStatusDto.REFUSED]: {
+    [ReservationWishStatusDto.REFUSED]: {
       label: 'Refusée',
       classes: 'bg-red-200 text-red-800',
       infoText: "Les packs sélectionnés ont été attribués à d'autres pilotes pour le moment.",
     },
-    [ReservationOrWishStatusDto.CANCELLED]: {
+    [ReservationWishStatusDto.CANCELLED]: {
       label: 'Annulée',
       classes: 'bg-gray-200 text-gray-800',
     },
   };
 
-  const getConfigFromStatus = (status: ReservationOrWishStatusDto) => {
-    return STATUS_CONFIG[status] || STATUS_CONFIG[ReservationOrWishStatusDto.CANCELLED];
+  const getConfigFromStatus = (status: ReservationWishStatusDto): ConfigType => {
+    return (
+      STATUS_CONFIG[status] || (STATUS_CONFIG[ReservationWishStatusDto.CANCELLED] as ConfigType)
+    );
   };
 
-  const getStatusLabel = (status: ReservationOrWishStatusDto): string => {
-  return STATUS_CONFIG[status]?.label || status;
-};
+  const getStatusLabel = (status: ReservationWishStatusDto): string => {
+    return STATUS_CONFIG[status]?.label || status;
+  };
 
   return {
     STATUS_CONFIG,

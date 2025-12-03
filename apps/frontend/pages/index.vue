@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { ReservationOrWishStatusDto, type ReservationWishDto } from 'shared';
+import { ReservationWishStatusDto, type ReservationWishDto } from 'shared';
 
 definePageMeta({
   middleware: 'auth',
@@ -49,15 +49,15 @@ const { reservationWishes, loading, error, getReservationWishes } = useReservati
 
 const { packs, getPacks } = usePack();
 
-const selectedStatuses = ref<Set<ReservationOrWishStatusDto>>(
-  new Set([ReservationOrWishStatusDto.PENDING, ReservationOrWishStatusDto.CONFIRMED]),
+const selectedStatuses = ref<Set<ReservationWishStatusDto>>(
+  new Set([ReservationWishStatusDto.PENDING, ReservationWishStatusDto.CONFIRMED]),
 );
 
 const getCurrentStatus = (wish: ReservationWishDto) => {
   const sortedEvents = [...wish.events].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
-  return sortedEvents[0]?.status ?? ReservationOrWishStatusDto.PENDING;
+  return sortedEvents[0]?.status ?? ReservationWishStatusDto.PENDING;
 };
 
 const availableStatuses = computed(() => {
@@ -72,7 +72,7 @@ const filteredReservationWishes = computed(() => {
     .filter((wish) => selectedStatuses.value.has(getCurrentStatus(wish)));
 });
 
-const toggleStatus = (status: ReservationOrWishStatusDto) => {
+const toggleStatus = (status: ReservationWishStatusDto) => {
   const set = selectedStatuses.value;
   set.has(status) ? set.delete(status) : set.add(status);
 };

@@ -11,7 +11,7 @@ import {
   IsUUID,
 } from 'class-validator';
 
-export enum ReservationOrWishStatusDto {
+export enum ReservationWishStatusDto {
   PENDING = 'PENDING',
   CONFIRMED = 'CONFIRMED',
   REFUSED = 'REFUSED',
@@ -32,18 +32,10 @@ export class ReservationDto {
   isCancelable!: boolean;
 }
 
-export enum ReservationEventTypeDto {
-  WISH = 'WISH',
-  RESERVATION = 'RESERVATION',
-}
-
 export class ReservationWishEventDto {
   @IsNotEmpty()
-  @IsEnum(ReservationOrWishStatusDto)
-  status!: ReservationOrWishStatusDto;
-
-  @IsNotEmpty()
-  type!: ReservationEventTypeDto;
+  @IsEnum(ReservationWishStatusDto)
+  status!: ReservationWishStatusDto;
 
   @IsNotEmpty()
   @IsDate()
