@@ -21,11 +21,11 @@ export class CreateReservationService implements ICommandHandler<CreateReservati
 
   constructor(
     @Inject(RESERVATION_REPOSITORY)
-    protected readonly reservationRepository: ReservationRepositoryPort,
-    protected readonly reservationDomainService: ReservationDomainService,
-    protected readonly updateReservationWishService: UpdateReservationWishService,
-    protected readonly createReservationWishService: CreateReservationWishService,
-    protected readonly getReservationWishesService: GetReservationWishesService,
+    private readonly reservationRepository: ReservationRepositoryPort,
+    private readonly reservationDomainService: ReservationDomainService,
+    private readonly updateReservationWishService: UpdateReservationWishService,
+    private readonly createReservationWishService: CreateReservationWishService,
+    private readonly getReservationWishesService: GetReservationWishesService,
   ) {}
 
   async execute({

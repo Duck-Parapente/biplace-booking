@@ -12,7 +12,7 @@ export class GetPacksService {
 
   constructor(
     @Inject(PACK_REPOSITORY)
-    protected readonly packRepository: PackRepositoryPort,
+    private readonly packRepository: PackRepositoryPort,
   ) {}
 
   async execute(): Promise<PackEntity[]> {

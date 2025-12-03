@@ -32,7 +32,7 @@ export class UpdateReservationWishHttpController {
   constructor(
     private readonly updateReservationWishService: UpdateReservationWishService,
     @Inject(RESERVATION_WISH_REPOSITORY)
-    protected readonly reservationWishRepository: ReservationWishRepositoryPort,
+    private readonly reservationWishRepository: ReservationWishRepositoryPort,
   ) {}
 
   @Delete(':id')

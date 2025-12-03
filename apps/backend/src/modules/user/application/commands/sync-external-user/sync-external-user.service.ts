@@ -12,7 +12,7 @@ export class SyncExternalUserService implements ICommandHandler<SyncExternalUser
 
   constructor(
     @Inject(USER_REPOSITORY)
-    protected readonly userRepository: UserRepositoryPort,
+    private readonly userRepository: UserRepositoryPort,
   ) {}
 
   async execute(command: SyncExternalUserCommand): Promise<void> {

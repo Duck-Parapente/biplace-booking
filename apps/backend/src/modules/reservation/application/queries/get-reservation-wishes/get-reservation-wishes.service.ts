@@ -12,7 +12,7 @@ export class GetReservationWishesService {
 
   constructor(
     @Inject(RESERVATION_WISH_REPOSITORY)
-    protected readonly reservationWishRepository: ReservationWishRepositoryPort,
+    private readonly reservationWishRepository: ReservationWishRepositoryPort,
   ) {}
 
   async execute(userId: UUID): Promise<ReservationWishWithReservation[]> {

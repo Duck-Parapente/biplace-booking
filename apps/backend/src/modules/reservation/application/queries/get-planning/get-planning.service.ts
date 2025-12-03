@@ -16,9 +16,9 @@ export class GetPlanningService {
 
   constructor(
     @Inject(RESERVATION_REPOSITORY)
-    protected readonly reservationRepository: ReservationRepositoryPort,
+    private readonly reservationRepository: ReservationRepositoryPort,
     @Inject(RESERVATION_WISH_REPOSITORY)
-    protected readonly reservationWishRepository: ReservationWishRepositoryPort,
+    private readonly reservationWishRepository: ReservationWishRepositoryPort,
     private readonly planningDomainService: PlanningDomainService,
     private readonly getPacksService: GetPacksService,
   ) {}

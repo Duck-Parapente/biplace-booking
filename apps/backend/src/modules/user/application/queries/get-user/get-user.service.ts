@@ -11,7 +11,7 @@ export class GetUserService {
 
   constructor(
     @Inject(USER_REPOSITORY)
-    protected readonly userRepository: UserRepositoryPort,
+    private readonly userRepository: UserRepositoryPort,
   ) {}
 
   async execute(command: GetUserCommand): Promise<UserEntity> {

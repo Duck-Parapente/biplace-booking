@@ -11,7 +11,7 @@ export class UpdatePackService implements ICommandHandler<UpdatePackCommand, voi
 
   constructor(
     @Inject(PACK_REPOSITORY)
-    protected readonly packRepository: PackRepositoryPort,
+    private readonly packRepository: PackRepositoryPort,
   ) {}
 
   async execute({ packId, updates, metadata }: UpdatePackCommand): Promise<void> {
