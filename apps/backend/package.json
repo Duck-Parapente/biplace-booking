@@ -5,6 +5,7 @@
   "scripts": {
     "dotenv": "dotenv -e ../../infra/.env",
     "dev": "pnpm dotenv -- ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/main.ts | pino-pretty",
+    "dev:debug": "pnpm dotenv -- ts-node-dev --inspect=9229 -r tsconfig-paths/register --respawn --transpile-only src/main.ts",
     "attribute:dev": "pnpm dotenv -- ts-node-dev -r tsconfig-paths/register --transpile-only src/console.ts run:attribute-packs | pino-pretty",
     "start": "node dist/apps/backend/src/main.js",
     "attribute": "node dist/apps/backend/src/console.js run:attribute-packs",
