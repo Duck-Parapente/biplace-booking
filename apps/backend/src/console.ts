@@ -11,7 +11,7 @@ bootstrap.init().then(async (app) => {
     await app.init();
     app.useLogger(app.get(Logger));
     await bootstrap.boot();
-    process.exit(0);
+    await app.close();
   } catch (e) {
     console.error('Error during console execution', e);
     process.exit(1);

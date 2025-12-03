@@ -7,7 +7,7 @@ import { PackSummary } from '@libs/types/accross-modules';
 import { PackEntity } from '@modules/pack/domain/pack.entity';
 import { PackRepositoryPort } from '@modules/pack/domain/ports/pack.repository.port';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Pack } from '@prisma/client';
+import { Pack, ReservationStatus } from '@prisma/client';
 
 const toEntity = (pack: Pack): PackEntity => {
   const { id, ownerId, ...otherProps } = pack;
@@ -66,6 +66,7 @@ export class PackRepository implements PackRepositoryPort {
             AND: [
               { startingDate: { lt: endingDate.value } },
               { endingDate: { gt: startingDate.value } },
+              { status: ReservationStatus.CONFIRMED },
             ],
           },
         },

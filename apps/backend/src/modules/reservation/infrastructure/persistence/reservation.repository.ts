@@ -78,6 +78,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
         AND: [
           { startingDate: { lt: endingDate.value } },
           { endingDate: { gt: startingDate.value } },
+          { status: ReservationStatus.CONFIRMED },
         ],
       },
     });

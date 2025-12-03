@@ -76,20 +76,11 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
   }
 
   isCancelable(): boolean {
-    return (
-      ReservationWishEntity.ALLOWED_STATUS_TRANSITIONS[ReservationWishStatus.REFUSED].includes(
-        this.props.status,
-      ) && this.startingDate.isInTheFuture()
-    );
+    return this.canUpdateStatusTo(ReservationWishStatus.CANCELLED);
   }
 
   update(status: ReservationWishStatus, metadata: DomainEventMetadata): void {
-    const allowedTransitions = ReservationWishEntity.ALLOWED_STATUS_TRANSITIONS[status];
-
-    if (
-      !allowedTransitions.includes(this.props.status) ||
-      (status === ReservationWishStatus.REFUSED && !this.isCancelable())
-    ) {
+    if (!this.canUpdateStatusTo(status)) {
       throw new CannotUpdateReservationWishStatusError(this.id, this.props.status, status);
     }
 
@@ -104,15 +95,11 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
     );
   }
 
-  shouldSendNewStatusNotification(
-    previousStatus: ReservationWishStatus,
-    newStatus: ReservationWishStatus,
-  ): boolean {
-    if (previousStatus === newStatus) {
-      return false;
-    }
-
-    return [ReservationWishStatus.CONFIRMED, ReservationWishStatus.REFUSED].includes(newStatus);
+  private canUpdateStatusTo(newStatus: ReservationWishStatus): boolean {
+    const allowedTransitions = ReservationWishEntity.ALLOWED_STATUS_TRANSITIONS[newStatus];
+    return (
+      allowedTransitions.includes(this.props.status) && this.props.startingDate.isInTheFuture()
+    );
   }
 
   validate(): void {

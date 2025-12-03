@@ -94,11 +94,7 @@ export class MailClient {
         }),
       };
 
-      const result = await this.mailgun.messages.create(this.domain, messageData);
-
-      this.logger.log(
-        `Template email sent successfully to ${recipients.join(', ')}: ${result.id} (template: ${options.template})`,
-      );
+      await this.mailgun.messages.create(this.domain, messageData);
     } catch (error) {
       this.logger.error(
         `Failed to send template email: ${(error as Error).message}`,

@@ -30,6 +30,10 @@ export class EmailNotificationAdapter implements ReservationWishNotificationPort
   }
 
   private async sendNotificationEmail(reservationWishId: UUID, template: string): Promise<void> {
+    this.logger.log(
+      `sendNotificationEmail called for ${reservationWishId.uuid} with template ${template}`,
+    );
+
     try {
       // TODO: create a command handler to fetch reservation wish details
       // This handler should be listening to reservation wish events

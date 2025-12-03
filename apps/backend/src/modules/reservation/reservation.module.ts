@@ -20,6 +20,7 @@ import { CreateReservationHttpController } from './infrastructure/http/controlle
 import { GetPlanningHttpController } from './infrastructure/http/controllers/get-planning.http.controller';
 import { GetReservationWishesHttpController } from './infrastructure/http/controllers/get-reservation-wishes.http.controller';
 import { UpdateReservationWishHttpController } from './infrastructure/http/controllers/update-reservation-wish.http.controller';
+import { ReservationWishStatusUpdatedEventHandler } from './infrastructure/listeners/reservation-wish-updated.event-handler';
 import { ReservationWishRepository } from './infrastructure/persistence/reservation-wish.repository';
 import { ReservationRepository } from './infrastructure/persistence/reservation.repository';
 import {
@@ -49,6 +50,7 @@ import {
     ReservationWishDomainService,
     ReservationDomainService,
     PlanningDomainService,
+    ReservationWishStatusUpdatedEventHandler,
     { provide: RESERVATION_WISH_REPOSITORY, useClass: ReservationWishRepository },
     { provide: RESERVATION_REPOSITORY, useClass: ReservationRepository },
     {
