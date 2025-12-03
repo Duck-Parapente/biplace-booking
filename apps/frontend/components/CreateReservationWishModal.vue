@@ -1,6 +1,16 @@
 <template>
+  <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg">
+    <div class="max-w-4xl mx-auto">
+      <button
+        @click="openCreateModal"
+        class="w-full bg-secondary-600 text-white hover:bg-secondary-700 transition text-sm px-4 py-3 rounded font-medium"
+      >
+        Créer une nouvelle demande
+      </button>
+    </div>
+  </div>
   <div
-    v-if="show"
+    v-if="showModal"
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
     @click.self="$emit('close')"
   >
@@ -9,7 +19,7 @@
       <form @submit.prevent="handleSubmit" class="space-y-4">
         <BaseInput
           id="startingDate"
-          v-model="localForm.startingDate"
+          v-model="addReservationWishForm.startingDate"
           label="Date"
           type="date"
           required
@@ -56,25 +66,27 @@
             Commentaire public (optionnel)
           </label>
           <textarea
-            v-model="localForm.publicComment"
+            v-model="addReservationWishForm.publicComment"
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-600 focus:border-transparent"
             rows="3"
             placeholder="Ajoutez un commentaire..."
           ></textarea>
         </div>
 
-        <div v-if="error" class="p-3 bg-red-50 text-red-700 text-sm">
-          <p><strong>Erreur:</strong> {{ error }}</p>
+        <div v-if="submitError" class="p-3 bg-red-50 text-red-700 text-sm">
+          <p><strong>Erreur:</strong> {{ submitError }}</p>
         </div>
 
-        <div v-if="success" class="p-3 bg-primary-400/20 text-secondary-600 text-sm">
+        <div v-if="submitSuccess" class="p-3 bg-primary-400/20 text-secondary-600 text-sm">
           <p>✓ Demande créée avec succès</p>
         </div>
 
         <div class="flex gap-3 pt-2">
           <button
             type="submit"
-            :disabled="submitting || selectedPacks.length === 0 || !localForm.startingDate"
+            :disabled="
+              submitting || selectedPacks.length === 0 || !addReservationWishForm.startingDate
+            "
             class="flex-1 bg-secondary-600 text-white hover:bg-secondary-700 transition text-sm px-4 py-2 rounded disabled:opacity-50"
           >
             {{ submitting ? 'Création...' : 'Créer' }}
@@ -94,36 +106,50 @@
 </template>
 
 <script setup lang="ts">
-import type { CreateReservationWishDto, PackDto } from 'shared';
+import type { PackDto } from 'shared';
 
 import { formatDateToString } from '~/composables/useDateHelpers';
 
 interface Props {
-  show: boolean;
   packs: PackDto[];
-  submitting: boolean;
-  error: string | null;
-  success: boolean;
-  modelValue: CreateReservationWishDto;
 }
 
+const { addReservationWishForm, submitReservationWish, submitError, submitSuccess, submitting } =
+  useReservationWish();
+
 const props = defineProps<Props>();
-
-const emit = defineEmits<{
-  close: [];
-  submit: [];
-  'update:modelValue': [value: CreateReservationWishDto];
-}>();
-
-const localForm = computed({
-  get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value),
-});
-
 const packSearch = ref('');
+const showModal = ref(false);
 const selectedPacks = ref<PackDto[]>([]);
 
 const today = computed(() => formatDateToString(new Date()));
+
+const openCreateModal = () => {
+  showModal.value = true;
+  submitError.value = null;
+  submitSuccess.value = false;
+  selectedPacks.value = [];
+  packSearch.value = '';
+  addReservationWishForm.value = {
+    startingDate: '',
+    packChoices: [],
+    publicComment: undefined,
+  };
+};
+
+const closeModal = () => {
+  showModal.value = false;
+};
+
+const handleSubmit = async () => {
+  await submitReservationWish();
+
+  if (submitSuccess.value) {
+    setTimeout(() => {
+      closeModal();
+    }, 1000);
+  }
+};
 
 const packOptions = computed(() =>
   props.packs
@@ -138,27 +164,13 @@ const handlePackSelect = (packId: string) => {
   const pack = props.packs.find((p) => p.id === packId);
   if (pack && !selectedPacks.value.find((p) => p.id === pack.id)) {
     selectedPacks.value.push(pack);
-    localForm.value.packChoices = selectedPacks.value.map((p) => p.id);
+    addReservationWishForm.value.packChoices = selectedPacks.value.map((p) => p.id);
   }
   packSearch.value = '';
 };
 
 const removePackChoice = (packId: string) => {
   selectedPacks.value = selectedPacks.value.filter((p) => p.id !== packId);
-  localForm.value.packChoices = selectedPacks.value.map((p) => p.id);
+  addReservationWishForm.value.packChoices = selectedPacks.value.map((p) => p.id);
 };
-
-const handleSubmit = () => {
-  emit('submit');
-};
-
-watch(
-  () => props.show,
-  (newShow) => {
-    if (newShow) {
-      selectedPacks.value = [];
-      packSearch.value = '';
-    }
-  },
-);
 </script>
