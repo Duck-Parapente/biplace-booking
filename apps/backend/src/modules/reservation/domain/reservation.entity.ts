@@ -77,7 +77,9 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
   }
 
   isCancelable(): boolean {
-    return this.props.status === ReservationStatus.CONFIRMED;
+    return (
+      this.props.status === ReservationStatus.CONFIRMED && this.props.startingDate.isInTheFuture()
+    );
   }
 
   validate(): void {

@@ -103,15 +103,19 @@ export class ReservationRepository implements ReservationRepositoryPort {
       },
     });
 
-    return reservations.map((r) => ({
-      id: new UUID({ uuid: r.id }),
-      packId: new UUID({ uuid: r.packId }),
-      status: mapStatus(r.status),
-      userId: r.userId ? new UUID({ uuid: r.userId }) : undefined,
-      startingDate: DateValueObject.fromDate(r.startingDate),
-      endingDate: DateValueObject.fromDate(r.endingDate),
-      publicComment: r.publicComment ?? undefined,
-    }));
+    return reservations.map((record) => {
+      const entity = toEntity(record);
+      return {
+        id: entity.id,
+        isCancelable: entity.isCancelable(),
+        packId: entity.packId,
+        status: mapStatus(entity.status),
+        userId: entity.userId,
+        startingDate: entity.startingDate,
+        endingDate: entity.endingDate,
+        publicComment: entity.publicComment,
+      };
+    });
   }
 
   async findById(id: UUID): Promise<ReservationEntity | null> {

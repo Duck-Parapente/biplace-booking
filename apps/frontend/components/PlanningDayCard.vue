@@ -111,7 +111,6 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   'toggle-expanded': [];
-  'cancel-reservation': [reservationId: string];
   'after-cancel-reservation': [];
 }>();
 
@@ -127,6 +126,7 @@ const toggleExpanded = () => {
 
 const canCancelReservation = (pack: PackPlanningDto): boolean => {
   if (!pack.reservation) return false;
+  if (!pack.reservation.isCancelable) return false;
 
   // User can cancel their own reservation
   if (pack.reservation.userId === currentUser.value?.id) return true;

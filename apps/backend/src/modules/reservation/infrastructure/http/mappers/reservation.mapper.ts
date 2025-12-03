@@ -60,6 +60,7 @@ export function mapPlanningDataToDto(planningData: PlanningData[]): PlanningDayD
             id: reservation.id.uuid,
             userId: reservation.userId?.uuid,
             publicComment: reservation.publicComment || null,
+            isCancelable: reservation.isCancelable,
           }
         : null,
     })),

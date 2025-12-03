@@ -17,6 +17,7 @@ export type ReservationProps = BaseReservationProps & {
 
 export type PlanningReservationDto = BaseReservationProps & {
   id: UUID;
+  isCancelable: boolean;
 };
 
 export interface PlanningPackData {

@@ -1,6 +1,7 @@
 import {
   ArrayNotEmpty,
   IsArray,
+  IsBoolean,
   IsDate,
   IsNotEmpty,
   IsOptional,
@@ -12,6 +13,10 @@ export class PlanningReservationDto {
   @IsNotEmpty()
   @IsUUID()
   id!: string;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isCancelable!: boolean;
 
   @IsOptional()
   @IsString()
