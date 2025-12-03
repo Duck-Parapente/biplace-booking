@@ -44,6 +44,12 @@ export class ReservationWishStatusUpdatedEventHandler
         await this.notificationPort.notifyRefusal(aggregateId);
         return;
       }
+
+      if (status === ReservationWishStatus.CANCELLED) {
+        this.logger.log(`Sending cancel notification for reservation wish ${aggregateId.uuid}`);
+        await this.notificationPort.notifyCancel(aggregateId);
+        return;
+      }
     } catch (error) {
       this.logger.error(
         `Error in ReservationWishStatusUpdatedEventHandler: ${(error as Error).message}`,

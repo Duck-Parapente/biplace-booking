@@ -6,6 +6,7 @@ import { Injectable, Logger } from '@nestjs/common';
 
 const TEMPLATE_CONFIRMATION = 'reservation_wish_confirmed';
 const TEMPLATE_REFUSAL = 'reservation_wish_refused';
+const TEMPLATE_CANCEL = 'reservation_wish_cancelled';
 
 const formatDate = (date: Date): string => {
   return date.toLocaleDateString('fr-FR', {
@@ -23,6 +24,10 @@ export class EmailNotificationAdapter implements ReservationWishNotificationPort
 
   async notifyConfirmation(reservationWishId: UUID): Promise<void> {
     await this.sendNotificationEmail(reservationWishId, TEMPLATE_CONFIRMATION);
+  }
+
+  async notifyCancel(reservationWishId: UUID): Promise<void> {
+    await this.sendNotificationEmail(reservationWishId, TEMPLATE_CANCEL);
   }
 
   async notifyRefusal(reservationWishId: UUID): Promise<void> {
