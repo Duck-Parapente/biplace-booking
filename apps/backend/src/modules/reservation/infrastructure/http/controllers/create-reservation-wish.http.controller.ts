@@ -7,7 +7,6 @@ import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
 import { CreateReservationWishCommand } from '@modules/reservation/application/commands/create-reservation-wish/create-reservation-wish.command';
 import { CreateReservationWishService } from '@modules/reservation/application/commands/create-reservation-wish/create-reservation-wish.service';
 import {
-  CannotCreateReservationWishException,
   EmptyPackChoicesException,
   ReservationWishInvalidDateRangeException,
   UserHasReservationWishOnStartingDateException,
@@ -56,7 +55,6 @@ export class CreateReservationWishHttpController {
       if (
         error instanceof ExceptionBase &&
         [
-          CannotCreateReservationWishException.name,
           EmptyPackChoicesException.name,
           ReservationWishInvalidDateRangeException.name,
           UserHasReservationWishOnStartingDateException.name,

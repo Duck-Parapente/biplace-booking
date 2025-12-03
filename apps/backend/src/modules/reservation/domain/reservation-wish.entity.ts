@@ -5,7 +5,6 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { ReservationWishCreatedDomainEvent } from './events/reservation-wish-created.domain-event';
 import { ReservationWishStatusUpdatedDomainEvent } from './events/reservation-wish-updated.domain-event';
 import {
-  CannotCreateReservationWishException,
   CannotUpdateReservationWishStatusException,
   EmptyPackChoicesException,
   ReservationWishInvalidDateRangeException,
@@ -45,10 +44,6 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
       createdAt: DateValueObject.fromDate(new Date()),
       props,
     });
-
-    if (!entity.canCreate()) {
-      throw new CannotCreateReservationWishException(id, props.startingDate);
-    }
 
     entity.addEvent(
       new ReservationWishCreatedDomainEvent({
@@ -104,15 +99,9 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
     );
   }
 
-  private canCreate(): boolean {
-    return this.props.startingDate.isInTheFuture() && this.createdAt.isInTheFuture();
-  }
-
   private canUpdate(newStatus: ReservationWishStatus): boolean {
     const allowedTransitions = ReservationWishEntity.ALLOWED_STATUS_TRANSITIONS[newStatus];
-    return (
-      allowedTransitions.includes(this.props.status) && this.props.startingDate.isInTheFuture()
-    );
+    return allowedTransitions.includes(this.props.status);
   }
 
   validate(): void {

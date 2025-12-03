@@ -51,13 +51,3 @@ export class EmptyPackChoicesException extends ExceptionBase {
     super('Reservation wish must have at least one pack choice.');
   }
 }
-
-export class CannotCreateReservationWishException extends ExceptionBase {
-  code = CannotCreateReservationWishException.name;
-
-  constructor(packId: UUID, startingDate: DateValueObject) {
-    super(
-      `Cannot create reservation wish for pack ID ${packId.uuid} on starting date ${startingDate.value.toISOString()}.`,
-    );
-  }
-}
