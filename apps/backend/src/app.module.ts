@@ -18,15 +18,24 @@ const appModules = [UserModule, PackModule, ReservationModule, ValidationEngineM
     LoggerModule.forRoot({
       pinoHttp: {
         useLevel: 'info',
-        serializers: {
-          req: (req) => ({
-            ...req,
-            headers: {
-              ...req.headers,
-              authorization: req.headers.authorization ? '[REDACTED]' : undefined,
-            },
-          }),
+        customSuccessMessage: (req, res) => {
+          return `(${res.statusCode}) ${req.method} ${req.url}`;
         },
+        serializers:
+          process.env.NODE_ENV === 'local'
+            ? {
+                req: () => undefined,
+                res: () => undefined,
+              }
+            : {
+                req: (req) => ({
+                  ...req,
+                  headers: {
+                    ...req.headers,
+                    authorization: req.headers.authorization ? '[REDACTED]' : undefined,
+                  },
+                }),
+              },
       },
     }),
     ConfigModule.forRoot({
