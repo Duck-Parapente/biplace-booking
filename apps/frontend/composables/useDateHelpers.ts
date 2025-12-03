@@ -95,12 +95,16 @@ export function getMonday(date: Date): Date {
 /**
  * Get all 7 days of the week starting from Monday
  */
-export function getWeekDays(monday: Date): Date[] {
+export function getWeekDays(monday: Date): { monday: Date; sunday: Date } {
   const days: Date[] = [];
   for (let i = 0; i < 7; i++) {
     const day = new Date(monday);
     day.setDate(monday.getDate() + i);
     days.push(day);
   }
-  return days;
+
+  return {
+    monday: days[0]!,
+    sunday: days[6]!,
+  };
 }

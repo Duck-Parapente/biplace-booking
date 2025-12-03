@@ -210,6 +210,8 @@ const { cancelReservation } = useReservation();
 const { packs: allPacks, getPacks } = usePack();
 
 const users = ref<UserDto[]>([]);
+const currentWeekStart = ref<Date>(getMonday(new Date()));
+const week = computed(() => getWeekDays(currentWeekStart.value));
 
 // Check if user has Admin or Manager role
 const isAdminOrManager = computed(() => {
@@ -236,9 +238,7 @@ const closeCreateReservationModal = () => {
 };
 
 const handleReservationCreated = async () => {
-  // Refresh planning after creating a reservation
-  const weekDays = getWeekDays(currentWeekStart.value);
-  await fetchPlanning(weekDays[0]!, weekDays[6]!);
+  await fetchPlanning(week.value.monday, week.value.sunday);
 };
 
 const canCancelReservation = (pack: PackPlanningDto): boolean => {
@@ -266,8 +266,7 @@ const handleCancelReservation = async (reservationId: string) => {
     await cancelReservation(reservationId);
 
     // Refresh planning after deleting
-    const weekDays = getWeekDays(currentWeekStart.value);
-    await fetchPlanning(weekDays[0]!, weekDays[6]!);
+    await fetchPlanning(week.value.monday, week.value.sunday);
   } catch (error) {
     console.error('Error deleting reservation:', error);
     alert('Erreur lors de la suppression de la réservation');
@@ -283,7 +282,6 @@ const sortedPacks = computed(() => {
 });
 
 // Week management
-const currentWeekStart = ref<Date>(getMonday(new Date()));
 
 function previousWeek() {
   const newDate = new Date(currentWeekStart.value);
@@ -303,8 +301,7 @@ function goToCurrentWeek() {
 
 // Fetch planning when week changes
 watch(currentWeekStart, async () => {
-  const weekDays = getWeekDays(currentWeekStart.value);
-  await fetchPlanning(weekDays[0]!, weekDays[6]!);
+  await fetchPlanning(week.value.monday, week.value.sunday);
 
   // Select all packs by default if none selected
   if (selectedPacks.value.size === 0) {
@@ -314,9 +311,8 @@ watch(currentWeekStart, async () => {
 
 // Initial fetch
 onMounted(async () => {
-  const weekDays = getWeekDays(currentWeekStart.value);
   await Promise.all([
-    fetchPlanning(weekDays[0]!, weekDays[6]!),
+    fetchPlanning(week.value.monday, week.value.sunday),
     getUsers().then((data) => (users.value = data)),
     getUser(),
     getPacks(),
