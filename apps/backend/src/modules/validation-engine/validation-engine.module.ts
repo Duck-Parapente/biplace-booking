@@ -1,6 +1,5 @@
 import { EventEmitter } from '@libs/database/helpers/event-emitter';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
-import { PackModule } from '@modules/pack/pack.module';
 import { ReservationModule } from '@modules/reservation/reservation.module';
 import { Module } from '@nestjs/common';
 
@@ -11,7 +10,7 @@ import { AttibutePackCliController } from './infrastructure/cli/attribute-packs.
 import { NOTIFICATION_PORT } from './validation-engine.di-tokens';
 
 @Module({
-  imports: [PackModule, ReservationModule],
+  imports: [ReservationModule],
   controllers: [],
   providers: [
     AttibutePackCliController,

@@ -3,11 +3,10 @@ import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
-import { PackSummary } from '@libs/types/accross-modules';
 import { PackEntity } from '@modules/pack/domain/pack.entity';
 import { PackRepositoryPort } from '@modules/pack/domain/ports/pack.repository.port';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Pack, ReservationStatus } from '@prisma/client';
+import { Pack } from '@prisma/client';
 
 const toEntity = (pack: Pack): PackEntity => {
   const { id, ownerId, ...otherProps } = pack;
@@ -53,26 +52,6 @@ export class PackRepository implements PackRepositoryPort {
       orderBy: { createdAt: 'desc' },
     });
     return packs.map(toEntity);
-  }
-
-  async findAvailablePacks(
-    startingDate: DateValueObject,
-    endingDate: DateValueObject,
-  ): Promise<PackSummary[]> {
-    const packs = await prisma.pack.findMany({
-      where: {
-        reservations: {
-          none: {
-            AND: [
-              { startingDate: { lt: endingDate.value } },
-              { endingDate: { gt: startingDate.value } },
-              { status: ReservationStatus.CONFIRMED },
-            ],
-          },
-        },
-      },
-    });
-    return packs.map(({ id, label }) => ({ id: new UUID({ uuid: id }), label }));
   }
 
   async findById(id: UUID): Promise<PackEntity | null> {

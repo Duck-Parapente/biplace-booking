@@ -4,10 +4,10 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
-import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.service';
 import { CreateReservationCommand } from '@modules/reservation/application/commands/create-reservation/create-reservation.command';
 import { CreateReservationService } from '@modules/reservation/application/commands/create-reservation/create-reservation.service';
 import { UpdateReservationWishService } from '@modules/reservation/application/commands/update-reservation-wish/update-reservation-wish.service';
+import { GetReservationsService } from '@modules/reservation/application/queries/get-reservation/get-reservation.service';
 import { GetReservationWishesService } from '@modules/reservation/application/queries/get-reservation-wishes/get-reservation-wishes.service';
 import { AttributionDomainService } from '@modules/validation-engine/domain/attribution.domain-service';
 import { ValidationEngineRunDomainEvent } from '@modules/validation-engine/domain/events/validation-engine-run.domain-event';
@@ -24,7 +24,7 @@ export class AttributePacksService {
   private readonly ATTRIBUTION_END_DAY_OFFSET = 5;
 
   constructor(
-    private readonly getPacksService: GetPacksService,
+    private readonly getReservationsService: GetReservationsService,
     private readonly getReservationWishesService: GetReservationWishesService,
     private readonly updateReservationWishService: UpdateReservationWishService,
     private readonly createReservationService: CreateReservationService,
@@ -64,7 +64,10 @@ export class AttributePacksService {
   ): Promise<void> {
     const pendingWishes =
       await this.getReservationWishesService.findPendingAndRefusedByStartingDate(startingDate);
-    const availablePacks = await this.getPacksService.findAvailablePacks(startingDate, endingDate);
+    const availablePacks = await this.getReservationsService.findAvailablePacks(
+      startingDate,
+      endingDate,
+    );
 
     this.logger.log(
       `👤 Found ${pendingWishes.length} pending wishes: ${pendingWishes

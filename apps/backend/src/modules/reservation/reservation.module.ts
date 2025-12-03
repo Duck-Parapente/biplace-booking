@@ -9,6 +9,7 @@ import { CreateReservationService } from './application/commands/create-reservat
 import { CreateReservationWishService } from './application/commands/create-reservation-wish/create-reservation-wish.service';
 import { UpdateReservationWishService } from './application/commands/update-reservation-wish/update-reservation-wish.service';
 import { GetPlanningService } from './application/queries/get-planning/get-planning.service';
+import { GetReservationsService } from './application/queries/get-reservation/get-reservation.service';
 import { GetReservationWishesService } from './application/queries/get-reservation-wishes/get-reservation-wishes.service';
 import { PlanningDomainService } from './domain/planning.domain-service';
 import { ReservationWishDomainService } from './domain/reservation-wish.domain-service';
@@ -43,7 +44,7 @@ import {
     CreateReservationWishService,
     UpdateReservationWishService,
     GetReservationWishesService,
-    GetReservationWishesService,
+    GetReservationsService,
     GetPlanningService,
     CreateReservationService,
     CancelReservationService,
@@ -59,6 +60,11 @@ import {
     },
     { provide: EVENT_EMITTER, useClass: EventEmitter },
   ],
-  exports: [GetReservationWishesService, UpdateReservationWishService, CreateReservationService],
+  exports: [
+    GetReservationsService,
+    GetReservationWishesService,
+    UpdateReservationWishService,
+    CreateReservationService,
+  ],
 })
 export class ReservationModule {}

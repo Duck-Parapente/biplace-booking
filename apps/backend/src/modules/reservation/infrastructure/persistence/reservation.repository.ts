@@ -3,6 +3,7 @@ import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
+import { PackSummary } from '@libs/types/accross-modules';
 import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
 import { ReservationEntity } from '@modules/reservation/domain/reservation.entity';
 import { PlanningReservationDto } from '@modules/reservation/domain/reservation.types';
@@ -48,6 +49,19 @@ export class ReservationRepository implements ReservationRepositoryPort {
     private readonly eventEmitter: EventEmitterPort,
   ) {}
 
+  private buildMatchingConfirmedReservationsFilter(
+    startingDate: DateValueObject,
+    endingDate: DateValueObject,
+  ) {
+    return {
+      AND: [
+        { startingDate: { lt: endingDate.value } },
+        { endingDate: { gt: startingDate.value } },
+        { status: ReservationStatus.CONFIRMED },
+      ],
+    };
+  }
+
   async create(reservation: ReservationEntity): Promise<void> {
     await prisma.reservation.create({
       data: {
@@ -75,15 +89,25 @@ export class ReservationRepository implements ReservationRepositoryPort {
     const count = await prisma.reservation.count({
       where: {
         packId: packId.uuid,
-        AND: [
-          { startingDate: { lt: endingDate.value } },
-          { endingDate: { gt: startingDate.value } },
-          { status: ReservationStatus.CONFIRMED },
-        ],
+        ...this.buildMatchingConfirmedReservationsFilter(startingDate, endingDate),
       },
     });
 
     return count > 0;
+  }
+
+  async findAvailablePacks(
+    startingDate: DateValueObject,
+    endingDate: DateValueObject,
+  ): Promise<PackSummary[]> {
+    const packs = await prisma.pack.findMany({
+      where: {
+        reservations: {
+          none: this.buildMatchingConfirmedReservationsFilter(startingDate, endingDate),
+        },
+      },
+    });
+    return packs.map(({ id, label }) => ({ id: new UUID({ uuid: id }), label }));
   }
 
   async findConfirmedReservationsByDateRange(
@@ -91,13 +115,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
     endDate: DateValueObject,
   ): Promise<PlanningReservationDto[]> {
     const reservations = await prisma.reservation.findMany({
-      where: {
-        AND: [
-          { startingDate: { lt: endDate.value } },
-          { endingDate: { gt: startDate.value } },
-          { status: ReservationStatus.CONFIRMED },
-        ],
-      },
+      where: this.buildMatchingConfirmedReservationsFilter(startDate, endDate),
       include: {
         user: true,
       },
