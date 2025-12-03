@@ -105,7 +105,6 @@ const handleCancel = async (wish: ReservationWishDto) => {
     confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')
   ) {
     await cancelReservation(wish.reservation.id);
-    await getReservationWishes();
     return;
   }
 

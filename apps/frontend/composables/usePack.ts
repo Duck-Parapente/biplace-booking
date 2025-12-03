@@ -41,24 +41,24 @@ const PACK_OPERATION_CONFIG: Record<PackOperationMode, PackOperationConfig> = {
 export const usePack = () => {
   const { callApi } = useApi();
 
-  const packs = ref<PackDto[]>([]);
-  const loading = ref(false);
-  const error = ref<string | null>(null);
+  const packs = useState<PackDto[]>('packs', () => []);
+  const loading = useState<boolean>('packsLoading', () => false);
+  const error = useState<string | null>('packsError', () => null);
 
   // Unified modal state
-  const showModal = ref(false);
-  const modalMode = ref<PackOperationMode>(PackOperationMode.CREATE);
-  const submitting = ref(false);
-  const submitError = ref<string | null>(null);
-  const submitSuccess = ref(false);
-  const editingPackId = ref<string | null>(null);
+  const showModal = useState<boolean>('packShowModal', () => false);
+  const modalMode = useState<PackOperationMode>('packModalMode', () => PackOperationMode.CREATE);
+  const submitting = useState<boolean>('packSubmitting', () => false);
+  const submitError = useState<string | null>('packSubmitError', () => null);
+  const submitSuccess = useState<boolean>('packSubmitSuccess', () => false);
+  const editingPackId = useState<string | null>('packEditingId', () => null);
 
-  const packForm = ref<CreatePackDto | UpdatePackDto>({
+  const packForm = useState<CreatePackDto | UpdatePackDto>('packForm', () => ({
     label: '',
     ownerId: '',
     flightsHours: undefined,
     flightsCount: undefined,
-  });
+  }));
 
   const openCreatePackModal = () => {
     modalMode.value = PackOperationMode.CREATE;

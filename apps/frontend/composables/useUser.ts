@@ -7,13 +7,13 @@ export const useUser = () => {
   const { callApi } = useApi();
 
   // State management
-  const userData = ref<UserDto | null>(null);
-  const users = ref<UserDto[]>([]);
-  const loading = ref(false);
-  const error = ref<string | null>(null);
-  const updating = ref(false);
-  const updateError = ref<string | null>(null);
-  const updateSuccess = ref(false);
+  const userData = useState<UserDto | null>('userData', () => null);
+  const users = useState<UserDto[]>('users', () => []);
+  const loading = useState<boolean>('userLoading', () => false);
+  const error = useState<string | null>('userError', () => null);
+  const updating = useState<boolean>('userUpdating', () => false);
+  const updateError = useState<string | null>('userUpdateError', () => null);
+  const updateSuccess = useState<boolean>('userUpdateSuccess', () => false);
 
   /**
    * Fetch the current user's data

@@ -1,11 +1,10 @@
 import { PlanningDayDto, PackPlanningDto } from 'shared';
-import { ref } from 'vue';
 
 export const usePlanning = () => {
   const { callApi } = useApi();
 
-  const packs = ref<PackPlanningDto[]>([]);
-  const planningDays = ref<PlanningDayDto[]>([]);
+  const packs = useState<PackPlanningDto[]>('planningPacks', () => []);
+  const planningDays = useState<PlanningDayDto[]>('planningDays', () => []);
 
   function formatDateToString(date: Date): string {
     const result = date.toISOString().split('T')[0];

@@ -5,22 +5,25 @@ const BASE_PATH = '/reservation-wishes';
 export const useReservationWish = () => {
   const { callApi } = useApi();
 
-  const reservationWishes = ref<ReservationWishDto[]>([]);
-  const loading = ref(false);
-  const error = ref<string | null>(null);
+  const reservationWishes = useState<ReservationWishDto[]>('reservationWishes', () => []);
+  const loading = useState<boolean>('reservationWishesLoading', () => false);
+  const error = useState<string | null>('reservationWishesError', () => null);
 
-  const submitting = ref(false);
-  const submitError = ref<string | null>(null);
-  const submitSuccess = ref(false);
+  const submitting = useState<boolean>('reservationWishSubmitting', () => false);
+  const submitError = useState<string | null>('reservationWishSubmitError', () => null);
+  const submitSuccess = useState<boolean>('reservationWishSubmitSuccess', () => false);
 
-  const cancelling = ref(false);
-  const cancellingError = ref<string | null>(null);
-  const cancellingSuccess = ref(false);
+  const cancelling = useState<boolean>('reservationWishCancelling', () => false);
+  const cancellingError = useState<string | null>('reservationWishCancellingError', () => null);
+  const cancellingSuccess = useState<boolean>('reservationWishCancellingSuccess', () => false);
 
-  const addReservationWishForm = ref<CreateReservationWishDto>({
-    startingDate: '',
-    packChoices: [],
-  });
+  const addReservationWishForm = useState<CreateReservationWishDto>(
+    'addReservationWishForm',
+    () => ({
+      startingDate: '',
+      packChoices: [],
+    }),
+  );
 
   const getReservationWishes = async (): Promise<ReservationWishDto[]> => {
     try {
