@@ -6,6 +6,7 @@ import { GetPacksService } from '@modules/pack/application/queries/get-packs/get
 import { CancelReservationCommand } from '@modules/reservation/application/commands/cancel-reservation/cancel-reservation.command';
 import { CancelReservationService } from '@modules/reservation/application/commands/cancel-reservation/cancel-reservation.service';
 import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
+import { ReservationEntity } from '@modules/reservation/domain/reservation.entity';
 import {
   CannotCancelReservationError,
   ReservationNotFoundError,
@@ -49,7 +50,7 @@ export class CancelReservationHttpController {
       throw new NotFoundException(`Reservation not found: ${id}`);
     }
 
-    await this.checkUserIsAllowedToCancelReservation(reservation.packId, userId, roles);
+    await this.checkUserIsAllowedToCancelReservation(reservation, userId, roles);
 
     const command = new CancelReservationCommand({
       reservation,
@@ -78,7 +79,7 @@ export class CancelReservationHttpController {
   }
 
   private async checkUserIsAllowedToCancelReservation(
-    packId: UUID,
+    { packId, userId: reservationUserId }: ReservationEntity,
     userId: UUID,
     roles: UserRoles[],
   ): Promise<void> {
@@ -87,6 +88,10 @@ export class CancelReservationHttpController {
     }
 
     if (await this.getPacksService.isPackOwnedByUser(packId, userId)) {
+      return;
+    }
+
+    if (reservationUserId && reservationUserId.equals(userId)) {
       return;
     }
 

@@ -26,6 +26,10 @@ export class ReservationDto {
   @IsNotEmpty()
   @IsString()
   packId!: string;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isCancelable!: boolean;
 }
 
 export enum ReservationEventTypeDto {

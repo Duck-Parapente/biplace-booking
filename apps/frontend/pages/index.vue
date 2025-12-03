@@ -112,13 +112,17 @@
                 {{ getConfigFromWish(wish).infoText }}
               </div>
               <button
-                v-if="wish.isCancelable"
-                @click="handleCancelWish(wish.id)"
+                v-if="wish.reservation?.isCancelable || wish.isCancelable"
+                @click="handleCancel(wish)"
                 :disabled="cancelling"
                 class="w-full bg-red-100 hover:bg-red-200 border-t border-red-200 p-3 text-sm font-medium text-red-800 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-b-lg"
               >
                 <IconX class="w-4 h-4" />
-                Annuler cette demande
+                {{
+                  wish.reservation?.isCancelable
+                    ? 'Annuler la réservation'
+                    : 'Annuler cette demande'
+                }}
               </button>
             </div>
           </div>
@@ -180,6 +184,7 @@ const {
 } = useReservationWish();
 
 const { packs, getPacks } = usePack();
+const { cancelReservation } = useReservation();
 
 const showModal = ref(false);
 const expandedWishes = ref<Set<string>>(new Set());
@@ -254,9 +259,21 @@ const handleSubmit = async () => {
   }
 };
 
-const handleCancelWish = async (wishId: string) => {
-  if (confirm('Êtes-vous sûr de vouloir annuler cette demande de réservation ?')) {
-    await cancelReservationWish(wishId);
+const handleCancel = async (wish: ReservationWishDto) => {
+  // If the wish has a cancelable reservation, cancel the reservation instead
+  if (wish.reservation?.isCancelable) {
+    if (confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) {
+      try {
+        await cancelReservation(wish.reservation.id);
+        await getReservationWishes();
+      } catch (error) {
+        console.error('Error canceling reservation:', error);
+      }
+    }
+  } else if (wish.isCancelable) {
+    if (confirm('Êtes-vous sûr de vouloir annuler cette demande de réservation ?')) {
+      await cancelReservationWish(wish.id);
+    }
   }
 };
 

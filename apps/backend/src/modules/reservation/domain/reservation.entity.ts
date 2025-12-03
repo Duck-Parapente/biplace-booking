@@ -62,7 +62,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
   }
 
   cancel(metadata: DomainEventMetadata): void {
-    if (this.props.status !== ReservationStatus.CONFIRMED) {
+    if (!this.isCancelable()) {
       throw new CannotCancelReservationError(this.id, this.props.status);
     }
     this.props.status = ReservationStatus.CANCELLED;
@@ -74,6 +74,10 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
         metadata,
       }),
     );
+  }
+
+  isCancelable(): boolean {
+    return this.props.status === ReservationStatus.CONFIRMED;
   }
 
   validate(): void {
