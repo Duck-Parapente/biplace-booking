@@ -3,7 +3,7 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { Injectable } from '@nestjs/common';
 
 import { ReservationWishProps } from './reservation-wish.types';
-import { PlanningData, PlanningPackData, ReservationProps } from './reservation.types';
+import { PlanningData, PlanningPackData, PlanningReservationDto } from './reservation.types';
 
 type PackInfo = {
   id: UUID;
@@ -16,7 +16,7 @@ export class PlanningDomainService {
     startDate: DateValueObject,
     endDate: DateValueObject,
     packs: PackInfo[],
-    reservations: ReservationProps[],
+    reservations: PlanningReservationDto[],
     pendingWishes: ReservationWishProps[],
   ): PlanningData[] {
     const today = DateValueObject.now();
@@ -59,7 +59,7 @@ export class PlanningDomainService {
   private buildPacksForDate(
     date: DateValueObject,
     allPacks: PackInfo[],
-    reservations: ReservationProps[],
+    reservations: PlanningReservationDto[],
     pendingWishes: ReservationWishProps[],
     isPastDate: boolean,
   ): PlanningPackData[] {
@@ -89,10 +89,10 @@ export class PlanningDomainService {
   }
 
   private findReservationForPackAndDate(
-    reservations: ReservationProps[],
+    reservations: PlanningReservationDto[],
     packId: UUID,
     date: DateValueObject,
-  ): ReservationProps | undefined {
+  ): PlanningReservationDto | undefined {
     return reservations.find(
       (r) =>
         r.packId.uuid === packId.uuid &&

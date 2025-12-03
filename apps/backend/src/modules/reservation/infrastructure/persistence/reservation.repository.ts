@@ -5,7 +5,7 @@ import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
 import { ReservationEntity } from '@modules/reservation/domain/reservation.entity';
-import { ReservationProps } from '@modules/reservation/domain/reservation.types';
+import { PlanningReservationDto } from '@modules/reservation/domain/reservation.types';
 import { ReservationStatus as DomainReservationStatus } from '@modules/reservation/domain/reservation.types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Reservation, ReservationStatus } from '@prisma/client';
@@ -88,7 +88,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
   async findConfirmedReservationsByDateRange(
     startDate: DateValueObject,
     endDate: DateValueObject,
-  ): Promise<ReservationProps[]> {
+  ): Promise<PlanningReservationDto[]> {
     const reservations = await prisma.reservation.findMany({
       where: {
         AND: [

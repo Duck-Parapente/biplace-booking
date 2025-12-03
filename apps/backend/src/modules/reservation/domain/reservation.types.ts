@@ -12,15 +12,18 @@ interface BaseReservationProps {
 
 export type CreateReservationProps = BaseReservationProps;
 export type ReservationProps = BaseReservationProps & {
-  id: UUID;
   status: ReservationStatus;
+};
+
+export type PlanningReservationDto = BaseReservationProps & {
+  id: UUID;
 };
 
 export interface PlanningPackData {
   packId: UuidProps;
   packLabel: string;
   pendingWishesCount: number;
-  reservation: ReservationProps | null;
+  reservation: PlanningReservationDto | null;
 }
 
 export interface PlanningData {
