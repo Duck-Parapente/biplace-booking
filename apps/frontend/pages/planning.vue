@@ -1,12 +1,7 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
     <!-- Week Selector - Fixed at top -->
-    <PlanningWeekSelector
-      :current-week-start="currentWeekStart"
-      @previous-week="previousWeek"
-      @next-week="nextWeek"
-      @go-to-current-week="goToCurrentWeek"
-    />
+    <PlanningWeekSelector v-model="currentWeekStart" />
 
     <div class="flex-1 p-2 max-w-[800px] mx-auto w-full flex flex-col min-h-0 mb-16">
       <div class="flex-1 overflow-y-auto pb-2">
@@ -241,24 +236,6 @@ const selectedPacks = ref<Set<string>>(new Set());
 const sortedPacks = computed(() => {
   return [...packs.value].sort((a, b) => a.packLabel.localeCompare(b.packLabel));
 });
-
-// Week management
-
-function previousWeek() {
-  const newDate = new Date(currentWeekStart.value);
-  newDate.setDate(newDate.getDate() - 7);
-  currentWeekStart.value = newDate;
-}
-
-function nextWeek() {
-  const newDate = new Date(currentWeekStart.value);
-  newDate.setDate(newDate.getDate() + 7);
-  currentWeekStart.value = newDate;
-}
-
-function goToCurrentWeek() {
-  currentWeekStart.value = getMonday(new Date());
-}
 
 // Fetch planning when week changes
 watch(currentWeekStart, async () => {
