@@ -8,7 +8,10 @@ import { RolesGuard } from '@libs/guards/roles.guard';
 import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.service';
 import { CreateReservationCommand } from '@modules/reservation/application/commands/create-reservation/create-reservation.command';
 import { CreateReservationService } from '@modules/reservation/application/commands/create-reservation/create-reservation.service';
-import { CannotCreateReservationError } from '@modules/reservation/domain/reservation.exceptions';
+import {
+  CannotCreateReservationException,
+  ReservationInvalidDateRangeException,
+} from '@modules/reservation/domain/reservation.exceptions';
 import {
   Controller,
   Post,
@@ -59,7 +62,12 @@ export class CreateReservationHttpController {
       return { message: 'Reservation created' };
     } catch (error) {
       this.logger.error('Error creating reservation', error);
-      if (error instanceof CannotCreateReservationError) {
+      if (
+        error instanceof Error &&
+        [CannotCreateReservationException.name, ReservationInvalidDateRangeException.name].includes(
+          error.name,
+        )
+      ) {
         throw new BadRequestException(error.message);
       }
 

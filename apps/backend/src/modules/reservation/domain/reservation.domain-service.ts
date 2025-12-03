@@ -5,7 +5,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { RESERVATION_REPOSITORY } from '../reservation.di-tokens';
 
 import { ReservationRepositoryPort } from './ports/reservation.repository.port';
-import { CannotCreateReservationError } from './reservation.exceptions';
+import { CannotCreateReservationException } from './reservation.exceptions';
 import { CreateReservationProps } from './reservation.types';
 
 @Injectable()
@@ -31,7 +31,7 @@ export class ReservationDomainService {
     );
 
     if (hasExistingReservation) {
-      throw new CannotCreateReservationError(packId, startingDate);
+      throw new CannotCreateReservationException(packId, startingDate);
     }
   }
 }

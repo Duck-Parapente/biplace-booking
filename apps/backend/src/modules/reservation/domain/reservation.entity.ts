@@ -4,7 +4,10 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 
 import { ReservationCreatedDomainEvent } from './events/reservation-created.domain-event';
 import { ReservationUpdatedDomainEvent } from './events/reservation-updated.domain-event';
-import { CannotCancelReservationError } from './reservation.exceptions';
+import {
+  CannotCancelReservationException,
+  ReservationInvalidDateRangeException,
+} from './reservation.exceptions';
 import { CreateReservationProps, ReservationProps, ReservationStatus } from './reservation.types';
 
 export class ReservationEntity extends AggregateRoot<ReservationProps> {
@@ -63,7 +66,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
 
   cancel(metadata: DomainEventMetadata): void {
     if (!this.isCancelable()) {
-      throw new CannotCancelReservationError(this.id, this.props.status);
+      throw new CannotCancelReservationException(this.id, this.props.status);
     }
     this.props.status = ReservationStatus.CANCELLED;
 
@@ -77,12 +80,12 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
   }
 
   isCancelable(): boolean {
-    return (
-      this.props.status === ReservationStatus.CONFIRMED && this.props.startingDate.isInTheFuture()
-    );
+    return this.props.status === ReservationStatus.CONFIRMED;
   }
 
   validate(): void {
-    // entity business rules validation to protect it's invariant before saving entity to a database
+    if (!this.startingDate.isBefore(this.endingDate)) {
+      throw new ReservationInvalidDateRangeException(this.startingDate, this.endingDate);
+    }
   }
 }

@@ -8,8 +8,8 @@ import { CancelReservationService } from '@modules/reservation/application/comma
 import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
 import { ReservationEntity } from '@modules/reservation/domain/reservation.entity';
 import {
-  CannotCancelReservationError,
-  ReservationNotFoundError,
+  CannotCancelReservationException,
+  ReservationNotFoundException,
 } from '@modules/reservation/domain/reservation.exceptions';
 import { RESERVATION_REPOSITORY } from '@modules/reservation/reservation.di-tokens';
 import {
@@ -66,11 +66,11 @@ export class CancelReservationHttpController {
     } catch (error) {
       this.logger.error('Error cancelling reservation', error);
 
-      if (error instanceof ReservationNotFoundError) {
+      if (error instanceof ReservationNotFoundException) {
         throw new NotFoundException(error.message);
       }
 
-      if (error instanceof CannotCancelReservationError) {
+      if (error instanceof CannotCancelReservationException) {
         throw new BadRequestException(error.message);
       }
 
