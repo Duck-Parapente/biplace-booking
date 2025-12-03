@@ -76,8 +76,8 @@ export class ReservationRepository implements ReservationRepositoryPort {
       where: {
         packId: packId.uuid,
         AND: [
-          { startingDate: { lte: endingDate.value } },
-          { endingDate: { gte: startingDate.value } },
+          { startingDate: { lt: endingDate.value } },
+          { endingDate: { gt: startingDate.value } },
         ],
       },
     });
@@ -92,8 +92,8 @@ export class ReservationRepository implements ReservationRepositoryPort {
     const reservations = await prisma.reservation.findMany({
       where: {
         AND: [
-          { startingDate: { lte: endDate.value } },
-          { endingDate: { gte: startDate.value } },
+          { startingDate: { lt: endDate.value } },
+          { endingDate: { gt: startDate.value } },
           { status: ReservationStatus.CONFIRMED },
         ],
       },
