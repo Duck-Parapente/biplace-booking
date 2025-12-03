@@ -1,11 +1,17 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
+import { ExceptionBase } from '@libs/exceptions';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
 import { CreateReservationWishCommand } from '@modules/reservation/application/commands/create-reservation-wish/create-reservation-wish.command';
 import { CreateReservationWishService } from '@modules/reservation/application/commands/create-reservation-wish/create-reservation-wish.service';
-import { UserHasReservationWishOnStartingDateError } from '@modules/reservation/domain/reservation-wish.exceptions';
+import {
+  CannotCreateReservationWishException,
+  EmptyPackChoicesException,
+  ReservationWishInvalidDateRangeException,
+  UserHasReservationWishOnStartingDateException,
+} from '@modules/reservation/domain/reservation-wish.exceptions';
 import {
   Controller,
   Post,
@@ -47,7 +53,15 @@ export class CreateReservationWishHttpController {
       return { message: 'Reservation wish created' };
     } catch (error) {
       this.logger.error('Error creating reservation wish', error);
-      if (error instanceof UserHasReservationWishOnStartingDateError) {
+      if (
+        error instanceof ExceptionBase &&
+        [
+          CannotCreateReservationWishException.name,
+          EmptyPackChoicesException.name,
+          ReservationWishInvalidDateRangeException.name,
+          UserHasReservationWishOnStartingDateException.name,
+        ].includes(error.code)
+      ) {
         throw new BadRequestException(error.message);
       }
 

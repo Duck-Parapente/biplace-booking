@@ -4,7 +4,12 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 
 import { ReservationWishCreatedDomainEvent } from './events/reservation-wish-created.domain-event';
 import { ReservationWishStatusUpdatedDomainEvent } from './events/reservation-wish-updated.domain-event';
-import { CannotUpdateReservationWishStatusError } from './reservation-wish.exceptions';
+import {
+  CannotCreateReservationWishException,
+  CannotUpdateReservationWishStatusException,
+  EmptyPackChoicesException,
+  ReservationWishInvalidDateRangeException,
+} from './reservation-wish.exceptions';
 import {
   CreateReservationWishProps,
   ReservationWishProps,
@@ -41,6 +46,10 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
       props,
     });
 
+    if (!entity.canCreate()) {
+      throw new CannotCreateReservationWishException(id, props.startingDate);
+    }
+
     entity.addEvent(
       new ReservationWishCreatedDomainEvent({
         aggregateId: id,
@@ -76,12 +85,12 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
   }
 
   isCancelable(): boolean {
-    return this.canUpdateStatusTo(ReservationWishStatus.CANCELLED);
+    return this.canUpdate(ReservationWishStatus.CANCELLED);
   }
 
   update(status: ReservationWishStatus, metadata: DomainEventMetadata): void {
-    if (!this.canUpdateStatusTo(status)) {
-      throw new CannotUpdateReservationWishStatusError(this.id, this.props.status, status);
+    if (!this.canUpdate(status)) {
+      throw new CannotUpdateReservationWishStatusException(this.id, this.props.status, status);
     }
 
     this.props.status = status;
@@ -95,7 +104,11 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
     );
   }
 
-  private canUpdateStatusTo(newStatus: ReservationWishStatus): boolean {
+  private canCreate(): boolean {
+    return this.props.startingDate.isInTheFuture() && this.createdAt.isInTheFuture();
+  }
+
+  private canUpdate(newStatus: ReservationWishStatus): boolean {
     const allowedTransitions = ReservationWishEntity.ALLOWED_STATUS_TRANSITIONS[newStatus];
     return (
       allowedTransitions.includes(this.props.status) && this.props.startingDate.isInTheFuture()
@@ -103,6 +116,12 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
   }
 
   validate(): void {
-    // entity business rules validation to protect it's invariant before saving entity to a database
+    if (!this.startingDate.isBefore(this.endingDate)) {
+      throw new ReservationWishInvalidDateRangeException(this.startingDate, this.endingDate);
+    }
+
+    if (this.packChoices.length === 0) {
+      throw new EmptyPackChoicesException();
+    }
   }
 }

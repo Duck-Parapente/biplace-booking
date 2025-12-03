@@ -5,7 +5,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { RESERVATION_WISH_REPOSITORY } from '../reservation.di-tokens';
 
 import { ReservationWishRepositoryPort } from './ports/reservation-wish.repository.port';
-import { UserHasReservationWishOnStartingDateError } from './reservation-wish.exceptions';
+import { UserHasReservationWishOnStartingDateException } from './reservation-wish.exceptions';
 import { CreateReservationWishProps } from './reservation-wish.types';
 
 @Injectable()
@@ -30,7 +30,7 @@ export class ReservationWishDomainService {
       );
 
     if (hasExistingWishOnStartingDate) {
-      throw new UserHasReservationWishOnStartingDateError(userId, startingDate);
+      throw new UserHasReservationWishOnStartingDateException(userId, startingDate);
     }
   }
 }

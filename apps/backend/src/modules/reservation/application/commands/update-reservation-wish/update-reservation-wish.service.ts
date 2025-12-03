@@ -1,7 +1,7 @@
 import { DomainEventMetadata } from '@libs/ddd';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
-import { ReservationWishNotFoundError } from '@modules/reservation/domain/reservation-wish.exceptions';
+import { ReservationWishNotFoundException } from '@modules/reservation/domain/reservation-wish.exceptions';
 import { ReservationWishStatus } from '@modules/reservation/domain/reservation-wish.types';
 import { RESERVATION_WISH_REPOSITORY } from '@modules/reservation/reservation.di-tokens';
 import { Inject, Logger } from '@nestjs/common';
@@ -69,7 +69,7 @@ export class UpdateReservationWishService
     const entity = await this.reservationWishRepository.findById(reservationWishId);
 
     if (!entity) {
-      throw new ReservationWishNotFoundError(reservationWishId);
+      throw new ReservationWishNotFoundException(reservationWishId);
     }
 
     if (entity.status === status) {

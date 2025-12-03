@@ -24,6 +24,10 @@ export class DateValueObject extends ValueObject<DateProps> {
     return this.value > new Date();
   }
 
+  isBefore(other: DateValueObject): boolean {
+    return this.value.getTime() < other.value.getTime();
+  }
+
   static now(): DateValueObject {
     return DateValueObject.fromDate(new Date());
   }

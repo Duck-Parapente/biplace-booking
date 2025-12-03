@@ -6,8 +6,8 @@ import { UpdateReservationWishCommand } from '@modules/reservation/application/c
 import { UpdateReservationWishService } from '@modules/reservation/application/commands/update-reservation-wish/update-reservation-wish.service';
 import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
 import {
-  CannotUpdateReservationWishStatusError,
-  ReservationWishNotFoundError,
+  CannotUpdateReservationWishStatusException,
+  ReservationWishNotFoundException,
 } from '@modules/reservation/domain/reservation-wish.exceptions';
 import { ReservationWishStatus } from '@modules/reservation/domain/reservation-wish.types';
 import { RESERVATION_WISH_REPOSITORY } from '@modules/reservation/reservation.di-tokens';
@@ -57,11 +57,11 @@ export class UpdateReservationWishHttpController {
     } catch (error) {
       this.logger.error('Error cancelling reservation wish', error);
 
-      if (error instanceof ReservationWishNotFoundError) {
+      if (error instanceof ReservationWishNotFoundException) {
         throw new NotFoundException(error.message);
       }
 
-      if (error instanceof CannotUpdateReservationWishStatusError) {
+      if (error instanceof CannotUpdateReservationWishStatusException) {
         throw new BadRequestException(error.message);
       }
 
