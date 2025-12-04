@@ -38,7 +38,7 @@ const mapStatus = (status: ReservationWishStatus): DomainReservationWishStatus =
 
 const toEntity = (
   record: ReservationWish & {
-    packChoices: { id: string }[];
+    packChoices: { pack: { id: string }; order: number }[];
   },
 ): ReservationWishEntity => {
   return new ReservationWishEntity({
@@ -49,9 +49,7 @@ const toEntity = (
       status: mapStatus(record.status),
       startingDate: DateValueObject.fromDate(record.startingDate),
       endingDate: DateValueObject.fromDate(record.endingDate),
-      packChoices: record.packChoices.map(
-        (packChoice: { id: string }) => new UUID({ uuid: packChoice.id }),
-      ),
+      packChoices: record.packChoices.map((pc) => new UUID({ uuid: pc.pack.id })),
       publicComment: record.publicComment ?? undefined,
     },
   });
@@ -76,7 +74,10 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
         publicComment: reservationWish.publicComment,
         status: reservationWish.status,
         packChoices: {
-          connect: reservationWish.packChoices.map(({ uuid: id }) => ({ id })),
+          create: reservationWish.packChoices.map(({ uuid: id }, index) => ({
+            packId: id,
+            order: index,
+          })),
         },
         user: {
           connect: { id: reservationWish.userId.uuid },
@@ -107,7 +108,10 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
     const record = await prisma.reservationWish.findUnique({
       where: { id: reservationWishId.uuid },
       include: {
-        packChoices: true,
+        packChoices: {
+          include: { pack: true },
+          orderBy: { order: 'asc' },
+        },
       },
     });
 
@@ -137,7 +141,10 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
       },
       include: {
         reservation: true,
-        packChoices: true,
+        packChoices: {
+          include: { pack: true },
+          orderBy: { order: 'asc' },
+        },
       },
     });
 
@@ -209,14 +216,20 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
         status: { in: PENDING_STATUSES },
       },
       include: {
-        packChoices: true,
+        packChoices: {
+          include: { pack: true },
+          orderBy: { order: 'asc' },
+        },
         user: true,
       },
     });
 
     return reservationWishes.map(({ id: uuid, packChoices, createdAt, publicComment, user }) => ({
       id: new UUID({ uuid }),
-      packChoices: packChoices.map(({ id, label }) => ({ id: new UUID({ uuid: id }), label })),
+      packChoices: packChoices.map(({ pack }) => ({
+        id: new UUID({ uuid: pack.id }),
+        label: pack.label,
+      })),
       createdAt: DateValueObject.fromDate(createdAt),
       publicComment: publicComment ?? undefined,
       user: {
@@ -238,13 +251,16 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
         status: { in: PENDING_STATUSES },
       },
       include: {
-        packChoices: true,
+        packChoices: {
+          include: { pack: true },
+          orderBy: { order: 'asc' },
+        },
       },
     });
 
     return pendingWishes.map((w) => ({
       startingDate: DateValueObject.fromDate(w.startingDate),
-      packChoices: w.packChoices.map((pc) => new UUID({ uuid: pc.id })),
+      packChoices: w.packChoices.map((pc) => new UUID({ uuid: pc.pack.id })),
       endingDate: DateValueObject.fromDate(w.endingDate),
       status: mapStatus(w.status),
       publicComment: w.publicComment ?? undefined,
