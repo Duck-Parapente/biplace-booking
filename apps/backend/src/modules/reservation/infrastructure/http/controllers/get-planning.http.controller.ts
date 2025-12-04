@@ -18,8 +18,8 @@ export class GetPlanningHttpController {
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
   ): Promise<PlanningDayDto[]> {
-    const start = DateValueObject.fromDateString(startDate);
-    const end = DateValueObject.fromDateString(endDate);
+    const start = DateValueObject.fromDateString(startDate).startOfDayInUTC(0);
+    const end = DateValueObject.fromDateString(endDate).startOfDayInUTC(1);
 
     const planningData = await this.getPlanningService.execute(start, end);
     return mapPlanningDataToDto(planningData);

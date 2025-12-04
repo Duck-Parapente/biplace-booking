@@ -48,7 +48,7 @@ export class PlanningDomainService {
     const currentDate = new Date(startDate.value);
     const endDateTime = endDate.value.getTime();
 
-    while (currentDate.getTime() <= endDateTime) {
+    while (currentDate.getTime() < endDateTime) {
       dates.push(DateValueObject.fromDate(new Date(currentDate)));
       currentDate.setDate(currentDate.getDate() + 1);
     }
