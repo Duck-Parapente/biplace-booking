@@ -173,21 +173,28 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
                 status: payloadTyped.status as DomainReservationWishStatus,
                 date: DateValueObject.fromDate(createdAt),
               };
-            }),
+            })
+            .filter((event) => event.status !== DomainReservationWishStatus.CONFIRMED),
         ],
       },
       reservation: record.reservation
         ? {
             entity: toReservationEntity(record.reservation),
-            events: allReservationStatusEvents
-              .filter(({ aggregateId }) => aggregateId === record.reservation?.id)
-              .map(({ payload, createdAt }) => {
-                const payloadTyped = payload as { status: string };
-                return {
-                  status: payloadTyped.status as DomainReservationStatus,
-                  date: DateValueObject.fromDate(createdAt),
-                };
-              }),
+            events: [
+              {
+                status: DomainReservationStatus.CONFIRMED,
+                date: DateValueObject.fromDate(record.reservation.createdAt),
+              },
+              ...allReservationStatusEvents
+                .filter(({ aggregateId }) => aggregateId === record.reservation?.id)
+                .map(({ payload, createdAt }) => {
+                  const payloadTyped = payload as { status: string };
+                  return {
+                    status: payloadTyped.status as DomainReservationStatus,
+                    date: DateValueObject.fromDate(createdAt),
+                  };
+                }),
+            ],
           }
         : null,
     }));
