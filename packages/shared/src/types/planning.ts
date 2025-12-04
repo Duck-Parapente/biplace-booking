@@ -3,6 +3,7 @@ import {
   IsArray,
   IsBoolean,
   IsDate,
+  IsDateString,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -45,8 +46,8 @@ export class PackPlanningDto {
 
 export class PlanningDayDto {
   @IsNotEmpty()
-  @IsDate()
-  date!: Date;
+  @IsDateString()
+  date!: string;
 
   @IsArray()
   @ArrayNotEmpty()

@@ -1,5 +1,6 @@
 import {
   IsDate,
+  IsDateString,
   IsEmail,
   IsNotEmpty,
   IsNumber,
@@ -42,6 +43,6 @@ export class UserDto extends UserProfileDto {
   currentScore?: number;
 
   @IsNotEmpty()
-  @IsDate()
-  createdAt!: Date;
+  @IsDateString()
+  createdAt!: string;
 }

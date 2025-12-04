@@ -3,8 +3,6 @@ import { RESERVATION_REPOSITORY } from '@modules/reservation/reservation.di-toke
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { UpdateReservationWishService } from '../update-reservation-wish/update-reservation-wish.service';
-
 import { CancelReservationCommand } from './cancel-reservation.command';
 
 @CommandHandler(CancelReservationCommand)
@@ -14,19 +12,11 @@ export class CancelReservationService implements ICommandHandler<CancelReservati
   constructor(
     @Inject(RESERVATION_REPOSITORY)
     private readonly reservationRepository: ReservationRepositoryPort,
-    private readonly updateReservationWishService: UpdateReservationWishService,
   ) {}
 
   async execute({ reservation, metadata }: CancelReservationCommand): Promise<void> {
     reservation.cancel(metadata);
     await this.reservationRepository.updateStatus(reservation);
-
-    if (reservation.reservationWishId) {
-      await this.updateReservationWishService.cancelReservationWish(
-        reservation.reservationWishId,
-        metadata,
-      );
-    }
 
     this.logger.log(`Reservation ${reservation.id.uuid} cancelled`);
   }

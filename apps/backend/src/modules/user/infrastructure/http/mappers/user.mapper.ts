@@ -11,6 +11,6 @@ export function mapUserToDto(user: UserEntity): UserDto {
     address: user.address ?? '',
     phoneNumber: user.phoneNumber ?? '',
     currentScore: user.currentScore,
-    createdAt: user.createdAt.value,
+    createdAt: user.createdAt.value.toISOString(),
   };
 }

@@ -4,6 +4,7 @@ import {
   IsArray,
   IsBoolean,
   IsDate,
+  IsDateString,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -38,8 +39,8 @@ export class ReservationWishEventDto {
   status!: ReservationWishStatusDto;
 
   @IsNotEmpty()
-  @IsDate()
-  date!: Date;
+  @IsDateString()
+  date!: string;
 }
 
 export class ReservationWishDto {
@@ -48,16 +49,16 @@ export class ReservationWishDto {
   id!: string;
 
   @IsNotEmpty()
-  @IsDate()
-  createdAt!: Date;
+  @IsDateString()
+  createdAt!: string;
 
   @IsNotEmpty()
-  @IsDate()
-  startingDate!: Date;
+  @IsDateString()
+  startingDate!: string;
 
   @IsNotEmpty()
-  @IsDate()
-  endingDate!: Date;
+  @IsDateString()
+  endingDate!: string;
 
   @IsArray()
   @ArrayNotEmpty()

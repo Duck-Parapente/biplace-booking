@@ -2,7 +2,7 @@ import {
   ReservationWishStatus,
   ReservationWishWithReservation,
 } from '@modules/reservation/domain/reservation-wish.types';
-import { PlanningData } from '@modules/reservation/domain/reservation.types';
+import { PlanningData, ReservationStatus } from '@modules/reservation/domain/reservation.types';
 import { ReservationWishDto, PlanningDayDto, ReservationWishStatusDto } from 'shared';
 
 const mapWishStatus = (status: ReservationWishStatus): ReservationWishStatusDto => {
@@ -20,16 +20,27 @@ const mapWishStatus = (status: ReservationWishStatus): ReservationWishStatusDto 
   }
 };
 
+const mapReservationStatusToWishStatus = (status: ReservationStatus): ReservationWishStatusDto => {
+  switch (status) {
+    case ReservationStatus.CONFIRMED:
+      return ReservationWishStatusDto.CONFIRMED;
+    case ReservationStatus.CANCELLED:
+      return ReservationWishStatusDto.CANCELLED;
+    default:
+      throw new Error(`Unknown ReservationStatus: ${status}`);
+  }
+};
+
 export function mapReservationWishToDto({
   reservation,
-  reservationWish: { entity: reservationWish, events },
+  reservationWish: { entity: reservationWish, events: reservationWishEvents },
 }: ReservationWishWithReservation): ReservationWishDto {
   return {
     id: reservationWish.id.uuid,
-    createdAt: reservationWish.createdAt.value,
+    createdAt: reservationWish.createdAt.value.toISOString(),
     isCancelable: reservationWish.isCancelable(),
-    startingDate: reservationWish.startingDate.value,
-    endingDate: reservationWish.endingDate.value,
+    startingDate: reservationWish.startingDate.value.toISOString(),
+    endingDate: reservationWish.endingDate.value.toISOString(),
     packChoices: reservationWish.packChoices.map((packChoice) => packChoice.uuid),
     publicComment: reservationWish.publicComment,
     reservation: reservation
@@ -40,17 +51,23 @@ export function mapReservationWishToDto({
         }
       : null,
     events: [
-      ...events.map((event) => ({
+      ...reservationWishEvents.map((event) => ({
         status: mapWishStatus(event.status),
-        date: event.date.value,
+        date: event.date.value.toISOString(),
       })),
+      ...(reservation
+        ? reservation.events.map((event) => ({
+            status: mapReservationStatusToWishStatus(event.status),
+            date: event.date.value.toISOString(),
+          }))
+        : []),
     ],
   };
 }
 
 export function mapPlanningDataToDto(planningData: PlanningData[]): PlanningDayDto[] {
   return planningData.map(({ date, packs }) => ({
-    date: date.value,
+    date: date.value.toISOString(),
     packs: packs.map(({ packId, packLabel, pendingWishesCount, reservation }) => ({
       packId: packId.uuid,
       packLabel,
