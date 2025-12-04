@@ -52,7 +52,18 @@ export class EmailNotificationAdapter implements ReservationNotificationPort {
         where: { id: reservationWishId.uuid },
         include: {
           user: true,
-          packChoices: true,
+          packChoices: {
+            select: {
+              pack: {
+                select: {
+                  label: true,
+                },
+              },
+            },
+            orderBy: {
+              order: 'asc',
+            },
+          },
         },
       });
 
@@ -62,7 +73,7 @@ export class EmailNotificationAdapter implements ReservationNotificationPort {
         variables: {
           nickname: user.firstName || '',
           startingDateLabel: formatDate(startingDate),
-          wishPacksLabels: packChoices.map(({ label }) => label).join(', '),
+          wishPacksLabels: packChoices.map(({ pack }) => pack.label).join(', '),
         },
       });
     } catch (error) {

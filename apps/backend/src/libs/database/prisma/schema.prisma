@@ -40,14 +40,14 @@ model User {
 }
 
 model Pack {
-    id                String            @id
+    id                String                      @id
     ownerId           String
-    owner             User              @relation(fields: [ownerId], references: [id])
+    owner             User                        @relation(fields: [ownerId], references: [id])
     label             String
     flightsHours      Int
     flightsCount      Int
-    createdAt         DateTime          @db.Timestamptz(3)
-    reservationWishes ReservationWish[]
+    createdAt         DateTime                    @db.Timestamptz(3)
+    reservationWishes ReservationWishPackChoice[]
     reservations      Reservation[]
 }
 
@@ -64,16 +64,26 @@ enum ReservationStatus {
 }
 
 model ReservationWish {
-    id            String                @id
-    startingDate  DateTime              @db.Timestamptz(3)
-    endingDate    DateTime              @db.Timestamptz(3)
-    packChoices   Pack[]
+    id            String                      @id
+    startingDate  DateTime                    @db.Timestamptz(3)
+    endingDate    DateTime                    @db.Timestamptz(3)
+    packChoices   ReservationWishPackChoice[]
     publicComment String?
-    user          User                  @relation(fields: [userId], references: [id])
+    user          User                        @relation(fields: [userId], references: [id])
     userId        String
-    createdAt     DateTime              @db.Timestamptz(3)
+    createdAt     DateTime                    @db.Timestamptz(3)
     status        ReservationWishStatus
     reservation   Reservation?
+}
+
+model ReservationWishPackChoice {
+    reservationWishId String
+    packId            String
+    order             Int
+    reservationWish   ReservationWish @relation(fields: [reservationWishId], references: [id], onDelete: Cascade)
+    pack              Pack            @relation(fields: [packId], references: [id])
+
+    @@id([reservationWishId, packId])
 }
 
 model Reservation {
