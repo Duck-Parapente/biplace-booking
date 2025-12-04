@@ -72,6 +72,22 @@ validate_environment() {
     [[ "$ENV" =~ ^(staging|prod)$ ]] || log_error "Invalid environment in .env: $ENV (must be 'staging' or 'prod')"
 }
 
+toggle_maintenance_mode() {
+    local state="$1"  # "true" or "false"
+    local action="$2" # "Enabling" or "Disabling"
+    
+    log_info "🔧 ${action} maintenance mode..."
+    
+    local sql="UPDATE \"FeatureFlag\" SET \"isActive\" = ${state}, \"updatedAt\" = NOW() WHERE \"key\" = 'maintenance_mode';"
+    local postgres_container="bb-${ENV}-postgres"
+    
+    if docker exec "$postgres_container" psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "$sql" >/dev/null 2>&1; then
+        log_success "Maintenance mode ${action,,}d"
+    else
+        log_warning "Could not ${action,,} maintenance mode (database may not be ready)"
+    fi
+}
+
 handle_running_containers() {
     cd "$INFRA_DIR" || log_error "Failed to navigate to infra directory: $INFRA_DIR"
     local running
@@ -81,6 +97,9 @@ handle_running_containers() {
     log_warning "Found running containers:"
     docker compose ps --format 'table {{.Name}}\t{{.State}}\t{{.Ports}}'
     echo ""
+
+    # Enable maintenance mode before stopping containers
+    toggle_maintenance_mode "true" "Enabling"
 
     log_info "🛑 Stopping existing containers..."
     docker compose down && log_success "Containers stopped"
@@ -142,6 +161,9 @@ load_prebuilt_image
 handle_running_containers
 deploy_full_stack
 ensure_caddy_entrypoint_running
+
+# Disable maintenance mode after successful deployment
+toggle_maintenance_mode "false" "Disabling"
 
 echo "----------------------------------------"
 echo "----- RESTART FINISHED -----"
