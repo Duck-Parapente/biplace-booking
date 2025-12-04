@@ -1,37 +1,12 @@
-import type { CreateReservationDto, PackDto, UserDto } from 'shared';
+import type { CreateReservationDto } from 'shared';
 
 export const useReservationForm = () => {
   const { callApi } = useApi();
-  const { getPacks } = usePack();
-  const { getUsers } = useUser();
-
-  // Data refs
-  const packs = ref<PackDto[]>([]);
-  const users = ref<UserDto[]>([]);
-  const loading = ref(false);
-  const loadError = ref<string | null>(null);
 
   // Submission state
-  const submitting = ref(false);
-  const submitError = ref<string | null>(null);
-  const submitSuccess = ref(false);
-
-  /**
-   * Load packs and users data
-   */
-  const loadData = async () => {
-    try {
-      loading.value = true;
-      loadError.value = null;
-      [packs.value, users.value] = await Promise.all([getPacks(), getUsers()]);
-    } catch (err) {
-      console.error('Failed to load data:', err);
-      loadError.value = 'Impossible de charger les données';
-      throw err;
-    } finally {
-      loading.value = false;
-    }
-  };
+  const submitting = useState('reservationForm-submitting', () => false);
+  const submitError = useState<string | null>('reservationForm-submitError', () => null);
+  const submitSuccess = useState('reservationForm-submitSuccess', () => false);
 
   /**
    * Submit a new reservation
@@ -39,8 +14,7 @@ export const useReservationForm = () => {
   const submitReservation = async (formData: CreateReservationDto) => {
     try {
       submitting.value = true;
-      submitError.value = null;
-      submitSuccess.value = false;
+      resetSubmissionState();
 
       await callApi('/reservations', {
         method: 'POST',
@@ -63,24 +37,18 @@ export const useReservationForm = () => {
    * Reset submission state
    */
   const resetSubmissionState = () => {
+    console.log('Resetting submission state');
     submitError.value = null;
     submitSuccess.value = false;
   };
 
   return {
-    // Data
-    packs: readonly(packs),
-    users: readonly(users),
-    loading: readonly(loading),
-    loadError: readonly(loadError),
-
     // Submission state
     submitting: readonly(submitting),
     submitError: readonly(submitError),
     submitSuccess: readonly(submitSuccess),
 
     // Actions
-    loadData,
     submitReservation,
     resetSubmissionState,
   };

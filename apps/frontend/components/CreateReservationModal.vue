@@ -122,10 +122,10 @@ const emit = defineEmits<Emits>();
 
 // Composables
 const { getUserDisplayName } = useUserHelpers();
-const { packs, users, loadData, submitReservation, submitting, submitError, submitSuccess } =
-  useReservationForm();
+const { submitReservation, submitting, submitError, submitSuccess } = useReservationForm();
 const { hasRole } = useAuth();
-const { getUser } = useUser();
+const { users, userData } = useUser();
+const { packs } = usePack();
 
 // Form state with computed setter for two-way binding
 const form = computed({
@@ -141,15 +141,13 @@ const userSearch = ref('');
 const selectedPack = computed(() => packs.value.find((p) => p.id === form.value.packId) ?? null);
 const selectedUser = computed(() => users.value.find((u) => u.id === form.value.userId) ?? null);
 
-const currentUser = ref<{ id: string } | null>(null);
-
 const filteredPacks = computed(() => {
   if (hasRole(UserRoles.ADMIN)) {
     return packs.value;
   }
 
-  if (hasRole(UserRoles.MANAGER) && currentUser.value) {
-    return packs.value.filter((pack) => pack.ownerId === currentUser.value?.id);
+  if (hasRole(UserRoles.MANAGER) && userData.value) {
+    return packs.value.filter((pack) => pack.ownerId === userData.value?.id);
   }
 
   return [];
@@ -218,9 +216,7 @@ const handleSubmit = async () => {
     setTimeout(() => {
       emit('close');
     }, 1000);
-  } catch {
-    // Error is already handled in the composable
-  }
+  } catch {}
 };
 
 // Reset form when modal opens
@@ -235,15 +231,6 @@ watch(
   async (isOpen) => {
     if (isOpen) {
       resetForm();
-      await loadData();
-
-      // Load current user data for filtering
-      try {
-        const user = await getUser();
-        currentUser.value = { id: user.id };
-      } catch (err) {
-        console.error('Failed to load current user:', err);
-      }
     }
   },
 );

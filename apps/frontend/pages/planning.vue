@@ -63,6 +63,7 @@ const { packs, planningDays, fetchPlanning } = usePlanning();
 const { getUsers, getUser } = useUser();
 const { hasRole } = useAuth();
 const { getPacks } = usePack();
+const { resetSubmissionState } = useReservationForm();
 
 const currentWeekStart = ref<Date>(getMonday(new Date()));
 const week = computed(() => getWeekDays(currentWeekStart.value));
@@ -88,6 +89,7 @@ const openCreateReservationModal = () => {
 };
 
 const closeCreateReservationModal = () => {
+  resetSubmissionState();
   showCreateReservationModal.value = false;
 };
 
