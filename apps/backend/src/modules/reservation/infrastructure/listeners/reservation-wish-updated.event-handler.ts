@@ -1,5 +1,5 @@
 import { ReservationWishStatusUpdatedDomainEvent } from '@modules/reservation/domain/events/reservation-wish-updated.domain-event';
-import { ReservationWishNotificationPort } from '@modules/reservation/domain/ports/reservation-wish-notification.port';
+import { ReservationNotificationPort } from '@modules/reservation/domain/ports/reservation-notification.port';
 import { RESERVATION_WISH_NOTIFICATION_PORT } from '@modules/reservation/reservation.di-tokens';
 import { Inject, Logger } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
@@ -13,7 +13,7 @@ export class ReservationWishStatusUpdatedEventHandler
 
   constructor(
     @Inject(RESERVATION_WISH_NOTIFICATION_PORT)
-    private readonly notificationPort: ReservationWishNotificationPort,
+    private readonly notificationPort: ReservationNotificationPort,
   ) {}
 
   async handle({
@@ -30,24 +30,15 @@ export class ReservationWishStatusUpdatedEventHandler
         aggregateId: aggregateId.uuid,
         metadata: metadata,
       });
-
-      if (status === ReservationWishStatus.CONFIRMED) {
-        this.logger.log(
-          `Sending confirmation notification for reservation wish ${aggregateId.uuid}`,
-        );
-        await this.notificationPort.notifyConfirmation(aggregateId);
-        return;
-      }
-
       if (status === ReservationWishStatus.REFUSED) {
         this.logger.log(`Sending refusal notification for reservation wish ${aggregateId.uuid}`);
-        await this.notificationPort.notifyRefusal(aggregateId);
+        await this.notificationPort.notifyWishRefusal(aggregateId);
         return;
       }
 
       if (status === ReservationWishStatus.CANCELLED) {
         this.logger.log(`Sending cancel notification for reservation wish ${aggregateId.uuid}`);
-        await this.notificationPort.notifyCancel(aggregateId);
+        await this.notificationPort.notifyWishCancel(aggregateId);
         return;
       }
     } catch (error) {
