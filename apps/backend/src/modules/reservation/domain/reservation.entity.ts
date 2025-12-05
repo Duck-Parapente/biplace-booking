@@ -1,5 +1,6 @@
 import { AggregateRoot, AggregateID, DomainEventMetadata } from '@libs/ddd';
 import { DateValueObject } from '@libs/ddd/date.value-object';
+import { Integer } from '@libs/ddd/integer.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
 import { ReservationCreatedDomainEvent } from './events/reservation-created.domain-event';
@@ -18,6 +19,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     const fullPros = {
       ...props,
       status: ReservationStatus.CONFIRMED,
+      cost: Integer.zero(),
     };
     const entity = new ReservationEntity({
       id,
@@ -62,6 +64,10 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
 
   get status() {
     return this.props.status;
+  }
+
+  get cost() {
+    return this.props.cost;
   }
 
   cancel(metadata: DomainEventMetadata): void {

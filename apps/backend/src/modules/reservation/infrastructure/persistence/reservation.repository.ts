@@ -1,5 +1,6 @@
 import { prisma } from '@libs/database/prisma/prisma';
 import { DateValueObject } from '@libs/ddd/date.value-object';
+import { Integer } from '@libs/ddd/integer.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
@@ -36,6 +37,7 @@ export const toEntity = (record: Reservation): ReservationEntity => {
       reservationWishId: record.reservationWishId
         ? new UUID({ uuid: record.reservationWishId })
         : undefined,
+      cost: new Integer({ value: record.cost }),
     },
   });
 };
@@ -74,6 +76,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
         packId: reservation.packId.uuid,
         userId: reservation.userId?.uuid ?? null,
         reservationWishId: reservation.reservationWishId?.uuid ?? null,
+        cost: reservation.cost.value,
       },
     });
 
