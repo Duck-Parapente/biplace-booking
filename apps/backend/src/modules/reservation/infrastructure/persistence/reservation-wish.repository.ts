@@ -4,7 +4,7 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
-import { ReservationUpdatedDomainEvent } from '@modules/reservation/domain/events/reservation-updated.domain-event';
+import { ReservationCancelledDomainEvent } from '@modules/reservation/domain/events/reservation-cancelled.domain-event';
 import { ReservationWishStatusUpdatedDomainEvent } from '@modules/reservation/domain/events/reservation-wish-updated.domain-event';
 import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
 import {
@@ -155,12 +155,12 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
       },
     });
 
-    const allReservationStatusEvents = await prisma.event.findMany({
+    const reservationCancelledEvents = await prisma.event.findMany({
       where: {
         aggregateId: {
           in: records.map((r) => r.reservation?.id).filter((id): id is string => !!id),
         },
-        name: ReservationUpdatedDomainEvent.name,
+        name: ReservationCancelledDomainEvent.name,
       },
     });
 
@@ -192,12 +192,11 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
                 status: DomainReservationStatus.CONFIRMED,
                 date: DateValueObject.fromDate(record.reservation.createdAt),
               },
-              ...allReservationStatusEvents
+              ...reservationCancelledEvents
                 .filter(({ aggregateId }) => aggregateId === record.reservation?.id)
-                .map(({ payload, createdAt }) => {
-                  const payloadTyped = payload as { status: string };
+                .map(({ createdAt }) => {
                   return {
-                    status: payloadTyped.status as DomainReservationStatus,
+                    status: DomainReservationStatus.CANCELLED,
                     date: DateValueObject.fromDate(createdAt),
                   };
                 }),

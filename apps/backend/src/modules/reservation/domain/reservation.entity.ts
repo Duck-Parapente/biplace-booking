@@ -3,8 +3,8 @@ import { DateValueObject } from '@libs/ddd/date.value-object';
 import { Integer } from '@libs/ddd/integer.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
+import { ReservationCancelledDomainEvent } from './events/reservation-cancelled.domain-event';
 import { ReservationCreatedDomainEvent } from './events/reservation-created.domain-event';
-import { ReservationUpdatedDomainEvent } from './events/reservation-updated.domain-event';
 import {
   CannotCancelReservationException,
   ReservationInvalidDateRangeException,
@@ -77,9 +77,8 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     this.props.status = ReservationStatus.CANCELLED;
 
     this.addEvent(
-      new ReservationUpdatedDomainEvent({
+      new ReservationCancelledDomainEvent({
         aggregateId: this.id,
-        status: this.props.status,
         metadata,
       }),
     );
