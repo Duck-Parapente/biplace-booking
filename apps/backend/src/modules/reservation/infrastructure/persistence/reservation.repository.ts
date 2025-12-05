@@ -151,15 +151,18 @@ export class ReservationRepository implements ReservationRepositoryPort {
     return toEntity(reservation);
   }
 
-  async updateStatus(reservation: ReservationEntity): Promise<void> {
+  async update(reservation: ReservationEntity): Promise<void> {
     await prisma.reservation.update({
       where: { id: reservation.id.uuid },
       data: {
         status: reservation.status,
+        cost: reservation.cost.value,
       },
     });
 
     await reservation.publishEvents(this.eventEmitter);
-    this.logger.log(`Reservation status updated: ${reservation.id.uuid} to ${reservation.status}`);
+    this.logger.log(
+      `Reservation updated: ${reservation.id.uuid} with status ${reservation.status} and cost ${reservation.cost.value}`,
+    );
   }
 }

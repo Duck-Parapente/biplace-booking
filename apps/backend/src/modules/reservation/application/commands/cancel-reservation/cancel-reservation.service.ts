@@ -15,8 +15,8 @@ export class CancelReservationService implements ICommandHandler<CancelReservati
   ) {}
 
   async execute({ reservation, metadata }: CancelReservationCommand): Promise<void> {
-    reservation.cancel(metadata);
-    await this.reservationRepository.updateStatus(reservation);
+    const cancelledReservation = reservation.cancel(metadata);
+    await this.reservationRepository.update(cancelledReservation);
 
     this.logger.log(`Reservation ${reservation.id.uuid} cancelled`);
   }

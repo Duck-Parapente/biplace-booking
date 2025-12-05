@@ -70,18 +70,29 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     return this.props.cost;
   }
 
-  cancel(metadata: DomainEventMetadata): void {
+  cancel(metadata: DomainEventMetadata): ReservationEntity {
     if (!this.isCancelable()) {
       throw new CannotCancelReservationException(this.id, this.props.status);
     }
     this.props.status = ReservationStatus.CANCELLED;
+    this.props.cost = this.calculateCost();
 
     this.addEvent(
       new ReservationCancelledDomainEvent({
         aggregateId: this.id,
         metadata,
+        cost: this.props.cost,
+        userId: this.props.userId,
       }),
     );
+
+    return this;
+  }
+
+  private calculateCost(): Integer {
+    if (!this.startingDate.isInTheFuture()) return Integer.zero();
+
+    return this.createdAt.daysBetween(DateValueObject.now());
   }
 
   isCancelable(): boolean {

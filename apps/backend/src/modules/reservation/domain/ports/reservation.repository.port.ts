@@ -7,6 +7,7 @@ import { PlanningReservationDto } from '../reservation.types';
 
 export interface ReservationRepositoryPort {
   create(reservationEntity: ReservationEntity): Promise<void>;
+  update(reservation: ReservationEntity): Promise<void>;
   findAvailablePacks(
     startingDate: DateValueObject,
     endingDate: DateValueObject,
@@ -21,5 +22,4 @@ export interface ReservationRepositoryPort {
     endDate: DateValueObject,
   ): Promise<PlanningReservationDto[]>;
   findById(id: UUID): Promise<ReservationEntity | null>;
-  updateStatus(reservation: ReservationEntity): Promise<void>;
 }
