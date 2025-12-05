@@ -8,6 +8,8 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.getHttpAdapter().getInstance().set('trust proxy', true); // trust first proxy
   app.useLogger(app.get(Logger));
   app.use(json({ limit: '10mb' }));
 

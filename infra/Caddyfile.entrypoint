@@ -1,5 +1,8 @@
 bb-backend-prod.duckparapente.fr {
-    reverse_proxy bb-prod-caddy:80
+    reverse_proxy bb-prod-caddy:80 {
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+    }
     
     log {
         output stdout
@@ -8,7 +11,10 @@ bb-backend-prod.duckparapente.fr {
 }
 
 bb-backend-staging.duckparapente.fr {
-    reverse_proxy bb-staging-caddy:80
+    reverse_proxy bb-staging-caddy:80 {
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+    }
     
     log {
         output stdout
