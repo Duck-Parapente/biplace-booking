@@ -1,5 +1,6 @@
 import { AggregateRoot, AggregateID } from '@libs/ddd';
 import { DateValueObject } from '@libs/ddd/date.value-object';
+import { Integer } from '@libs/ddd/integer.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
 import { UserCreatedDomainEvent } from './events/user-created.domain-event';
@@ -65,6 +66,10 @@ export class UserEntity extends AggregateRoot<UserProps> {
         changes: props,
       }),
     );
+  }
+
+  incrementScore(cost: Integer): void {
+    this.props.currentScore += cost.value;
   }
 
   validate(): void {
