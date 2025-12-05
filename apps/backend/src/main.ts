@@ -1,7 +1,7 @@
 import 'newrelic';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { json } from 'express';
+import { json, Request, Response, NextFunction } from 'express';
 import { Logger } from 'nestjs-pino';
 
 import { AppModule } from './app.module';
@@ -12,6 +12,16 @@ async function bootstrap() {
   app.getHttpAdapter().getInstance().set('trust proxy', true); // trust first proxy
   app.useLogger(app.get(Logger));
   app.use(json({ limit: '10mb' }));
+
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    const origin = req.headers.origin;
+
+    if (process.env.FRONTEND_URL !== origin) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
+
+    next();
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
