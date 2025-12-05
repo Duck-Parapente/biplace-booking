@@ -1,6 +1,9 @@
 # Production API
 :80 {
-    reverse_proxy backend:3001
+    reverse_proxy backend:3001 {
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {header.X-Forwarded-For}, {remote_host}
+    }
     
     # Security headers
     header {
