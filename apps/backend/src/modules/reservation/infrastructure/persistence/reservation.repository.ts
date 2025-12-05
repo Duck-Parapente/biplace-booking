@@ -1,5 +1,6 @@
 import { prisma } from '@libs/database/prisma/prisma';
 import { DateValueObject } from '@libs/ddd/date.value-object';
+import { Integer } from '@libs/ddd/integer.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
@@ -36,6 +37,7 @@ export const toEntity = (record: Reservation): ReservationEntity => {
       reservationWishId: record.reservationWishId
         ? new UUID({ uuid: record.reservationWishId })
         : undefined,
+      cost: new Integer({ value: record.cost }),
     },
   });
 };
@@ -74,6 +76,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
         packId: reservation.packId.uuid,
         userId: reservation.userId?.uuid ?? null,
         reservationWishId: reservation.reservationWishId?.uuid ?? null,
+        cost: reservation.cost.value,
       },
     });
 
@@ -148,15 +151,18 @@ export class ReservationRepository implements ReservationRepositoryPort {
     return toEntity(reservation);
   }
 
-  async updateStatus(reservation: ReservationEntity): Promise<void> {
+  async update(reservation: ReservationEntity): Promise<void> {
     await prisma.reservation.update({
       where: { id: reservation.id.uuid },
       data: {
         status: reservation.status,
+        cost: reservation.cost.value,
       },
     });
 
     await reservation.publishEvents(this.eventEmitter);
-    this.logger.log(`Reservation status updated: ${reservation.id.uuid} to ${reservation.status}`);
+    this.logger.log(
+      `Reservation updated: ${reservation.id.uuid} with status ${reservation.status} and cost ${reservation.cost.value}`,
+    );
   }
 }

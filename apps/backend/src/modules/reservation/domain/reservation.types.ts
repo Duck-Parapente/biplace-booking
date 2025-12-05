@@ -1,4 +1,5 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
+import { Integer } from '@libs/ddd/integer.value-object';
 import { UUID, UuidProps } from '@libs/ddd/uuid.value-object';
 
 interface BaseReservationProps {
@@ -12,6 +13,7 @@ interface BaseReservationProps {
 
 export type CreateReservationProps = BaseReservationProps;
 export type ReservationProps = BaseReservationProps & {
+  cost: Integer;
   status: ReservationStatus;
 };
 

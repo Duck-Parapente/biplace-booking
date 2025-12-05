@@ -1,9 +1,10 @@
 import { AggregateRoot, AggregateID, DomainEventMetadata } from '@libs/ddd';
 import { DateValueObject } from '@libs/ddd/date.value-object';
+import { Integer } from '@libs/ddd/integer.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
+import { ReservationCancelledDomainEvent } from './events/reservation-cancelled.domain-event';
 import { ReservationCreatedDomainEvent } from './events/reservation-created.domain-event';
-import { ReservationUpdatedDomainEvent } from './events/reservation-updated.domain-event';
 import {
   CannotCancelReservationException,
   ReservationInvalidDateRangeException,
@@ -18,6 +19,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     const fullPros = {
       ...props,
       status: ReservationStatus.CONFIRMED,
+      cost: Integer.zero(),
     };
     const entity = new ReservationEntity({
       id,
@@ -64,19 +66,33 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     return this.props.status;
   }
 
-  cancel(metadata: DomainEventMetadata): void {
+  get cost() {
+    return this.props.cost;
+  }
+
+  cancel(metadata: DomainEventMetadata): ReservationEntity {
     if (!this.isCancelable()) {
       throw new CannotCancelReservationException(this.id, this.props.status);
     }
     this.props.status = ReservationStatus.CANCELLED;
+    this.props.cost = this.calculateCost();
 
     this.addEvent(
-      new ReservationUpdatedDomainEvent({
+      new ReservationCancelledDomainEvent({
         aggregateId: this.id,
-        status: this.props.status,
         metadata,
+        cost: this.props.cost,
+        userId: this.props.userId,
       }),
     );
+
+    return this;
+  }
+
+  private calculateCost(): Integer {
+    if (!this.startingDate.isInTheFuture()) return Integer.zero();
+
+    return this.createdAt.daysBetween(DateValueObject.now());
   }
 
   isCancelable(): boolean {

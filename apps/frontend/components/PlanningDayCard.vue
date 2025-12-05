@@ -103,7 +103,7 @@ import IconX from '~/components/icons/IconX.vue';
 import { formatDateLong, isToday } from '~/composables/useDateHelpers';
 
 interface PlanningDay {
-  date: Date;
+  date: string;
   packs: PackPlanningDto[];
 }
 
@@ -133,7 +133,7 @@ const canCancelReservation = (pack: PackPlanningDto): boolean => {
   if (!pack.reservation) return false;
   if (!pack.reservation.isCancelable) return false;
 
-  const isAfterNow = props.day.date > new Date();
+  const isAfterNow = new Date(props.day.date) > new Date();
 
   // User can cancel their own reservation
   if (pack.reservation.userId === currentUser.value?.id && isAfterNow) return true;

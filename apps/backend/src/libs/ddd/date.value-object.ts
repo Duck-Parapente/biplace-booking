@@ -2,6 +2,7 @@ import { Guard } from '@libs/guards/primitive.guard';
 
 import { ArgumentInvalidException } from '../exceptions/exceptions';
 
+import { Integer } from './integer.value-object';
 import { ValueObject } from './value-object.base';
 
 export interface DateProps {
@@ -26,6 +27,11 @@ export class DateValueObject extends ValueObject<DateProps> {
 
   isBefore(other: DateValueObject): boolean {
     return this.value.getTime() < other.value.getTime();
+  }
+
+  daysBetween(other: DateValueObject): Integer {
+    const diffMs = other.value.getTime() - this.value.getTime();
+    return new Integer({ value: Math.round(diffMs / (1000 * 60 * 60 * 24)) });
   }
 
   static now(): DateValueObject {

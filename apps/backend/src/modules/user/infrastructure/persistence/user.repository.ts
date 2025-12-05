@@ -59,6 +59,7 @@ export class UserRepository implements UserRepositoryPort {
         lastName: user.lastName,
         address: user.address,
         phoneNumber: user.phoneNumber,
+        currentScore: user.currentScore,
       },
     });
 
