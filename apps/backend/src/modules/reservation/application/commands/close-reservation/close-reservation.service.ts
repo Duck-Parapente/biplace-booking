@@ -1,7 +1,9 @@
-import { prisma } from '@libs/database/prisma/prisma';
-import { UUID } from '@libs/ddd/uuid.value-object';
+import { FlightLogRepositoryPort } from '@modules/reservation/domain/ports/flight-log.repository.port';
 import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
-import { RESERVATION_REPOSITORY } from '@modules/reservation/reservation.di-tokens';
+import {
+  FLIGHT_LOG_REPOSITORY,
+  RESERVATION_REPOSITORY,
+} from '@modules/reservation/reservation.di-tokens';
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
@@ -14,25 +16,15 @@ export class CloseReservationService implements ICommandHandler<CloseReservation
   constructor(
     @Inject(RESERVATION_REPOSITORY)
     private readonly reservationRepository: ReservationRepositoryPort,
+    @Inject(FLIGHT_LOG_REPOSITORY)
+    private readonly flightLogRepository: FlightLogRepositoryPort,
   ) {}
 
   async execute({ reservation, flightLog, metadata }: CloseReservationCommand): Promise<void> {
     const closedReservation = reservation.close(flightLog, metadata);
 
-    // Create the flight log
-    await prisma.flightLog.create({
-      data: {
-        id: UUID.random().uuid,
-        reservationId: reservation.id.uuid,
-        flightsMinutes: flightLog.flightTimeMinutes.value,
-        flightsCount: flightLog.flightCount.value,
-        publicComment: flightLog.publicComment ?? null,
-        privateComment: flightLog.privateComment ?? null,
-        createdAt: new Date(),
-      },
-    });
-
     await this.reservationRepository.update(closedReservation);
+    await this.flightLogRepository.create(reservation.id, flightLog);
 
     this.logger.log(`Reservation ${reservation.id.uuid} closed`);
   }

@@ -26,9 +26,11 @@ import { UpdateReservationWishHttpController } from './infrastructure/http/contr
 import { ReservationCancelledEventHandler } from './infrastructure/listeners/reservation-cancelled.event-handler';
 import { ReservationCreatedEventHandler } from './infrastructure/listeners/reservation-created.event-handler';
 import { ReservationWishStatusUpdatedEventHandler } from './infrastructure/listeners/reservation-wish-updated.event-handler';
+import { FlightLogRepository } from './infrastructure/persistence/flight-log.repository';
 import { ReservationWishRepository } from './infrastructure/persistence/reservation-wish.repository';
 import { ReservationRepository } from './infrastructure/persistence/reservation.repository';
 import {
+  FLIGHT_LOG_REPOSITORY,
   RESERVATION_REPOSITORY,
   RESERVATION_WISH_NOTIFICATION_PORT,
   RESERVATION_WISH_REPOSITORY,
@@ -62,6 +64,7 @@ import {
     ReservationCreatedEventHandler,
     { provide: RESERVATION_WISH_REPOSITORY, useClass: ReservationWishRepository },
     { provide: RESERVATION_REPOSITORY, useClass: ReservationRepository },
+    { provide: FLIGHT_LOG_REPOSITORY, useClass: FlightLogRepository },
     {
       provide: RESERVATION_WISH_NOTIFICATION_PORT,
       useClass: EmailNotificationAdapter,
