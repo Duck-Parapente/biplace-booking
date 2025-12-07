@@ -26,6 +26,8 @@ const mapReservationStatusToWishStatus = (status: ReservationStatus): Reservatio
       return ReservationWishStatusDto.CONFIRMED;
     case ReservationStatus.CANCELLED:
       return ReservationWishStatusDto.CANCELLED;
+    case ReservationStatus.CLOSED:
+      return ReservationWishStatusDto.CLOSED;
     default:
       throw new Error(`Unknown ReservationStatus: ${status}`);
   }

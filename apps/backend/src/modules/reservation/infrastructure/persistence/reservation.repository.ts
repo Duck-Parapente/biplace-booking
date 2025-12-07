@@ -18,6 +18,8 @@ const mapStatus = (status: ReservationStatus): DomainReservationStatus => {
       return DomainReservationStatus.CONFIRMED;
     case ReservationStatus.CANCELLED:
       return DomainReservationStatus.CANCELLED;
+    case ReservationStatus.CLOSED:
+      return DomainReservationStatus.CLOSED;
     default:
       throw new Error(`Unknown ReservationStatus: ${status}`);
   }

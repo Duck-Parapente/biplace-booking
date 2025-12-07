@@ -61,6 +61,7 @@ enum ReservationWishStatus {
 enum ReservationStatus {
     CONFIRMED
     CANCELLED
+    CLOSED
 }
 
 model ReservationWish {
