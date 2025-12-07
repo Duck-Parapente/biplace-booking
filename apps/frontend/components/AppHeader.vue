@@ -51,18 +51,29 @@
 
         <!-- Menu content -->
         <nav class="flex-1 flex flex-col items-center justify-center gap-8">
-          <NuxtLink
-            v-for="item in visibleMenuItems"
-            :key="item.path"
-            :to="item.path"
-            class="text-secondary-600 text-2xl font-semibold hover:opacity-80 transition-opacity"
-            @click="isMenuOpen = false"
+          <div
+            v-for="category in visibleMenuCategories"
+            :key="category.label"
+            class="flex flex-col items-center gap-4"
           >
-            {{ item.label }}
-          </NuxtLink>
+            <p class="text-secondary-600/50 text-sm font-medium uppercase tracking-wider">
+              {{ category.label }}
+            </p>
+            <div class="flex flex-col items-center gap-4">
+              <NuxtLink
+                v-for="item in category.items"
+                :key="item.path"
+                :to="item.path"
+                class="text-secondary-600 text-2xl font-semibold hover:opacity-80 transition-opacity"
+                @click="isMenuOpen = false"
+              >
+                {{ item.label }}
+              </NuxtLink>
+            </div>
+          </div>
 
           <button
-            class="bg-secondary-600 text-primary-400 transition text-lg px-6 py-3 rounded hover:opacity-90"
+            class="bg-secondary-600 text-primary-400 transition text-lg px-6 py-3 rounded hover:opacity-90 mt-4"
             @click="handleLogout()"
           >
             Se déconnecter
@@ -103,19 +114,43 @@ interface MenuItem {
   requiresRole?: UserRoles;
 }
 
-const menuItems: MenuItem[] = [
-  { path: '/', label: 'Mes demandes' },
-  { path: '/planning', label: 'Planning' },
-  { path: '/mon-compte', label: 'Mon compte' },
-  { path: '/contacts', label: 'Contacts' },
-  { path: '/gestion-packs', label: 'Gestion des Packs', requiresRole: UserRoles.ADMIN },
+interface MenuCategory {
+  label: string;
+  items: MenuItem[];
+}
+
+const menuCategories: MenuCategory[] = [
+  {
+    label: 'Réservations',
+    items: [
+      { path: '/planning', label: 'Planning' },
+      { path: '/', label: 'Mes demandes' },
+      { path: '/carnet-de-vol', label: 'Carnet de vol' },
+    ],
+  },
+  {
+    label: 'Informations',
+    items: [{ path: '/contacts', label: 'Contacts' }],
+  },
+  {
+    label: 'Administration',
+    items: [
+      { path: '/mon-compte', label: 'Mon compte' },
+      { path: '/gestion-packs', label: 'Gestion des Packs', requiresRole: UserRoles.ADMIN },
+    ],
+  },
 ];
 
-const visibleMenuItems = computed(() => {
-  return menuItems.filter((item) => {
-    if (!item.requiresRole) return true;
-    return hasRole(item.requiresRole);
-  });
+const visibleMenuCategories = computed(() => {
+  return menuCategories
+    .map((category) => ({
+      ...category,
+      items: category.items.filter((item) => {
+        if (!item.requiresRole) return true;
+        return hasRole(item.requiresRole);
+      }),
+    }))
+    .filter((category) => category.items.length > 0);
 });
 
 const handleLogout = () => {

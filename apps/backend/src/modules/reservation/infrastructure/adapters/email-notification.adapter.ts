@@ -2,12 +2,14 @@ import { prisma } from '@libs/database/prisma/prisma';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { MailClient } from '@libs/mail/mail.client';
 import { ReservationNotificationPort } from '@modules/reservation/domain/ports/reservation-notification.port';
+import { FlightLogProps } from '@modules/reservation/domain/reservation.types';
 import { Injectable, Logger } from '@nestjs/common';
 
 const TEMPLATE_WISH_REFUSAL = 'reservation_wish_refused';
 const TEMPLATE_WISH_CANCEL = 'reservation_wish_cancelled';
 const TEMPLATE_RESERVATION_CONFIRMATION = 'reservation_confirmed';
 const TEMPLATE_RESERVATION_CANCEL = 'reservation_cancelled';
+const TEMPLATE_RESERVATION_CLOSING = 'reservation_closed';
 
 const formatDate = (date: Date): string => {
   return date.toLocaleDateString('fr-FR', {
@@ -29,6 +31,41 @@ export class EmailNotificationAdapter implements ReservationNotificationPort {
 
   async notifyReservationCancelled(reservationId: UUID): Promise<void> {
     await this.sendReservationNotificationEmail(reservationId, TEMPLATE_RESERVATION_CANCEL);
+  }
+
+  async notifyReservationClosed(reservationId: UUID, flightLog: FlightLogProps): Promise<void> {
+    try {
+      const { pack, user, startingDate } = await prisma.reservation.findUniqueOrThrow({
+        where: { id: reservationId.uuid },
+        include: {
+          user: true,
+          pack: {
+            select: {
+              owner: true,
+              label: true,
+            },
+          },
+        },
+      });
+
+      await this.mailClient.sendTemplate({
+        to: [...(user ? [user.email] : []), pack.owner.email],
+        template: TEMPLATE_RESERVATION_CLOSING,
+        variables: {
+          startingDateLabel: formatDate(startingDate),
+          selectedPackLabel: pack.label,
+          flightCount: flightLog.flightCount.value,
+          flightTimeMinutes: flightLog.flightTimeMinutes.value,
+          publicComment: flightLog.publicComment || '-',
+          privateComment: flightLog.privateComment || '-',
+        },
+      });
+    } catch (error) {
+      this.logger.error(
+        `Failed to send reservation closed email: ${(error as Error).message}`,
+        (error as Error).stack,
+      );
+    }
   }
 
   async notifyWishCancel(reservationWishId: UUID): Promise<void> {

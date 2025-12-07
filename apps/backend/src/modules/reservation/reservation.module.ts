@@ -25,6 +25,7 @@ import { GetPlanningHttpController } from './infrastructure/http/controllers/get
 import { GetReservationWishesHttpController } from './infrastructure/http/controllers/get-reservation-wishes.http.controller';
 import { UpdateReservationWishHttpController } from './infrastructure/http/controllers/update-reservation-wish.http.controller';
 import { ReservationCancelledEventHandler } from './infrastructure/listeners/reservation-cancelled.event-handler';
+import { ReservationClosedEventHandler } from './infrastructure/listeners/reservation-closed.event-handler';
 import { ReservationCreatedEventHandler } from './infrastructure/listeners/reservation-created.event-handler';
 import { ReservationWishStatusUpdatedEventHandler } from './infrastructure/listeners/reservation-wish-updated.event-handler';
 import { FlightLogRepository } from './infrastructure/persistence/flight-log.repository';
@@ -64,6 +65,7 @@ import {
     ReservationWishStatusUpdatedEventHandler,
     ReservationCancelledEventHandler,
     ReservationCreatedEventHandler,
+    ReservationClosedEventHandler,
     { provide: RESERVATION_WISH_REPOSITORY, useClass: ReservationWishRepository },
     { provide: RESERVATION_REPOSITORY, useClass: ReservationRepository },
     { provide: FLIGHT_LOG_REPOSITORY, useClass: FlightLogRepository },
