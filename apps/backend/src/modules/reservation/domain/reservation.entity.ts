@@ -106,8 +106,12 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     return this.canBeModified();
   }
 
+  isClosable(): boolean {
+    return this.canBeModified();
+  }
+
   close(flightLog: FlightLogProps, metadata: DomainEventMetadata): ReservationEntity {
-    if (!this.isCloseable()) {
+    if (!this.isClosable()) {
       throw new CannotCloseReservationException(this.id, this.props.status);
     }
 
@@ -123,10 +127,6 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     );
 
     return this;
-  }
-
-  isCloseable(): boolean {
-    return this.canBeModified();
   }
 
   validate(): void {

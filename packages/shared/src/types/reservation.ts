@@ -32,6 +32,10 @@ export class ReservationDto {
   @IsNotEmpty()
   @IsBoolean()
   isCancelable!: boolean;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isClosable!: boolean;
 }
 
 export class ReservationWishEventDto {

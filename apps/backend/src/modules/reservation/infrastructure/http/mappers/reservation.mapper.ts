@@ -50,6 +50,7 @@ export function mapReservationWishToDto({
           id: reservation.entity.id.uuid,
           packId: reservation.entity.packId.uuid,
           isCancelable: reservation.entity.isCancelable(),
+          isClosable: reservation.entity.isClosable(),
         }
       : null,
     events: [
