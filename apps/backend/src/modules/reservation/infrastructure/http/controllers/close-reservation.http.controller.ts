@@ -1,0 +1,109 @@
+import { Integer } from '@libs/ddd/integer.value-object';
+import { UUID } from '@libs/ddd/uuid.value-object';
+import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
+import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
+import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
+import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.service';
+import { CloseReservationCommand } from '@modules/reservation/application/commands/close-reservation/close-reservation.command';
+import { CloseReservationService } from '@modules/reservation/application/commands/close-reservation/close-reservation.service';
+import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
+import { ReservationEntity } from '@modules/reservation/domain/reservation.entity';
+import {
+  CannotCloseReservationException,
+  ReservationNotFoundException,
+} from '@modules/reservation/domain/reservation.exceptions';
+import { RESERVATION_REPOSITORY } from '@modules/reservation/reservation.di-tokens';
+import {
+  Controller,
+  Logger,
+  UseGuards,
+  Post,
+  Param,
+  NotFoundException,
+  Request,
+  ForbiddenException,
+  Inject,
+  BadRequestException,
+  Body,
+} from '@nestjs/common';
+import { CloseReservationDto, UserRoles } from 'shared';
+
+@Controller('reservations')
+@UseGuards(JwtAuthGuard, MaintenanceModeGuard)
+export class CloseReservationHttpController {
+  private readonly logger = new Logger(CloseReservationHttpController.name);
+
+  constructor(
+    private readonly closeReservationService: CloseReservationService,
+    private readonly getPacksService: GetPacksService,
+    @Inject(RESERVATION_REPOSITORY)
+    private readonly reservationRepository: ReservationRepositoryPort,
+  ) {}
+
+  @Post(':id/close')
+  async closeReservation(
+    @Param('id') id: string,
+    @Request() { user: { id: userId, roles } }: { user: AuthenticatedUser },
+    @Body() { flightTimeMinutes, flightCount, publicComment, privateComment }: CloseReservationDto,
+  ) {
+    const reservationId = new UUID({ uuid: id });
+    const reservation = await this.reservationRepository.findById(reservationId);
+
+    if (!reservation) {
+      throw new NotFoundException(`Reservation not found: ${id}`);
+    }
+
+    await this.checkUserIsAllowedToCloseReservation(reservation, userId, roles);
+
+    const command = new CloseReservationCommand({
+      reservation,
+      flightLog: {
+        flightTimeMinutes: new Integer({ value: flightTimeMinutes }),
+        flightCount: new Integer({ value: flightCount }),
+        publicComment,
+        privateComment,
+      },
+      metadata: {
+        userId: userId.uuid,
+      },
+    });
+
+    try {
+      await this.closeReservationService.execute(command);
+
+      return { message: 'Reservation closed' };
+    } catch (error) {
+      this.logger.error('Error closing reservation', error);
+
+      if (error instanceof ReservationNotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+
+      if (error instanceof CannotCloseReservationException) {
+        throw new BadRequestException(error.message);
+      }
+
+      throw error;
+    }
+  }
+
+  private async checkUserIsAllowedToCloseReservation(
+    { packId, userId: reservationUserId }: ReservationEntity,
+    userId: UUID,
+    roles: UserRoles[],
+  ): Promise<void> {
+    if (roles.includes(UserRoles.ADMIN)) {
+      return;
+    }
+
+    if (await this.getPacksService.isPackOwnedByUser(packId, userId)) {
+      return;
+    }
+
+    if (reservationUserId && reservationUserId.equals(userId)) {
+      return;
+    }
+
+    throw new ForbiddenException('User is not allowed to close this reservation');
+  }
+}

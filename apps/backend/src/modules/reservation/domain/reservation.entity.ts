@@ -4,12 +4,19 @@ import { Integer } from '@libs/ddd/integer.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
 import { ReservationCancelledDomainEvent } from './events/reservation-cancelled.domain-event';
+import { ReservationClosedDomainEvent } from './events/reservation-closed.domain-event';
 import { ReservationCreatedDomainEvent } from './events/reservation-created.domain-event';
 import {
   CannotCancelReservationException,
+  CannotCloseReservationException,
   ReservationInvalidDateRangeException,
 } from './reservation.exceptions';
-import { CreateReservationProps, ReservationProps, ReservationStatus } from './reservation.types';
+import {
+  CreateReservationProps,
+  FlightLogProps,
+  ReservationProps,
+  ReservationStatus,
+} from './reservation.types';
 
 export class ReservationEntity extends AggregateRoot<ReservationProps> {
   protected readonly _id!: AggregateID;
@@ -96,12 +103,39 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
   }
 
   isCancelable(): boolean {
-    return this.props.status === ReservationStatus.CONFIRMED;
+    return this.canBeModified();
+  }
+
+  close(flightLog: FlightLogProps, metadata: DomainEventMetadata): ReservationEntity {
+    if (!this.isCloseable()) {
+      throw new CannotCloseReservationException(this.id, this.props.status);
+    }
+
+    this.props.status = ReservationStatus.CLOSED;
+
+    this.addEvent(
+      new ReservationClosedDomainEvent({
+        aggregateId: this.id,
+        metadata,
+        userId: this.props.userId,
+        flightLog,
+      }),
+    );
+
+    return this;
+  }
+
+  isCloseable(): boolean {
+    return this.canBeModified();
   }
 
   validate(): void {
     if (!this.startingDate.isBefore(this.endingDate)) {
       throw new ReservationInvalidDateRangeException(this.startingDate, this.endingDate);
     }
+  }
+
+  private canBeModified(): boolean {
+    return this.props.status === ReservationStatus.CONFIRMED;
   }
 }

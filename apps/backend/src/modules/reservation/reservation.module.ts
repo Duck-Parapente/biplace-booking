@@ -5,6 +5,7 @@ import { Module } from '@nestjs/common';
 import { PackModule } from '../pack/pack.module';
 
 import { CancelReservationService } from './application/commands/cancel-reservation/cancel-reservation.service';
+import { CloseReservationService } from './application/commands/close-reservation/close-reservation.service';
 import { CreateReservationService } from './application/commands/create-reservation/create-reservation.service';
 import { CreateReservationWishService } from './application/commands/create-reservation-wish/create-reservation-wish.service';
 import { UpdateReservationWishService } from './application/commands/update-reservation-wish/update-reservation-wish.service';
@@ -16,6 +17,7 @@ import { ReservationWishDomainService } from './domain/reservation-wish.domain-s
 import { ReservationDomainService } from './domain/reservation.domain-service';
 import { EmailNotificationAdapter } from './infrastructure/adapters/email-notification.adapter';
 import { CancelReservationHttpController } from './infrastructure/http/controllers/cancel-reservation.http.controller';
+import { CloseReservationHttpController } from './infrastructure/http/controllers/close-reservation.http.controller';
 import { CreateReservationWishHttpController } from './infrastructure/http/controllers/create-reservation-wish.http.controller';
 import { CreateReservationHttpController } from './infrastructure/http/controllers/create-reservation.http.controller';
 import { GetPlanningHttpController } from './infrastructure/http/controllers/get-planning.http.controller';
@@ -41,6 +43,7 @@ import {
     GetReservationWishesHttpController,
     GetPlanningHttpController,
     CancelReservationHttpController,
+    CloseReservationHttpController,
   ],
   providers: [
     CreateReservationWishService,
@@ -50,6 +53,7 @@ import {
     GetPlanningService,
     CreateReservationService,
     CancelReservationService,
+    CloseReservationService,
     ReservationWishDomainService,
     ReservationDomainService,
     PlanningDomainService,

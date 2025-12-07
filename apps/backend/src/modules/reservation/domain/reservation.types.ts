@@ -39,3 +39,10 @@ export enum ReservationStatus {
   CANCELLED = 'CANCELLED',
   CLOSED = 'CLOSED',
 }
+
+export interface FlightLogProps {
+  flightTimeMinutes: Integer;
+  flightCount: Integer;
+  publicComment?: string;
+  privateComment?: string;
+}

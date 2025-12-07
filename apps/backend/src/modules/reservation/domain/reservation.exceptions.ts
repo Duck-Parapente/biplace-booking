@@ -36,3 +36,12 @@ export class ReservationInvalidDateRangeException extends ExceptionBase {
     );
   }
 }
+
+export class CannotCloseReservationException extends ExceptionBase {
+  code = CannotCloseReservationException.name;
+  constructor(reservationId: UUID, status: string) {
+    super(
+      `Cannot close reservation ${reservationId.uuid} with status ${status}. Only confirmed reservations can be closed.`,
+    );
+  }
+}
