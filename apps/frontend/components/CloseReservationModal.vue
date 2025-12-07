@@ -41,7 +41,7 @@
               v-model="form.publicComment"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-600 focus:border-transparent"
               rows="3"
-              placeholder="Commentaire visible par le passager..."
+              placeholder="Commentaire visible par tout le monde"
             ></textarea>
           </div>
 
@@ -51,7 +51,7 @@
               v-model="form.privateComment"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-600 focus:border-transparent"
               rows="3"
-              placeholder="Commentaire interne (non visible par le passager)..."
+              placeholder="Commentaire interne, à destination du respo pack"
             ></textarea>
           </div>
 
