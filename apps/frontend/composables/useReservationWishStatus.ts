@@ -12,6 +12,10 @@ export const useReservationWishStatus = () => {
       label: 'Confirmée',
       classes: 'bg-green-200 text-green-800',
     },
+    [ReservationWishStatusDto.CLOSED]: {
+      label: 'Clôturée',
+      classes: 'bg-green-200 text-green-800',
+    },
     [ReservationWishStatusDto.REFUSED]: {
       label: 'Refusée',
       classes: 'bg-red-200 text-red-800',

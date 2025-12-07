@@ -26,7 +26,7 @@
             <BaseTag
               v-for="packId in wish.packChoices"
               :key="packId"
-              :variant="hasReservation(packId) ? 'success' : 'secondary'"
+              :variant="showPackIsReserved(packId) ? 'success' : 'secondary'"
             >
               {{ getPackLabel(packId) }}
             </BaseTag>
@@ -101,10 +101,12 @@ const getPackLabel = (packId: string): string => {
 
 const statusConfig = getConfigFromStatus(props.currentStatus);
 
-const hasReservation = (packId: string): boolean => {
+const showPackIsReserved = (packId: string): boolean => {
   return (
     props.wish.reservation?.packId === packId &&
-    props.currentStatus === ReservationWishStatusDto.CONFIRMED
+    [ReservationWishStatusDto.CONFIRMED, ReservationWishStatusDto.CLOSED].includes(
+      props.currentStatus,
+    )
   );
 };
 
