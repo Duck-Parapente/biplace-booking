@@ -2,11 +2,10 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
-import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.service';
 import { CancelReservationCommand } from '@modules/reservation/application/commands/cancel-reservation/cancel-reservation.command';
 import { CancelReservationService } from '@modules/reservation/application/commands/cancel-reservation/cancel-reservation.service';
+import { ReservationAuthorizationService } from '@modules/reservation/application/services/reservation-authorization.service';
 import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
-import { ReservationEntity } from '@modules/reservation/domain/reservation.entity';
 import {
   CannotCancelReservationException,
   ReservationNotFoundException,
@@ -20,11 +19,9 @@ import {
   Param,
   NotFoundException,
   Request,
-  ForbiddenException,
   Inject,
   BadRequestException,
 } from '@nestjs/common';
-import { UserRoles } from 'shared';
 
 @Controller('reservations')
 @UseGuards(JwtAuthGuard, MaintenanceModeGuard)
@@ -33,7 +30,7 @@ export class CancelReservationHttpController {
 
   constructor(
     private readonly cancelReservationService: CancelReservationService,
-    private readonly getPacksService: GetPacksService,
+    private readonly reservationAuthorizationService: ReservationAuthorizationService,
     @Inject(RESERVATION_REPOSITORY)
     private readonly reservationRepository: ReservationRepositoryPort,
   ) {}
@@ -50,7 +47,11 @@ export class CancelReservationHttpController {
       throw new NotFoundException(`Reservation not found: ${id}`);
     }
 
-    await this.checkUserIsAllowedToCancelReservation(reservation, userId, roles);
+    await this.reservationAuthorizationService.checkUserIsAllowedToModifyReservation(
+      reservation,
+      userId,
+      roles,
+    );
 
     const command = new CancelReservationCommand({
       reservation,
@@ -76,25 +77,5 @@ export class CancelReservationHttpController {
 
       throw error;
     }
-  }
-
-  private async checkUserIsAllowedToCancelReservation(
-    { packId, userId: reservationUserId }: ReservationEntity,
-    userId: UUID,
-    roles: UserRoles[],
-  ): Promise<void> {
-    if (roles.includes(UserRoles.ADMIN)) {
-      return;
-    }
-
-    if (await this.getPacksService.isPackOwnedByUser(packId, userId)) {
-      return;
-    }
-
-    if (reservationUserId && reservationUserId.equals(userId)) {
-      return;
-    }
-
-    throw new ForbiddenException('User is not allowed to cancel this reservation');
   }
 }

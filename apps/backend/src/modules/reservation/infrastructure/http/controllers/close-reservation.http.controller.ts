@@ -3,11 +3,10 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
-import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.service';
 import { CloseReservationCommand } from '@modules/reservation/application/commands/close-reservation/close-reservation.command';
 import { CloseReservationService } from '@modules/reservation/application/commands/close-reservation/close-reservation.service';
+import { ReservationAuthorizationService } from '@modules/reservation/application/services/reservation-authorization.service';
 import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
-import { ReservationEntity } from '@modules/reservation/domain/reservation.entity';
 import {
   CannotCloseReservationException,
   ReservationNotFoundException,
@@ -21,12 +20,11 @@ import {
   Param,
   NotFoundException,
   Request,
-  ForbiddenException,
   Inject,
   BadRequestException,
   Body,
 } from '@nestjs/common';
-import { CloseReservationDto, UserRoles } from 'shared';
+import { CloseReservationDto } from 'shared';
 
 @Controller('reservations')
 @UseGuards(JwtAuthGuard, MaintenanceModeGuard)
@@ -35,7 +33,7 @@ export class CloseReservationHttpController {
 
   constructor(
     private readonly closeReservationService: CloseReservationService,
-    private readonly getPacksService: GetPacksService,
+    private readonly reservationAuthorizationService: ReservationAuthorizationService,
     @Inject(RESERVATION_REPOSITORY)
     private readonly reservationRepository: ReservationRepositoryPort,
   ) {}
@@ -53,7 +51,11 @@ export class CloseReservationHttpController {
       throw new NotFoundException(`Reservation not found: ${id}`);
     }
 
-    await this.checkUserIsAllowedToCloseReservation(reservation, userId, roles);
+    await this.reservationAuthorizationService.checkUserIsAllowedToModifyReservation(
+      reservation,
+      userId,
+      roles,
+    );
 
     const command = new CloseReservationCommand({
       reservation,
@@ -85,25 +87,5 @@ export class CloseReservationHttpController {
 
       throw error;
     }
-  }
-
-  private async checkUserIsAllowedToCloseReservation(
-    { packId, userId: reservationUserId }: ReservationEntity,
-    userId: UUID,
-    roles: UserRoles[],
-  ): Promise<void> {
-    if (roles.includes(UserRoles.ADMIN)) {
-      return;
-    }
-
-    if (await this.getPacksService.isPackOwnedByUser(packId, userId)) {
-      return;
-    }
-
-    if (reservationUserId && reservationUserId.equals(userId)) {
-      return;
-    }
-
-    throw new ForbiddenException('User is not allowed to close this reservation');
   }
 }

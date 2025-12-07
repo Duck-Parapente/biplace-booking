@@ -12,6 +12,7 @@ import { UpdateReservationWishService } from './application/commands/update-rese
 import { GetPlanningService } from './application/queries/get-planning/get-planning.service';
 import { GetReservationsService } from './application/queries/get-reservation/get-reservation.service';
 import { GetReservationWishesService } from './application/queries/get-reservation-wishes/get-reservation-wishes.service';
+import { ReservationAuthorizationService } from './application/services/reservation-authorization.service';
 import { PlanningDomainService } from './domain/planning.domain-service';
 import { ReservationWishDomainService } from './domain/reservation-wish.domain-service';
 import { ReservationDomainService } from './domain/reservation.domain-service';
@@ -56,6 +57,7 @@ import {
     CreateReservationService,
     CancelReservationService,
     CloseReservationService,
+    ReservationAuthorizationService,
     ReservationWishDomainService,
     ReservationDomainService,
     PlanningDomainService,
