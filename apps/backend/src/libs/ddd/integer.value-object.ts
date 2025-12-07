@@ -45,4 +45,8 @@ export class Integer extends ValueObject<IntegerProps> {
   public isEqualTo(other: Integer): boolean {
     return this.value === other.value;
   }
+
+  public min(other: Integer): Integer {
+    return this.isLessThan(other) ? this : other;
+  }
 }

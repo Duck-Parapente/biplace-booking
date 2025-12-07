@@ -99,7 +99,9 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
   private calculateCost(): Integer {
     if (!this.startingDate.isInTheFuture()) return Integer.zero();
 
-    return this.createdAt.daysBetween(DateValueObject.now());
+    return this.createdAt
+      .daysBetween(DateValueObject.now())
+      .min(this.createdAt.daysBetween(this.startingDate));
   }
 
   isCancelable(): boolean {
@@ -116,6 +118,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     }
 
     this.props.status = ReservationStatus.CLOSED;
+    this.props.cost = this.calculateCost();
 
     this.addEvent(
       new ReservationClosedDomainEvent({
