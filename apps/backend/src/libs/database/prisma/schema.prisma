@@ -100,4 +100,16 @@ model Reservation {
     reservationWish   ReservationWish?  @relation(fields: [reservationWishId], references: [id])
     reservationWishId String?           @unique
     cost              Int
+    flightLog         FlightLog?
+}
+
+model FlightLog {
+    id             String      @id
+    reservationId  String      @unique
+    reservation    Reservation @relation(fields: [reservationId], references: [id])
+    flightsMinutes Int
+    flightsCount   Int
+    publicComment  String?
+    privateComment String?
+    createdAt      DateTime    @db.Timestamptz(3)
 }
