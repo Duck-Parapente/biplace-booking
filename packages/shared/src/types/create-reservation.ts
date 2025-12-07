@@ -3,8 +3,10 @@ import {
   ArrayNotEmpty,
   IsArray,
   IsDateString,
+  IsInt,
   IsNotEmpty,
   IsOptional,
+  IsPositive,
   IsString,
   IsUUID,
 } from 'class-validator';
@@ -41,4 +43,24 @@ export class CreateReservationDto {
   @IsOptional()
   @IsString()
   publicComment?: string;
+}
+
+export class CloseReservationDto {
+  @IsNotEmpty()
+  @IsInt()
+  @IsPositive()
+  flightTimeMinutes!: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  @IsPositive()
+  flightCount!: number;
+
+  @IsOptional()
+  @IsString()
+  publicComment?: string;
+
+  @IsOptional()
+  @IsString()
+  privateComment?: string;
 }

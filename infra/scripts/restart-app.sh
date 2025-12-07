@@ -82,7 +82,7 @@ toggle_maintenance_mode() {
     local postgres_container="bb-${ENV}-postgres"
     
     if docker exec "$postgres_container" psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "$sql" >/dev/null 2>&1; then
-        log_success "Maintenance mode ${action,,}d"
+        log_success "Maintenance mode ${action,,}"
     else
         log_warning "Could not ${action,,} maintenance mode (database may not be ready)"
     fi

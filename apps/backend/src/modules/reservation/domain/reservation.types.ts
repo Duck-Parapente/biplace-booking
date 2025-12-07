@@ -37,4 +37,12 @@ export interface PlanningData {
 export enum ReservationStatus {
   CONFIRMED = 'CONFIRMED',
   CANCELLED = 'CANCELLED',
+  CLOSED = 'CLOSED',
+}
+
+export interface FlightLogProps {
+  flightTimeMinutes: Integer;
+  flightCount: Integer;
+  publicComment?: string;
+  privateComment?: string;
 }

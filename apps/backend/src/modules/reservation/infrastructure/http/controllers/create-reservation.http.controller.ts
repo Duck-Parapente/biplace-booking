@@ -5,9 +5,9 @@ import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
 import { Roles } from '@libs/guards/roles.decorator';
 import { RolesGuard } from '@libs/guards/roles.guard';
-import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.service';
 import { CreateReservationCommand } from '@modules/reservation/application/commands/create-reservation/create-reservation.command';
 import { CreateReservationService } from '@modules/reservation/application/commands/create-reservation/create-reservation.service';
+import { ReservationAuthorizationService } from '@modules/reservation/application/services/reservation-authorization.service';
 import {
   CannotCreateReservationException,
   ReservationInvalidDateRangeException,
@@ -20,7 +20,6 @@ import {
   UseGuards,
   Request,
   BadRequestException,
-  ForbiddenException,
 } from '@nestjs/common';
 import { CreateReservationDto, UserRoles } from 'shared';
 
@@ -32,7 +31,7 @@ export class CreateReservationHttpController {
 
   constructor(
     private readonly createReservationService: CreateReservationService,
-    private readonly getPacksService: GetPacksService,
+    private readonly reservationAuthorizationService: ReservationAuthorizationService,
   ) {}
 
   @Post()
@@ -52,7 +51,7 @@ export class CreateReservationHttpController {
     });
 
     try {
-      await this.checkUserIsAllowedToCreateReservation(
+      await this.reservationAuthorizationService.checkUserIsAllowedToCreateReservation(
         command.reservation.packId,
         createdById,
         roles,
@@ -73,21 +72,5 @@ export class CreateReservationHttpController {
 
       throw error;
     }
-  }
-
-  private async checkUserIsAllowedToCreateReservation(
-    packId: UUID,
-    userId: UUID,
-    roles: UserRoles[],
-  ): Promise<void> {
-    if (roles.includes(UserRoles.ADMIN)) {
-      return;
-    }
-
-    if (await this.getPacksService.isPackOwnedByUser(packId, userId)) {
-      return;
-    }
-
-    throw new ForbiddenException('User is not allowed to create reservation for this pack');
   }
 }

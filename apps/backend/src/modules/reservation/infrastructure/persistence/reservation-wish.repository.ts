@@ -5,6 +5,7 @@ import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 import { ReservationCancelledDomainEvent } from '@modules/reservation/domain/events/reservation-cancelled.domain-event';
+import { ReservationClosedDomainEvent } from '@modules/reservation/domain/events/reservation-closed.domain-event';
 import { ReservationWishStatusUpdatedDomainEvent } from '@modules/reservation/domain/events/reservation-wish-updated.domain-event';
 import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
 import {
@@ -19,7 +20,7 @@ import { ReservationStatus as DomainReservationStatus } from '@modules/reservati
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ReservationWish, ReservationWishStatus } from '@prisma/client';
 
-import { toEntity as toReservationEntity } from './reservation.repository';
+import { mapStatusFromEventName, toEntity as toReservationEntity } from './reservation.repository';
 
 const mapStatus = (status: ReservationWishStatus): DomainReservationWishStatus => {
   switch (status) {
@@ -155,12 +156,14 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
       },
     });
 
-    const reservationCancelledEvents = await prisma.event.findMany({
+    const allReservationsEvents = await prisma.event.findMany({
       where: {
         aggregateId: {
           in: records.map((r) => r.reservation?.id).filter((id): id is string => !!id),
         },
-        name: ReservationCancelledDomainEvent.name,
+        name: {
+          in: [ReservationCancelledDomainEvent.name, ReservationClosedDomainEvent.name],
+        },
       },
     });
 
@@ -192,11 +195,11 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
                 status: DomainReservationStatus.CONFIRMED,
                 date: DateValueObject.fromDate(record.reservation.createdAt),
               },
-              ...reservationCancelledEvents
+              ...allReservationsEvents
                 .filter(({ aggregateId }) => aggregateId === record.reservation?.id)
-                .map(({ createdAt }) => {
+                .map(({ createdAt, name }) => {
                   return {
-                    status: DomainReservationStatus.CANCELLED,
+                    status: mapStatusFromEventName(name),
                     date: DateValueObject.fromDate(createdAt),
                   };
                 }),

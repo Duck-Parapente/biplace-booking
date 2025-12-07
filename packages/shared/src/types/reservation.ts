@@ -17,6 +17,7 @@ export enum ReservationWishStatusDto {
   CONFIRMED = 'CONFIRMED',
   REFUSED = 'REFUSED',
   CANCELLED = 'CANCELLED',
+  CLOSED = 'CLOSED',
 }
 
 export class ReservationDto {
@@ -31,6 +32,10 @@ export class ReservationDto {
   @IsNotEmpty()
   @IsBoolean()
   isCancelable!: boolean;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isClosable!: boolean;
 }
 
 export class ReservationWishEventDto {

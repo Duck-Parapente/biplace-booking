@@ -5,17 +5,20 @@ import { Module } from '@nestjs/common';
 import { PackModule } from '../pack/pack.module';
 
 import { CancelReservationService } from './application/commands/cancel-reservation/cancel-reservation.service';
+import { CloseReservationService } from './application/commands/close-reservation/close-reservation.service';
 import { CreateReservationService } from './application/commands/create-reservation/create-reservation.service';
 import { CreateReservationWishService } from './application/commands/create-reservation-wish/create-reservation-wish.service';
 import { UpdateReservationWishService } from './application/commands/update-reservation-wish/update-reservation-wish.service';
 import { GetPlanningService } from './application/queries/get-planning/get-planning.service';
 import { GetReservationsService } from './application/queries/get-reservation/get-reservation.service';
 import { GetReservationWishesService } from './application/queries/get-reservation-wishes/get-reservation-wishes.service';
+import { ReservationAuthorizationService } from './application/services/reservation-authorization.service';
 import { PlanningDomainService } from './domain/planning.domain-service';
 import { ReservationWishDomainService } from './domain/reservation-wish.domain-service';
 import { ReservationDomainService } from './domain/reservation.domain-service';
 import { EmailNotificationAdapter } from './infrastructure/adapters/email-notification.adapter';
 import { CancelReservationHttpController } from './infrastructure/http/controllers/cancel-reservation.http.controller';
+import { CloseReservationHttpController } from './infrastructure/http/controllers/close-reservation.http.controller';
 import { CreateReservationWishHttpController } from './infrastructure/http/controllers/create-reservation-wish.http.controller';
 import { CreateReservationHttpController } from './infrastructure/http/controllers/create-reservation.http.controller';
 import { GetPlanningHttpController } from './infrastructure/http/controllers/get-planning.http.controller';
@@ -24,9 +27,11 @@ import { UpdateReservationWishHttpController } from './infrastructure/http/contr
 import { ReservationCancelledEventHandler } from './infrastructure/listeners/reservation-cancelled.event-handler';
 import { ReservationCreatedEventHandler } from './infrastructure/listeners/reservation-created.event-handler';
 import { ReservationWishStatusUpdatedEventHandler } from './infrastructure/listeners/reservation-wish-updated.event-handler';
+import { FlightLogRepository } from './infrastructure/persistence/flight-log.repository';
 import { ReservationWishRepository } from './infrastructure/persistence/reservation-wish.repository';
 import { ReservationRepository } from './infrastructure/persistence/reservation.repository';
 import {
+  FLIGHT_LOG_REPOSITORY,
   RESERVATION_REPOSITORY,
   RESERVATION_WISH_NOTIFICATION_PORT,
   RESERVATION_WISH_REPOSITORY,
@@ -41,6 +46,7 @@ import {
     GetReservationWishesHttpController,
     GetPlanningHttpController,
     CancelReservationHttpController,
+    CloseReservationHttpController,
   ],
   providers: [
     CreateReservationWishService,
@@ -50,6 +56,8 @@ import {
     GetPlanningService,
     CreateReservationService,
     CancelReservationService,
+    CloseReservationService,
+    ReservationAuthorizationService,
     ReservationWishDomainService,
     ReservationDomainService,
     PlanningDomainService,
@@ -58,6 +66,7 @@ import {
     ReservationCreatedEventHandler,
     { provide: RESERVATION_WISH_REPOSITORY, useClass: ReservationWishRepository },
     { provide: RESERVATION_REPOSITORY, useClass: ReservationRepository },
+    { provide: FLIGHT_LOG_REPOSITORY, useClass: FlightLogRepository },
     {
       provide: RESERVATION_WISH_NOTIFICATION_PORT,
       useClass: EmailNotificationAdapter,

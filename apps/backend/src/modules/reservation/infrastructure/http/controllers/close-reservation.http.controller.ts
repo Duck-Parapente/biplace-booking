@@ -1,13 +1,14 @@
+import { Integer } from '@libs/ddd/integer.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
-import { CancelReservationCommand } from '@modules/reservation/application/commands/cancel-reservation/cancel-reservation.command';
-import { CancelReservationService } from '@modules/reservation/application/commands/cancel-reservation/cancel-reservation.service';
+import { CloseReservationCommand } from '@modules/reservation/application/commands/close-reservation/close-reservation.command';
+import { CloseReservationService } from '@modules/reservation/application/commands/close-reservation/close-reservation.service';
 import { ReservationAuthorizationService } from '@modules/reservation/application/services/reservation-authorization.service';
 import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
 import {
-  CannotCancelReservationException,
+  CannotCloseReservationException,
   ReservationNotFoundException,
 } from '@modules/reservation/domain/reservation.exceptions';
 import { RESERVATION_REPOSITORY } from '@modules/reservation/reservation.di-tokens';
@@ -15,30 +16,33 @@ import {
   Controller,
   Logger,
   UseGuards,
-  Delete,
+  Post,
   Param,
   NotFoundException,
   Request,
   Inject,
   BadRequestException,
+  Body,
 } from '@nestjs/common';
+import { CloseReservationDto } from 'shared';
 
 @Controller('reservations')
 @UseGuards(JwtAuthGuard, MaintenanceModeGuard)
-export class CancelReservationHttpController {
-  private readonly logger = new Logger(CancelReservationHttpController.name);
+export class CloseReservationHttpController {
+  private readonly logger = new Logger(CloseReservationHttpController.name);
 
   constructor(
-    private readonly cancelReservationService: CancelReservationService,
+    private readonly closeReservationService: CloseReservationService,
     private readonly reservationAuthorizationService: ReservationAuthorizationService,
     @Inject(RESERVATION_REPOSITORY)
     private readonly reservationRepository: ReservationRepositoryPort,
   ) {}
 
-  @Delete(':id')
-  async cancelReservation(
+  @Post(':id/close')
+  async closeReservation(
     @Param('id') id: string,
     @Request() { user: { id: userId, roles } }: { user: AuthenticatedUser },
+    @Body() { flightTimeMinutes, flightCount, publicComment, privateComment }: CloseReservationDto,
   ) {
     const reservationId = new UUID({ uuid: id });
     const reservation = await this.reservationRepository.findById(reservationId);
@@ -53,25 +57,31 @@ export class CancelReservationHttpController {
       roles,
     );
 
-    const command = new CancelReservationCommand({
+    const command = new CloseReservationCommand({
       reservation,
+      flightLog: {
+        flightTimeMinutes: new Integer({ value: flightTimeMinutes }),
+        flightCount: new Integer({ value: flightCount }),
+        publicComment,
+        privateComment,
+      },
       metadata: {
         userId: userId.uuid,
       },
     });
 
     try {
-      await this.cancelReservationService.execute(command);
+      await this.closeReservationService.execute(command);
 
-      return { message: 'Reservation cancelled' };
+      return { message: 'Reservation closed' };
     } catch (error) {
-      this.logger.error('Error cancelling reservation', error);
+      this.logger.error('Error closing reservation', error);
 
       if (error instanceof ReservationNotFoundException) {
         throw new NotFoundException(error.message);
       }
 
-      if (error instanceof CannotCancelReservationException) {
+      if (error instanceof CannotCloseReservationException) {
         throw new BadRequestException(error.message);
       }
 

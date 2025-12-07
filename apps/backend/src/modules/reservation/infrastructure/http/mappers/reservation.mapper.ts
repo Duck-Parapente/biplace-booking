@@ -26,6 +26,8 @@ const mapReservationStatusToWishStatus = (status: ReservationStatus): Reservatio
       return ReservationWishStatusDto.CONFIRMED;
     case ReservationStatus.CANCELLED:
       return ReservationWishStatusDto.CANCELLED;
+    case ReservationStatus.CLOSED:
+      return ReservationWishStatusDto.CLOSED;
     default:
       throw new Error(`Unknown ReservationStatus: ${status}`);
   }
@@ -48,6 +50,7 @@ export function mapReservationWishToDto({
           id: reservation.entity.id.uuid,
           packId: reservation.entity.packId.uuid,
           isCancelable: reservation.entity.isCancelable(),
+          isClosable: reservation.entity.isClosable(),
         }
       : null,
     events: [
