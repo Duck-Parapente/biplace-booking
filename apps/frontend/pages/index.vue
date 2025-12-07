@@ -33,7 +33,10 @@
         </div>
       </div>
     </div>
-    <CreateReservationWishModal :packs="packs" />
+    <CreateReservationWishModal
+      :packs="packs"
+      :has-unclosed-old-reservation="hasUnclosedOldReservation"
+    />
   </main>
 </template>
 
@@ -76,6 +79,19 @@ const toggleStatus = (status: ReservationWishStatusDto) => {
   const set = selectedStatuses.value;
   set.has(status) ? set.delete(status) : set.add(status);
 };
+
+const hasUnclosedOldReservation = computed(() => {
+  return reservationWishes.value.some((wish) => {
+    const now = new Date();
+    const startingDate = new Date(wish.startingDate);
+    const threeDaysAfterFlight = new Date(startingDate);
+    threeDaysAfterFlight.setDate(threeDaysAfterFlight.getDate() + 3);
+
+    const isAfter3Days = now > threeDaysAfterFlight;
+
+    return isAfter3Days && !!wish.reservation?.isClosable;
+  });
+});
 
 onMounted(() => {
   getReservationWishes();

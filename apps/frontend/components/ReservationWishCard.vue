@@ -54,33 +54,17 @@
     >
       {{ statusConfig.infoText }}
     </div>
-    <button
-      v-if="canClose"
-      @click="showCloseModal = true"
-      class="w-full bg-green-100 hover:bg-green-200 border-t border-green-200 p-3 text-sm font-medium text-green-800 transition flex items-center justify-center gap-2"
-    >
-      <IconCheck class="w-4 h-4" />
-      Clôturer la réservation
-    </button>
+    <CloseReservationModal v-if="wish.reservation" :wish="wish" />
     <button
       v-if="canCancel"
       @click="handleCancel(wish)"
       :disabled="cancelling"
       class="w-full bg-red-100 hover:bg-red-200 border-t border-red-200 p-3 text-sm font-medium text-red-800 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-b-lg"
-      :class="{ 'rounded-b-lg': !canClose }"
     >
       <IconX class="w-4 h-4" />
       {{ wish.reservation?.isCancelable ? 'Annuler la réservation' : 'Annuler cette demande' }}
     </button>
   </div>
-
-  <CloseReservationModal
-    v-if="wish.reservation"
-    :show="showCloseModal"
-    :reservation-id="wish.reservation.id"
-    @close="showCloseModal = false"
-    @submit="showCloseModal = false"
-  />
 </template>
 
 <script setup lang="ts">
@@ -100,7 +84,6 @@ const { cancelReservation } = useReservation();
 const props = defineProps<Props>();
 
 const showHistory = ref(false);
-const showCloseModal = ref(false);
 
 const sortedEvents = computed(() => {
   return [...props.wish.events].sort(
@@ -134,12 +117,6 @@ const canCancel = computed(() => {
   const isAfterNow = new Date(props.wish.startingDate) > new Date();
 
   return isAfterNow && props.wish.reservation.isCancelable;
-});
-
-const canClose = computed(() => {
-  const isBeforeNow = new Date(props.wish.startingDate) < new Date();
-
-  return isBeforeNow && !!props.wish.reservation?.isClosable;
 });
 
 const handleCancel = async (wish: ReservationWishDto) => {
