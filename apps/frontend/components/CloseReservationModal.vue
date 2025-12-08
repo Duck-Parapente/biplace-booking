@@ -2,7 +2,7 @@
   <button
     v-if="canClose"
     @click="showModal = true"
-    class="w-full bg-green-100 hover:bg-green-200 border-t border-green-200 p-3 text-sm font-medium text-green-800 transition flex items-center justify-center gap-2"
+    class="w-full bg-yellow-50 hover:bg-yellow-100 border-t border-yellow-100 p-3 text-sm font-medium text-yellow-800 transition flex items-center justify-center gap-2"
   >
     <IconCheck class="w-4 h-4" />
     Clôturer la réservation

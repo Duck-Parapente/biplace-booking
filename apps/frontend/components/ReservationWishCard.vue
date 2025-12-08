@@ -7,7 +7,7 @@
       </span>
       <div
         v-if="wish.reservation && wish.reservation.cost > 0"
-        class="flex items-center gap-1.5 text-xs text-primary-700 font-semibold"
+        class="flex items-center gap-1 text-xs text-primary-700 font-semibold"
         aria-label="Coût de réservation"
       >
         <span class="text-primary-800">{{ wish.reservation.cost }}</span>
