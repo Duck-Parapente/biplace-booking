@@ -15,7 +15,7 @@
         <p><strong>Erreur:</strong> {{ error }}</p>
       </div>
 
-      <div v-else class="flex-1 overflow-y-auto pb-20">
+      <div v-else class="flex-1 overflow-y-auto pb-32">
         <div class="rounded-lg shadow-sm">
           <div v-if="filteredReservationWishes.length === 0" class="text-gray-500 text-sm">
             <p>Aucune demande de réservation pour le moment.</p>

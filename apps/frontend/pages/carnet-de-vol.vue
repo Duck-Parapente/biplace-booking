@@ -1,6 +1,18 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
     <div class="flex-1 p-4 max-w-4xl mx-auto w-full flex flex-col min-h-0">
+      <!-- Pack Selection -->
+      <div class="mb-6 bg-white p-4 rounded-lg shadow-sm">
+        <BaseAutocomplete
+          id="pack-select"
+          v-model="selectedPackLabel"
+          :options="packOptions"
+          label="Sélectionner un pack"
+          placeholder="Rechercher un pack..."
+          @select="handlePackSelect"
+        />
+      </div>
+
       <div v-if="loading" class="text-gray-500">
         <p>Chargement...</p>
       </div>
@@ -9,53 +21,63 @@
         <p><strong>Erreur:</strong> {{ error }}</p>
       </div>
 
+      <div v-else-if="!selectedPackId" class="text-gray-500 text-center p-8">
+        <p>Veuillez sélectionner un pack pour voir le carnet de vol.</p>
+      </div>
+
       <div v-else class="flex-1 overflow-y-auto">
         <div class="rounded-lg shadow-sm">
-          <div v-if="closedReservations.length === 0" class="text-gray-500 text-sm">
-            <p>Aucun vol enregistré pour le moment.</p>
+          <div
+            v-if="reservations.length === 0"
+            class="text-gray-500 text-sm bg-white p-4 rounded-lg"
+          >
+            <p>Aucun vol enregistré pour ce pack.</p>
           </div>
 
-          <div v-else class="space-y-3">
+          <div v-else class="space-y-2">
             <div
-              v-for="reservation in closedReservations"
+              v-for="reservation in reservations"
               :key="reservation.id"
-              class="border bg-white border-gray-300 rounded-lg p-4 hover:shadow-md transition"
+              class="border bg-white border-gray-300 rounded-lg p-3 hover:shadow-md transition"
             >
-              <div class="flex justify-between items-start mb-3">
-                <div>
+              <div class="flex justify-between items-start mb-2">
+                <div class="flex items-baseline gap-2">
                   <p class="font-bold text-secondary-600">
                     {{ formatDateLong(reservation.startingDate).day }}
                     {{ formatDateLong(reservation.startingDate).month }}
-                    {{ formatDateLong(reservation.startingDate).year }}
                   </p>
-                  <p class="text-sm text-gray-500">
+                  <p class="text-xs text-gray-500">
                     {{ formatDateLong(reservation.startingDate).weekday }}
                   </p>
                 </div>
-                <span class="px-2 py-1 text-xs font-medium rounded bg-green-100 text-green-800">
-                  Clôturé
-                </span>
+                <BaseTag v-if="reservation.flightLog" variant="success"> Clôturé </BaseTag>
               </div>
 
-              <div class="space-y-2 text-sm text-gray-700">
+              <div v-if="reservation.userName" class="mb-2 text-sm">
+                <span class="font-semibold">Pilote:</span>
+                <span class="ml-2">{{ reservation.userName }}</span>
+              </div>
+
+              <div
+                v-if="reservation.flightLog"
+                class="bg-gray-50 rounded-lg p-2 space-y-1.5 text-sm"
+              >
                 <div class="flex items-center gap-2">
-                  <span class="font-semibold">Pack:</span>
-                  <BaseTag variant="secondary">{{ getPackLabel(reservation.packId) }}</BaseTag>
-                </div>
-
-                <div v-if="reservation.flightTimeMinutes" class="flex items-center gap-2">
                   <span class="font-semibold">Temps de vol:</span>
-                  <span>{{ reservation.flightTimeMinutes }} minutes</span>
+                  <span>{{ reservation.flightLog.flightTimeMinutes }} minutes</span>
                 </div>
 
-                <div v-if="reservation.flightCount" class="flex items-center gap-2">
+                <div class="flex items-center gap-2">
                   <span class="font-semibold">Nombre de vols:</span>
-                  <span>{{ reservation.flightCount }}</span>
+                  <span>{{ reservation.flightLog.flightsCount }}</span>
                 </div>
 
-                <div v-if="reservation.publicComment" class="pt-2 border-t border-gray-200">
+                <div
+                  v-if="reservation.flightLog.publicComment"
+                  class="pt-1.5 border-t border-gray-200"
+                >
                   <p class="font-semibold mb-1">Commentaire:</p>
-                  <p class="italic text-gray-600">"{{ reservation.publicComment }}"</p>
+                  <p class="italic text-gray-600">"{{ reservation.flightLog.publicComment }}"</p>
                 </div>
               </div>
             </div>
@@ -67,44 +89,78 @@
 </template>
 
 <script setup lang="ts">
-import { ReservationWishStatusDto } from 'shared';
-
+import type { AutocompleteOption } from '~/components/atoms/BaseAutocomplete.vue';
 import { formatDateLong } from '~/composables/useDateHelpers';
+
+interface FlightLogDto {
+  flightTimeMinutes: number;
+  flightsCount: number;
+  publicComment?: string | null;
+}
+
+interface FlightBookPackReservationDto {
+  id: string;
+  startingDate: string;
+  endingDate: string;
+  userName: string | null;
+  flightLog: FlightLogDto | null;
+}
 
 definePageMeta({
   middleware: 'auth',
   pageTitle: 'Carnet de vol',
 });
 
-const { reservationWishes, loading, error, getReservationWishes } = useReservationWish();
+const { callApi } = useApi();
 const { packs, getPacks } = usePack();
 
-const closedReservations = computed(() => {
-  return reservationWishes.value
-    .filter((wish) => {
-      const latestStatus = [...wish.events].sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-      )[0]?.status;
-      return latestStatus === ReservationWishStatusDto.CLOSED && wish.reservation;
-    })
-    .map((wish) => ({
-      id: wish.reservation!.id,
-      startingDate: wish.startingDate,
-      packId: wish.reservation!.packId,
-      flightTimeMinutes: wish.reservation!.flightTimeMinutes,
-      flightCount: wish.reservation!.flightCount,
-      publicComment: wish.reservation!.publicComment,
-    }))
-    .sort((a, b) => new Date(b.startingDate).getTime() - new Date(a.startingDate).getTime());
+const selectedPackId = ref<string | null>(null);
+const selectedPackLabel = ref<string>('');
+const reservations = ref<FlightBookPackReservationDto[]>([]);
+const loading = ref<boolean>(false);
+const error = ref<string | null>(null);
+
+const packOptions = computed<AutocompleteOption[]>(() => {
+  return packs.value.map((pack) => ({
+    value: pack.id,
+    label: pack.label,
+  }));
 });
 
-const getPackLabel = (packId: string): string => {
-  const pack = packs.value.find(({ id }) => id === packId);
-  return pack ? pack.label : packId;
+const handlePackSelect = async (packId: string) => {
+  if (!packId) {
+    selectedPackId.value = null;
+    reservations.value = [];
+    return;
+  }
+
+  selectedPackId.value = packId;
+  const pack = packs.value.find((p) => p.id === packId);
+  if (pack) {
+    selectedPackLabel.value = pack.label;
+  }
+  await fetchPackReservations(packId);
+};
+
+const fetchPackReservations = async (packId: string) => {
+  try {
+    loading.value = true;
+    error.value = null;
+    const data = await callApi<FlightBookPackReservationDto[]>(`/packs/${packId}/reservations`);
+    reservations.value = data.sort(
+      (a, b) => new Date(b.startingDate).getTime() - new Date(a.startingDate).getTime(),
+    );
+  } catch (err) {
+    const errorMessage =
+      err instanceof Error ? err.message : 'Impossible de charger les réservations du pack';
+    error.value = errorMessage;
+    console.error('Failed to fetch pack reservations:', err);
+  } finally {
+    loading.value = false;
+  }
 };
 
 onMounted(() => {
-  getReservationWishes();
   getPacks();
 });
 </script>
