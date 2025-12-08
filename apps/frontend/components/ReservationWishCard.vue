@@ -18,15 +18,7 @@
     <div class="p-4">
       <div class="flex-1">
         <div class="text-sm text-gray-600 space-y-1">
-          <p class="flex items-center gap-2">
-            <span class="font-bold text-secondary-600"
-              >{{ formatDateLong(wish.startingDate).day }}
-              {{ formatDateLong(wish.startingDate).month }}</span
-            >
-            <span class="text-gray-400 font-normal text-sm"
-              >({{ formatDateLong(wish.startingDate).weekday }})</span
-            >
-          </p>
+          <DateDisplay :date="wish.startingDate" />
           <div class="flex flex-wrap gap-1 mt-2 items-center">
             <span class="text-xs text-gray-500">
               {{ 'Mes préférences:' }}
@@ -80,8 +72,6 @@
 
 <script setup lang="ts">
 import { type ReservationWishDto, type PackDto, ReservationWishStatusDto } from 'shared';
-
-import { formatDateLong } from '~/composables/useDateHelpers';
 
 interface Props {
   wish: ReservationWishDto;
