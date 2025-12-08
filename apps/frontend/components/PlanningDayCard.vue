@@ -12,12 +12,7 @@
     >
       <div class="flex items-center justify-between">
         <h3 class="text-base font-semibold">
-          <span class="text-secondary-600"
-            >{{ formatDateLong(day.date).day }} {{ formatDateLong(day.date).month }}</span
-          >
-          <span class="text-gray-400 font-normal text-sm ml-1"
-            >({{ formatDateLong(day.date).weekday }})</span
-          >
+          <DateDisplay :date="day.date" />
         </h3>
         <IconChevronRight
           class="w-4 h-4 transition-transform"
@@ -100,7 +95,7 @@ import IconCheck from '~/components/icons/IconCheck.vue';
 import IconClock from '~/components/icons/IconClock.vue';
 import IconUser from '~/components/icons/IconUser.vue';
 import IconX from '~/components/icons/IconX.vue';
-import { formatDateLong, isToday } from '~/composables/useDateHelpers';
+import { isToday } from '~/composables/useDateHelpers';
 
 interface PlanningDay {
   date: string;

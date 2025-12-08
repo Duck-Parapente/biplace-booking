@@ -41,15 +41,7 @@
               class="border bg-white border-gray-300 rounded-lg p-3 hover:shadow-md transition"
             >
               <div class="flex justify-between items-start mb-2">
-                <div class="flex items-baseline gap-2">
-                  <p class="font-bold text-secondary-600">
-                    {{ formatDateLong(reservation.startingDate).day }}
-                    {{ formatDateLong(reservation.startingDate).month }}
-                  </p>
-                  <p class="text-xs text-gray-500">
-                    {{ formatDateLong(reservation.startingDate).weekday }}
-                  </p>
-                </div>
+                <DateDisplay :date="reservation.startingDate" />
                 <BaseTag v-if="reservation.flightLog" variant="success"> Clôturé </BaseTag>
               </div>
 
@@ -60,7 +52,7 @@
 
               <div
                 v-if="reservation.flightLog"
-                class="bg-gray-50 rounded-lg p-2 space-y-1.5 text-sm"
+                class="bg-gray-100 rounded-lg p-2 space-y-1.5 text-sm"
               >
                 <div class="flex items-center gap-2">
                   <span class="font-semibold">Temps de vol:</span>
@@ -90,7 +82,6 @@
 
 <script setup lang="ts">
 import type { AutocompleteOption } from '~/components/atoms/BaseAutocomplete.vue';
-import { formatDateLong } from '~/composables/useDateHelpers';
 
 interface FlightLogDto {
   flightTimeMinutes: number;
