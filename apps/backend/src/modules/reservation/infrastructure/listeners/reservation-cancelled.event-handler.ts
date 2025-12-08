@@ -18,7 +18,6 @@ export class ReservationCancelledEventHandler
     try {
       this.logger.log({
         message: `${ReservationCancelledDomainEvent.name} received`,
-        status,
         eventId: id.uuid,
         aggregateId: aggregateId.uuid,
         metadata: metadata,
