@@ -18,7 +18,7 @@
       @input="handleInput"
       @focus="$emit('focus', $event)"
       @blur="$emit('blur', $event)"
-      class="appearance-none w-full min-h-0 min-w-0 max-w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-secondary-600 disabled:opacity-50 disabled:cursor-not-allowed"
+      class="modal translate-z-0 appearance-none w-full min-w-0 max-w-full px-3 py-2 border border-gray-300 rounded text-[16px] leading-normal focus:outline-none focus:ring-2 focus:ring-secondary-600 disabled:opacity-50 disabled:cursor-not-allowed"
     />
   </div>
 </template>
