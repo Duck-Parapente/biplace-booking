@@ -221,9 +221,8 @@ export class ReservationRepository implements ReservationRepositoryPort {
       { totalMinutes: 0, totalCount: 0 },
     );
 
-    const totalFlightsMinutes = new Integer({ value: reservationFlightStats.totalMinutes });
     const totalFlightsHours = initialFlightsHours.add(
-      new Integer({ value: Math.floor(totalFlightsMinutes.value / 60) }),
+      new Integer({ value: Math.floor(reservationFlightStats.totalMinutes / 60) }),
     );
     const totalFlightsCount = initialFlightsCount.add(
       new Integer({ value: reservationFlightStats.totalCount }),
