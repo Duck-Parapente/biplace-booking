@@ -3,7 +3,7 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { PackSummary } from '@libs/types/accross-modules';
 
 import { ReservationEntity } from '../reservation.entity';
-import { PackReservationWithDetails, PlanningReservationDto } from '../reservation.types';
+import { PackReservationsWithDetails, PlanningReservationDto } from '../reservation.types';
 
 export interface ReservationRepositoryPort {
   create(reservationEntity: ReservationEntity): Promise<void>;
@@ -22,5 +22,5 @@ export interface ReservationRepositoryPort {
     endDate: DateValueObject,
   ): Promise<PlanningReservationDto[]>;
   findById(id: UUID): Promise<ReservationEntity | null>;
-  findClosedAndConfirmedReservationsByPackId(packId: UUID): Promise<PackReservationWithDetails[]>;
+  findClosedAndConfirmedReservationsByPackId(packId: UUID): Promise<PackReservationsWithDetails>;
 }

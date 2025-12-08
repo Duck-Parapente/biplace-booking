@@ -10,7 +10,7 @@ import { ReservationClosedDomainEvent } from '@modules/reservation/domain/events
 import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
 import { ReservationEntity } from '@modules/reservation/domain/reservation.entity';
 import {
-  PackReservationWithDetails,
+  PackReservationsWithDetails,
   PlanningReservationDto,
 } from '@modules/reservation/domain/reservation.types';
 import { ReservationStatus as DomainReservationStatus } from '@modules/reservation/domain/reservation.types';
@@ -186,7 +186,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
 
   async findClosedAndConfirmedReservationsByPackId(
     packId: UUID,
-  ): Promise<PackReservationWithDetails[]> {
+  ): Promise<PackReservationsWithDetails> {
     const reservations = await prisma.reservation.findMany({
       where: {
         packId: packId.uuid,
@@ -197,26 +197,56 @@ export class ReservationRepository implements ReservationRepositoryPort {
       include: {
         user: true,
         flightLog: true,
+        pack: true,
       },
       orderBy: {
         startingDate: 'desc',
       },
     });
 
-    return reservations.map((reservation) => ({
-      id: new UUID({ uuid: reservation.id }),
-      startingDate: DateValueObject.fromDate(reservation.startingDate),
-      endingDate: DateValueObject.fromDate(reservation.endingDate),
-      userName: reservation.user
-        ? `${reservation.user.firstName ?? ''} ${reservation.user.lastName ?? ''}`.trim()
-        : undefined,
-      flightLog: reservation.flightLog
-        ? {
-            flightTimeMinutes: new Integer({ value: reservation.flightLog.flightsMinutes }),
-            flightsCount: new Integer({ value: reservation.flightLog.flightsCount }),
-            publicComment: reservation.flightLog.publicComment ?? undefined,
-          }
-        : undefined,
-    }));
+    const pack = reservations[0]?.pack;
+    const initialFlightsCount = pack ? new Integer({ value: pack.flightsCount }) : Integer.zero();
+    const initialFlightsHours = pack ? new Integer({ value: pack.flightsHours }) : Integer.zero();
+
+    const reservationFlightStats = reservations.reduce(
+      (acc, reservation) => {
+        if (reservation.flightLog) {
+          return {
+            totalMinutes: acc.totalMinutes + reservation.flightLog.flightsMinutes,
+            totalCount: acc.totalCount + reservation.flightLog.flightsCount,
+          };
+        }
+        return acc;
+      },
+      { totalMinutes: 0, totalCount: 0 },
+    );
+
+    const totalFlightsMinutes = new Integer({ value: reservationFlightStats.totalMinutes });
+    const totalFlightsHours = initialFlightsHours.add(
+      new Integer({ value: Math.floor(totalFlightsMinutes.value / 60) }),
+    );
+    const totalFlightsCount = initialFlightsCount.add(
+      new Integer({ value: reservationFlightStats.totalCount }),
+    );
+
+    return {
+      packReservations: reservations.map((reservation) => ({
+        id: new UUID({ uuid: reservation.id }),
+        startingDate: DateValueObject.fromDate(reservation.startingDate),
+        endingDate: DateValueObject.fromDate(reservation.endingDate),
+        userName: reservation.user
+          ? `${reservation.user.firstName ?? ''} ${reservation.user.lastName ?? ''}`.trim()
+          : undefined,
+        flightLog: reservation.flightLog
+          ? {
+              flightTimeMinutes: new Integer({ value: reservation.flightLog.flightsMinutes }),
+              flightsCount: new Integer({ value: reservation.flightLog.flightsCount }),
+              publicComment: reservation.flightLog.publicComment ?? undefined,
+            }
+          : undefined,
+      })),
+      totalFlightsCount,
+      totalFlightsHours,
+    };
   }
 }

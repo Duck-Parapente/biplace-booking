@@ -3,7 +3,7 @@ import {
   ReservationWishWithReservation,
 } from '@modules/reservation/domain/reservation-wish.types';
 import {
-  PackReservationWithDetails,
+  PackReservationsWithDetails,
   PlanningData,
   ReservationStatus,
 } from '@modules/reservation/domain/reservation.types';
@@ -11,7 +11,7 @@ import {
   ReservationWishDto,
   PlanningDayDto,
   ReservationWishStatusDto,
-  FlightBookPackReservationDto,
+  PackReservationsDto,
 } from 'shared';
 
 const mapWishStatus = (status: ReservationWishStatus): ReservationWishStatusDto => {
@@ -97,21 +97,27 @@ export function mapPlanningDataToDto(planningData: PlanningData[]): PlanningDayD
   }));
 }
 
-export function mapPackReservationsToDto(
-  reservations: PackReservationWithDetails[],
-): FlightBookPackReservationDto[] {
-  return reservations.map((reservation) => ({
-    id: reservation.id.uuid,
-    startingDate: reservation.startingDate.value.toISOString(),
-    endingDate: reservation.endingDate.value.toISOString(),
-    userName: reservation.userName ?? null,
-    flightLog: reservation.flightLog
-      ? {
-          flightTimeMinutes: reservation.flightLog.flightTimeMinutes.value,
-          flightsCount: reservation.flightLog.flightsCount.value,
-          publicComment: reservation.flightLog.publicComment ?? null,
-          privateComment: reservation.flightLog.privateComment ?? null,
-        }
-      : null,
-  }));
+export function mapPackReservationsToDto({
+  totalFlightsCount,
+  totalFlightsHours,
+  packReservations,
+}: PackReservationsWithDetails): PackReservationsDto {
+  return {
+    reservations: packReservations.map((reservation) => ({
+      id: reservation.id.uuid,
+      startingDate: reservation.startingDate.value.toISOString(),
+      endingDate: reservation.endingDate.value.toISOString(),
+      userName: reservation.userName ?? null,
+      flightLog: reservation.flightLog
+        ? {
+            flightTimeMinutes: reservation.flightLog.flightTimeMinutes.value,
+            flightsCount: reservation.flightLog.flightsCount.value,
+            publicComment: reservation.flightLog.publicComment ?? null,
+            privateComment: reservation.flightLog.privateComment ?? null,
+          }
+        : null,
+    })),
+    totalFlightsCount: totalFlightsCount.value,
+    totalFlightsHours: totalFlightsHours.value,
+  };
 }

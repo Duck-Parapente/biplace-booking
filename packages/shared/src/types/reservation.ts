@@ -126,3 +126,19 @@ export class FlightBookPackReservationDto {
   @IsOptional()
   flightLog!: FlightLogDto | null;
 }
+
+export class PackReservationsDto {
+  @IsArray()
+  @ArrayNotEmpty()
+  @ArrayMinSize(1)
+  @IsNotEmpty({ each: true })
+  reservations!: FlightBookPackReservationDto[];
+
+  @IsInt()
+  @IsNotEmpty()
+  totalFlightsHours!: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  totalFlightsCount!: number;
+}
