@@ -64,7 +64,7 @@ export class EmailNotificationAdapter implements ReservationNotificationPort {
         variables: {
           startingDateLabel: formatDate(startingDate),
           selectedPackLabel: pack.label,
-          flightCount: flightLog.flightCount.value,
+          flightsCount: flightLog.flightsCount.value,
           flightTimeMinutes: flightLog.flightTimeMinutes.value,
           publicComment: flightLog.publicComment || '-',
           privateComment: flightLog.privateComment || '-',

@@ -3,9 +3,9 @@ import {
   ArrayNotEmpty,
   IsArray,
   IsBoolean,
-  IsDate,
   IsDateString,
   IsEnum,
+  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -86,4 +86,39 @@ export class ReservationWishDto {
 
   @IsOptional()
   reservation!: ReservationDto | null;
+}
+
+export class FlightLogDto {
+  @IsNotEmpty()
+  @IsInt()
+  flightTimeMinutes!: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  flightsCount!: number;
+
+  @IsOptional()
+  @IsString()
+  publicComment?: string | null;
+}
+
+export class FlightBookPackReservationDto {
+  @IsUUID()
+  @IsNotEmpty()
+  id!: string;
+
+  @IsNotEmpty()
+  @IsDateString()
+  startingDate!: string;
+
+  @IsNotEmpty()
+  @IsDateString()
+  endingDate!: string;
+
+  @IsOptional()
+  @IsString()
+  userName!: string | null;
+
+  @IsOptional()
+  flightLog!: FlightLogDto | null;
 }

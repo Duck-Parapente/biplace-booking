@@ -13,7 +13,7 @@ export class FlightLogRepository implements FlightLogRepositoryPort {
       data: {
         id: UUID.random().uuid,
         flightsMinutes: flightLog.flightTimeMinutes.value,
-        flightsCount: flightLog.flightCount.value,
+        flightsCount: flightLog.flightsCount.value,
         publicComment: flightLog.publicComment ?? null,
         privateComment: flightLog.privateComment ?? null,
         createdAt: new Date(),

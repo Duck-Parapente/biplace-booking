@@ -7,7 +7,10 @@ import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { PackSummary } from '@libs/types/accross-modules';
 import { ReservationCancelledDomainEvent } from '@modules/reservation/domain/events/reservation-cancelled.domain-event';
 import { ReservationClosedDomainEvent } from '@modules/reservation/domain/events/reservation-closed.domain-event';
-import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
+import {
+  PackReservationWithDetails,
+  ReservationRepositoryPort,
+} from '@modules/reservation/domain/ports/reservation.repository.port';
 import { ReservationEntity } from '@modules/reservation/domain/reservation.entity';
 import { PlanningReservationDto } from '@modules/reservation/domain/reservation.types';
 import { ReservationStatus as DomainReservationStatus } from '@modules/reservation/domain/reservation.types';
@@ -179,5 +182,46 @@ export class ReservationRepository implements ReservationRepositoryPort {
     this.logger.log(
       `Reservation updated: ${reservation.id.uuid} with status ${reservation.status} and cost ${reservation.cost.value}`,
     );
+  }
+
+  async findClosedAndConfirmedReservationsByPackId(
+    packId: UUID,
+  ): Promise<PackReservationWithDetails[]> {
+    const reservations = await prisma.reservation.findMany({
+      where: {
+        packId: packId.uuid,
+        status: {
+          in: [ReservationStatus.CONFIRMED, ReservationStatus.CLOSED],
+        },
+      },
+      include: {
+        user: true,
+        flightLog: true,
+      },
+      orderBy: {
+        startingDate: 'desc',
+      },
+    });
+
+    return reservations.map((reservation) => ({
+      id: new UUID({ uuid: reservation.id }),
+      startingDate: DateValueObject.fromDate(reservation.startingDate),
+      endingDate: DateValueObject.fromDate(reservation.endingDate),
+      publicComment: reservation.publicComment ?? undefined,
+      userName: reservation.user
+        ? `${reservation.user.firstName ?? ''} ${reservation.user.lastName ?? ''}`.trim() ||
+          undefined
+        : undefined,
+      flightLog: reservation.flightLog
+        ? {
+            id: reservation.flightLog.id,
+            flightsMinutes: reservation.flightLog.flightsMinutes,
+            flightsCount: reservation.flightLog.flightsCount,
+            publicComment: reservation.flightLog.publicComment ?? undefined,
+            privateComment: reservation.flightLog.privateComment ?? undefined,
+            createdAt: reservation.flightLog.createdAt,
+          }
+        : undefined,
+    }));
   }
 }

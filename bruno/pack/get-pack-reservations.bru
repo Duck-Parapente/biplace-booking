@@ -1,0 +1,23 @@
+meta {
+  name: get-pack-reservations
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BACKEND_DOMAIN}}/packs/{{PACK_ID}}/reservations
+  body: none
+  auth: bearer
+}
+
+params:query {
+}
+
+auth:bearer {
+  token: {{AUTH_TOKEN}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

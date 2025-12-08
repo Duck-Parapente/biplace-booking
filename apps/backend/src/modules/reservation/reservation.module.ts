@@ -9,6 +9,7 @@ import { CloseReservationService } from './application/commands/close-reservatio
 import { CreateReservationService } from './application/commands/create-reservation/create-reservation.service';
 import { CreateReservationWishService } from './application/commands/create-reservation-wish/create-reservation-wish.service';
 import { UpdateReservationWishService } from './application/commands/update-reservation-wish/update-reservation-wish.service';
+import { GetPackReservationsService } from './application/queries/get-pack-reservations/get-pack-reservations.service';
 import { GetPlanningService } from './application/queries/get-planning/get-planning.service';
 import { GetReservationsService } from './application/queries/get-reservation/get-reservation.service';
 import { GetReservationWishesService } from './application/queries/get-reservation-wishes/get-reservation-wishes.service';
@@ -21,6 +22,7 @@ import { CancelReservationHttpController } from './infrastructure/http/controlle
 import { CloseReservationHttpController } from './infrastructure/http/controllers/close-reservation.http.controller';
 import { CreateReservationWishHttpController } from './infrastructure/http/controllers/create-reservation-wish.http.controller';
 import { CreateReservationHttpController } from './infrastructure/http/controllers/create-reservation.http.controller';
+import { GetPackReservationsHttpController } from './infrastructure/http/controllers/get-pack-reservations.http.controller';
 import { GetPlanningHttpController } from './infrastructure/http/controllers/get-planning.http.controller';
 import { GetReservationWishesHttpController } from './infrastructure/http/controllers/get-reservation-wishes.http.controller';
 import { UpdateReservationWishHttpController } from './infrastructure/http/controllers/update-reservation-wish.http.controller';
@@ -46,6 +48,7 @@ import {
     UpdateReservationWishHttpController,
     GetReservationWishesHttpController,
     GetPlanningHttpController,
+    GetPackReservationsHttpController,
     CancelReservationHttpController,
     CloseReservationHttpController,
   ],
@@ -55,6 +58,7 @@ import {
     GetReservationWishesService,
     GetReservationsService,
     GetPlanningService,
+    GetPackReservationsService,
     CreateReservationService,
     CancelReservationService,
     CloseReservationService,
