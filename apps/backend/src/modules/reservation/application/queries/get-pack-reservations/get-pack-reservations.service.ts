@@ -1,6 +1,6 @@
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
-import { PackReservationWithDetails } from '@modules/reservation/domain/reservation.types';
+import { PackReservationsWithDetails } from '@modules/reservation/domain/reservation.types';
 import { RESERVATION_REPOSITORY } from '@modules/reservation/reservation.di-tokens';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
@@ -13,7 +13,7 @@ export class GetPackReservationsService {
     private readonly reservationRepository: ReservationRepositoryPort,
   ) {}
 
-  async execute(packId: UUID): Promise<PackReservationWithDetails[]> {
+  async execute(packId: UUID): Promise<PackReservationsWithDetails> {
     this.logger.log(`Getting closed and confirmed reservations for pack ${packId.uuid}`);
     return this.reservationRepository.findClosedAndConfirmedReservationsByPackId(packId);
   }

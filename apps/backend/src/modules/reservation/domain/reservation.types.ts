@@ -47,10 +47,16 @@ export interface FlightLogProps {
   privateComment?: string;
 }
 
-export interface PackReservationWithDetails {
+interface PackReservation {
   id: UUID;
   startingDate: DateValueObject;
   endingDate: DateValueObject;
   userName?: string;
   flightLog?: FlightLogProps;
 }
+
+export type PackReservationsWithDetails = {
+  packReservations: PackReservation[];
+  totalFlightsCount: Integer;
+  totalFlightsHours: Integer;
+};

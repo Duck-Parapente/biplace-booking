@@ -2,7 +2,7 @@
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
     <div class="flex-1 p-4 max-w-4xl mx-auto w-full flex flex-col min-h-0">
       <!-- Pack Selection -->
-      <div class="mb-6 bg-white p-4 rounded-lg shadow-sm">
+      <div class="mb-2 bg-white p-4 rounded-lg shadow-sm">
         <BaseAutocomplete
           id="pack-select"
           v-model="selectedPackLabel"
@@ -11,6 +11,23 @@
           placeholder="Rechercher un pack..."
           @select="handlePackSelect"
         />
+      </div>
+
+      <!-- Pack Totals -->
+      <div
+        v-if="selectedPackId && !loading && !error"
+        class="mb-6 bg-white p-2 rounded-lg shadow-sm"
+      >
+        <div class="flex gap-6 text-sm">
+          <div>
+            <span class="font-semibold">Heures de vol:</span>
+            <span class="ml-2">{{ totalFlightsHours }}h</span>
+          </div>
+          <div>
+            <span class="font-semibold">Nombre de vols:</span>
+            <span class="ml-2">{{ totalFlightsCount }}</span>
+          </div>
+        </div>
       </div>
 
       <div v-if="loading" class="text-gray-500">
@@ -81,21 +98,9 @@
 </template>
 
 <script setup lang="ts">
+import type { PackReservationsDto, FlightBookPackReservationDto } from 'shared';
+
 import type { AutocompleteOption } from '~/components/atoms/BaseAutocomplete.vue';
-
-interface FlightLogDto {
-  flightTimeMinutes: number;
-  flightsCount: number;
-  publicComment?: string | null;
-}
-
-interface FlightBookPackReservationDto {
-  id: string;
-  startingDate: string;
-  endingDate: string;
-  userName: string | null;
-  flightLog: FlightLogDto | null;
-}
 
 definePageMeta({
   middleware: 'auth',
@@ -108,6 +113,8 @@ const { packs, getPacks } = usePack();
 const selectedPackId = ref<string | null>(null);
 const selectedPackLabel = ref<string>('');
 const reservations = ref<FlightBookPackReservationDto[]>([]);
+const totalFlightsHours = ref<number>(0);
+const totalFlightsCount = ref<number>(0);
 const loading = ref<boolean>(false);
 const error = ref<string | null>(null);
 
@@ -137,10 +144,12 @@ const fetchPackReservations = async (packId: string) => {
   try {
     loading.value = true;
     error.value = null;
-    const data = await callApi<FlightBookPackReservationDto[]>(`/packs/${packId}/reservations`);
-    reservations.value = data.sort(
+    const data = await callApi<PackReservationsDto>(`/packs/${packId}/reservations`);
+    reservations.value = data.reservations.sort(
       (a, b) => new Date(b.startingDate).getTime() - new Date(a.startingDate).getTime(),
     );
+    totalFlightsHours.value = data.totalFlightsHours;
+    totalFlightsCount.value = data.totalFlightsCount;
   } catch (err) {
     const errorMessage =
       err instanceof Error ? err.message : 'Impossible de charger les réservations du pack';
