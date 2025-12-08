@@ -62,9 +62,9 @@
                 <BaseTag v-if="reservation.flightLog" variant="success"> Clôturé </BaseTag>
               </div>
 
-              <div v-if="reservation.userName" class="mb-2 text-sm">
+              <div v-if="reservation.userName" class="mb-2 text-sm flex items-center gap-2">
                 <span class="font-semibold">Pilote:</span>
-                <span class="ml-2">{{ reservation.userName }}</span>
+                <PilotDisplay :display-name="reservation.userName" />
               </div>
 
               <div
