@@ -106,7 +106,7 @@ export class FlightLogDto {
   publicComment?: string | null;
 }
 
-export class FlightBookPackReservationDto {
+class FlightBookPackReservationDto {
   @IsUUID()
   @IsNotEmpty()
   id!: string;

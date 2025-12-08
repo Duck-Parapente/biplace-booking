@@ -98,7 +98,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PackReservationsDto, FlightBookPackReservationDto } from 'shared';
+import type { PackReservationsDto } from 'shared';
 
 import type { AutocompleteOption } from '~/components/atoms/BaseAutocomplete.vue';
 
@@ -112,7 +112,7 @@ const { packs, getPacks } = usePack();
 
 const selectedPackId = ref<string | null>(null);
 const selectedPackLabel = ref<string>('');
-const reservations = ref<FlightBookPackReservationDto[]>([]);
+const reservations = ref<PackReservationsDto['reservations']>([]);
 const totalFlightsHours = ref<number>(0);
 const totalFlightsCount = ref<number>(0);
 const loading = ref<boolean>(false);
