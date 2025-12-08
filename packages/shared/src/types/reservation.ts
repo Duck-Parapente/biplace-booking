@@ -36,6 +36,10 @@ export class ReservationDto {
   @IsNotEmpty()
   @IsBoolean()
   isClosable!: boolean;
+
+  @IsNotEmpty()
+  @IsInt()
+  cost!: number;
 }
 
 export class ReservationWishEventDto {

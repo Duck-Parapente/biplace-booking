@@ -60,6 +60,7 @@ export function mapReservationWishToDto({
           packId: reservation.entity.packId.uuid,
           isCancelable: reservation.entity.isCancelable(),
           isClosable: reservation.entity.isClosable(),
+          cost: reservation.entity.cost.value,
         }
       : null,
     events: [

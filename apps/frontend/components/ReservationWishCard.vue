@@ -1,10 +1,18 @@
 <template>
   <div class="border bg-gray-50 border-gray-300 rounded-lg hover:shadow-md transition relative">
     <!-- Status Badge - Top Right Corner -->
-    <div class="absolute top-3 right-3">
+    <div class="absolute top-3 right-3 flex flex-col items-end gap-1.5">
       <span class="px-2 py-1 text-xs font-medium rounded shadow-sm" :class="statusConfig.classes">
         {{ statusConfig.label }}
       </span>
+      <div
+        v-if="wish.reservation && wish.reservation.cost > 0"
+        class="flex items-center gap-1.5 text-xs text-primary-700 font-semibold"
+        aria-label="Coût de réservation"
+      >
+        <span class="text-primary-800">{{ wish.reservation.cost }}</span>
+        <IconDuck class="w-4 h-4 fill-primary-800" />
+      </div>
     </div>
 
     <div class="p-4">
@@ -32,6 +40,9 @@
             </BaseTag>
           </div>
           <p v-if="wish.publicComment" class="italic text-gray-700">"{{ wish.publicComment }}"</p>
+
+          <!-- Reservation Cost -->
+          <!-- Reservation cost moved to top-right badge area -->
 
           <!-- Event History Toggle -->
           <button
