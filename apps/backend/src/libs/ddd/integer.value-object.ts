@@ -49,4 +49,8 @@ export class Integer extends ValueObject<IntegerProps> {
   public min(other: Integer): Integer {
     return this.isLessThan(other) ? this : other;
   }
+
+  public max(other: Integer): Integer {
+    return this.isGreaterThan(other) ? this : other;
+  }
 }

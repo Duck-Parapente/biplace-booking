@@ -2,6 +2,7 @@ import { AggregateRoot, AggregateID, DomainEventMetadata } from '@libs/ddd';
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { Integer } from '@libs/ddd/integer.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
+import { Logger } from '@nestjs/common';
 
 import { ReservationCancelledDomainEvent } from './events/reservation-cancelled.domain-event';
 import { ReservationClosedDomainEvent } from './events/reservation-closed.domain-event';
@@ -20,6 +21,7 @@ import {
 
 export class ReservationEntity extends AggregateRoot<ReservationProps> {
   protected readonly _id!: AggregateID;
+  protected readonly logger = new Logger(ReservationEntity.name);
 
   static create(props: CreateReservationProps, metadata: DomainEventMetadata) {
     const id = UUID.random();
@@ -82,7 +84,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
       throw new CannotCancelReservationException(this.id, this.props.status);
     }
     this.props.status = ReservationStatus.CANCELLED;
-    this.props.cost = this.calculateCost();
+    this.props.cost = this.calculateCancellationCost();
 
     this.addEvent(
       new ReservationCancelledDomainEvent({
@@ -96,12 +98,54 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     return this;
   }
 
-  private calculateCost(): Integer {
-    if (!this.startingDate.isInTheFuture()) return Integer.zero();
+  private calculateCancellationCost(): Integer {
+    if (!this.startingDate.isInTheFuture()) {
+      this.logger.log({
+        reservationId: this.id.uuid,
+        input: {
+          createdAt: this.createdAt.value.toISOString(),
+          startingDate: this.startingDate.value.toISOString(),
+          now: new Date().toISOString(),
+        },
+        output: { cost: 0 },
+      });
+      return Integer.zero();
+    }
 
-    return this.createdAt
-      .daysBetween(DateValueObject.now())
-      .min(this.createdAt.daysBetween(this.startingDate));
+    const daysSinceCreation = this.createdAt.daysBetween(DateValueObject.now());
+    const maxAllowedCost = this.calculateMaxCost();
+    const result = daysSinceCreation.min(maxAllowedCost);
+
+    this.logger.log({
+      reservationId: this.id.uuid,
+      input: {
+        createdAt: this.createdAt.value.toISOString(),
+        startingDate: this.startingDate.value.toISOString(),
+        now: new Date().toISOString(),
+      },
+      output: { cost: result.value },
+    });
+
+    return result;
+  }
+
+  private calculateClosingCost(): Integer {
+    const result = this.calculateMaxCost();
+
+    this.logger.log({
+      reservationId: this.id.uuid,
+      input: {
+        createdAt: this.createdAt.value.toISOString(),
+        startingDate: this.startingDate.value.toISOString(),
+      },
+      output: { cost: result.value },
+    });
+
+    return result;
+  }
+
+  private calculateMaxCost(): Integer {
+    return this.createdAt.daysBetween(this.startingDate).max(Integer.zero());
   }
 
   isCancelable(): boolean {
@@ -118,7 +162,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     }
 
     this.props.status = ReservationStatus.CLOSED;
-    this.props.cost = this.calculateCost();
+    this.props.cost = this.calculateClosingCost();
 
     this.addEvent(
       new ReservationClosedDomainEvent({
