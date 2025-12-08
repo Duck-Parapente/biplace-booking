@@ -34,49 +34,50 @@
             <p>Aucun vol enregistré pour ce pack.</p>
           </div>
 
-          <div v-else class="space-y-3">
+          <div v-else class="space-y-2">
             <div
               v-for="reservation in reservations"
               :key="reservation.id"
-              class="border bg-white border-gray-300 rounded-lg p-4 hover:shadow-md transition"
+              class="border bg-white border-gray-300 rounded-lg p-3 hover:shadow-md transition"
             >
-              <div class="flex justify-between items-start mb-3">
-                <div>
+              <div class="flex justify-between items-start mb-2">
+                <div class="flex items-baseline gap-2">
                   <p class="font-bold text-secondary-600">
                     {{ formatDateLong(reservation.startingDate).day }}
                     {{ formatDateLong(reservation.startingDate).month }}
                   </p>
-                  <p class="text-sm text-gray-500">
+                  <p class="text-xs text-gray-500">
                     {{ formatDateLong(reservation.startingDate).weekday }}
                   </p>
                 </div>
                 <BaseTag v-if="reservation.flightLog" variant="success"> Clôturé </BaseTag>
               </div>
 
-              <div v-if="reservation.flightLog" class="space-y-2 text-sm text-gray-700">
-                <div v-if="reservation.userName" class="flex items-center gap-2">
-                  <span class="font-semibold">Pilote:</span>
-                  <span>{{ reservation.userName }}</span>
+              <div v-if="reservation.userName" class="mb-2 text-sm">
+                <span class="font-semibold">Pilote:</span>
+                <span class="ml-2">{{ reservation.userName }}</span>
+              </div>
+
+              <div
+                v-if="reservation.flightLog"
+                class="bg-gray-50 rounded-lg p-2 space-y-1.5 text-sm"
+              >
+                <div class="flex items-center gap-2">
+                  <span class="font-semibold">Temps de vol:</span>
+                  <span>{{ reservation.flightLog.flightTimeMinutes }} minutes</span>
                 </div>
 
-                <div class="space-y-2 pt-2 border-t border-gray-200">
-                  <div class="flex items-center gap-2">
-                    <span class="font-semibold">Temps de vol:</span>
-                    <span>{{ reservation.flightLog.flightTimeMinutes }} minutes</span>
-                  </div>
+                <div class="flex items-center gap-2">
+                  <span class="font-semibold">Nombre de vols:</span>
+                  <span>{{ reservation.flightLog.flightsCount }}</span>
+                </div>
 
-                  <div class="flex items-center gap-2">
-                    <span class="font-semibold">Nombre de vols:</span>
-                    <span>{{ reservation.flightLog.flightsCount }}</span>
-                  </div>
-
-                  <div
-                    v-if="reservation.flightLog.publicComment"
-                    class="pt-2 border-t border-gray-200"
-                  >
-                    <p class="font-semibold mb-1">Commentaire:</p>
-                    <p class="italic text-gray-600">"{{ reservation.flightLog.publicComment }}"</p>
-                  </div>
+                <div
+                  v-if="reservation.flightLog.publicComment"
+                  class="pt-1.5 border-t border-gray-200"
+                >
+                  <p class="font-semibold mb-1">Commentaire:</p>
+                  <p class="italic text-gray-600">"{{ reservation.flightLog.publicComment }}"</p>
                 </div>
               </div>
             </div>
@@ -127,7 +128,11 @@ const packOptions = computed<AutocompleteOption[]>(() => {
 });
 
 const handlePackSelect = async (packId: string) => {
-  if (!packId) return;
+  if (!packId) {
+    selectedPackId.value = null;
+    reservations.value = [];
+    return;
+  }
 
   selectedPackId.value = packId;
   const pack = packs.value.find((p) => p.id === packId);
