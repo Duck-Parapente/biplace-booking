@@ -17,7 +17,7 @@ export interface ReservationRepositoryPort {
     startingDate: DateValueObject,
     endingDate: DateValueObject,
   ): Promise<boolean>;
-  findConfirmedReservationsByDateRange(
+  findConfirmedAndClosedReservationsByDateRange(
     startDate: DateValueObject,
     endDate: DateValueObject,
   ): Promise<PlanningReservationDto[]>;

@@ -66,7 +66,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
     private readonly eventEmitter: EventEmitterPort,
   ) {}
 
-  private buildMatchingConfirmedReservationsFilter(
+  private buildMatchingConfirmedAndClosedReservationsFilter(
     startingDate: DateValueObject,
     endingDate: DateValueObject,
   ) {
@@ -74,7 +74,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
       AND: [
         { startingDate: { lt: endingDate.value } },
         { endingDate: { gt: startingDate.value } },
-        { status: ReservationStatus.CONFIRMED },
+        { status: { in: [ReservationStatus.CONFIRMED, ReservationStatus.CLOSED] } },
       ],
     };
   }
@@ -107,7 +107,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
     const count = await prisma.reservation.count({
       where: {
         packId: packId.uuid,
-        ...this.buildMatchingConfirmedReservationsFilter(startingDate, endingDate),
+        ...this.buildMatchingConfirmedAndClosedReservationsFilter(startingDate, endingDate),
       },
     });
 
@@ -121,19 +121,19 @@ export class ReservationRepository implements ReservationRepositoryPort {
     const packs = await prisma.pack.findMany({
       where: {
         reservations: {
-          none: this.buildMatchingConfirmedReservationsFilter(startingDate, endingDate),
+          none: this.buildMatchingConfirmedAndClosedReservationsFilter(startingDate, endingDate),
         },
       },
     });
     return packs.map(({ id, label }) => ({ id: new UUID({ uuid: id }), label }));
   }
 
-  async findConfirmedReservationsByDateRange(
+  async findConfirmedAndClosedReservationsByDateRange(
     startDate: DateValueObject,
     endDate: DateValueObject,
   ): Promise<PlanningReservationDto[]> {
     const reservations = await prisma.reservation.findMany({
-      where: this.buildMatchingConfirmedReservationsFilter(startDate, endDate),
+      where: this.buildMatchingConfirmedAndClosedReservationsFilter(startDate, endDate),
       include: {
         user: true,
       },
