@@ -7,12 +7,12 @@ import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { PackSummary } from '@libs/types/accross-modules';
 import { ReservationCancelledDomainEvent } from '@modules/reservation/domain/events/reservation-cancelled.domain-event';
 import { ReservationClosedDomainEvent } from '@modules/reservation/domain/events/reservation-closed.domain-event';
+import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
+import { ReservationEntity } from '@modules/reservation/domain/reservation.entity';
 import {
   PackReservationWithDetails,
-  ReservationRepositoryPort,
-} from '@modules/reservation/domain/ports/reservation.repository.port';
-import { ReservationEntity } from '@modules/reservation/domain/reservation.entity';
-import { PlanningReservationDto } from '@modules/reservation/domain/reservation.types';
+  PlanningReservationDto,
+} from '@modules/reservation/domain/reservation.types';
 import { ReservationStatus as DomainReservationStatus } from '@modules/reservation/domain/reservation.types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Reservation, ReservationStatus } from '@prisma/client';
@@ -207,19 +207,14 @@ export class ReservationRepository implements ReservationRepositoryPort {
       id: new UUID({ uuid: reservation.id }),
       startingDate: DateValueObject.fromDate(reservation.startingDate),
       endingDate: DateValueObject.fromDate(reservation.endingDate),
-      publicComment: reservation.publicComment ?? undefined,
       userName: reservation.user
-        ? `${reservation.user.firstName ?? ''} ${reservation.user.lastName ?? ''}`.trim() ||
-          undefined
+        ? `${reservation.user.firstName ?? ''} ${reservation.user.lastName ?? ''}`.trim()
         : undefined,
       flightLog: reservation.flightLog
         ? {
-            id: reservation.flightLog.id,
-            flightsMinutes: reservation.flightLog.flightsMinutes,
-            flightsCount: reservation.flightLog.flightsCount,
+            flightTimeMinutes: new Integer({ value: reservation.flightLog.flightsMinutes }),
+            flightsCount: new Integer({ value: reservation.flightLog.flightsCount }),
             publicComment: reservation.flightLog.publicComment ?? undefined,
-            privateComment: reservation.flightLog.privateComment ?? undefined,
-            createdAt: reservation.flightLog.createdAt,
           }
         : undefined,
     }));

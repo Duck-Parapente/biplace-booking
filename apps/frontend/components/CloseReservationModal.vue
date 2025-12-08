@@ -26,8 +26,8 @@
         />
 
         <BaseInput
-          id="flightCount"
-          v-model.number="form.flightCount"
+          id="flightsCount"
+          v-model.number="form.flightsCount"
           label="Nombre de vols"
           type="number"
           required
@@ -143,7 +143,7 @@ const canClose = computed(() => {
 });
 const form = ref<CloseReservationDto>({
   flightTimeMinutes: 0,
-  flightCount: 0,
+  flightsCount: 0,
   publicComment: '',
   privateComment: '',
 });
@@ -178,7 +178,7 @@ const handleSubmit = async () => {
 const resetForm = () => {
   form.value = {
     flightTimeMinutes: 0,
-    flightCount: 0,
+    flightsCount: 0,
     publicComment: '',
     privateComment: '',
   };

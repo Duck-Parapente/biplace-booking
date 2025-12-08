@@ -1,6 +1,6 @@
 import { UUID } from '@libs/ddd/uuid.value-object';
-import { PackReservationWithDetails } from '@modules/reservation/domain/ports/reservation.repository.port';
 import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
+import { PackReservationWithDetails } from '@modules/reservation/domain/reservation.types';
 import { RESERVATION_REPOSITORY } from '@modules/reservation/reservation.di-tokens';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
