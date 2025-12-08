@@ -48,8 +48,18 @@ export class EmailNotificationAdapter implements ReservationNotificationPort {
         },
       });
 
+      if (!user && !flightLog.privateComment) {
+        this.logger.warn(
+          `No user found and no private comment for reservation ${reservationId.uuid}, skipping email notification.`,
+        );
+        return;
+      }
+
       await this.mailClient.sendTemplate({
-        to: [...(user ? [user.email] : []), pack.owner.email],
+        to: [
+          ...(user ? [user.email] : []),
+          ...(flightLog.privateComment ? [pack.owner.email] : []),
+        ],
         template: TEMPLATE_RESERVATION_CLOSING,
         variables: {
           startingDateLabel: formatDate(startingDate),
