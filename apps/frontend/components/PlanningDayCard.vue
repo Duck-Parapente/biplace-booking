@@ -44,14 +44,20 @@
           <span class="text-sm text-secondary-600">{{ pack.packLabel }}</span>
 
           <div class="flex flex-col items-end gap-1">
-            <div class="flex items-stretch gap-1">
+            <div class="flex items-stretch gap-1 text-sm">
               <div
-                class="flex items-center gap-1 px-2 py-1 rounded text-sm"
+                v-if="!pack.reservation"
+                class="flex items-center gap-1 rounded px-2 py-1"
                 :class="getPackStatusConfig(pack).backgroundClass"
               >
                 <component :is="getPackStatusConfig(pack).icon" class="w-3 h-3" />
                 <span>{{ getPackStatusConfig(pack).label }}</span>
               </div>
+              <PilotDisplay
+                v-else
+                :display-name="getPackStatusConfig(pack).label"
+                variant="reserved"
+              />
               <button
                 v-if="pack.reservation && canCancelReservation(pack)"
                 @click="handleCancelReservation(pack.reservation.id)"
