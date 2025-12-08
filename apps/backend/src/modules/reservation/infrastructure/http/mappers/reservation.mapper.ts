@@ -2,8 +2,17 @@ import {
   ReservationWishStatus,
   ReservationWishWithReservation,
 } from '@modules/reservation/domain/reservation-wish.types';
-import { PlanningData, ReservationStatus } from '@modules/reservation/domain/reservation.types';
-import { ReservationWishDto, PlanningDayDto, ReservationWishStatusDto } from 'shared';
+import {
+  PackReservationWithDetails,
+  PlanningData,
+  ReservationStatus,
+} from '@modules/reservation/domain/reservation.types';
+import {
+  ReservationWishDto,
+  PlanningDayDto,
+  ReservationWishStatusDto,
+  FlightBookPackReservationDto,
+} from 'shared';
 
 const mapWishStatus = (status: ReservationWishStatus): ReservationWishStatusDto => {
   switch (status) {
@@ -84,5 +93,24 @@ export function mapPlanningDataToDto(planningData: PlanningData[]): PlanningDayD
           }
         : null,
     })),
+  }));
+}
+
+export function mapPackReservationsToDto(
+  reservations: PackReservationWithDetails[],
+): FlightBookPackReservationDto[] {
+  return reservations.map((reservation) => ({
+    id: reservation.id.uuid,
+    startingDate: reservation.startingDate.value.toISOString(),
+    endingDate: reservation.endingDate.value.toISOString(),
+    userName: reservation.userName ?? null,
+    flightLog: reservation.flightLog
+      ? {
+          flightTimeMinutes: reservation.flightLog.flightTimeMinutes.value,
+          flightsCount: reservation.flightLog.flightsCount.value,
+          publicComment: reservation.flightLog.publicComment ?? null,
+          privateComment: reservation.flightLog.privateComment ?? null,
+        }
+      : null,
   }));
 }

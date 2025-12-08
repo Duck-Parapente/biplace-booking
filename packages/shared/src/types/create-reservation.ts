@@ -54,7 +54,7 @@ export class CloseReservationDto {
   @IsNotEmpty()
   @IsInt()
   @IsPositive()
-  flightCount!: number;
+  flightsCount!: number;
 
   @IsOptional()
   @IsString()

@@ -42,7 +42,15 @@ export enum ReservationStatus {
 
 export interface FlightLogProps {
   flightTimeMinutes: Integer;
-  flightCount: Integer;
+  flightsCount: Integer;
   publicComment?: string;
   privateComment?: string;
+}
+
+export interface PackReservationWithDetails {
+  id: UUID;
+  startingDate: DateValueObject;
+  endingDate: DateValueObject;
+  userName?: string;
+  flightLog?: FlightLogProps;
 }
