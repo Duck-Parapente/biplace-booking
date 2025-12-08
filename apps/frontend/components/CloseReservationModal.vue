@@ -35,6 +35,38 @@
         />
 
         <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Vérifications <span class="text-red-500">*</span>
+          </label>
+          <div class="space-y-2">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input
+                v-model="checklist.cleanHarness"
+                type="checkbox"
+                class="w-4 h-4 text-secondary-600 border-gray-300 rounded focus:ring-secondary-600"
+              />
+              <span class="text-sm text-gray-700">Sellette propre</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input
+                v-model="checklist.dryWing"
+                type="checkbox"
+                class="w-4 h-4 text-secondary-600 border-gray-300 rounded focus:ring-secondary-600"
+              />
+              <span class="text-sm text-gray-700">Voile sèche</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input
+                v-model="checklist.okHelmet"
+                type="checkbox"
+                class="w-4 h-4 text-secondary-600 border-gray-300 rounded focus:ring-secondary-600"
+              />
+              <span class="text-sm text-gray-700">Casque OK</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
           <label class="block text-sm font-medium text-gray-700 mb-1"> Commentaire public </label>
           <textarea
             v-model="form.publicComment"
@@ -65,7 +97,7 @@
         <div class="flex gap-3 pt-2">
           <button
             type="submit"
-            :disabled="submitting || submitSuccess"
+            :disabled="submitting || submitSuccess || !isChecklistComplete"
             class="flex-1 bg-secondary-600 text-white hover:bg-secondary-700 transition text-sm px-4 py-2 rounded disabled:opacity-50"
           >
             {{ submitting ? 'Clôture...' : 'Clôturer' }}
@@ -94,6 +126,16 @@ interface Props {
 
 const props = defineProps<Props>();
 const showModal = ref(false);
+
+const checklist = ref({
+  cleanHarness: false,
+  dryWing: false,
+  okHelmet: false,
+});
+
+const isChecklistComplete = computed(() => {
+  return checklist.value.cleanHarness && checklist.value.dryWing && checklist.value.okHelmet;
+});
 
 const canClose = computed(() => {
   const isBeforeNow = new Date(props.wish.startingDate) < new Date();
@@ -139,6 +181,11 @@ const resetForm = () => {
     flightCount: 0,
     publicComment: '',
     privateComment: '',
+  };
+  checklist.value = {
+    cleanHarness: false,
+    dryWing: false,
+    okHelmet: false,
   };
 };
 
