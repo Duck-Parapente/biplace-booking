@@ -44,7 +44,7 @@ export interface FlightLogProps {
   flightTimeMinutes: Integer;
   flightsCount: Integer;
   publicComment?: string;
-  privateComment?: string;
+  shouldWarnPackOwner?: boolean;
 }
 
 interface PackReservation {

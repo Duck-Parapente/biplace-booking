@@ -56,9 +56,9 @@ export class EmailNotificationAdapter implements ReservationNotificationPort {
         },
       });
 
-      if (!user && !flightLog.privateComment) {
+      if (!user) {
         this.logger.warn(
-          `No user found and no private comment for reservation ${reservationId.uuid}, skipping email notification.`,
+          `No user found for reservation ${reservationId.uuid}, skipping email notification.`,
         );
         return;
       }
@@ -66,7 +66,7 @@ export class EmailNotificationAdapter implements ReservationNotificationPort {
       await this.mailClient.sendTemplate({
         to: [
           ...(user ? [user.email] : []),
-          ...(flightLog.privateComment ? [pack.owner.email] : []),
+          ...(flightLog.shouldWarnPackOwner ? [pack.owner.email] : []),
         ],
         template: TEMPLATE_RESERVATION_CLOSING,
         variables: {
@@ -75,7 +75,6 @@ export class EmailNotificationAdapter implements ReservationNotificationPort {
           flightsCount: flightLog.flightsCount.value,
           flightTimeMinutes: flightLog.flightTimeMinutes.value,
           publicComment: flightLog.publicComment || '-',
-          privateComment: flightLog.privateComment || '-',
         },
       });
     } catch (error) {

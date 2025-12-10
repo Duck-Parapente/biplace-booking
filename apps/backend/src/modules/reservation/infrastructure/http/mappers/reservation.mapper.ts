@@ -113,7 +113,6 @@ export function mapPackReservationsToDto({
             flightTimeMinutes: reservation.flightLog.flightTimeMinutes.value,
             flightsCount: reservation.flightLog.flightsCount.value,
             publicComment: reservation.flightLog.publicComment ?? null,
-            privateComment: reservation.flightLog.privateComment ?? null,
           }
         : null,
     })),
