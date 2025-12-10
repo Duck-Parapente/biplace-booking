@@ -67,7 +67,7 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"> Commentaire public </label>
+          <label class="block text-sm font-medium text-gray-700 mb-1"> Observations </label>
           <textarea
             v-model="form.publicComment"
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-600 focus:border-transparent"
@@ -77,13 +77,14 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"> Commentaire privé </label>
-          <textarea
-            v-model="form.privateComment"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-600 focus:border-transparent"
-            rows="3"
-            placeholder="Commentaire interne, à destination du respo pack"
-          ></textarea>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input
+              v-model="form.shouldWarnPackOwner"
+              type="checkbox"
+              class="w-4 h-4 text-secondary-600 border-gray-300 rounded focus:ring-secondary-600"
+            />
+            <span class="text-sm font-medium text-gray-700"> Prévenir le responsable du pack </span>
+          </label>
         </div>
 
         <div v-if="submitError" class="p-3 bg-red-50 text-red-700 text-sm">
@@ -145,7 +146,7 @@ const form = ref<CloseReservationDto>({
   flightTimeMinutes: 0,
   flightsCount: 0,
   publicComment: '',
-  privateComment: '',
+  shouldWarnPackOwner: false,
 });
 
 // Composables
@@ -180,7 +181,7 @@ const resetForm = () => {
     flightTimeMinutes: 0,
     flightsCount: 0,
     publicComment: '',
-    privateComment: '',
+    shouldWarnPackOwner: false,
   };
   checklist.value = {
     cleanHarness: false,

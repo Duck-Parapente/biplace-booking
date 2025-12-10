@@ -111,6 +111,5 @@ model FlightLog {
     flightsMinutes Int
     flightsCount   Int
     publicComment  String?
-    privateComment String?
     createdAt      DateTime    @db.Timestamptz(3)
 }

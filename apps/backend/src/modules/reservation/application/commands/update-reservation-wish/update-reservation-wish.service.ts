@@ -28,13 +28,13 @@ export class UpdateReservationWishService
     await this.updateReservationWishStatus(reservationWishId, status, metadata);
   }
 
-  async cancelReservationWish(
+  async rollbackToPendingStatus(
     reservationWishId: UUID,
     metadata: DomainEventMetadata,
   ): Promise<void> {
     await this.updateReservationWishStatus(
       reservationWishId,
-      ReservationWishStatus.CANCELLED,
+      ReservationWishStatus.PENDING,
       metadata,
     );
   }

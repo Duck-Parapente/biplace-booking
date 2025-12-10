@@ -15,7 +15,6 @@ export class FlightLogRepository implements FlightLogRepositoryPort {
         flightsMinutes: flightLog.flightTimeMinutes.value,
         flightsCount: flightLog.flightsCount.value,
         publicComment: flightLog.publicComment ?? null,
-        privateComment: flightLog.privateComment ?? null,
         createdAt: new Date(),
         reservation: {
           connect: { id: reservationId.uuid },

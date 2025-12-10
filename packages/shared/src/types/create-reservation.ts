@@ -2,6 +2,7 @@ import {
   ArrayMinSize,
   ArrayNotEmpty,
   IsArray,
+  IsBoolean,
   IsDateString,
   IsInt,
   IsNotEmpty,
@@ -60,7 +61,7 @@ export class CloseReservationDto {
   @IsString()
   publicComment?: string;
 
-  @IsOptional()
-  @IsString()
-  privateComment?: string;
+  @IsNotEmpty()
+  @IsBoolean()
+  shouldWarnPackOwner!: boolean;
 }
