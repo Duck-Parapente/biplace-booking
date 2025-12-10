@@ -47,7 +47,7 @@ export class CreateReservationHttpController {
         endingDate: DateValueObject.fromDateString(startingDate).startOfDayInUTC(1),
         publicComment: publicComment,
       },
-      metadata: { userId: createdById.uuid },
+      metadata: { userId: createdById },
     });
 
     try {

@@ -56,7 +56,7 @@ export class CancelReservationHttpController {
     const command = new CancelReservationCommand({
       reservation,
       metadata: {
-        userId: userId.uuid,
+        userId,
       },
     });
 

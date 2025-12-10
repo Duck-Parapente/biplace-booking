@@ -20,7 +20,7 @@ export type DomainEventMetadata = {
   /**
    * User ID for debugging and logging purposes
    */
-  readonly userId?: string;
+  readonly userId?: UUID;
 };
 
 export type DomainEventProps<T> = Omit<T, 'id' | 'metadata'> & {
