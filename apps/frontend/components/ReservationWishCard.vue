@@ -33,10 +33,6 @@
           </div>
           <p v-if="wish.publicComment" class="italic text-gray-700">"{{ wish.publicComment }}"</p>
 
-          <!-- Reservation Cost -->
-          <!-- Reservation cost moved to top-right badge area -->
-
-          <!-- Event History Toggle -->
           <button
             @click="toggleHistory"
             class="text-xs text-gray-600 hover:text-gray-800 hover:underline mt-2 flex items-center gap-1"
@@ -80,7 +76,7 @@ interface Props {
 }
 
 const { getConfigFromStatus } = useReservationWishStatus();
-const { cancelling, cancelReservationWish, getReservationWishes } = useReservationWish();
+const { cancelling, cancelReservationWish } = useReservationWish();
 const { cancelReservation } = useReservation();
 const props = defineProps<Props>();
 
@@ -113,11 +109,16 @@ const showPackIsReserved = (packId: string): boolean => {
 };
 
 const canCancel = computed(() => {
-  if (!props.wish.reservation) return props.wish.isCancelable;
-
   const isAfterNow = new Date(props.wish.startingDate) > new Date();
 
-  return isAfterNow && props.wish.reservation.isCancelable;
+  const reservationIsCancelable = props.wish.reservation?.isCancelable || false;
+  const wishIsCancelable = props.wish.isCancelable;
+
+  if (!isAfterNow) {
+    return wishIsCancelable && !reservationIsCancelable;
+  }
+
+  return reservationIsCancelable || wishIsCancelable;
 });
 
 const handleCancel = async (wish: ReservationWishDto) => {
