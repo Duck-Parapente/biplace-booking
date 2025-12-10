@@ -22,7 +22,7 @@ export class CancelReservationService implements ICommandHandler<CancelReservati
     await this.reservationRepository.update(cancelledReservation);
 
     if (reservation.reservationWishId) {
-      await this.updateReservationWishService.rollbackToPendingStatus(
+      await this.updateReservationWishService.cancelReservationWish(
         reservation.reservationWishId,
         metadata,
       );
