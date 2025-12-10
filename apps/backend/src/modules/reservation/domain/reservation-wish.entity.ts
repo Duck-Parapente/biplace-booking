@@ -83,7 +83,11 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
     return this.canUpdate(ReservationWishStatus.CANCELLED);
   }
 
-  update(status: ReservationWishStatus, metadata: DomainEventMetadata): void {
+  update(
+    status: ReservationWishStatus,
+    metadata: DomainEventMetadata,
+    explanationTable?: string,
+  ): void {
     if (!this.canUpdate(status)) {
       throw new CannotUpdateReservationWishStatusException(this.id, this.props.status, status);
     }
@@ -94,6 +98,7 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
       new ReservationWishStatusUpdatedDomainEvent({
         aggregateId: this.id,
         status,
+        explanationTable,
         metadata,
       }),
     );

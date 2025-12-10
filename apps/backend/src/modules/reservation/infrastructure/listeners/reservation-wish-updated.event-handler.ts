@@ -19,6 +19,7 @@ export class ReservationWishStatusUpdatedEventHandler
   async handle({
     status,
     aggregateId,
+    explanationTable,
     id,
     metadata,
   }: ReservationWishStatusUpdatedDomainEvent): Promise<void> {
@@ -32,13 +33,13 @@ export class ReservationWishStatusUpdatedEventHandler
       });
       if (status === ReservationWishStatus.REFUSED) {
         this.logger.log(`Sending refusal notification for reservation wish ${aggregateId.uuid}`);
-        await this.notificationPort.notifyWishRefusal(aggregateId);
+        await this.notificationPort.notifyWishRefusal(aggregateId, explanationTable);
         return;
       }
 
       if (status === ReservationWishStatus.CANCELLED) {
         this.logger.log(`Sending cancel notification for reservation wish ${aggregateId.uuid}`);
-        await this.notificationPort.notifyWishCancel(aggregateId);
+        await this.notificationPort.notifyWishCancel(aggregateId, explanationTable);
         return;
       }
     } catch (error) {

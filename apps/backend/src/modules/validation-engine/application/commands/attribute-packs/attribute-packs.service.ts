@@ -158,15 +158,17 @@ export class AttributePacksService {
       return;
     }
 
-    const htmlTable = this.attributionExplanationHtmlDomainService.generateHtmlTable(
+    const explanationTable = this.attributionExplanationHtmlDomainService.generateHtmlTable(
       engineInput,
       attributions,
     );
 
-    this.logger.log(`\n=== HTML Explanation Table ===\n${htmlTable}\n`);
-
     for (const wish of refusedWishes) {
-      await this.updateReservationWishService.refuseReservationWish(wish.id, metadata);
+      await this.updateReservationWishService.refuseReservationWish(
+        wish.id,
+        explanationTable,
+        metadata,
+      );
     }
   }
 }

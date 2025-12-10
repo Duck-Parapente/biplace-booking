@@ -86,17 +86,22 @@ export class EmailNotificationAdapter implements ReservationNotificationPort {
     }
   }
 
-  async notifyWishCancel(reservationWishId: UUID): Promise<void> {
-    await this.sendWishNotificationEmail(reservationWishId, TEMPLATE_WISH_CANCEL);
+  async notifyWishCancel(reservationWishId: UUID, explanationTable?: string): Promise<void> {
+    await this.sendWishNotificationEmail(reservationWishId, TEMPLATE_WISH_CANCEL, explanationTable);
   }
 
-  async notifyWishRefusal(reservationWishId: UUID): Promise<void> {
-    await this.sendWishNotificationEmail(reservationWishId, TEMPLATE_WISH_REFUSAL);
+  async notifyWishRefusal(reservationWishId: UUID, explanationTable?: string): Promise<void> {
+    await this.sendWishNotificationEmail(
+      reservationWishId,
+      TEMPLATE_WISH_REFUSAL,
+      explanationTable,
+    );
   }
 
   private async sendWishNotificationEmail(
     reservationWishId: UUID,
     template: string,
+    explanationTable?: string,
   ): Promise<void> {
     this.logger.log(
       `sendNotificationEmail called for ${reservationWishId.uuid} with template ${template}`,
@@ -129,6 +134,7 @@ export class EmailNotificationAdapter implements ReservationNotificationPort {
           nickname: user.firstName || '',
           startingDateLabel: formatDate(startingDate),
           wishPacksLabels: packChoices.map(({ pack }) => pack.label).join(', '),
+          explanationTable: explanationTable || '',
         },
       });
     } catch (error) {
