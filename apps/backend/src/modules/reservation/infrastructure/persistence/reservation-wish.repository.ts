@@ -1,5 +1,6 @@
 import { prisma } from '@libs/database/prisma/prisma';
 import { DateValueObject } from '@libs/ddd/date.value-object';
+import { Integer } from '@libs/ddd/integer.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
@@ -228,9 +229,10 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
 
     return reservationWishes.map(({ id: uuid, packChoices, createdAt, publicComment, user }) => ({
       id: new UUID({ uuid }),
-      packChoices: packChoices.map(({ pack }) => ({
+      packChoices: packChoices.map(({ pack, order }) => ({
         id: new UUID({ uuid: pack.id }),
         label: pack.label,
+        order: new Integer({ value: order }),
       })),
       createdAt: DateValueObject.fromDate(createdAt),
       publicComment: publicComment ?? undefined,

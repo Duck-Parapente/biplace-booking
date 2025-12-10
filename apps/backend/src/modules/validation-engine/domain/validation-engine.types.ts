@@ -5,8 +5,13 @@ export const VALIDATION_ENGINE_MODULE = {
   userId: new UUID({ uuid: '00000000-0000-0000-0000-000000000000' }),
 };
 
+export interface EnginePack {
+  id: UUID;
+  label: string;
+}
+
 export interface BaseValidationEngineProps {
-  availablePacks: { id: UUID; label: string }[];
+  availablePacks: EnginePack[];
   reservationWishes: ReservationWishForAttribution[];
 }
 
