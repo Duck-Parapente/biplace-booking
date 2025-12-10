@@ -27,11 +27,11 @@ export class ReservationCreatedEventHandler
         reservation,
         eventId: id.uuid,
         aggregateId: aggregateId.uuid,
-        metadata: metadata,
+        metadata,
       });
 
       this.logger.log(`Sending confirmation notification for reservation ${aggregateId.uuid}`);
-      await this.notificationPort.notifyReservationCreated(aggregateId);
+      await this.notificationPort.notifyReservationCreated(aggregateId, metadata.userId);
     } catch (error) {
       this.logger.error(
         `Error in ReservationCreatedEventHandler: ${(error as Error).message}`,

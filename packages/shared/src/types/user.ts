@@ -38,9 +38,9 @@ export class UserDto extends UserProfileDto {
   @IsNotEmpty()
   externalAuthId!: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsNumber()
-  currentScore?: number;
+  currentScore!: number;
 
   @IsNotEmpty()
   @IsDateString()

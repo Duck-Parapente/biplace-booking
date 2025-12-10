@@ -19,7 +19,7 @@ export class GetUserHttpController {
     const { id } = req.user;
 
     const user = await this.getUserService.execute(
-      new GetUserCommand({ userId: id, metadata: { userId: id.uuid } }),
+      new GetUserCommand({ userId: id, metadata: { userId: id } }),
     );
     return mapUserToDto(user);
   }

@@ -28,17 +28,6 @@ export class UpdateReservationWishService
     await this.updateReservationWishStatus(reservationWishId, status, metadata);
   }
 
-  async cancelReservationWish(
-    reservationWishId: UUID,
-    metadata: DomainEventMetadata,
-  ): Promise<void> {
-    await this.updateReservationWishStatus(
-      reservationWishId,
-      ReservationWishStatus.CANCELLED,
-      metadata,
-    );
-  }
-
   async confirmReservationWish(
     reservationWishId: UUID,
     metadata: DomainEventMetadata,

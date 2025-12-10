@@ -28,7 +28,7 @@ export class CreatePackHttpController {
         ownerId: new UUID({ uuid: body.ownerId }),
       },
       metadata: {
-        userId: userId.uuid,
+        userId,
       },
     });
 

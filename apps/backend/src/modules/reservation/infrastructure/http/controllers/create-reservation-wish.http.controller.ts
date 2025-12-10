@@ -42,7 +42,7 @@ export class CreateReservationWishHttpController {
         userId: createdById,
       },
       metadata: {
-        userId: createdById.uuid,
+        userId: createdById,
       },
     });
 

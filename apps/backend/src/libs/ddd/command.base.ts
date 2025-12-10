@@ -4,6 +4,8 @@ import { Guard } from '@libs/guards/primitive.guard';
 
 import { ArgumentNotProvidedException } from '../exceptions';
 
+import { UUID } from './uuid.value-object';
+
 export type CommandProps<T> = Omit<T, 'id'> & Omit<Command, 'id'>;
 
 type CommandMetadata = {
@@ -20,7 +22,7 @@ type CommandMetadata = {
    * ID of a user who invoked the command. Can be useful for
    * logging and tracking execution of commands and events
    */
-  readonly userId?: string;
+  readonly userId?: UUID;
 
   /**
    * Time when the command occurred. Mostly for tracing purposes

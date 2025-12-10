@@ -21,7 +21,10 @@ export class EventEmitter implements EventEmitterPort {
         aggregateId: aggregateId.uuid,
         name: domainEvent.constructor.name,
         payload,
-        metadata,
+        metadata: {
+          ...metadata,
+          userId: metadata.userId?.uuid ?? undefined,
+        },
       },
     });
 

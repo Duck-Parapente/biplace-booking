@@ -30,7 +30,7 @@ export class UpdatePackHttpController {
         ...otherUpdates,
       },
       metadata: {
-        userId: userId.uuid,
+        userId,
       },
     });
 

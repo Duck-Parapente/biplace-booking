@@ -66,7 +66,7 @@ export class CloseReservationHttpController {
         privateComment,
       },
       metadata: {
-        userId: userId.uuid,
+        userId,
       },
     });
 
