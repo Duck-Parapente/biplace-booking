@@ -1,19 +1,29 @@
 import { Injectable } from '@nestjs/common';
 
-import { Attribution, BaseValidationEngineProps } from './validation-engine.types';
+import { Attribution, BaseValidationEngineProps, EnginePack } from './validation-engine.types';
+
+const getNumberDisplay = (index: number): string => {
+  const emojiNumbers = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
+
+  if (index < emojiNumbers.length) {
+    return emojiNumbers[index];
+  }
+  return String(index + 1);
+};
 
 @Injectable()
 export class AttributionExplanationHtmlDomainService {
   generateHtmlTable(
+    allPacks: EnginePack[],
     { availablePacks, reservationWishes }: BaseValidationEngineProps,
     attributions: Attribution[],
   ): string {
-    const allPackLabels = availablePacks.map((p) => p.label);
+    const allPackLabels = allPacks.map((p) => p.label);
 
     const pilots = reservationWishes.map((wish) => {
       const attribution = attributions.find((a) => a.reservationWishId.equals(wish.id));
       const attributedPack = attribution
-        ? availablePacks.find((p) => p.id.equals(attribution.assignedPackId))
+        ? allPacks.find((p) => p.id.equals(attribution.assignedPackId))
         : null;
 
       return {
@@ -26,19 +36,27 @@ export class AttributionExplanationHtmlDomainService {
 
     const tableRows = pilots
       .map((pilot) => {
-        const packCells = allPackLabels
-          .map((packLabel) => {
-            const isChoice = pilot.packChoices.includes(packLabel);
+        const packCells = allPacks
+          .map(({ id: packId, label: packLabel }) => {
+            const isAvailable = availablePacks.some((p) => p.id.uuid === packId.uuid);
+            const choiceIndex = pilot.packChoices.indexOf(packLabel);
+            const isChoice = choiceIndex !== -1;
             const isAttributed = pilot.attributedPackLabel === packLabel;
 
-            let icon = '';
-            if (isAttributed) {
-              icon = '🟢'; // Green circle for attributed
-            } else if (isChoice) {
-              icon = '⚪'; // White circle for choice
+            let backgroundColor = '#ffffff';
+            let content = '';
+
+            if (!isAvailable) {
+              backgroundColor = '#ffe6e6';
+            } else if (isAttributed) {
+              backgroundColor = '#c8f7c8';
             }
 
-            return `<td style="padding: 8px; border: 1px solid #ddd; text-align: center; font-size: 16px;">${icon}</td>`;
+            if (isChoice) {
+              content = getNumberDisplay(choiceIndex);
+            }
+
+            return `<td style="padding: 8px; border: 1px solid #ddd; text-align: center; font-size: 16px; background-color: ${backgroundColor};">${content}</td>`;
           })
           .join('');
 
@@ -53,7 +71,7 @@ export class AttributionExplanationHtmlDomainService {
 
     return `
       <div style="margin: 20px 0; font-family: Arial, sans-serif;">
-        <h3>Attributions sur les packs disponibles</h3>
+        <h3>Détail des attributions</h3>
         <table style="border-collapse: collapse; width: 100%; margin-top: 10px;">
           <thead>
             <tr style="background-color: #f8f9fa;">
@@ -66,8 +84,9 @@ export class AttributionExplanationHtmlDomainService {
           </tbody>
         </table>
         <p style="margin-top: 15px; font-size: 12px; color: #6c757d;">
-          <span style="font-size: 16px;">⚪</span> = Choix demandé &nbsp;&nbsp;
-          <span style="font-size: 16px;">🟢</span> = Pack attribué
+          Emoji numéro = ordre de préférence du choix &nbsp;&nbsp;
+          <span style="display: inline-block; width: 20px; height: 20px; background-color: #c8f7c8; border: 1px solid #ddd; vertical-align: middle;"></span> = Pack attribué &nbsp;&nbsp;
+          <span style="display: inline-block; width: 20px; height: 20px; background-color: #ffe6e6; border: 1px solid #ddd; vertical-align: middle;"></span> = Pack indisponible avant l'attribution automatique
         </p>
       </div>
     `;

@@ -1,9 +1,9 @@
-import { DomainEventMetadata } from '@libs/ddd';
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
+import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.service';
 import { CreateReservationCommand } from '@modules/reservation/application/commands/create-reservation/create-reservation.command';
 import { CreateReservationService } from '@modules/reservation/application/commands/create-reservation/create-reservation.service';
 import { UpdateReservationWishService } from '@modules/reservation/application/commands/update-reservation-wish/update-reservation-wish.service';
@@ -15,6 +15,7 @@ import { ValidationEngineRunDomainEvent } from '@modules/validation-engine/domai
 import {
   Attribution,
   BaseValidationEngineProps,
+  EnginePack,
   VALIDATION_ENGINE_MODULE,
 } from '@modules/validation-engine/domain/validation-engine.types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -26,6 +27,7 @@ export class AttributePacksService {
   private readonly ATTRIBUTION_END_DAY_OFFSET = 5;
 
   constructor(
+    private readonly getPacksService: GetPacksService,
     private readonly getReservationsService: GetReservationsService,
     private readonly getReservationWishesService: GetReservationWishesService,
     private readonly updateReservationWishService: UpdateReservationWishService,
@@ -39,6 +41,7 @@ export class AttributePacksService {
   async attributePacks(): Promise<void> {
     const todayNormalized = DateValueObject.now();
     const errors: Array<{ date: string; error: Error }> = [];
+    const allPacks = await this.getPacksService.execute();
 
     for (
       let dayOffset = this.ATTRIBUTION_START_DAY_OFFSET;
@@ -51,7 +54,7 @@ export class AttributePacksService {
       this.logger.warn(`Will process attributions for ${startingDate.value.toISOString()}`);
 
       try {
-        await this.processAttributionsForDate(startingDate, endingDate);
+        await this.processAttributionsForDate(startingDate, endingDate, allPacks);
       } catch (error) {
         const errorMessage = `Error processing attributions for ${startingDate.value.toISOString()}: ${
           (error as Error).message
@@ -75,6 +78,7 @@ export class AttributePacksService {
   private async processAttributionsForDate(
     startingDate: DateValueObject,
     endingDate: DateValueObject,
+    allPacks: EnginePack[],
   ): Promise<void> {
     const pendingWishes =
       await this.getReservationWishesService.findPendingAndRefusedByStartingDate(startingDate);
@@ -108,7 +112,7 @@ export class AttributePacksService {
     this.logger.log(`Generated ${attributions.length} attributions`);
 
     await this.createReservations(attributions, pendingWishes, startingDate, endingDate);
-    await this.refuseUnattributedWishes(engineInput, attributions, VALIDATION_ENGINE_MODULE);
+    await this.refuseUnattributedWishes(allPacks, engineInput, attributions);
 
     await this.eventEmitter.logDomainEvent(
       new ValidationEngineRunDomainEvent({
@@ -155,9 +159,9 @@ export class AttributePacksService {
   }
 
   private async refuseUnattributedWishes(
+    allPacks: EnginePack[],
     engineInput: BaseValidationEngineProps,
     attributions: Attribution[],
-    metadata: DomainEventMetadata,
   ): Promise<void> {
     const attributedWishIds = new Set(attributions.map((a) => a.reservationWishId.uuid));
     const refusedWishes = engineInput.reservationWishes.filter(
@@ -169,6 +173,7 @@ export class AttributePacksService {
     }
 
     const explanationTable = this.attributionExplanationHtmlDomainService.generateHtmlTable(
+      allPacks,
       engineInput,
       attributions,
     );
@@ -177,7 +182,7 @@ export class AttributePacksService {
       await this.updateReservationWishService.refuseReservationWish(
         wish.id,
         explanationTable,
-        metadata,
+        VALIDATION_ENGINE_MODULE,
       );
     }
   }
