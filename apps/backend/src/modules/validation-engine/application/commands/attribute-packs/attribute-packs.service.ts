@@ -9,10 +9,12 @@ import { CreateReservationService } from '@modules/reservation/application/comma
 import { UpdateReservationWishService } from '@modules/reservation/application/commands/update-reservation-wish/update-reservation-wish.service';
 import { GetReservationsService } from '@modules/reservation/application/queries/get-reservation/get-reservation.service';
 import { GetReservationWishesService } from '@modules/reservation/application/queries/get-reservation-wishes/get-reservation-wishes.service';
+import { AttributionExplanationHtmlDomainService } from '@modules/validation-engine/domain/attribution-explanation-html.domain-service';
 import { AttributionDomainService } from '@modules/validation-engine/domain/attribution.domain-service';
 import { ValidationEngineRunDomainEvent } from '@modules/validation-engine/domain/events/validation-engine-run.domain-event';
 import {
   Attribution,
+  BaseValidationEngineProps,
   VALIDATION_ENGINE_MODULE,
 } from '@modules/validation-engine/domain/validation-engine.types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -29,6 +31,7 @@ export class AttributePacksService {
     private readonly updateReservationWishService: UpdateReservationWishService,
     private readonly createReservationService: CreateReservationService,
     private readonly attributionDomainService: AttributionDomainService,
+    private readonly attributionExplanationHtmlDomainService: AttributionExplanationHtmlDomainService,
     @Inject(EVENT_EMITTER)
     private readonly eventEmitter: EventEmitterPort,
   ) {}
@@ -94,7 +97,7 @@ export class AttributePacksService {
     this.logger.log(`Generated ${attributions.length} attributions`);
 
     await this.createReservations(attributions, pendingWishes, startingDate, endingDate);
-    await this.refuseUnattributedWishes(startingDate, VALIDATION_ENGINE_MODULE);
+    await this.refuseUnattributedWishes(engineInput, attributions, VALIDATION_ENGINE_MODULE);
 
     await this.eventEmitter.logDomainEvent(
       new ValidationEngineRunDomainEvent({
@@ -141,14 +144,31 @@ export class AttributePacksService {
   }
 
   private async refuseUnattributedWishes(
-    startingDate: DateValueObject,
+    engineInput: BaseValidationEngineProps,
+    attributions: Attribution[],
     metadata: DomainEventMetadata,
   ): Promise<void> {
-    const pendingWishes =
-      await this.getReservationWishesService.findPendingAndRefusedByStartingDate(startingDate);
+    // Get wishes that were NOT attributed
+    const attributedWishIds = new Set(attributions.map((a) => a.reservationWishId.uuid));
+    const refusedWishes = engineInput.reservationWishes.filter(
+      (wish) => !attributedWishIds.has(wish.id.uuid),
+    );
 
-    for (const wish of pendingWishes) {
-      await this.updateReservationWishService.refuseReservationWish(wish.id, metadata);
+    if (refusedWishes.length === 0) {
+      return;
+    }
+
+    const explanationTable = this.attributionExplanationHtmlDomainService.generateHtmlTable(
+      engineInput,
+      attributions,
+    );
+
+    for (const wish of refusedWishes) {
+      await this.updateReservationWishService.refuseReservationWish(
+        wish.id,
+        explanationTable,
+        metadata,
+      );
     }
   }
 }

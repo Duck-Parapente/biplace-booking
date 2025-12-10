@@ -11,26 +11,16 @@
     :class="$attrs.class"
     class="w-full flex items-center justify-between px-6 py-4 bg-primary-400 text-secondary-600"
   >
-    <div class="flex items-center gap-3 text-xl font-semibold">
-      <NuxtLink
-        to="/"
-        class="hover:opacity-80 transition-opacity -my-2 -ml-2 p-2"
-        aria-label="Accueil"
-      >
-        <IconHome class="h-6 w-6" />
-      </NuxtLink>
-      <span class="text-secondary-600/50">/</span>
-      <span>{{ pageTitle }}</span>
-    </div>
-
-    <div v-if="isAuthenticated" class="flex items-center gap-3">
+    <div class="flex items-center gap-3">
       <button
-        class="text-secondary-600 hover:opacity-80 transition-opacity -my-2 -mr-2 p-2"
+        v-if="isAuthenticated"
+        class="text-secondary-600 hover:opacity-80 transition-opacity -my-2 -ml-2 p-2"
         @click="isMenuOpen = true"
         aria-label="Ouvrir le menu"
       >
         <IconMenu class="h-6 w-6" />
       </button>
+      <span class="text-xl font-semibold">{{ pageTitle }}</span>
     </div>
   </header>
 
