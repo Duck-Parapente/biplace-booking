@@ -25,12 +25,20 @@ export class EmailNotificationAdapter implements ReservationNotificationPort {
 
   constructor(private readonly mailClient: MailClient) {}
 
-  async notifyReservationCreated(reservationId: UUID): Promise<void> {
-    await this.sendReservationNotificationEmail(reservationId, TEMPLATE_RESERVATION_CONFIRMATION);
+  async notifyReservationCreated(reservationId: UUID, initiatedBy?: UUID): Promise<void> {
+    await this.sendReservationNotificationEmail(
+      reservationId,
+      initiatedBy,
+      TEMPLATE_RESERVATION_CONFIRMATION,
+    );
   }
 
-  async notifyReservationCancelled(reservationId: UUID): Promise<void> {
-    await this.sendReservationNotificationEmail(reservationId, TEMPLATE_RESERVATION_CANCEL);
+  async notifyReservationCancelled(reservationId: UUID, initiatedBy?: UUID): Promise<void> {
+    await this.sendReservationNotificationEmail(
+      reservationId,
+      initiatedBy,
+      TEMPLATE_RESERVATION_CANCEL,
+    );
   }
 
   async notifyReservationClosed(reservationId: UUID, flightLog: FlightLogProps): Promise<void> {
@@ -133,6 +141,7 @@ export class EmailNotificationAdapter implements ReservationNotificationPort {
 
   private async sendReservationNotificationEmail(
     reservationId: UUID,
+    initiatedBy: UUID | undefined,
     template: string,
   ): Promise<void> {
     this.logger.log(
@@ -148,6 +157,12 @@ export class EmailNotificationAdapter implements ReservationNotificationPort {
         },
       });
 
+      const initiator = initiatedBy
+        ? await prisma.user.findUnique({
+            where: { id: initiatedBy.uuid },
+          })
+        : null;
+
       if (!user) {
         this.logger.warn(
           `No user found for reservation ${reservationId.uuid}, skipping email notification.`,
@@ -162,6 +177,9 @@ export class EmailNotificationAdapter implements ReservationNotificationPort {
           nickname: user.firstName || '',
           startingDateLabel: formatDate(startingDate),
           selectedPackLabel: pack.label,
+          initiatorName: initiator
+            ? [initiator.firstName, initiator.lastName].filter(Boolean).join(' ')
+            : 'Système',
         },
       });
     } catch (error) {
