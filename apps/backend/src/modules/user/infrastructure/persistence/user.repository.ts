@@ -1,6 +1,7 @@
 import { prisma } from '@libs/database/prisma/prisma';
 import { Email } from '@libs/ddd';
 import { DateValueObject } from '@libs/ddd/date.value-object';
+import { Integer } from '@libs/ddd/integer.value-object';
 import { UUID, UuidProps } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
@@ -22,7 +23,7 @@ const toEntity = (user: User): UserEntity => {
       lastName: lastName ?? undefined,
       phoneNumber: phoneNumber ?? undefined,
       address: address ?? undefined,
-      currentScore,
+      currentScore: new Integer({ value: currentScore }),
     },
   });
 };
@@ -41,7 +42,7 @@ export class UserRepository implements UserRepositoryPort {
       data: {
         id: user.id.uuid,
         createdAt: user.createdAt.value,
-        currentScore: user.currentScore,
+        currentScore: user.currentScore.value,
         email: user.email.email,
         externalAuthId: user.externalAuthId,
       },
@@ -59,7 +60,7 @@ export class UserRepository implements UserRepositoryPort {
         lastName: user.lastName,
         address: user.address,
         phoneNumber: user.phoneNumber,
-        currentScore: user.currentScore,
+        currentScore: user.currentScore.value,
       },
     });
 
@@ -82,5 +83,26 @@ export class UserRepository implements UserRepositoryPort {
       orderBy: { createdAt: 'desc' },
     });
     return users.map(toEntity);
+  }
+
+  async getTwelveMonthUserScore(userId: UuidProps): Promise<Integer> {
+    const twelveMonthsAgo = new Date();
+    twelveMonthsAgo.setFullYear(twelveMonthsAgo.getFullYear() - 1);
+
+    const {
+      _sum: { cost },
+    } = await prisma.reservation.aggregate({
+      where: {
+        userId: userId.uuid,
+        startingDate: {
+          gte: twelveMonthsAgo,
+        },
+      },
+      _sum: {
+        cost: true,
+      },
+    });
+
+    return new Integer({ value: cost ?? 0 });
   }
 }

@@ -1,4 +1,5 @@
 import { Email } from '@libs/ddd';
+import { Integer } from '@libs/ddd/integer.value-object';
 
 export interface ExternalUser {
   externalAuthId: string;
@@ -16,7 +17,7 @@ export interface UserProfile {
 export interface UserProps extends UserProfile {
   email: Email;
   externalAuthId: string;
-  currentScore: number;
+  currentScore: Integer;
 }
 
 export type CreateUserProps = ExternalUser;

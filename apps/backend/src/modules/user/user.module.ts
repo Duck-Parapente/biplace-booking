@@ -10,7 +10,7 @@ import { GetUserHttpController } from './infrastructure/http/controllers/get-use
 import { GetUsersHttpController } from './infrastructure/http/controllers/get-users.http.controller';
 import { SyncExternalUserHttpController } from './infrastructure/http/controllers/sync-external-user.http.controller';
 import { UpdateUserHttpController } from './infrastructure/http/controllers/update-user.http.controller';
-import { UserScoreReservationCancelledEventHandler } from './infrastructure/listeners/reservation-cancelled.event-handler';
+import { ReservationEndedEventHandler } from './infrastructure/listeners/reservation-ended.event-handler';
 import { UserRepository } from './infrastructure/persistence/user.repository';
 import { USER_REPOSITORY } from './user.di-tokens';
 
@@ -27,7 +27,7 @@ import { USER_REPOSITORY } from './user.di-tokens';
     GetUserService,
     GetUsersService,
     UpdateUserService,
-    UserScoreReservationCancelledEventHandler,
+    ReservationEndedEventHandler,
     { provide: USER_REPOSITORY, useClass: UserRepository },
     { provide: 'USER_REPOSITORY_FOR_AUTH', useClass: UserRepository },
     { provide: EVENT_EMITTER, useClass: EventEmitter },
