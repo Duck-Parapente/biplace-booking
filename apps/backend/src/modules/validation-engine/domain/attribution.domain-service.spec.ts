@@ -36,7 +36,7 @@ describe('AttributionDomainService', () => {
       )
       .forEach((wish: ReservationWishForAttribution) => {
         lines.push(
-          `  - ${wish.user.nickname} (score: ${wish.user.currentScore}): ${wish.packChoices.map((p: PackSummary) => p.label).join(', ')}`,
+          `  - ${wish.user.nickname} (score: ${wish.user.currentScore}): ${wish.packChoices.map((p) => p.label).join(', ')}`,
         );
       });
 
@@ -83,7 +83,7 @@ describe('AttributionDomainService', () => {
 
         const props: BaseValidationEngineProps = {
           availablePacks,
-          reservationWishes: wishes,
+          reservationWishes: wishes as ReservationWishForAttribution[],
         };
 
         const result = service.getAttributions(props);
@@ -107,7 +107,7 @@ describe('AttributionDomainService', () => {
           console.log(
             printDebugInfo(
               name,
-              wishes,
+              wishes as ReservationWishForAttribution[],
               availablePacks,
               result,
               expectedAttributions,

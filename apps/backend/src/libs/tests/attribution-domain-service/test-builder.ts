@@ -1,6 +1,7 @@
 import assert from 'assert';
 
 import { DateValueObject } from '@libs/ddd/date.value-object';
+import { Integer } from '@libs/ddd/integer.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 import { PackSummary } from '@libs/types/accross-modules';
@@ -47,7 +48,13 @@ export class TestBuilder {
     }
   }
 
-  buildTest() {
+  buildTest(): {
+    name: string;
+    availablePacks: PackSummary[];
+    wishes: ReservationWishForAttribution[];
+    expectedAttributions: { wishId: UUID; pack: PackSummary }[];
+    expectedUnassigned: UUID[];
+  } {
     const expectedAttributions: { wishId: UUID; pack: PackSummary }[] = [];
     const expectedUnassigned: UUID[] = [];
     const wishes_: ReservationWishForAttribution[] = [];
@@ -56,16 +63,20 @@ export class TestBuilder {
     this.wishes.forEach((wish) => {
       const wishId = UUID.random();
 
-      const packChoices_: PackSummary[] = [];
+      const packChoices_: { id: UUID; label: string; order: Integer }[] = [];
 
       // Pour chaque pack demandé
-      wish.packNames.forEach((packName) => {
+      wish.packNames.forEach((packName, index) => {
         // Crée le pack s'il n'existe pas.
         this.addPack(packName);
         // Ajoute le pack à la liste
         const pack = this.packs.get(packName);
         if (pack) {
-          packChoices_.push(pack);
+          packChoices_.push({
+            id: pack.id,
+            label: pack.label,
+            order: new Integer({ value: index }),
+          });
         }
       });
 
