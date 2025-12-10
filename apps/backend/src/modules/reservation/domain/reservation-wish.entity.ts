@@ -26,7 +26,7 @@ export class ReservationWishEntity extends AggregateRoot<ReservationWishProps> {
     [ReservationWishStatus.CANCELLED]: [...PENDING_STATUSES, ReservationWishStatus.CONFIRMED],
     [ReservationWishStatus.CONFIRMED]: PENDING_STATUSES,
     [ReservationWishStatus.REFUSED]: PENDING_STATUSES,
-    [ReservationWishStatus.PENDING]: [],
+    [ReservationWishStatus.PENDING]: [ReservationWishStatus.CONFIRMED],
   };
 
   static create(rawProps: CreateReservationWishProps, metadata: DomainEventMetadata) {
