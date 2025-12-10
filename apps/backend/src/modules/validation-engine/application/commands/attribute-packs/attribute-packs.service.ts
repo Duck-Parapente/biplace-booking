@@ -38,6 +38,7 @@ export class AttributePacksService {
 
   async attributePacks(): Promise<void> {
     const todayNormalized = DateValueObject.now();
+    const errors: Array<{ date: string; error: Error }> = [];
 
     for (
       let dayOffset = this.ATTRIBUTION_START_DAY_OFFSET;
@@ -52,13 +53,23 @@ export class AttributePacksService {
       try {
         await this.processAttributionsForDate(startingDate, endingDate);
       } catch (error) {
-        this.logger.error(
-          `Error processing attributions for ${startingDate.value.toISOString()}: ${
-            (error as Error).message
-          }`,
-        );
+        const errorMessage = `Error processing attributions for ${startingDate.value.toISOString()}: ${
+          (error as Error).message
+        }`;
+        this.logger.error(errorMessage);
+        errors.push({ date: startingDate.value.toISOString(), error: error as Error });
       }
     }
+
+    if (!errors.length) {
+      this.logger.log('Attribution process completed successfully without errors.');
+      return;
+    }
+
+    const errorSummary = errors.map(({ date, error }) => `${date}: ${error.message}`).join('\n');
+    throw new Error(
+      `Attribution process completed with ${errors.length} error(s):\n${errorSummary}`,
+    );
   }
 
   private async processAttributionsForDate(
@@ -148,7 +159,6 @@ export class AttributePacksService {
     attributions: Attribution[],
     metadata: DomainEventMetadata,
   ): Promise<void> {
-    // Get wishes that were NOT attributed
     const attributedWishIds = new Set(attributions.map((a) => a.reservationWishId.uuid));
     const refusedWishes = engineInput.reservationWishes.filter(
       (wish) => !attributedWishIds.has(wish.id.uuid),

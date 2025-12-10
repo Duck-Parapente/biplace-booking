@@ -87,26 +87,26 @@
           </label>
         </div>
 
-        <div v-if="submitError" class="p-3 bg-red-50 text-red-700 text-sm">
-          <p><strong>Erreur:</strong> {{ submitError }}</p>
+        <div v-if="closeError" class="p-3 bg-red-50 text-red-700 text-sm">
+          <p><strong>Erreur:</strong> {{ closeError }}</p>
         </div>
 
-        <div v-if="submitSuccess" class="p-3 bg-primary-400/20 text-secondary-600 text-sm">
+        <div v-if="closeSuccess" class="p-3 bg-primary-400/20 text-secondary-600 text-sm">
           <p>✓ Réservation clôturée avec succès</p>
         </div>
 
         <div class="flex gap-3 pt-2">
           <button
             type="submit"
-            :disabled="submitting || submitSuccess || !isChecklistComplete"
+            :disabled="closing || closeSuccess || !isChecklistComplete"
             class="flex-1 bg-secondary-600 text-white hover:bg-secondary-700 transition text-sm px-4 py-2 rounded disabled:opacity-50"
           >
-            {{ submitting ? 'Clôture...' : 'Clôturer' }}
+            {{ closing ? 'Clôture...' : 'Clôturer' }}
           </button>
           <button
             type="button"
             @click="closeModal"
-            :disabled="submitting"
+            :disabled="closing"
             class="flex-1 bg-gray-200 text-gray-700 hover:bg-gray-300 transition text-sm px-4 py-2 rounded disabled:opacity-50"
           >
             Annuler
@@ -152,11 +152,6 @@ const form = ref<CloseReservationDto>({
 // Composables
 const { closeReservation, closing, closeError, closeSuccess } = useReservation();
 
-// Renamed for consistency with component's responsibility
-const submitting = closing;
-const submitError = closeError;
-const submitSuccess = closeSuccess;
-
 // Close modal helper
 const closeModal = () => {
   showModal.value = false;
@@ -188,6 +183,10 @@ const resetForm = () => {
     dryWing: false,
     okHelmet: false,
   };
+  // Reset success/error states
+  closeSuccess.value = false;
+  closeError.value = null;
+  closing.value = false;
 };
 
 // Watch for modal open/close
