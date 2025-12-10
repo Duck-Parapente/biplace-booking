@@ -20,7 +20,7 @@ export class ReservationCancelledEventHandler
         message: `${ReservationCancelledDomainEvent.name} received`,
         eventId: id.uuid,
         aggregateId: aggregateId.uuid,
-        metadata: metadata,
+        metadata,
       });
 
       this.logger.log(`Sending refusal notification for reservation ${aggregateId.uuid}`);
