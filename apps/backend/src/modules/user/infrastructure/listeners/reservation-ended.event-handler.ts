@@ -1,14 +1,15 @@
 import { ReservationCancelledDomainEvent } from '@modules/reservation/domain/events/reservation-cancelled.domain-event';
+import { ReservationClosedDomainEvent } from '@modules/reservation/domain/events/reservation-closed.domain-event';
 import { UserRepositoryPort } from '@modules/user/domain/ports/user.repository.port';
 import { USER_REPOSITORY } from '@modules/user/user.di-tokens';
 import { Inject, Logger } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 
-@EventsHandler(ReservationCancelledDomainEvent)
-export class UserScoreReservationCancelledEventHandler
-  implements IEventHandler<ReservationCancelledDomainEvent>
+@EventsHandler(ReservationCancelledDomainEvent, ReservationClosedDomainEvent)
+export class ReservationEndedEventHandler
+  implements IEventHandler<ReservationCancelledDomainEvent | ReservationClosedDomainEvent>
 {
-  private readonly logger = new Logger(UserScoreReservationCancelledEventHandler.name);
+  private readonly logger = new Logger(ReservationEndedEventHandler.name);
 
   constructor(
     @Inject(USER_REPOSITORY)
@@ -19,16 +20,14 @@ export class UserScoreReservationCancelledEventHandler
     aggregateId,
     id,
     userId,
-    cost,
     metadata,
-  }: ReservationCancelledDomainEvent): Promise<void> {
+  }: ReservationCancelledDomainEvent | ReservationClosedDomainEvent): Promise<void> {
     try {
       this.logger.log({
-        message: `${ReservationCancelledDomainEvent.name} received for user score update`,
+        message: `Handling event ${id.uuid} for reservation ${aggregateId.uuid}`,
         eventId: id.uuid,
         reservationId: aggregateId.uuid,
         userId: userId?.uuid,
-        cost: cost.value,
         metadata: metadata,
       });
 
@@ -43,14 +42,16 @@ export class UserScoreReservationCancelledEventHandler
         return;
       }
 
-      this.logger.log(`Incrementing score for user ${userId.uuid} by ${cost.value} days`);
-      user.incrementScore(cost);
+      const currentScore = await this.userRepository.getTwelveMonthUserScore(userId);
+
+      this.logger.log(`Update score for user ${userId.uuid} to ${currentScore.value}`);
+      user.setCurrentScore(currentScore);
       await this.userRepository.update(user);
 
       this.logger.log(`Successfully updated score for user ${userId.uuid}`);
     } catch (error) {
       this.logger.error(
-        `Error in UserScoreReservationCancelledEventHandler: ${(error as Error).message}`,
+        `Error in ReservationEndedEventHandler: ${(error as Error).message}`,
         (error as Error).stack,
       );
       throw error;

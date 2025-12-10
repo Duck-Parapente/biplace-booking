@@ -17,7 +17,7 @@ export class UserEntity extends AggregateRoot<UserProps> {
       createdAt: DateValueObject.fromDate(new Date()),
       props: {
         ...props,
-        currentScore: 0,
+        currentScore: Integer.zero(),
       },
     });
     user.addEvent(
@@ -68,8 +68,8 @@ export class UserEntity extends AggregateRoot<UserProps> {
     );
   }
 
-  incrementScore(cost: Integer): void {
-    this.props.currentScore += cost.value;
+  setCurrentScore(newScore: Integer): void {
+    this.props.currentScore = newScore;
   }
 
   validate(): void {
