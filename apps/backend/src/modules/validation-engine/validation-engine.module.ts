@@ -4,6 +4,7 @@ import { ReservationModule } from '@modules/reservation/reservation.module';
 import { Module } from '@nestjs/common';
 
 import { AttributePacksService } from './application/commands/attribute-packs/attribute-packs.service';
+import { AttributionExplanationHtmlDomainService } from './domain/attribution-explanation-html.domain-service';
 import { AttributionDomainService } from './domain/attribution.domain-service';
 import { EmailNotificationAdapter } from './infrastructure/adapters/email-notification.adapter';
 import { AttibutePackCliController } from './infrastructure/cli/attribute-packs.cli.controller';
@@ -15,6 +16,7 @@ import { NOTIFICATION_PORT } from './validation-engine.di-tokens';
   providers: [
     AttibutePackCliController,
     AttributionDomainService,
+    AttributionExplanationHtmlDomainService,
     AttributePacksService,
     {
       provide: NOTIFICATION_PORT,
