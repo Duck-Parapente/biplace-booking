@@ -1,8 +1,10 @@
 <template>
   <div
     :class="[
-      'border rounded shadow-sm',
-      isToday(day.date) ? 'bg-gray-200 border-gray-400' : 'bg-white border-gray-300',
+      'rounded shadow-sm',
+      isBeforeToday(day.date) ? 'bg-gray-100 border border-gray-300' : '',
+      isToday(day.date) ? 'bg-white border-2 border-gray-400' : '',
+      !isBeforeToday(day.date) && !isToday(day.date) ? 'bg-white border border-gray-300' : '',
     ]"
   >
     <div
@@ -101,7 +103,7 @@ import IconCheck from '~/components/icons/IconCheck.vue';
 import IconClock from '~/components/icons/IconClock.vue';
 import IconUser from '~/components/icons/IconUser.vue';
 import IconX from '~/components/icons/IconX.vue';
-import { isToday } from '~/composables/useDateHelpers';
+import { isToday, isBeforeToday } from '~/composables/useDateHelpers';
 
 interface PlanningDay {
   date: string;

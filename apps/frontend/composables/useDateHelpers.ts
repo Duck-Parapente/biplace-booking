@@ -64,6 +64,17 @@ export function isToday(date: Date | string): boolean {
 }
 
 /**
+ * Check if a date is before today
+ */
+export function isBeforeToday(date: Date | string): boolean {
+  const d = toDate(date);
+  d.setHours(0, 0, 0, 0);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return d < today;
+}
+
+/**
  * Format a date to ISO string format (YYYY-MM-DD)
  */
 export function formatDateToString(date: Date): string {
