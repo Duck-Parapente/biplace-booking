@@ -1,6 +1,6 @@
 import { ReservationCreatedDomainEvent } from '@modules/reservation/domain/events/reservation-created.domain-event';
 import { ReservationNotificationPort } from '@modules/reservation/domain/ports/reservation-notification.port';
-import { RESERVATION_WISH_NOTIFICATION_PORT } from '@modules/reservation/reservation.di-tokens';
+import { RESERVATION_NOTIFICATION_PORT } from '@modules/reservation/reservation.di-tokens';
 import { Inject, Logger } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 
@@ -11,7 +11,7 @@ export class ReservationCreatedEventHandler
   private readonly logger = new Logger(ReservationCreatedEventHandler.name);
 
   constructor(
-    @Inject(RESERVATION_WISH_NOTIFICATION_PORT)
+    @Inject(RESERVATION_NOTIFICATION_PORT)
     private readonly notificationPort: ReservationNotificationPort,
   ) {}
 

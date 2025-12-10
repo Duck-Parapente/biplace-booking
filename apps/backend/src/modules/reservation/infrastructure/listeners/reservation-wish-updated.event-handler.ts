@@ -1,5 +1,5 @@
 import { ReservationWishStatusUpdatedDomainEvent } from '@modules/reservation/domain/events/reservation-wish-updated.domain-event';
-import { ReservationNotificationPort } from '@modules/reservation/domain/ports/reservation-notification.port';
+import { ReservationWishNotificationPort } from '@modules/reservation/domain/ports/reservation-wish-notification.port';
 import { RESERVATION_WISH_NOTIFICATION_PORT } from '@modules/reservation/reservation.di-tokens';
 import { Inject, Logger } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
@@ -13,7 +13,7 @@ export class ReservationWishStatusUpdatedEventHandler
 
   constructor(
     @Inject(RESERVATION_WISH_NOTIFICATION_PORT)
-    private readonly notificationPort: ReservationNotificationPort,
+    private readonly notificationPort: ReservationWishNotificationPort,
   ) {}
 
   async handle({
@@ -39,7 +39,7 @@ export class ReservationWishStatusUpdatedEventHandler
 
       if (status === ReservationWishStatus.CANCELLED) {
         this.logger.log(`Sending cancel notification for reservation wish ${aggregateId.uuid}`);
-        await this.notificationPort.notifyWishCancel(aggregateId, explanationTable);
+        await this.notificationPort.notifyWishCancel(aggregateId);
         return;
       }
     } catch (error) {

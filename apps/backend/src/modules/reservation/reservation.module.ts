@@ -17,7 +17,8 @@ import { ReservationAuthorizationService } from './application/services/reservat
 import { PlanningDomainService } from './domain/planning.domain-service';
 import { ReservationWishDomainService } from './domain/reservation-wish.domain-service';
 import { ReservationDomainService } from './domain/reservation.domain-service';
-import { EmailNotificationAdapter } from './infrastructure/adapters/email-notification.adapter';
+import { ReservationEmailNotificationAdapter } from './infrastructure/adapters/reservation-email-notification.adapter';
+import { ReservationWishEmailNotificationAdapter } from './infrastructure/adapters/reservation-wish-email-notification.adapter';
 import { CancelReservationHttpController } from './infrastructure/http/controllers/cancel-reservation.http.controller';
 import { CloseReservationHttpController } from './infrastructure/http/controllers/close-reservation.http.controller';
 import { CreateReservationWishHttpController } from './infrastructure/http/controllers/create-reservation-wish.http.controller';
@@ -35,6 +36,7 @@ import { ReservationWishRepository } from './infrastructure/persistence/reservat
 import { ReservationRepository } from './infrastructure/persistence/reservation.repository';
 import {
   FLIGHT_LOG_REPOSITORY,
+  RESERVATION_NOTIFICATION_PORT,
   RESERVATION_REPOSITORY,
   RESERVATION_WISH_NOTIFICATION_PORT,
   RESERVATION_WISH_REPOSITORY,
@@ -75,7 +77,11 @@ import {
     { provide: FLIGHT_LOG_REPOSITORY, useClass: FlightLogRepository },
     {
       provide: RESERVATION_WISH_NOTIFICATION_PORT,
-      useClass: EmailNotificationAdapter,
+      useClass: ReservationWishEmailNotificationAdapter,
+    },
+    {
+      provide: RESERVATION_NOTIFICATION_PORT,
+      useClass: ReservationEmailNotificationAdapter,
     },
     { provide: EVENT_EMITTER, useClass: EventEmitter },
   ],
