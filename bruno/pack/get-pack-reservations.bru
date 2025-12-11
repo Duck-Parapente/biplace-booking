@@ -5,12 +5,13 @@ meta {
 }
 
 get {
-  url: {{BACKEND_DOMAIN}}/packs/{{PACK_ID}}/reservations
+  url: {{BACKEND_DOMAIN}}/reservations/pack?packId={{PACK_ID}}
   body: none
   auth: bearer
 }
 
 params:query {
+  packId: {{PACK_ID}}
 }
 
 auth:bearer {

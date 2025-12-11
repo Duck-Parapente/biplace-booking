@@ -144,7 +144,7 @@ const fetchPackReservations = async (packId: string) => {
   try {
     loading.value = true;
     error.value = null;
-    const data = await callApi<PackReservationsDto>(`/packs/${packId}/reservations`);
+    const data = await callApi<PackReservationsDto>(`/reservations/pack?packId=${packId}`);
     reservations.value = data.reservations.sort(
       (a, b) => new Date(b.startingDate).getTime() - new Date(a.startingDate).getTime(),
     );
