@@ -84,7 +84,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
       throw new CannotCancelReservationException(this.id, this.props.status);
     }
     this.props.status = ReservationStatus.CANCELLED;
-    this.props.cost = this.calculateCancellationCost();
+    this.props.cost = this.calculateCost();
 
     this.addEvent(
       new ReservationCancelledDomainEvent({
@@ -98,22 +98,9 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     return this;
   }
 
-  private calculateCancellationCost(): Integer {
-    if (!this.startingDate.isInTheFuture()) {
-      this.logger.log({
-        reservationId: this.id.uuid,
-        input: {
-          createdAt: this.createdAt.value.toISOString(),
-          startingDate: this.startingDate.value.toISOString(),
-          now: new Date().toISOString(),
-        },
-        output: { cost: 0 },
-      });
-      return Integer.zero();
-    }
-
+  private calculateCost(): Integer {
     const daysSinceCreation = this.createdAt.daysBetween(DateValueObject.now());
-    const maxAllowedCost = this.calculateMaxCost();
+    const maxAllowedCost = this.createdAt.daysBetween(this.startingDate).max(Integer.zero());
     const result = daysSinceCreation.min(maxAllowedCost);
 
     this.logger.log({
@@ -127,25 +114,6 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     });
 
     return result;
-  }
-
-  private calculateClosingCost(): Integer {
-    const result = this.calculateMaxCost();
-
-    this.logger.log({
-      reservationId: this.id.uuid,
-      input: {
-        createdAt: this.createdAt.value.toISOString(),
-        startingDate: this.startingDate.value.toISOString(),
-      },
-      output: { cost: result.value },
-    });
-
-    return result;
-  }
-
-  private calculateMaxCost(): Integer {
-    return this.createdAt.daysBetween(this.startingDate).max(Integer.zero());
   }
 
   isCancelable(): boolean {
@@ -162,7 +130,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     }
 
     this.props.status = ReservationStatus.CLOSED;
-    this.props.cost = this.calculateClosingCost();
+    this.props.cost = this.calculateCost();
 
     this.addEvent(
       new ReservationClosedDomainEvent({
