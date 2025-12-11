@@ -48,7 +48,7 @@ Voici la config du cron:
 
 ```
     0 3 * * * /srv/prod-biplace/infra/scripts/backup.sh >> /var/log/db_backup.log 2>&1
-    0 4 * * * /srv/staging-biplace/infra/scripts/backup.sh >> /var/log/db_backup.log 2>&1
+    30 3 * * * /srv/staging-biplace/infra/scripts/backup.sh >> /var/log/db_backup.log 2>&1
 ```
 
 ### Attribution automatique des packs
@@ -61,6 +61,8 @@ Tous les soirs à 20h, l'attribution automatique des packs est exécutée via `p
 Voici la config du cron:
 
 ```
-    0 20 * * * docker exec bb-staging-backend sh -c "cd apps/backend && pnpm attribute" >> /var/log/attribute.log 2>&1
+    30 20 * * * docker exec bb-staging-backend sh -c "cd apps/backend && pnpm attribute" >> /var/log/attribute.log 2>&1
     0 20 * * * docker exec bb-prod-backend sh -c "cd apps/backend && pnpm attribute" >> /var/log/attribute.log 2>&1
+    30 7,9,11,13,15,17 * * * docker exec bb-staging-backend sh -c "cd apps/backend && pnpm attribute:today" >> /var/log/attribute-today.log 2>&1
+    0 7,9,11,13,15,17 * * * docker exec bb-prod-backend sh -c "cd apps/backend && pnpm attribute:today" >> /var/log/attribute-today.log 2>&1
 ```

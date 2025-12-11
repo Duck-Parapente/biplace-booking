@@ -20,8 +20,14 @@ export class AttibutePackCliController {
   @Command({
     command: COMMAND_NAME,
     description: 'Run packs attribution',
+    options: [
+      {
+        flags: '--run-for-today-only',
+        description: 'Run attribution for current day only (dayOffset=0)',
+      },
+    ],
   })
-  async attributePacks() {
+  async attributePacks(options: { runForTodayOnly?: boolean }) {
     const isMaintenanceMode = await this.featureFlagProvider.isFlagActive(MAINTENANCE_MODE_KEY);
     if (isMaintenanceMode) {
       throw new BadRequestException('Maintenance mode is already active. Cannot run attribution.');
@@ -32,9 +38,10 @@ export class AttibutePackCliController {
       this.logger.log('🔒 Maintenance mode activated');
 
       const startTime = Date.now();
-      this.logger.log('Starting packs attribution:');
+      const runForTodayOnly = options.runForTodayOnly || false;
+      this.logger.log(`Starting packs attribution${runForTodayOnly ? ' (for today only)' : ''}:`);
 
-      await this.attributePacksService.attributePacks();
+      await this.attributePacksService.attributePacks(runForTodayOnly);
 
       const endTime = Date.now();
       const duration = ((endTime - startTime) / 1000).toFixed(2);
