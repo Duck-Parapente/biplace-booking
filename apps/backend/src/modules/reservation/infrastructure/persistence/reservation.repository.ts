@@ -232,6 +232,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
           ? `${reservation.user.firstName ?? ''} ${reservation.user.lastName ?? ''}`.trim()
           : undefined,
         status: mapStatus(reservation.status),
+        cost: new Integer({ value: reservation.cost }),
         flightLog: reservation.flightLog
           ? {
               flightTimeMinutes: new Integer({ value: reservation.flightLog.flightsMinutes }),

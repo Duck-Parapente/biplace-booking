@@ -70,24 +70,27 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <DateDisplay :date="reservation.startingDate" />
-                <BaseTag
-                  v-if="reservation.status === ReservationWishStatusDto.CANCELLED"
-                  variant="danger"
-                >
-                  Annulé
-                </BaseTag>
-                <BaseTag
-                  v-else-if="reservation.status === ReservationWishStatusDto.CLOSED"
-                  variant="success"
-                >
-                  Clôturé
-                </BaseTag>
-                <BaseTag
-                  v-else-if="reservation.status === ReservationWishStatusDto.CONFIRMED"
-                  variant="gray"
-                >
-                  Confirmé
-                </BaseTag>
+                <div class="flex flex-col items-end gap-1.5">
+                  <BaseTag
+                    v-if="reservation.status === ReservationWishStatusDto.CANCELLED"
+                    variant="danger"
+                  >
+                    Annulé
+                  </BaseTag>
+                  <BaseTag
+                    v-else-if="reservation.status === ReservationWishStatusDto.CLOSED"
+                    variant="success"
+                  >
+                    Clôturé
+                  </BaseTag>
+                  <BaseTag
+                    v-else-if="reservation.status === ReservationWishStatusDto.CONFIRMED"
+                    variant="gray"
+                  >
+                    Confirmé
+                  </BaseTag>
+                  <CostDisplay :cost="reservation.cost" />
+                </div>
               </div>
 
               <div v-if="reservation.userName" class="mb-2 text-sm flex items-center gap-2">

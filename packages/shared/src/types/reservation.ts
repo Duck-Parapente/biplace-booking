@@ -123,6 +123,10 @@ class PackReservationDto {
   @IsEnum(ReservationWishStatusDto)
   status!: ReservationWishStatusDto;
 
+  @IsNotEmpty()
+  @IsInt()
+  cost!: number;
+
   @IsOptional()
   @IsString()
   userName!: string | null;

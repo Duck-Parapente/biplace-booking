@@ -5,14 +5,10 @@
       <span class="px-2 py-1 text-xs font-medium rounded shadow-sm" :class="statusConfig.classes">
         {{ statusConfig.label }}
       </span>
-      <div
+      <CostDisplay
         v-if="wish.reservation && wish.reservation.cost > 0"
-        class="flex items-center gap-1 text-xs text-primary-700 font-semibold"
-        aria-label="Coût de réservation"
-      >
-        <span class="text-primary-800">{{ wish.reservation.cost }}</span>
-        <IconDuck class="w-4 h-4 fill-primary-800" />
-      </div>
+        :cost="wish.reservation.cost"
+      />
     </div>
 
     <div class="p-4">
