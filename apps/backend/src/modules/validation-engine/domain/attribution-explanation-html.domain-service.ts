@@ -84,9 +84,11 @@ export class AttributionExplanationHtmlDomainService {
           </tbody>
         </table>
         <p style="margin-top: 15px; font-size: 12px; color: #6c757d;">
-          Emoji numéro = ordre de préférence du choix &nbsp;&nbsp;
           <span style="display: inline-block; width: 20px; height: 20px; background-color: #c8f7c8; border: 1px solid #ddd; vertical-align: middle;"></span> = Pack attribué &nbsp;&nbsp;
           <span style="display: inline-block; width: 20px; height: 20px; background-color: #ffe6e6; border: 1px solid #ddd; vertical-align: middle;"></span> = Pack indisponible avant l'attribution automatique
+        </p>
+        <p style="margin-top: 5px; font-size: 12px; color: #6c757d;">
+          Numéro = ordre de préférence du choix &nbsp;&nbsp;
         </p>
       </div>
     `;
