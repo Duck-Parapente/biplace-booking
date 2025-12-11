@@ -108,6 +108,7 @@ export function mapPackReservationsToDto({
       startingDate: reservation.startingDate.value.toISOString(),
       endingDate: reservation.endingDate.value.toISOString(),
       userName: reservation.userName ?? null,
+      status: mapReservationStatusToWishStatus(reservation.status),
       flightLog: reservation.flightLog
         ? {
             flightTimeMinutes: reservation.flightLog.flightTimeMinutes.value,

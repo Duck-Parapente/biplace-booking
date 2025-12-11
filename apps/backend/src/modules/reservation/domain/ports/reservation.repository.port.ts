@@ -22,5 +22,5 @@ export interface ReservationRepositoryPort {
     endDate: DateValueObject,
   ): Promise<PlanningReservationDto[]>;
   findById(id: UUID): Promise<ReservationEntity | null>;
-  findClosedAndConfirmedReservationsByPackId(packId: UUID): Promise<PackReservationsWithDetails>;
+  findAllReservationsByPackId(packId: UUID): Promise<PackReservationsWithDetails>;
 }

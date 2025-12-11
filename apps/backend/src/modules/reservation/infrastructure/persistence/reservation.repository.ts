@@ -184,15 +184,10 @@ export class ReservationRepository implements ReservationRepositoryPort {
     );
   }
 
-  async findClosedAndConfirmedReservationsByPackId(
-    packId: UUID,
-  ): Promise<PackReservationsWithDetails> {
+  async findAllReservationsByPackId(packId: UUID): Promise<PackReservationsWithDetails> {
     const reservations = await prisma.reservation.findMany({
       where: {
         packId: packId.uuid,
-        status: {
-          in: [ReservationStatus.CONFIRMED, ReservationStatus.CLOSED],
-        },
       },
       include: {
         user: true,
@@ -236,6 +231,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
         userName: reservation.user
           ? `${reservation.user.firstName ?? ''} ${reservation.user.lastName ?? ''}`.trim()
           : undefined,
+        status: mapStatus(reservation.status),
         flightLog: reservation.flightLog
           ? {
               flightTimeMinutes: new Integer({ value: reservation.flightLog.flightsMinutes }),

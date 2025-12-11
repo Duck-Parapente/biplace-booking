@@ -14,7 +14,7 @@ export class GetPackReservationsService {
   ) {}
 
   async execute(packId: UUID): Promise<PackReservationsWithDetails> {
-    this.logger.log(`Getting closed and confirmed reservations for pack ${packId.uuid}`);
-    return this.reservationRepository.findClosedAndConfirmedReservationsByPackId(packId);
+    this.logger.log(`Getting all reservations for pack ${packId.uuid}`);
+    return this.reservationRepository.findAllReservationsByPackId(packId);
   }
 }

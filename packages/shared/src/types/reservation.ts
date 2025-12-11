@@ -106,7 +106,7 @@ export class FlightLogDto {
   publicComment?: string | null;
 }
 
-class FlightBookPackReservationDto {
+class PackReservationDto {
   @IsUUID()
   @IsNotEmpty()
   id!: string;
@@ -118,6 +118,10 @@ class FlightBookPackReservationDto {
   @IsNotEmpty()
   @IsDateString()
   endingDate!: string;
+
+  @IsNotEmpty()
+  @IsEnum(ReservationWishStatusDto)
+  status!: ReservationWishStatusDto;
 
   @IsOptional()
   @IsString()
@@ -132,7 +136,7 @@ export class PackReservationsDto {
   @ArrayNotEmpty()
   @ArrayMinSize(1)
   @IsNotEmpty({ each: true })
-  reservations!: FlightBookPackReservationDto[];
+  reservations!: PackReservationDto[];
 
   @IsInt()
   @IsNotEmpty()
