@@ -1,6 +1,6 @@
 import { ReservationCancelledDomainEvent } from '@modules/reservation/domain/events/reservation-cancelled.domain-event';
 import { ReservationNotificationPort } from '@modules/reservation/domain/ports/reservation-notification.port';
-import { RESERVATION_WISH_NOTIFICATION_PORT } from '@modules/reservation/reservation.di-tokens';
+import { RESERVATION_NOTIFICATION_PORT } from '@modules/reservation/reservation.di-tokens';
 import { Inject, Logger } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 
@@ -10,7 +10,7 @@ export class ReservationCancelledEventHandler
 {
   private readonly logger = new Logger(ReservationCancelledEventHandler.name);
   constructor(
-    @Inject(RESERVATION_WISH_NOTIFICATION_PORT)
+    @Inject(RESERVATION_NOTIFICATION_PORT)
     private readonly notificationPort: ReservationNotificationPort,
   ) {}
 

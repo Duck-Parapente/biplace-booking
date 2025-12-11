@@ -5,8 +5,6 @@ import { ReservationNotificationPort } from '@modules/reservation/domain/ports/r
 import { FlightLogProps } from '@modules/reservation/domain/reservation.types';
 import { Injectable, Logger } from '@nestjs/common';
 
-const TEMPLATE_WISH_REFUSAL = 'reservation_wish_refused';
-const TEMPLATE_WISH_CANCEL = 'reservation_wish_cancelled';
 const TEMPLATE_RESERVATION_CONFIRMATION = 'reservation_confirmed';
 const TEMPLATE_RESERVATION_CANCEL = 'reservation_cancelled';
 const TEMPLATE_RESERVATION_CLOSING = 'reservation_closed';
@@ -20,8 +18,8 @@ const formatDate = (date: Date): string => {
 };
 
 @Injectable()
-export class EmailNotificationAdapter implements ReservationNotificationPort {
-  private readonly logger = new Logger(EmailNotificationAdapter.name);
+export class ReservationEmailNotificationAdapter implements ReservationNotificationPort {
+  private readonly logger = new Logger(ReservationEmailNotificationAdapter.name);
 
   constructor(private readonly mailClient: MailClient) {}
 
@@ -80,65 +78,6 @@ export class EmailNotificationAdapter implements ReservationNotificationPort {
     } catch (error) {
       this.logger.error(
         `Failed to send reservation closed email: ${(error as Error).message}`,
-        (error as Error).stack,
-      );
-    }
-  }
-
-  async notifyWishCancel(reservationWishId: UUID, explanationTable?: string): Promise<void> {
-    await this.sendWishNotificationEmail(reservationWishId, TEMPLATE_WISH_CANCEL, explanationTable);
-  }
-
-  async notifyWishRefusal(reservationWishId: UUID, explanationTable?: string): Promise<void> {
-    await this.sendWishNotificationEmail(
-      reservationWishId,
-      TEMPLATE_WISH_REFUSAL,
-      explanationTable,
-    );
-  }
-
-  private async sendWishNotificationEmail(
-    reservationWishId: UUID,
-    template: string,
-    explanationTable?: string,
-  ): Promise<void> {
-    this.logger.log(
-      `sendNotificationEmail called for ${reservationWishId.uuid} with template ${template}`,
-    );
-
-    try {
-      const { user, startingDate, packChoices } = await prisma.reservationWish.findUniqueOrThrow({
-        where: { id: reservationWishId.uuid },
-        include: {
-          user: true,
-          packChoices: {
-            select: {
-              pack: {
-                select: {
-                  label: true,
-                },
-              },
-            },
-            orderBy: {
-              order: 'asc',
-            },
-          },
-        },
-      });
-
-      await this.mailClient.sendTemplate({
-        to: user.email,
-        template,
-        variables: {
-          nickname: user.firstName || '',
-          startingDateLabel: formatDate(startingDate),
-          wishPacksLabels: packChoices.map(({ pack }) => pack.label).join(', '),
-          explanationTable: explanationTable || '',
-        },
-      });
-    } catch (error) {
-      this.logger.error(
-        `Failed to send ${template} email: ${(error as Error).message}`,
         (error as Error).stack,
       );
     }
