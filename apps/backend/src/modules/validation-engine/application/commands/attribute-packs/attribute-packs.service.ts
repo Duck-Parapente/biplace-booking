@@ -38,16 +38,14 @@ export class AttributePacksService {
     private readonly eventEmitter: EventEmitterPort,
   ) {}
 
-  async attributePacks(): Promise<void> {
+  async attributePacks(runForTodayOnly = false): Promise<void> {
     const todayNormalized = DateValueObject.now();
     const errors: Array<{ date: string; error: Error }> = [];
     const allPacks = await this.getPacksService.execute();
 
-    for (
-      let dayOffset = this.ATTRIBUTION_START_DAY_OFFSET;
-      dayOffset <= this.ATTRIBUTION_END_DAY_OFFSET;
-      dayOffset++
-    ) {
+    const { startDayOffset, endDayOffset } = this.getDateBoundaries(runForTodayOnly);
+
+    for (let dayOffset = startDayOffset; dayOffset <= endDayOffset; dayOffset++) {
       const startingDate = todayNormalized.startOfDayInUTC(dayOffset);
       const endingDate = startingDate.startOfDayInUTC(1);
 
@@ -73,6 +71,19 @@ export class AttributePacksService {
     throw new Error(
       `Attribution process completed with ${errors.length} error(s):\n${errorSummary}`,
     );
+  }
+
+  private getDateBoundaries(runForTodayOnly: boolean): {
+    startDayOffset: number;
+    endDayOffset: number;
+  } {
+    if (runForTodayOnly) {
+      return { startDayOffset: 0, endDayOffset: 0 };
+    }
+    return {
+      startDayOffset: this.ATTRIBUTION_START_DAY_OFFSET,
+      endDayOffset: this.ATTRIBUTION_END_DAY_OFFSET,
+    };
   }
 
   private async processAttributionsForDate(
