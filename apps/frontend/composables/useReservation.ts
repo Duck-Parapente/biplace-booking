@@ -43,9 +43,17 @@ export const useReservation = () => {
     }
   };
 
+  const updateReservation = async (reservationId: string, cost: number): Promise<void> => {
+    await callApi(`/reservations/${reservationId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ cost }),
+    });
+  };
+
   return {
     cancelReservation,
     closeReservation,
+    updateReservation,
     closing,
     closeError,
     closeSuccess,

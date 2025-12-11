@@ -11,15 +11,26 @@
           placeholder="Rechercher un pack..."
           @select="handlePackSelect"
         />
-        <!-- Admin: Include Cancelled Reservations -->
-        <div v-if="isAdmin" class="mt-3">
+        <div v-if="isAdmin" class="mt-3 flex items-center justify-between">
           <label class="flex items-center gap-2 text-sm cursor-pointer">
-            <input
-              v-model="includeCancelled"
-              type="checkbox"
-              class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            />
-            <span>Inclure les réservations annulées</span>
+            <span>Mode édition</span>
+            <button
+              type="button"
+              :class="[
+                editMode ? 'bg-primary-400' : 'bg-gray-200',
+                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2',
+              ]"
+              role="switch"
+              :aria-checked="editMode"
+              @click="editMode = !editMode"
+            >
+              <span
+                :class="[
+                  editMode ? 'translate-x-5' : 'translate-x-0',
+                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                ]"
+              />
+            </button>
           </label>
         </div>
       </div>
@@ -67,6 +78,8 @@
               v-for="reservation in reservations"
               :key="reservation.id"
               class="border bg-white border-gray-300 rounded-lg p-3 hover:shadow-md transition"
+              :class="{ 'cursor-pointer hover:bg-gray-50': editMode }"
+              @click="handleReservationClick(reservation)"
             >
               <div class="flex justify-between items-start mb-2">
                 <DateDisplay :date="reservation.startingDate" />
@@ -89,7 +102,7 @@
                   >
                     Confirmé
                   </BaseTag>
-                  <CostDisplay :cost="reservation.cost" />
+                  <CostDisplay v-if="editMode" :cost="reservation.cost" />
                 </div>
               </div>
 
@@ -125,6 +138,13 @@
         </div>
       </div>
     </div>
+    <EditCostModal
+      :open="editModalOpen"
+      :reservation-id="editingReservation?.id || ''"
+      :current-cost="editingReservation?.cost || 0"
+      @close="closeEditModal"
+      @updated="handleCostUpdated"
+    />
   </main>
 </template>
 
@@ -151,7 +171,9 @@ const totalFlightsHours = ref<number>(0);
 const totalFlightsCount = ref<number>(0);
 const loading = ref<boolean>(false);
 const error = ref<string | null>(null);
-const includeCancelled = ref<boolean>(false);
+const editMode = ref<boolean>(false);
+const editModalOpen = ref<boolean>(false);
+const editingReservation = ref<PackReservationsDto['reservations'][0] | null>(null);
 
 const packOptions = computed<AutocompleteOption[]>(() => {
   return packs.value.map((pack) => ({
@@ -163,8 +185,7 @@ const packOptions = computed<AutocompleteOption[]>(() => {
 const reservations = computed(() => {
   return allReservations.value
     .filter(
-      (reservation) =>
-        includeCancelled.value || reservation.status !== ReservationWishStatusDto.CANCELLED,
+      (reservation) => editMode.value || reservation.status !== ReservationWishStatusDto.CANCELLED,
     )
     .sort((a, b) => new Date(b.startingDate).getTime() - new Date(a.startingDate).getTime());
 });
@@ -199,6 +220,28 @@ const fetchPackReservations = async (packId: string) => {
     console.error('Failed to fetch pack reservations:', err);
   } finally {
     loading.value = false;
+  }
+};
+
+const handleReservationClick = (reservation: PackReservationsDto['reservations'][0]) => {
+  if (editMode.value) {
+    openEditModal(reservation);
+  }
+};
+
+const openEditModal = (reservation: PackReservationsDto['reservations'][0]) => {
+  editingReservation.value = reservation;
+  editModalOpen.value = true;
+};
+
+const closeEditModal = () => {
+  editModalOpen.value = false;
+  editingReservation.value = null;
+};
+
+const handleCostUpdated = async () => {
+  if (selectedPackId.value) {
+    await fetchPackReservations(selectedPackId.value);
   }
 };
 
