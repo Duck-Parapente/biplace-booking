@@ -7,6 +7,7 @@ import { Logger } from '@nestjs/common';
 import { ReservationCancelledDomainEvent } from './events/reservation-cancelled.domain-event';
 import { ReservationClosedDomainEvent } from './events/reservation-closed.domain-event';
 import { ReservationCreatedDomainEvent } from './events/reservation-created.domain-event';
+import { ReservationUpdatedDomainEvent } from './events/reservation-updated.domain-event';
 import {
   CannotCancelReservationException,
   CannotCloseReservationException,
@@ -139,6 +140,20 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
         cost: this.props.cost,
         userId: this.props.userId,
         flightLog,
+      }),
+    );
+
+    return this;
+  }
+
+  updateCost(cost: Integer, metadata: DomainEventMetadata): ReservationEntity {
+    this.props.cost = cost;
+
+    this.addEvent(
+      new ReservationUpdatedDomainEvent({
+        aggregateId: this.id,
+        metadata,
+        cost,
       }),
     );
 
