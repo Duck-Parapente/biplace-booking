@@ -48,7 +48,7 @@ Voici la config du cron:
 
 ```
     0 3 * * * /srv/prod-biplace/infra/scripts/backup.sh >> /var/log/db_backup.log 2>&1
-    0 4 * * * /srv/staging-biplace/infra/scripts/backup.sh >> /var/log/db_backup.log 2>&1
+    30 3 * * * /srv/staging-biplace/infra/scripts/backup.sh >> /var/log/db_backup.log 2>&1
 ```
 
 ### Attribution automatique des packs
