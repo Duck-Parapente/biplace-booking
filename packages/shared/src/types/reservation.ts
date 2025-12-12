@@ -43,9 +43,13 @@ export class ReservationDto {
 }
 
 export class ReservationWishEventDto {
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(ReservationWishStatusDto)
-  status!: ReservationWishStatusDto;
+  status?: ReservationWishStatusDto;
+
+  @IsOptional()
+  @IsInt()
+  cost?: number;
 
   @IsNotEmpty()
   @IsDateString()

@@ -6,7 +6,7 @@
         {{ statusConfig.label }}
       </span>
       <CostDisplay
-        v-if="wish.reservation && wish.reservation.cost > 0"
+        v-if="wish.reservation && ReservationWishStatusDto.CONFIRMED !== currentStatus"
         :cost="wish.reservation.cost"
       />
     </div>

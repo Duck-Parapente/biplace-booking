@@ -1,4 +1,5 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
+import { Integer } from '@libs/ddd/integer.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
 import { ReservationWishEntity } from './reservation-wish.entity';
@@ -35,6 +36,6 @@ export type ReservationWishWithReservation = {
   };
   reservation: {
     entity: ReservationEntity;
-    events: { status: ReservationStatus; date: DateValueObject }[];
+    events: { status: ReservationStatus | undefined; date: DateValueObject; cost: Integer }[];
   } | null;
 };

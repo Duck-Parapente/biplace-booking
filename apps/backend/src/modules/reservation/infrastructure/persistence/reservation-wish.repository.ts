@@ -7,6 +7,7 @@ import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 import { ReservationCancelledDomainEvent } from '@modules/reservation/domain/events/reservation-cancelled.domain-event';
 import { ReservationClosedDomainEvent } from '@modules/reservation/domain/events/reservation-closed.domain-event';
+import { ReservationUpdatedDomainEvent } from '@modules/reservation/domain/events/reservation-updated.domain-event';
 import { ReservationWishStatusUpdatedDomainEvent } from '@modules/reservation/domain/events/reservation-wish-updated.domain-event';
 import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
 import {
@@ -163,7 +164,11 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
           in: records.map((r) => r.reservation?.id).filter((id): id is string => !!id),
         },
         name: {
-          in: [ReservationCancelledDomainEvent.name, ReservationClosedDomainEvent.name],
+          in: [
+            ReservationCancelledDomainEvent.name,
+            ReservationClosedDomainEvent.name,
+            ReservationUpdatedDomainEvent.name,
+          ],
         },
       },
     });
@@ -194,13 +199,17 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
             events: [
               {
                 status: DomainReservationStatus.CONFIRMED,
+                cost: Integer.zero(),
                 date: DateValueObject.fromDate(record.reservation.createdAt),
               },
               ...allReservationsEvents
                 .filter(({ aggregateId }) => aggregateId === record.reservation?.id)
-                .map(({ createdAt, name }) => {
+                .map(({ createdAt, name, payload }) => {
+                  const payloadTyped = payload as { cost: { props: { value: number } } };
+
                   return {
                     status: mapStatusFromEventName(name),
+                    cost: new Integer({ value: payloadTyped.cost.props.value }),
                     date: DateValueObject.fromDate(createdAt),
                   };
                 }),

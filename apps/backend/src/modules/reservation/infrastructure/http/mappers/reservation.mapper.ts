@@ -70,8 +70,9 @@ export function mapReservationWishToDto({
       })),
       ...(reservation
         ? reservation.events.map((event) => ({
-            status: mapReservationStatusToWishStatus(event.status),
+            status: event.status ? mapReservationStatusToWishStatus(event.status) : undefined,
             date: event.date.value.toISOString(),
+            cost: event.cost.value,
           }))
         : []),
     ],
