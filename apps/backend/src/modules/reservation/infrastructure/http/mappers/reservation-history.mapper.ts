@@ -1,11 +1,10 @@
 import {
   ReservationEvent,
   ReservationWishWithHistory,
-  StatusUpdate,
 } from '@modules/reservation/domain/reservation-wish.read-models';
 import { ReservationWishStatus } from '@modules/reservation/domain/reservation-wish.types';
 import { ReservationStatus } from '@modules/reservation/domain/reservation.types';
-import { ReservationWishDto, ReservationWishStatusDto } from 'shared';
+import { ReservationWishDto, ReservationWishStatusDto, EventType } from 'shared';
 
 const mapWishStatusToDto = (status: ReservationWishStatus): ReservationWishStatusDto => {
   switch (status) {
@@ -33,21 +32,6 @@ const mapReservationStatusToDto = (status: ReservationStatus): ReservationWishSt
     default:
       throw new Error(`Unknown ReservationStatus: ${status}`);
   }
-};
-
-const mapStatusUpdateToDto = (
-  update: StatusUpdate,
-): { status: ReservationWishStatusDto; date: string } => {
-  const status =
-    typeof update.status === 'string' &&
-    (Object.values(ReservationWishStatus) as string[]).includes(update.status)
-      ? mapWishStatusToDto(update.status as ReservationWishStatus)
-      : mapReservationStatusToDto(update.status as ReservationStatus);
-
-  return {
-    status,
-    date: update.occurredAt.value.toISOString(),
-  };
 };
 
 const mapCostUpdateToDto = (event: ReservationEvent): { cost: number; date: string } => ({
@@ -82,8 +66,16 @@ export function mapReservationWishWithHistoryToDto(
         }
       : null,
     statusUpdates: [
-      ...wishHistory.statusUpdates.map(mapStatusUpdateToDto),
-      ...(reservationHistory?.statusUpdates.map(mapStatusUpdateToDto) ?? []),
+      ...wishHistory.statusUpdates.map((update) => ({
+        status: mapWishStatusToDto(update.status as ReservationWishStatus),
+        date: update.occurredAt.value.toISOString(),
+        type: EventType.WISH,
+      })),
+      ...(reservationHistory?.statusUpdates.map((update) => ({
+        status: mapReservationStatusToDto(update.status as ReservationStatus),
+        date: update.occurredAt.value.toISOString(),
+        type: EventType.RESERVATION,
+      })) ?? []),
     ],
     costUpdates: reservationHistory?.otherEvents.map(mapCostUpdateToDto) ?? [],
   };

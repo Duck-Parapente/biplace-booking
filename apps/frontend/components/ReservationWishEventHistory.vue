@@ -10,7 +10,11 @@
           class="px-2 py-0.5 rounded text-xs"
           :class="getConfigFromStatus(event.status).classes"
         >
-          {{ getConfigFromStatus(event.status).label }}
+          {{
+            (event.eventType === EventType.WISH ? 'Demande' : 'Réservation') +
+            ' ' +
+            getConfigFromStatus(event.status).label.toLowerCase()
+          }}
         </span>
       </div>
       <div v-else-if="event.type === 'cost'" class="flex items-center gap-1">
@@ -25,12 +29,12 @@
 </template>
 
 <script setup lang="ts">
-import { type ReservationWishStatusDto } from 'shared';
+import { type ReservationWishStatusDto, EventType } from 'shared';
 
 import { formatDateTime } from '~/composables/useDateHelpers';
 
 type EventItem =
-  | { type: 'status'; status: ReservationWishStatusDto; date: string }
+  | { type: 'status'; status: ReservationWishStatusDto; date: string; eventType: EventType }
   | { type: 'cost'; cost: number; date: string };
 
 interface Props {

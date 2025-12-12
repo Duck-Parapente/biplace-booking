@@ -84,6 +84,7 @@ const sortedEvents = computed(() => {
     type: 'status' as const,
     status: update.status,
     date: update.date,
+    eventType: update.type,
   }));
 
   const costEvents = props.wish.costUpdates.map((update) => ({

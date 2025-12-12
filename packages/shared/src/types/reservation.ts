@@ -20,6 +20,11 @@ export enum ReservationWishStatusDto {
   CLOSED = 'CLOSED',
 }
 
+export enum EventType {
+  WISH = 'WISH',
+  RESERVATION = 'RESERVATION',
+}
+
 export class ReservationDto {
   @IsUUID()
   @IsNotEmpty()
@@ -50,6 +55,10 @@ export class ReservationWishStatusUpdateDto {
   @IsNotEmpty()
   @IsDateString()
   date!: string;
+
+  @IsNotEmpty()
+  @IsEnum(EventType)
+  type!: EventType;
 }
 
 export class ReservationCostUpdateDto {
