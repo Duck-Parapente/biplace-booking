@@ -11,12 +11,34 @@
           placeholder="Rechercher un pack..."
           @select="handlePackSelect"
         />
+        <div v-if="isAdmin" class="mt-3 flex items-center justify-between">
+          <label class="flex items-center gap-2 text-sm cursor-pointer">
+            <span>Mode édition</span>
+            <button
+              type="button"
+              :class="[
+                editMode ? 'bg-primary-400' : 'bg-gray-200',
+                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2',
+              ]"
+              role="switch"
+              :aria-checked="editMode"
+              @click="editMode = !editMode"
+            >
+              <span
+                :class="[
+                  editMode ? 'translate-x-5' : 'translate-x-0',
+                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                ]"
+              />
+            </button>
+          </label>
+        </div>
       </div>
 
       <!-- Pack Totals -->
       <div
         v-if="selectedPackId && !loading && !error"
-        class="mb-6 bg-white p-2 rounded-lg shadow-sm"
+        class="mb-6 bg-yellow-50 p-2 rounded-lg shadow-sm"
       >
         <div class="flex gap-6 text-sm">
           <div>
@@ -56,10 +78,32 @@
               v-for="reservation in reservations"
               :key="reservation.id"
               class="border bg-white border-gray-300 rounded-lg p-3 hover:shadow-md transition"
+              :class="{ 'cursor-pointer hover:bg-gray-50': editMode }"
+              @click="handleReservationClick(reservation)"
             >
               <div class="flex justify-between items-start mb-2">
                 <DateDisplay :date="reservation.startingDate" />
-                <BaseTag v-if="reservation.flightLog" variant="success"> Clôturé </BaseTag>
+                <div class="flex flex-col items-end gap-1.5">
+                  <BaseTag
+                    v-if="reservation.status === ReservationWishStatusDto.CANCELLED"
+                    variant="danger"
+                  >
+                    Annulé
+                  </BaseTag>
+                  <BaseTag
+                    v-else-if="reservation.status === ReservationWishStatusDto.CLOSED"
+                    variant="success"
+                  >
+                    Clôturé
+                  </BaseTag>
+                  <BaseTag
+                    v-else-if="reservation.status === ReservationWishStatusDto.CONFIRMED"
+                    variant="gray"
+                  >
+                    Confirmé
+                  </BaseTag>
+                  <CostDisplay v-if="editMode" :cost="reservation.cost" />
+                </div>
               </div>
 
               <div v-if="reservation.userName" class="mb-2 text-sm flex items-center gap-2">
@@ -94,11 +138,18 @@
         </div>
       </div>
     </div>
+    <EditCostModal
+      :open="editModalOpen"
+      :reservation-id="editingReservation?.id || ''"
+      :current-cost="editingReservation?.cost || 0"
+      @close="closeEditModal"
+      @updated="handleCostUpdated"
+    />
   </main>
 </template>
 
 <script setup lang="ts">
-import type { PackReservationsDto } from 'shared';
+import { ReservationWishStatusDto, type PackReservationsDto, UserRoles } from 'shared';
 
 import type { AutocompleteOption } from '~/components/atoms/BaseAutocomplete.vue';
 
@@ -109,14 +160,20 @@ definePageMeta({
 
 const { callApi } = useApi();
 const { packs, getPacks } = usePack();
+const { hasRole } = useAuth();
+
+const isAdmin = computed(() => hasRole(UserRoles.ADMIN));
 
 const selectedPackId = ref<string | null>(null);
 const selectedPackLabel = ref<string>('');
-const reservations = ref<PackReservationsDto['reservations']>([]);
+const allReservations = ref<PackReservationsDto['reservations']>([]);
 const totalFlightsHours = ref<number>(0);
 const totalFlightsCount = ref<number>(0);
 const loading = ref<boolean>(false);
 const error = ref<string | null>(null);
+const editMode = ref<boolean>(false);
+const editModalOpen = ref<boolean>(false);
+const editingReservation = ref<PackReservationsDto['reservations'][0] | null>(null);
 
 const packOptions = computed<AutocompleteOption[]>(() => {
   return packs.value.map((pack) => ({
@@ -125,10 +182,18 @@ const packOptions = computed<AutocompleteOption[]>(() => {
   }));
 });
 
+const reservations = computed(() => {
+  return allReservations.value
+    .filter(
+      (reservation) => editMode.value || reservation.status !== ReservationWishStatusDto.CANCELLED,
+    )
+    .sort((a, b) => new Date(b.startingDate).getTime() - new Date(a.startingDate).getTime());
+});
+
 const handlePackSelect = async (packId: string) => {
   if (!packId) {
     selectedPackId.value = null;
-    reservations.value = [];
+    allReservations.value = [];
     return;
   }
 
@@ -144,10 +209,8 @@ const fetchPackReservations = async (packId: string) => {
   try {
     loading.value = true;
     error.value = null;
-    const data = await callApi<PackReservationsDto>(`/packs/${packId}/reservations`);
-    reservations.value = data.reservations.sort(
-      (a, b) => new Date(b.startingDate).getTime() - new Date(a.startingDate).getTime(),
-    );
+    const data = await callApi<PackReservationsDto>(`/reservations/pack?packId=${packId}`);
+    allReservations.value = data.reservations;
     totalFlightsHours.value = data.totalFlightsHours;
     totalFlightsCount.value = data.totalFlightsCount;
   } catch (err) {
@@ -157,6 +220,28 @@ const fetchPackReservations = async (packId: string) => {
     console.error('Failed to fetch pack reservations:', err);
   } finally {
     loading.value = false;
+  }
+};
+
+const handleReservationClick = (reservation: PackReservationsDto['reservations'][0]) => {
+  if (editMode.value) {
+    openEditModal(reservation);
+  }
+};
+
+const openEditModal = (reservation: PackReservationsDto['reservations'][0]) => {
+  editingReservation.value = reservation;
+  editModalOpen.value = true;
+};
+
+const closeEditModal = () => {
+  editModalOpen.value = false;
+  editingReservation.value = null;
+};
+
+const handleCostUpdated = async () => {
+  if (selectedPackId.value) {
+    await fetchPackReservations(selectedPackId.value);
   }
 };
 

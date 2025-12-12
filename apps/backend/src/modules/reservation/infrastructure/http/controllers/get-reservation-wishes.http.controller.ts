@@ -4,7 +4,7 @@ import { GetReservationWishesService } from '@modules/reservation/application/qu
 import { Controller, Logger, Get, UseGuards, Request } from '@nestjs/common';
 import { ReservationWishDto } from 'shared';
 
-import { mapReservationWishToDto } from '../mappers/reservation.mapper';
+import { mapReservationWishWithHistoryToDto } from '../mappers/reservation-history.mapper';
 
 @Controller('reservation-wishes')
 @UseGuards(JwtAuthGuard)
@@ -18,6 +18,6 @@ export class GetReservationWishesHttpController {
     @Request() { user: { id } }: { user: AuthenticatedUser },
   ): Promise<ReservationWishDto[]> {
     const reservationWishes = await this.getReservationWishesService.execute(id);
-    return reservationWishes.map(mapReservationWishToDto);
+    return reservationWishes.map(mapReservationWishWithHistoryToDto);
   }
 }

@@ -57,10 +57,10 @@ const selectedStatuses = ref<Set<ReservationWishStatusDto>>(
 );
 
 const getCurrentStatus = (wish: ReservationWishDto) => {
-  const sortedEvents = [...wish.events].sort(
+  const sortedStatusUpdates = [...wish.statusUpdates].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
-  return sortedEvents[0]?.status ?? ReservationWishStatusDto.PENDING;
+  return sortedStatusUpdates[0]?.status ?? ReservationWishStatusDto.PENDING;
 };
 
 const availableStatuses = computed(() => {

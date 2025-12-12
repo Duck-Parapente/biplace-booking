@@ -51,6 +51,8 @@ interface PackReservation {
   id: UUID;
   startingDate: DateValueObject;
   endingDate: DateValueObject;
+  status: ReservationStatus;
+  cost: Integer;
   userName?: string;
   flightLog?: FlightLogProps;
 }

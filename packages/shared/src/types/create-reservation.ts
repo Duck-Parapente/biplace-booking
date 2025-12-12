@@ -65,3 +65,9 @@ export class CloseReservationDto {
   @IsBoolean()
   shouldWarnPackOwner!: boolean;
 }
+
+export class UpdateReservationDto {
+  @IsNotEmpty()
+  @IsInt()
+  cost!: number;
+}

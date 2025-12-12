@@ -1,10 +1,6 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
-import { ReservationWishEntity } from './reservation-wish.entity';
-import { ReservationEntity } from './reservation.entity';
-import { ReservationStatus } from './reservation.types';
-
 interface BaseReservationWishProps {
   packChoices: UUID[];
   publicComment?: string;
@@ -27,14 +23,3 @@ export enum ReservationWishStatus {
   REFUSED = 'REFUSED',
   CONFIRMED = 'CONFIRMED',
 }
-
-export type ReservationWishWithReservation = {
-  reservationWish: {
-    entity: ReservationWishEntity;
-    events: { status: ReservationWishStatus; date: DateValueObject }[];
-  };
-  reservation: {
-    entity: ReservationEntity;
-    events: { status: ReservationStatus; date: DateValueObject }[];
-  } | null;
-};

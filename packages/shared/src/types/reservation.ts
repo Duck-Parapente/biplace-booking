@@ -20,6 +20,11 @@ export enum ReservationWishStatusDto {
   CLOSED = 'CLOSED',
 }
 
+export enum EventType {
+  WISH = 'WISH',
+  RESERVATION = 'RESERVATION',
+}
+
 export class ReservationDto {
   @IsUUID()
   @IsNotEmpty()
@@ -42,10 +47,24 @@ export class ReservationDto {
   cost!: number;
 }
 
-export class ReservationWishEventDto {
+export class ReservationWishStatusUpdateDto {
   @IsNotEmpty()
   @IsEnum(ReservationWishStatusDto)
   status!: ReservationWishStatusDto;
+
+  @IsNotEmpty()
+  @IsDateString()
+  date!: string;
+
+  @IsNotEmpty()
+  @IsEnum(EventType)
+  type!: EventType;
+}
+
+export class ReservationCostUpdateDto {
+  @IsNotEmpty()
+  @IsInt()
+  cost!: number;
 
   @IsNotEmpty()
   @IsDateString()
@@ -78,7 +97,10 @@ export class ReservationWishDto {
   @IsArray()
   @ArrayNotEmpty()
   @ArrayMinSize(1)
-  events!: ReservationWishEventDto[];
+  statusUpdates!: ReservationWishStatusUpdateDto[];
+
+  @IsArray()
+  costUpdates!: ReservationCostUpdateDto[];
 
   @IsNotEmpty()
   @IsBoolean()
@@ -106,7 +128,7 @@ export class FlightLogDto {
   publicComment?: string | null;
 }
 
-class FlightBookPackReservationDto {
+class PackReservationDto {
   @IsUUID()
   @IsNotEmpty()
   id!: string;
@@ -118,6 +140,14 @@ class FlightBookPackReservationDto {
   @IsNotEmpty()
   @IsDateString()
   endingDate!: string;
+
+  @IsNotEmpty()
+  @IsEnum(ReservationWishStatusDto)
+  status!: ReservationWishStatusDto;
+
+  @IsNotEmpty()
+  @IsInt()
+  cost!: number;
 
   @IsOptional()
   @IsString()
@@ -132,7 +162,7 @@ export class PackReservationsDto {
   @ArrayNotEmpty()
   @ArrayMinSize(1)
   @IsNotEmpty({ each: true })
-  reservations!: FlightBookPackReservationDto[];
+  reservations!: PackReservationDto[];
 
   @IsInt()
   @IsNotEmpty()

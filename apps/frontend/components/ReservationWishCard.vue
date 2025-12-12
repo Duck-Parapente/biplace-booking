@@ -5,14 +5,10 @@
       <span class="px-2 py-1 text-xs font-medium rounded shadow-sm" :class="statusConfig.classes">
         {{ statusConfig.label }}
       </span>
-      <div
-        v-if="wish.reservation && wish.reservation.cost > 0"
-        class="flex items-center gap-1 text-xs text-primary-700 font-semibold"
-        aria-label="Coût de réservation"
-      >
-        <span class="text-primary-800">{{ wish.reservation.cost }}</span>
-        <IconDuck class="w-4 h-4 fill-primary-800" />
-      </div>
+      <CostDisplay
+        v-if="wish.reservation && ReservationWishStatusDto.CONFIRMED !== currentStatus"
+        :cost="wish.reservation.cost"
+      />
     </div>
 
     <div class="p-4">
@@ -83,7 +79,21 @@ const props = defineProps<Props>();
 const showHistory = ref(false);
 
 const sortedEvents = computed(() => {
-  return [...props.wish.events].sort(
+  // Combine status updates and cost updates into a single timeline
+  const statusEvents = props.wish.statusUpdates.map((update) => ({
+    type: 'status' as const,
+    status: update.status,
+    date: update.date,
+    eventType: update.type,
+  }));
+
+  const costEvents = props.wish.costUpdates.map((update) => ({
+    type: 'cost' as const,
+    cost: update.cost,
+    date: update.date,
+  }));
+
+  return [...statusEvents, ...costEvents].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
 });

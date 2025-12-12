@@ -7,21 +7,21 @@ import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { ReservationWishForAttribution } from '@libs/types/accross-modules';
 import { ReservationCancelledDomainEvent } from '@modules/reservation/domain/events/reservation-cancelled.domain-event';
 import { ReservationClosedDomainEvent } from '@modules/reservation/domain/events/reservation-closed.domain-event';
+import { ReservationUpdatedDomainEvent } from '@modules/reservation/domain/events/reservation-updated.domain-event';
 import { ReservationWishStatusUpdatedDomainEvent } from '@modules/reservation/domain/events/reservation-wish-updated.domain-event';
 import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
 import {
   PENDING_STATUSES,
   ReservationWishEntity,
 } from '@modules/reservation/domain/reservation-wish.entity';
-import {
-  ReservationWishStatus as DomainReservationWishStatus,
-  ReservationWishWithReservation,
-} from '@modules/reservation/domain/reservation-wish.types';
-import { ReservationStatus as DomainReservationStatus } from '@modules/reservation/domain/reservation.types';
+import { ReservationWishStatus as DomainReservationWishStatus } from '@modules/reservation/domain/reservation-wish.types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ReservationWish, ReservationWishStatus } from '@prisma/client';
 
-import { mapStatusFromEventName, toEntity as toReservationEntity } from './reservation.repository';
+import { ReservationWishWithHistory } from '../../domain/reservation-wish.read-models';
+
+import { buildReservationHistory, buildReservationWishHistory } from './event-history.mapper';
+import { toEntity as toReservationEntity } from './reservation.repository';
 
 const mapStatus = (status: ReservationWishStatus): DomainReservationWishStatus => {
   switch (status) {
@@ -136,7 +136,7 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
     this.logger.log(`ReservationWish updated: ${reservationWish.id.uuid}`);
   }
 
-  async findAllForUser(userId: UUID): Promise<ReservationWishWithReservation[]> {
+  async findAllWithHistoryForUser(userId: UUID): Promise<ReservationWishWithHistory[]> {
     const records = await prisma.reservationWish.findMany({
       where: {
         userId: userId.uuid,
@@ -150,64 +150,49 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
       },
     });
 
-    const allWishStatusEvents = await prisma.event.findMany({
+    const wishStatusEvents = await prisma.event.findMany({
       where: {
         aggregateId: { in: records.map(({ id }) => id) },
         name: ReservationWishStatusUpdatedDomainEvent.name,
       },
     });
 
-    const allReservationsEvents = await prisma.event.findMany({
-      where: {
-        aggregateId: {
-          in: records.map((r) => r.reservation?.id).filter((id): id is string => !!id),
-        },
-        name: {
-          in: [ReservationCancelledDomainEvent.name, ReservationClosedDomainEvent.name],
-        },
-      },
-    });
+    const reservationIds = records.map((r) => r.reservation?.id).filter((id): id is string => !!id);
 
-    return records.map((record) => ({
-      reservationWish: {
-        entity: toEntity(record),
-        events: [
-          {
-            status: DomainReservationWishStatus.PENDING,
-            date: DateValueObject.fromDate(record.createdAt),
-          },
-          ...allWishStatusEvents
-            .filter(({ aggregateId }) => aggregateId === record.id)
-            .map(({ payload, createdAt }) => {
-              const payloadTyped = payload as { status: string };
-              return {
-                status: payloadTyped.status as DomainReservationWishStatus,
-                date: DateValueObject.fromDate(createdAt),
-              };
-            })
-            .filter((event) => event.status !== DomainReservationWishStatus.CONFIRMED),
-        ],
-      },
-      reservation: record.reservation
-        ? {
-            entity: toReservationEntity(record.reservation),
-            events: [
-              {
-                status: DomainReservationStatus.CONFIRMED,
-                date: DateValueObject.fromDate(record.reservation.createdAt),
+    const reservationEvents =
+      reservationIds.length > 0
+        ? await prisma.event.findMany({
+            where: {
+              aggregateId: { in: reservationIds },
+              name: {
+                in: [
+                  ReservationCancelledDomainEvent.name,
+                  ReservationClosedDomainEvent.name,
+                  ReservationUpdatedDomainEvent.name,
+                ],
               },
-              ...allReservationsEvents
-                .filter(({ aggregateId }) => aggregateId === record.reservation?.id)
-                .map(({ createdAt, name }) => {
-                  return {
-                    status: mapStatusFromEventName(name),
-                    date: DateValueObject.fromDate(createdAt),
-                  };
-                }),
-            ],
-          }
-        : null,
-    }));
+            },
+          })
+        : [];
+
+    // Map to domain read models
+    return records.map((record) => {
+      const wishEntity = toEntity(record);
+      const wishEvents = wishStatusEvents.filter(({ aggregateId }) => aggregateId === record.id);
+      const wishHistory = buildReservationWishHistory(wishEntity, wishEvents);
+
+      const reservationHistory = record.reservation
+        ? (() => {
+            const reservationEntity = toReservationEntity(record.reservation);
+            const resEvents = reservationEvents.filter(
+              ({ aggregateId }) => aggregateId === record.reservation?.id,
+            );
+            return buildReservationHistory(reservationEntity, resEvents);
+          })()
+        : null;
+
+      return new ReservationWishWithHistory(wishHistory, reservationHistory);
+    });
   }
 
   async findPendingAndRefusedByStartingDate(
