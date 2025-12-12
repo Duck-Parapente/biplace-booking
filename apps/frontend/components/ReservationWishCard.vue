@@ -79,7 +79,20 @@ const props = defineProps<Props>();
 const showHistory = ref(false);
 
 const sortedEvents = computed(() => {
-  return [...props.wish.events].sort(
+  // Combine status updates and cost updates into a single timeline
+  const statusEvents = props.wish.statusUpdates.map((update) => ({
+    type: 'status' as const,
+    status: update.status,
+    date: update.date,
+  }));
+
+  const costEvents = props.wish.costUpdates.map((update) => ({
+    type: 'cost' as const,
+    cost: update.cost,
+    date: update.date,
+  }));
+
+  return [...statusEvents, ...costEvents].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
 });

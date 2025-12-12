@@ -5,9 +5,6 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { PackSummary } from '@libs/types/accross-modules';
-import { ReservationCancelledDomainEvent } from '@modules/reservation/domain/events/reservation-cancelled.domain-event';
-import { ReservationClosedDomainEvent } from '@modules/reservation/domain/events/reservation-closed.domain-event';
-import { ReservationUpdatedDomainEvent } from '@modules/reservation/domain/events/reservation-updated.domain-event';
 import { ReservationRepositoryPort } from '@modules/reservation/domain/ports/reservation.repository.port';
 import { ReservationEntity } from '@modules/reservation/domain/reservation.entity';
 import {
@@ -28,19 +25,6 @@ const mapStatus = (status: ReservationStatus): DomainReservationStatus => {
       return DomainReservationStatus.CLOSED;
     default:
       throw new Error(`Unknown ReservationStatus: ${status}`);
-  }
-};
-
-export const mapStatusFromEventName = (eventName: string): DomainReservationStatus | undefined => {
-  switch (eventName) {
-    case ReservationCancelledDomainEvent.name:
-      return DomainReservationStatus.CANCELLED;
-    case ReservationClosedDomainEvent.name:
-      return DomainReservationStatus.CLOSED;
-    case ReservationUpdatedDomainEvent.name:
-      return undefined;
-    default:
-      throw new Error(`Unknown event name for ReservationStatus mapping: ${eventName}`);
   }
 };
 

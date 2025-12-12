@@ -42,14 +42,20 @@ export class ReservationDto {
   cost!: number;
 }
 
-export class ReservationWishEventDto {
-  @IsOptional()
+export class ReservationWishStatusUpdateDto {
+  @IsNotEmpty()
   @IsEnum(ReservationWishStatusDto)
-  status?: ReservationWishStatusDto;
+  status!: ReservationWishStatusDto;
 
-  @IsOptional()
+  @IsNotEmpty()
+  @IsDateString()
+  date!: string;
+}
+
+export class ReservationCostUpdateDto {
+  @IsNotEmpty()
   @IsInt()
-  cost?: number;
+  cost!: number;
 
   @IsNotEmpty()
   @IsDateString()
@@ -82,7 +88,10 @@ export class ReservationWishDto {
   @IsArray()
   @ArrayNotEmpty()
   @ArrayMinSize(1)
-  events!: ReservationWishEventDto[];
+  statusUpdates!: ReservationWishStatusUpdateDto[];
+
+  @IsArray()
+  costUpdates!: ReservationCostUpdateDto[];
 
   @IsNotEmpty()
   @IsBoolean()

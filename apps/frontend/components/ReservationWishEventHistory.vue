@@ -5,7 +5,7 @@
       :key="index"
       class="flex items-center justify-between text-xs"
     >
-      <div v-if="event.status" class="flex items-center gap-2">
+      <div v-if="event.type === 'status'" class="flex items-center gap-2">
         <span
           class="px-2 py-0.5 rounded text-xs"
           :class="getConfigFromStatus(event.status).classes"
@@ -13,7 +13,7 @@
           {{ getConfigFromStatus(event.status).label }}
         </span>
       </div>
-      <div v-else-if="event.cost !== undefined" class="flex items-center gap-1">
+      <div v-else-if="event.type === 'cost'" class="flex items-center gap-1">
         <span class="text-gray-500 italic text-xs">Mise à jour manuelle:</span>
         <CostDisplay :cost="event.cost" />
       </div>
@@ -25,12 +25,16 @@
 </template>
 
 <script setup lang="ts">
-import { type ReservationWishEventDto } from 'shared';
+import { type ReservationWishStatusDto } from 'shared';
 
 import { formatDateTime } from '~/composables/useDateHelpers';
 
+type EventItem =
+  | { type: 'status'; status: ReservationWishStatusDto; date: string }
+  | { type: 'cost'; cost: number; date: string };
+
 interface Props {
-  events: ReservationWishEventDto[];
+  events: EventItem[];
 }
 
 const props = defineProps<Props>();
