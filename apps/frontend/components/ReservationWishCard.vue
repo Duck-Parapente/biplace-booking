@@ -93,9 +93,17 @@ const sortedEvents = computed(() => {
     date: update.date,
   }));
 
-  return [...statusEvents, ...costEvents].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  );
+  return [...statusEvents, ...costEvents].sort((a, b) => {
+    const timeA = new Date(a.date).getTime();
+    const timeB = new Date(b.date).getTime();
+
+    if (timeB !== timeA) {
+      return timeB - timeA;
+    }
+
+    // If same time, cost events should come first (lower index)
+    return a.type === 'cost' ? -1 : 1;
+  });
 });
 
 const toggleHistory = () => {
