@@ -18,7 +18,7 @@
         </span>
       </div>
       <div v-else-if="event.type === 'cost'" class="flex items-center gap-1">
-        <span class="text-gray-500 italic text-xs">Mise à jour manuelle:</span>
+        <span class="text-gray-500 text-xs">Canardos mis à jour:</span>
         <CostDisplay :cost="event.cost" />
       </div>
       <span class="text-gray-500">
