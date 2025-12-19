@@ -49,12 +49,10 @@ export class CreateReservationDto {
 export class CloseReservationDto {
   @IsNotEmpty()
   @IsInt()
-  @IsPositive()
   flightTimeMinutes!: number;
 
   @IsNotEmpty()
   @IsInt()
-  @IsPositive()
   flightsCount!: number;
 
   @IsOptional()
