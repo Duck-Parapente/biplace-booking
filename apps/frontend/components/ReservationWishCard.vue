@@ -98,11 +98,10 @@ const sortedEvents = computed(() => {
     const timeB = new Date(b.date).getTime();
 
     if (timeB !== timeA) {
-      return timeB - timeA;
+      return timeA - timeB;
     }
 
-    // If same time, cost events should come first (lower index)
-    return a.type === 'cost' ? -1 : 1;
+    return a.type === 'cost' ? 1 : -1;
   });
 });
 

@@ -51,6 +51,20 @@ export function formatDateTime(date: Date | string): string {
 }
 
 /**
+ * Format a date with time including seconds (e.g., "28/11/2023 à 14:30:45")
+ */
+export function formatDateTimeWithSeconds(date: Date | string): string {
+  const d = toDate(date);
+  const dateStr = formatDate(d);
+  const timeStr = d.toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+  return `${dateStr} à ${timeStr}`;
+}
+
+/**
  * Check if a date is today
  */
 export function isToday(date: Date | string): boolean {
