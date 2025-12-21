@@ -4,7 +4,7 @@
       {{ formatDateLong(date).day }}
       {{ formatDateLong(date).month }}
     </p>
-    <p class="text-gray-400 font-normal text-sm">({{ formatDateLong(date).weekday }})</p>
+    <p class="text-gray-400 font-normal text-xs">{{ formatDateLong(date).weekday }}</p>
   </div>
 </template>
 

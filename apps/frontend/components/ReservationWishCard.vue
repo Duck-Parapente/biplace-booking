@@ -1,24 +1,31 @@
 <template>
-  <div class="border bg-gray-50 border-gray-300 rounded-lg hover:shadow-md transition relative">
+  <div class="border bg-white border-gray-300 rounded-lg hover:shadow-md transition relative">
     <!-- Status Badge - Top Right Corner -->
-    <div class="absolute top-3 right-3 flex flex-col items-end gap-1.5">
-      <span class="px-2 py-1 text-xs font-medium rounded shadow-sm" :class="statusConfig.classes">
-        {{ statusConfig.label }}
-      </span>
-      <CostDisplay
+    <div class="absolute top-3 right-3 flex flex-col items-end">
+      <button
+        @click="toggleHistory"
+        class="px-2 py-1 text-xs font-medium rounded inline-flex items-center gap-1 transition-all hover:opacity-80"
+        :class="statusConfig.classes"
+      >
+        <IconChevronRight
+          class="w-3 h-3 transition-transform"
+          :class="showHistory ? 'rotate-90' : ''"
+        />
+        <span>{{ statusConfig.label }}</span>
+      </button>
+      <span
         v-if="wish.reservation && ReservationWishStatusDto.CONFIRMED !== currentStatus"
-        :cost="wish.reservation.cost"
-      />
+        class="inline-flex items-center text-gray-400 mt-1"
+      >
+        <CostDisplay :cost="wish.reservation.cost" />
+      </span>
     </div>
 
-    <div class="p-4">
+    <div class="p-3">
       <div class="flex-1">
-        <div class="text-sm text-gray-600 space-y-1">
+        <div class="text-sm text-gray-600 space-y-2">
           <DateDisplay :date="wish.startingDate" />
-          <div class="flex flex-wrap gap-1 mt-2 items-center">
-            <span class="text-xs text-gray-500">
-              {{ 'Mes préférences:' }}
-            </span>
+          <div class="flex flex-wrap gap-1 mt-3 items-center">
             <BaseTag
               v-for="packId in wish.packChoices"
               :key="packId"
@@ -27,19 +34,10 @@
               {{ getPackLabel(packId) }}
             </BaseTag>
           </div>
-          <p v-if="wish.publicComment" class="italic text-gray-700">"{{ wish.publicComment }}"</p>
-
-          <button
-            @click="toggleHistory"
-            class="text-xs text-gray-600 hover:text-gray-800 hover:underline mt-2 flex items-center gap-1"
-          >
-            <IconChevronRight
-              class="w-3 h-3 transition-transform"
-              :class="showHistory ? 'rotate-90' : ''"
-            />
-            {{ showHistory ? 'Masquer' : 'Voir' }} l'historique
-          </button>
-          <ReservationWishEventHistory v-if="showHistory" :events="sortedEvents" />
+          <p v-if="wish.publicComment" class="text-gray-700 rounded-lg bg-gray-100 p-3">
+            ℹ️ {{ wish.publicComment }}
+          </p>
+          <ReservationWishEventHistory :events="sortedEvents" :show-history="showHistory" />
         </div>
       </div>
     </div>
@@ -54,7 +52,7 @@
       v-if="canCancel"
       @click="handleCancel(wish)"
       :disabled="cancelling"
-      class="w-full bg-red-100 hover:bg-red-200 border-t border-red-200 p-3 text-sm font-medium text-red-800 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-b-lg"
+      class="w-full bg-red-50 hover:bg-red-100 border-t border-red-1000 p-3 text-sm font-medium text-red-800 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-b-lg"
     >
       <IconX class="w-4 h-4" />
       {{ wish.reservation?.isCancelable ? 'Annuler la réservation' : 'Annuler cette demande' }}
@@ -77,6 +75,10 @@ const { cancelReservation } = useReservation();
 const props = defineProps<Props>();
 
 const showHistory = ref(false);
+
+const toggleHistory = () => {
+  showHistory.value = !showHistory.value;
+};
 
 const sortedEvents = computed(() => {
   // Combine status updates and cost updates into a single timeline
@@ -104,10 +106,6 @@ const sortedEvents = computed(() => {
     return a.type === 'cost' ? 1 : -1;
   });
 });
-
-const toggleHistory = () => {
-  showHistory.value = !showHistory.value;
-};
 
 const getPackLabel = (packId: string): string => {
   const pack = props.packs.find(({ id }) => id === packId);

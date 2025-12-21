@@ -1,14 +1,14 @@
 <template>
-  <div class="mt-2 p-2 bg-white rounded border border-gray-200 space-y-3">
+  <div class="mt-2 p-3 bg-white rounded border border-gray-200 space-y-2" v-if="showHistory">
     <div
       v-for="(group, groupIndex) in groupedEvents"
       :key="groupIndex"
-      class="pb-3 border-b border-gray-200 last:border-b-0 last:pb-0"
+      class="pb-2 border-b border-gray-100 last:border-b-0 last:pb-0"
     >
-      <div class="flex items-start justify-between gap-2">
+      <div class="flex items-start justify-between gap-1">
         <div class="flex-1 space-y-1">
           <div v-for="(event, eventIndex) in group.events" :key="eventIndex">
-            <div v-if="event.type === 'status'" class="flex items-center gap-2">
+            <div v-if="event.type === 'status'" class="flex items-center">
               <span
                 class="px-2 py-0.5 rounded text-xs"
                 :class="getConfigFromStatus(event.status).classes"
@@ -20,8 +20,11 @@
                 }}
               </span>
             </div>
-            <div v-else-if="event.type === 'cost'" class="flex items-center gap-1 italic text-xs">
-              <span class="text-gray-500">Canardos mis à jour:</span>
+            <div
+              v-else-if="event.type === 'cost'"
+              class="flex items-center gap-1 text-xs text-gray-400"
+            >
+              <span>Mise à jour des points:</span>
               <CostDisplay :cost="event.cost" />
             </div>
           </div>
@@ -45,6 +48,7 @@ type EventItem =
 
 interface Props {
   events: EventItem[];
+  showHistory: boolean;
 }
 
 const props = defineProps<Props>();

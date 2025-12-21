@@ -18,13 +18,13 @@ const props = withDefaults(defineProps<Props>(), {
 
 const variantClasses = computed(() => {
   const variants = {
-    primary: 'bg-primary-100 text-primary-800',
-    secondary: 'bg-secondary-100 text-secondary-800',
-    success: 'bg-green-100 text-green-800',
-    warning: 'bg-yellow-100 text-yellow-800',
-    danger: 'bg-red-100 text-red-800',
-    info: 'bg-blue-100 text-blue-800',
-    gray: 'bg-gray-100 text-gray-800',
+    primary: 'bg-primary-50 text-primary-700 border border-primary-700',
+    secondary: 'bg-secondary-50 text-secondary-700 border border-secondary-700',
+    success: 'bg-green-50 text-green-700 border border-green-700',
+    warning: 'bg-yellow-50 text-yellow-700 border border-yellow-700',
+    danger: 'bg-red-50 text-red-700 border border-red-700',
+    info: 'bg-blue-50 text-blue-700 border border-blue-700',
+    gray: 'bg-gray-50 text-gray-700 border border-gray-700',
   };
   return variants[props.variant];
 });

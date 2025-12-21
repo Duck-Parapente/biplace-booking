@@ -6,24 +6,24 @@ export const useReservationWishStatus = () => {
   const STATUS_CONFIG: Record<ReservationWishStatusDto, ConfigType> = {
     [ReservationWishStatusDto.PENDING]: {
       label: 'En attente',
-      classes: 'bg-yellow-200 text-yellow-800',
+      classes: 'bg-yellow-50 text-yellow-700 border border-yellow-700',
     },
     [ReservationWishStatusDto.CONFIRMED]: {
       label: 'Confirmée',
-      classes: 'bg-green-200 text-green-800',
+      classes: 'bg-green-50 text-green-700 border border-green-700',
     },
     [ReservationWishStatusDto.CLOSED]: {
       label: 'Clôturée',
-      classes: 'bg-green-200 text-green-800',
+      classes: 'bg-green-50 text-green-700 border border-green-700',
     },
     [ReservationWishStatusDto.REFUSED]: {
       label: 'Refusée',
-      classes: 'bg-red-200 text-red-800',
+      classes: 'bg-red-50 text-red-700 border border-red-700',
       infoText: "Les packs sélectionnés ont été attribués à d'autres pilotes pour le moment.",
     },
     [ReservationWishStatusDto.CANCELLED]: {
       label: 'Annulée',
-      classes: 'bg-gray-200 text-gray-800',
+      classes: 'bg-gray-50 text-gray-700 border border-gray-700',
     },
   };
 

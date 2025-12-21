@@ -1,11 +1,8 @@
 <template>
-  <div
-    class="flex items-center gap-1 text-xs text-primary-700 font-semibold"
-    aria-label="Coût de réservation"
-  >
-    <span class="text-primary-800">{{ cost }}</span>
-    <IconDuck class="w-4 h-4 fill-primary-800" />
-  </div>
+  <span class="inline-flex items-center gap-1 text-xs font-medium" aria-label="Coût de réservation">
+    <span>{{ cost }}</span>
+    <IconDuck class="w-3.5 h-3.5" />
+  </span>
 </template>
 
 <script setup lang="ts">

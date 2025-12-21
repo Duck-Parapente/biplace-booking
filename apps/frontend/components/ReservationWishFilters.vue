@@ -4,7 +4,7 @@
       v-for="status in availableStatuses"
       :key="status"
       @click="$emit('toggle', status)"
-      class="px-3 py-1.5 text-sm font-medium rounded-lg transition"
+      class="px-3 py-1.5 text-sm font-medium rounded-full transition"
       :class="
         selectedStatuses.has(status)
           ? 'bg-secondary-600 text-white'
