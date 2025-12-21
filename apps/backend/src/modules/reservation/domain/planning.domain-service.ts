@@ -19,11 +19,11 @@ export class PlanningDomainService {
     reservations: PlanningReservationDto[],
     pendingWishes: ReservationWishProps[],
   ): PlanningData[] {
-    const today = DateValueObject.now();
+    const today = DateValueObject.now().startOfDayInUTC(0);
     const dates = this.generateDateRange(startDate, endDate);
 
     return dates.map((date) => {
-      const isPastDate = date.value <= today.value;
+      const isPastDate = date.value < today.value;
 
       const packsForDate = this.buildPacksForDate(
         date,
