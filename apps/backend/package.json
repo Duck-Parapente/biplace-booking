@@ -36,6 +36,7 @@
     "form-data": "4.0.5",
     "jwks-rsa": "3.2.0",
     "mailgun.js": "12.2.0",
+    "munkres": "2.0.4",
     "nestjs-console": "10.0.0",
     "nestjs-pino": "4.4.1",
     "newrelic": "13.6.2",

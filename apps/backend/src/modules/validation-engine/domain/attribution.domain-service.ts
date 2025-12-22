@@ -1,176 +1,236 @@
 import { Injectable } from '@nestjs/common';
+import munkres from 'munkres';
 
 import { Attribution, BaseValidationEngineProps } from './validation-engine.types';
 
 type ReservationWish = BaseValidationEngineProps['reservationWishes'][number];
 type Pack = BaseValidationEngineProps['availablePacks'][number];
-type PackId = Pack['id'];
+
+interface AssignmentData {
+  packIds: (string | undefined)[];
+  wishes: ReservationWish[];
+  costMatrix: bigint[][];
+  incompatibleWeight: bigint;
+}
 
 @Injectable()
 export class AttributionDomainService {
   getAttributions(props: BaseValidationEngineProps): Attribution[] {
-    const { reservationWishes } = props;
-    const attributions: Attribution[] = [];
-    const assignedPacks = new Set<string>();
+    const { reservationWishes, availablePacks } = props;
 
-    const sortedWishes = this.sortWishesByPriority(reservationWishes);
-
-    for (let i = 0; i < sortedWishes.length; i++) {
-      const wish = sortedWishes[i];
-      const availablePackChoices = this.filterAvailablePackChoices(
-        wish,
-        assignedPacks,
-        props.availablePacks,
-      );
-
-      if (availablePackChoices.length === 0) {
-        continue;
-      }
-
-      const remainingWishes = sortedWishes.slice(i + 1);
-      const packScores = this.calculatePackImpactScores(
-        availablePackChoices,
-        remainingWishes,
-        assignedPacks,
-        props.availablePacks,
-      );
-
-      const selectedPackId = this.selectOptimalPack(availablePackChoices, packScores);
-
-      attributions.push({
-        reservationWishId: wish.id,
-        assignedPackId: selectedPackId,
-      });
-      assignedPacks.add(selectedPackId.uuid);
+    if (reservationWishes.length === 0) {
+      return [];
     }
+
+    // Build the assignment data and cost matrix
+    const assignmentData = this.buildAssignmentData(reservationWishes, availablePacks);
+
+    // Run Munkres algorithm to find optimal assignment
+    const resultMatrix = munkres(assignmentData.costMatrix);
+
+    // Build final attributions from the result
+    const attributions = this.buildAttributions(resultMatrix, assignmentData);
 
     return attributions;
   }
 
+  private buildAssignmentData(
+    reservationWishes: ReservationWish[],
+    availablePacks: Pack[],
+  ): AssignmentData {
+    const sortedWishes = this.sortWishesByPriority(reservationWishes);
+    const increments = this.computeWeightIncrements(sortedWishes, availablePacks);
+    const allPacks = new Map<string, number>();
+
+    const { costMatrix, sum } = this.buildCostMatrix(
+      sortedWishes,
+      availablePacks,
+      increments,
+      allPacks,
+    );
+
+    const incompatibleWeight = sum + BigInt(1);
+    const squaredCostMatrix = this.squareCostMatrix(
+      costMatrix,
+      allPacks.size,
+      sortedWishes.length,
+      incompatibleWeight,
+    );
+    const packIds = this.convertPackMapToArray(allPacks);
+
+    return {
+      packIds,
+      wishes: sortedWishes,
+      costMatrix: squaredCostMatrix,
+      incompatibleWeight,
+    };
+  }
+
+  private computeWeightIncrements(
+    sortedWishes: ReservationWish[],
+    availablePacks: Pack[],
+  ): bigint[] {
+    return sortedWishes
+      .slice()
+      .reverse()
+      .reduce<{ increments: bigint[]; weightIncrement: bigint }>(
+        (acc, wish) => {
+          const availableChoices = this.getAvailablePackChoices(wish, availablePacks);
+          const choicesCount = BigInt(availableChoices.length);
+
+          const nextWeightIncrement =
+            (acc.weightIncrement * choicesCount * (choicesCount + BigInt(1))) / BigInt(2) +
+            BigInt(1);
+
+          return {
+            increments: [acc.weightIncrement, ...acc.increments],
+            weightIncrement: nextWeightIncrement,
+          };
+        },
+        { increments: [], weightIncrement: BigInt(1) },
+      ).increments;
+  }
+
+  private buildCostMatrix(
+    sortedWishes: ReservationWish[],
+    availablePacks: Pack[],
+    increments: bigint[],
+    allPacks: Map<string, number>,
+  ): { costMatrix: bigint[][]; sum: bigint } {
+    return sortedWishes.reduce<{
+      costMatrix: bigint[][];
+      sum: bigint;
+      previousAccumulatedLine: bigint;
+      weight: bigint;
+      wishIndex: number;
+    }>(
+      (acc, wish) => {
+        const availableChoices = this.getAvailablePackChoices(wish, availablePacks);
+
+        const { costs, newSum, newWeight } = this.buildCostsForWish(
+          availableChoices,
+          allPacks,
+          acc.weight,
+          acc.previousAccumulatedLine,
+          acc.sum,
+          increments[acc.wishIndex],
+        );
+
+        const nextPreviousAccumulatedLine = acc.previousAccumulatedLine + newWeight;
+
+        return {
+          costMatrix: [...acc.costMatrix, costs],
+          sum: newSum,
+          previousAccumulatedLine: nextPreviousAccumulatedLine,
+          weight: newWeight + BigInt(1),
+          wishIndex: acc.wishIndex + 1,
+        };
+      },
+      {
+        costMatrix: [],
+        sum: BigInt(0),
+        previousAccumulatedLine: BigInt(0),
+        weight: BigInt(0),
+        wishIndex: 0,
+      },
+    );
+  }
+
+  private buildCostsForWish(
+    availableChoices: Pack[],
+    allPacks: Map<string, number>,
+    initialWeight: bigint,
+    previousAccumulatedLine: bigint,
+    initialSum: bigint,
+    increment: bigint,
+  ): { costs: bigint[]; newSum: bigint; newWeight: bigint } {
+    return availableChoices.reduce<{
+      costs: bigint[];
+      newSum: bigint;
+      newWeight: bigint;
+    }>(
+      (packAcc, pack) => {
+        let packIndex = allPacks.get(pack.id.uuid);
+        if (packIndex === undefined) {
+          packIndex = allPacks.size;
+          allPacks.set(pack.id.uuid, packIndex);
+        }
+
+        const cost = packAcc.newWeight + previousAccumulatedLine;
+        packAcc.costs[packIndex] = cost;
+
+        return {
+          costs: packAcc.costs,
+          newSum: packAcc.newSum + cost,
+          newWeight: packAcc.newWeight + increment,
+        };
+      },
+      { costs: [], newSum: initialSum, newWeight: initialWeight },
+    );
+  }
+
+  private squareCostMatrix(
+    costMatrix: bigint[][],
+    packsCount: number,
+    wishesCount: number,
+    incompatibleWeight: bigint,
+  ): bigint[][] {
+    const maxDim = Math.max(packsCount, wishesCount);
+    return costMatrix.map((row) =>
+      Array.from({ length: maxDim }, (_, j) => row[j] ?? incompatibleWeight),
+    );
+  }
+
+  private convertPackMapToArray(allPacks: Map<string, number>): (string | undefined)[] {
+    const packIds = Array.from({ length: allPacks.size }, () => undefined as string | undefined);
+    allPacks.forEach((index, packUuid) => {
+      packIds[index] = packUuid;
+    });
+    return packIds;
+  }
+
+  private buildAttributions(
+    resultMatrix: number[][],
+    assignmentData: AssignmentData,
+  ): Attribution[] {
+    return resultMatrix
+      .map(([wishIndex, packIndex]) => {
+        const wish = assignmentData.wishes[wishIndex];
+        const packUuid = assignmentData.packIds[packIndex];
+
+        // Only create attribution if the pack is in the wish's choices
+        if (!packUuid || !this.isPackInWishChoices(wish, packUuid)) {
+          return null;
+        }
+
+        const pack = wish.packChoices.find((p) => p.id.uuid === packUuid);
+
+        return pack
+          ? {
+              reservationWishId: wish.id,
+              assignedPackId: pack.id,
+            }
+          : null;
+      })
+      .filter((attribution): attribution is Attribution => attribution !== null);
+  }
+
   private sortWishesByPriority(reservationWishes: ReservationWish[]): ReservationWish[] {
     return [...reservationWishes].sort((a, b) => {
-      // Comparer d'abord par score (du plus bas au plus haut = plus prioritaire d'abord)
+      // Compare by score (lower score = higher priority)
       if (a.user.currentScore !== b.user.currentScore) {
         return a.user.currentScore - b.user.currentScore;
       }
-      // En cas d'égalité, comparer par date de création (du plus ancien au plus récent)
+      // If equal, compare by creation date (older = higher priority)
       return a.createdAt.value.getTime() - b.createdAt.value.getTime();
     });
   }
 
-  private filterAvailablePackChoices(
-    wish: ReservationWish,
-    assignedPacks: Set<string>,
-    availablePacks: Pack[],
-  ): Pack[] {
-    return wish.packChoices.filter(
-      (pack) =>
-        !assignedPacks.has(pack.id.uuid) && availablePacks.some(({ id }) => id.equals(pack.id)),
-    );
+  private getAvailablePackChoices(wish: ReservationWish, availablePacks: Pack[]): Pack[] {
+    return wish.packChoices.filter((pack) => availablePacks.some(({ id }) => id.equals(pack.id)));
   }
 
-  private calculatePackImpactScores(
-    availablePackChoices: Pack[],
-    remainingWishes: ReservationWish[],
-    assignedPacks: Set<string>,
-    availablePacks: Pack[],
-  ): Map<string, number> {
-    const packScores = new Map<string, number>();
-
-    for (const pack of availablePackChoices) {
-      const score = this.calculateSelfishnessScore(
-        pack,
-        remainingWishes,
-        assignedPacks,
-        availablePacks,
-      );
-      packScores.set(pack.id.uuid, score);
-    }
-
-    return packScores;
-  }
-
-  private calculateSelfishnessScore(
-    pack: Pack,
-    remainingWishes: ReservationWish[],
-    assignedPacks: Set<string>,
-    availablePacks: Pack[],
-  ): number {
-    let score = 0;
-
-    for (const otherWish of remainingWishes) {
-      if (!this.wishIncludesPack(otherWish, pack.id)) {
-        continue;
-      }
-
-      const remainingOptionsCount = this.countRemainingOptions(
-        otherWish,
-        pack.id,
-        assignedPacks,
-        availablePacks,
-      );
-
-      score += this.getPenaltyForRemainingOptions(remainingOptionsCount);
-    }
-
-    return score;
-  }
-
-  private wishIncludesPack(wish: ReservationWish, packId: PackId): boolean {
-    return wish.packChoices.some((choice) => choice.id.equals(packId));
-  }
-
-  private countRemainingOptions(
-    wish: ReservationWish,
-    excludedPackId: PackId,
-    assignedPacks: Set<string>,
-    availablePacks: Pack[],
-  ): number {
-    return wish.packChoices.filter(
-      (p) =>
-        !p.id.equals(excludedPackId) &&
-        !assignedPacks.has(p.id.uuid) &&
-        availablePacks.some(({ id }) => id.equals(p.id)),
-    ).length;
-  }
-
-  private getPenaltyForRemainingOptions(remainingOptionsCount: number): number {
-    if (remainingOptionsCount === 0) {
-      return 1000; // Les laisserait sans option : pénalité maximale
-    } else if (remainingOptionsCount === 1) {
-      return 100; // Ne leur laisserait qu'une seule option : pénalité forte
-    } else if (remainingOptionsCount === 2) {
-      return 10; // Ne leur laisserait que 2 options : pénalité modérée
-    } else {
-      return 1; // Ont encore beaucoup d'options : pénalité faible
-    }
-  }
-
-  private selectOptimalPack(availablePackChoices: Pack[], packScores: Map<string, number>): PackId {
-    const firstChoiceScore = packScores.get(availablePackChoices[0].id.uuid) || 0;
-
-    if (firstChoiceScore < 200) {
-      // Le premier choix n'a pas d'impact significatif sur les autres
-      return availablePackChoices[0].id;
-    }
-
-    // Le premier choix limiterait trop les autres, trouver une alternative
-    return this.findPackWithLowestScore(availablePackChoices, packScores);
-  }
-
-  private findPackWithLowestScore(
-    availablePackChoices: Pack[],
-    packScores: Map<string, number>,
-  ): PackId {
-    const minScore = Math.min(...Array.from(packScores.values()));
-
-    for (const pack of availablePackChoices) {
-      if ((packScores.get(pack.id.uuid) || 0) === minScore) {
-        return pack.id;
-      }
-    }
-
-    // Fallback (should never happen)
-    return availablePackChoices[0].id;
+  private isPackInWishChoices(wish: ReservationWish, packUuid: string): boolean {
+    return wish.packChoices.some((choice) => choice.id.uuid === packUuid);
   }
 }
