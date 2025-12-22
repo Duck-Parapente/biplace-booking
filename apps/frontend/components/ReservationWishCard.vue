@@ -126,14 +126,11 @@ const showPackIsReserved = (packId: string): boolean => {
 const canCancel = computed(() => {
   const isAfterNow = new Date(props.wish.startingDate) > new Date();
 
-  const reservationIsCancelable = props.wish.reservation?.isCancelable || false;
-  const wishIsCancelable = props.wish.isCancelable && !props.wish.reservation;
-
-  if (!isAfterNow) {
-    return wishIsCancelable && !reservationIsCancelable;
+  if (props.wish.reservation) {
+    return props.wish.reservation.isCancelable && isAfterNow;
   }
 
-  return reservationIsCancelable || wishIsCancelable;
+  return props.wish.isCancelable;
 });
 
 const handleCancel = async (wish: ReservationWishDto) => {
