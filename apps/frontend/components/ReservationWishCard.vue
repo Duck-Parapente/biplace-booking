@@ -55,7 +55,7 @@
       class="w-full bg-red-50 hover:bg-red-100 border-t border-red-1000 p-3 text-sm font-medium text-red-800 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-b-lg"
     >
       <IconX class="w-4 h-4" />
-      {{ wish.reservation?.isCancelable ? 'Annuler la réservation' : 'Annuler cette demande' }}
+      {{ wish.reservation?.isCancelable ? 'Annuler la réservation' : 'Annuler la demande' }}
     </button>
   </div>
 </template>
@@ -127,7 +127,7 @@ const canCancel = computed(() => {
   const isAfterNow = new Date(props.wish.startingDate) > new Date();
 
   const reservationIsCancelable = props.wish.reservation?.isCancelable || false;
-  const wishIsCancelable = props.wish.isCancelable;
+  const wishIsCancelable = props.wish.isCancelable && !props.wish.reservation;
 
   if (!isAfterNow) {
     return wishIsCancelable && !reservationIsCancelable;
@@ -144,10 +144,7 @@ const handleCancel = async (wish: ReservationWishDto) => {
     return;
   }
 
-  if (
-    wish.isCancelable &&
-    confirm('Êtes-vous sûr de vouloir annuler cette demande de réservation ?')
-  ) {
+  if (wish.isCancelable && confirm('Êtes-vous sûr de vouloir annuler cette demande ?')) {
     await cancelReservationWish(wish.id);
   }
 };

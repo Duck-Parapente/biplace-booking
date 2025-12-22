@@ -19,7 +19,7 @@
     @click.self="closeModal"
   >
     <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-      <h3 class="text-xl font-semibold mb-4 text-secondary-600">Nouvelle demande de réservation</h3>
+      <h3 class="text-xl font-semibold mb-4 text-secondary-600">Nouvelle demande</h3>
       <form @submit.prevent="handleSubmit" class="space-y-4">
         <BaseInput
           id="startingDate"
