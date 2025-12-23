@@ -60,5 +60,5 @@ interface PackReservation {
 export type PackReservationsWithDetails = {
   packReservations: PackReservation[];
   totalFlightsCount: Integer;
-  totalFlightsHours: Integer;
+  totalFlightsMinutes: Integer;
 };

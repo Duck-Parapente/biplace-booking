@@ -43,7 +43,9 @@
         <div class="flex gap-6 text-sm">
           <div>
             <span class="font-semibold">Heures de vol:</span>
-            <span class="ml-2">{{ totalFlightsHours }}h</span>
+            <span class="ml-2"
+              >{{ Math.floor(totalFlightsMinutes / 60) }}h{{ totalFlightsMinutes % 60 }}mn</span
+            >
           </div>
           <div>
             <span class="font-semibold">Nombre de vols:</span>
@@ -170,7 +172,7 @@ const isAdmin = computed(() => hasRole(UserRoles.ADMIN));
 const selectedPackId = ref<string | null>(null);
 const selectedPackLabel = ref<string>('');
 const allReservations = ref<PackReservationsDto['reservations']>([]);
-const totalFlightsHours = ref<number>(0);
+const totalFlightsMinutes = ref<number>(0);
 const totalFlightsCount = ref<number>(0);
 const loading = ref<boolean>(false);
 const error = ref<string | null>(null);
@@ -214,7 +216,7 @@ const fetchPackReservations = async (packId: string) => {
     error.value = null;
     const data = await callApi<PackReservationsDto>(`/reservations/pack?packId=${packId}`);
     allReservations.value = data.reservations;
-    totalFlightsHours.value = data.totalFlightsHours;
+    totalFlightsMinutes.value = data.totalFlightsMinutes;
     totalFlightsCount.value = data.totalFlightsCount;
   } catch (err) {
     const errorMessage =

@@ -188,7 +188,9 @@ export class ReservationRepository implements ReservationRepositoryPort {
 
     const pack = reservations[0]?.pack;
     const initialFlightsCount = pack ? new Integer({ value: pack.flightsCount }) : Integer.zero();
-    const initialFlightsHours = pack ? new Integer({ value: pack.flightsHours }) : Integer.zero();
+    const initialFlightsMinutes = pack
+      ? new Integer({ value: pack.flightsHours * 60 })
+      : Integer.zero();
 
     const reservationFlightStats = reservations.reduce(
       (acc, reservation) => {
@@ -203,8 +205,8 @@ export class ReservationRepository implements ReservationRepositoryPort {
       { totalMinutes: 0, totalCount: 0 },
     );
 
-    const totalFlightsHours = initialFlightsHours.add(
-      new Integer({ value: Math.floor(reservationFlightStats.totalMinutes / 60) }),
+    const totalFlightsMinutes = initialFlightsMinutes.add(
+      new Integer({ value: reservationFlightStats.totalMinutes }),
     );
     const totalFlightsCount = initialFlightsCount.add(
       new Integer({ value: reservationFlightStats.totalCount }),
@@ -229,7 +231,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
           : undefined,
       })),
       totalFlightsCount,
-      totalFlightsHours,
+      totalFlightsMinutes,
     };
   }
 }

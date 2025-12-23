@@ -166,7 +166,7 @@ export class PackReservationsDto {
 
   @IsInt()
   @IsNotEmpty()
-  totalFlightsHours!: number;
+  totalFlightsMinutes!: number;
 
   @IsInt()
   @IsNotEmpty()

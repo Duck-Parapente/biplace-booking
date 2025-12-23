@@ -39,7 +39,7 @@ export function mapPlanningDataToDto(planningData: PlanningData[]): PlanningDayD
 
 export function mapPackReservationsToDto({
   totalFlightsCount,
-  totalFlightsHours,
+  totalFlightsMinutes,
   packReservations,
 }: PackReservationsWithDetails): PackReservationsDto {
   return {
@@ -59,6 +59,6 @@ export function mapPackReservationsToDto({
         : null,
     })),
     totalFlightsCount: totalFlightsCount.value,
-    totalFlightsHours: totalFlightsHours.value,
+    totalFlightsMinutes: totalFlightsMinutes.value,
   };
 }
