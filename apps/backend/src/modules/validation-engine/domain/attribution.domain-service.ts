@@ -15,6 +15,12 @@ interface AssignmentData {
 
 @Injectable()
 export class AttributionDomainService {
+  // Maximum safe BigInt value to prevent overflow
+  // BigInt can handle arbitrarily large integers, but we set a practical limit
+  // to catch truly excessive cases while allowing normal operation
+  // Using 2^120 to handle edge cases with many wishes and pack choices
+  private readonly MAX_SAFE_BIGINT = BigInt(2) ** BigInt(120);
+
   getAttributions(props: BaseValidationEngineProps): Attribution[] {
     const { reservationWishes, availablePacks } = props;
 
@@ -81,6 +87,15 @@ export class AttributionDomainService {
           const nextWeightIncrement =
             (acc.weightIncrement * choicesCount * (choicesCount + BigInt(1))) / BigInt(2) +
             BigInt(1);
+
+          // Check for potential overflow
+          if (nextWeightIncrement > this.MAX_SAFE_BIGINT) {
+            throw new Error(
+              `Weight increment overflow detected: value ${nextWeightIncrement} exceeds safe BigInt limit. ` +
+              `This can happen with too many reservation wishes or pack choices. ` +
+              `Consider reducing the number of wishes or available packs.`,
+            );
+          }
 
           return {
             increments: [acc.weightIncrement, ...acc.increments],
@@ -207,9 +222,9 @@ export class AttributionDomainService {
 
         return pack
           ? {
-              reservationWishId: wish.id,
-              assignedPackId: pack.id,
-            }
+            reservationWishId: wish.id,
+            assignedPackId: pack.id,
+          }
           : null;
       })
       .filter((attribution): attribution is Attribution => attribution !== null);
