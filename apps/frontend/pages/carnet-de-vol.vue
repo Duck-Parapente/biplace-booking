@@ -2,7 +2,7 @@
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
     <div class="flex-1 p-4 max-w-4xl mx-auto w-full flex flex-col min-h-0">
       <!-- Pack Selection -->
-      <div class="mb-2 bg-white p-4 rounded-lg shadow-sm">
+      <div class="mb-2 bg-white p-4 rounded-lg shadow-sm border border-gray-300">
         <BaseAutocomplete
           id="pack-select"
           v-model="selectedPackLabel"
@@ -38,7 +38,7 @@
       <!-- Pack Totals -->
       <div
         v-if="selectedPackId && !loading && !error"
-        class="mb-6 bg-yellow-50 p-2 rounded-lg shadow-sm"
+        class="mb-6 bg-yellow-50 text-yellow-600 border border-yellow-600 p-2 rounded-lg shadow-sm"
       >
         <div class="flex gap-6 text-sm">
           <div>
@@ -102,13 +102,16 @@
                   >
                     Confirmé
                   </BaseTag>
-                  <CostDisplay v-if="editMode" :cost="reservation.cost" />
                 </div>
               </div>
 
               <div v-if="reservation.userName" class="mb-2 text-sm flex items-center gap-2">
                 <span class="font-semibold">Pilote:</span>
                 <PilotDisplay :display-name="reservation.userName" />
+                <template v-if="editMode">
+                  <span class="font-semibold text-xl text-gray-200">&nbsp;/&nbsp;</span>
+                  <CostDisplay :cost="reservation.cost" />
+                </template>
               </div>
 
               <div
