@@ -23126,3 +23126,125 @@ export const testCaseRandom999 = () => {
 
   return testBuilder.buildTest();
 };
+
+export const testCaseRandomBIG = () => {
+  const createdAt = DateValueObject.fromDate(new Date('2025-11-20T10:00:00Z'));
+  let testBuilder: TestBuilder = new TestBuilder('should solve this set BIG');
+  testBuilder.addWish('A', 1, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'I');
+  testBuilder.addWish('B', 2, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'J');
+  testBuilder.addWish('C', 3, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'K');
+  testBuilder.addWish('D', 4, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'L');
+  testBuilder.addWish('E', 5, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'M');
+  testBuilder.addWish('F', 6, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'N');
+  testBuilder.addWish('G', 7, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'O');
+  testBuilder.addWish('H', 8, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'P');
+  testBuilder.addWish('I', 9, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'Q');
+  testBuilder.addWish('J', 10, createdAt, ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 'R');
+  testBuilder.addWish(
+    'K',
+    11,
+    createdAt,
+    ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
+    undefined,
+  );
+  testBuilder.addWish(
+    'L',
+    12,
+    createdAt,
+    ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
+    undefined,
+  );
+  testBuilder.addWish(
+    'M',
+    13,
+    createdAt,
+    ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
+    undefined,
+  );
+  testBuilder.addWish(
+    'N',
+    14,
+    createdAt,
+    ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
+    undefined,
+  );
+  testBuilder.addWish(
+    'O',
+    15,
+    createdAt,
+    ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
+    undefined,
+  );
+  testBuilder.addWish(
+    'P',
+    16,
+    createdAt,
+    ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
+    undefined,
+  );
+  testBuilder.addWish(
+    'Q',
+    17,
+    createdAt,
+    ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
+    undefined,
+  );
+  testBuilder.addWish(
+    'R',
+    18,
+    createdAt,
+    ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
+    undefined,
+  );
+  testBuilder.addWish(
+    'S',
+    19,
+    createdAt,
+    ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
+    undefined,
+  );
+  testBuilder.addWish(
+    'T',
+    20,
+    createdAt,
+    ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
+    undefined,
+  );
+  testBuilder.addWish(
+    'U',
+    21,
+    createdAt,
+    ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
+    undefined,
+  );
+  testBuilder.addWish(
+    'V',
+    22,
+    createdAt,
+    ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
+    undefined,
+  );
+  testBuilder.addWish(
+    'W',
+    23,
+    createdAt,
+    ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
+    undefined,
+  );
+  testBuilder.addWish(
+    'X',
+    24,
+    createdAt,
+    ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
+    undefined,
+  );
+  testBuilder.addWish(
+    'Y',
+    25,
+    createdAt,
+    ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S'],
+    'S',
+  );
+
+  return testBuilder.buildTest();
+};
