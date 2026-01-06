@@ -29,9 +29,15 @@ export const usePlanning = () => {
           }
         });
       });
-      packs.value = Array.from(packsMap.values());
+      packs.value = Array.from(packsMap.values()).sort((a, b) =>
+        a.packLabel.localeCompare(b.packLabel),
+      );
 
-      planningDays.value = data;
+      // Sort packs within each day
+      planningDays.value = data.map((day) => ({
+        ...day,
+        packs: [...day.packs].sort((a, b) => a.packLabel.localeCompare(b.packLabel)),
+      }));
     } catch (error) {
       console.error('Failed to fetch planning:', error);
     }

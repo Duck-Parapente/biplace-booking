@@ -2,7 +2,7 @@
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
     <PlanningWeekSelector v-model="currentWeekStart" />
     <PlanningPackFilter
-      :sorted-packs="sortedPacks"
+      :sorted-packs="packs"
       :selected-packs="selectedPacks"
       @toggle-pack="togglePack"
     />
@@ -96,11 +96,6 @@ const refreshPlanning = async () => {
 
 // Selected packs filter
 const selectedPacks = ref<Set<string>>(new Set());
-
-// Sorted packs for display
-const sortedPacks = computed(() => {
-  return [...packs.value].sort((a, b) => a.packLabel.localeCompare(b.packLabel));
-});
 
 // Fetch planning when week changes
 watch(currentWeekStart, async () => {

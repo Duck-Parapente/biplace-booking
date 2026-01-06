@@ -1,16 +1,16 @@
 <template>
-  <div class="bg-white border-b border-gray-300 shadow-lg">
+  <div class="bg-gray-50">
     <div class="overflow-x-auto px-3 py-2 max-w-[800px] mx-auto">
       <div class="flex gap-1.5 min-w-min">
         <button
           v-for="pack in sortedPacks"
           :key="pack.packId"
           @click="$emit('togglePack', pack.packId)"
-          class="px-2.5 py-1 text-sm rounded-full transition whitespace-nowrap flex-shrink-0"
+          class="px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-200 whitespace-nowrap flex-shrink-0"
           :class="
             selectedPacks.has(pack.packId)
-              ? 'bg-secondary-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              ? 'bg-secondary-600 text-white shadow-sm hover:bg-secondary-700 hover:shadow'
+              : 'bg-gray-200/80 text-gray-700 hover:bg-gray-300/80'
           "
         >
           {{ pack.packLabel }}

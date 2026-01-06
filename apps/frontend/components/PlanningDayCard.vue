@@ -2,9 +2,9 @@
   <div
     :class="[
       'rounded shadow-sm',
-      isBeforeToday(day.date) ? 'bg-gray-100 border border-gray-300' : '',
-      isToday(day.date) ? 'bg-white border-2 border-gray-400' : '',
-      !isBeforeToday(day.date) && !isToday(day.date) ? 'bg-white border border-gray-300' : '',
+      isBeforeToday(day.date) ? 'bg-gray-100 border border-gray-200' : '',
+      isToday(day.date) ? 'bg-white border-2 border-gray-300' : '',
+      !isBeforeToday(day.date) && !isToday(day.date) ? 'bg-white border border-gray-200' : '',
     ]"
   >
     <div
@@ -24,14 +24,14 @@
 
       <!-- Pack Status Tags (when collapsed) -->
       <div v-if="!isExpanded" class="flex flex-wrap gap-1 mt-2">
-        <span
+        <BaseTag
           v-for="pack in day.packs"
           :key="pack.packId"
-          class="px-2 py-0.5 text-xs rounded"
-          :class="getPackStatusConfig(pack).backgroundClass"
+          rounded="rounded"
+          :variant="getPackStatusConfig(pack).variant"
         >
           {{ pack.packLabel }}
-        </span>
+        </BaseTag>
       </div>
     </div>
 
@@ -47,23 +47,23 @@
 
           <div class="flex flex-col items-end gap-1">
             <div class="flex items-stretch gap-1 text-sm">
-              <div
+              <BaseTag
                 v-if="!pack.reservation"
-                class="flex items-center gap-1 rounded px-2 py-1"
-                :class="getPackStatusConfig(pack).backgroundClass"
+                rounded="rounded"
+                :variant="getPackStatusConfig(pack).variant"
               >
-                <component :is="getPackStatusConfig(pack).icon" class="w-3 h-3" />
-                <span>{{ getPackStatusConfig(pack).label }}</span>
-              </div>
+                <component :is="getPackStatusConfig(pack).icon" class="w-3 h-3 mr-1" />
+                {{ getPackStatusConfig(pack).label }}
+              </BaseTag>
               <PilotDisplay
                 v-else
                 :display-name="getPackStatusConfig(pack).label"
-                variant="reserved"
+                variant="danger"
               />
               <button
                 v-if="pack.reservation && canCancelReservation(pack)"
                 @click="handleCancelReservation(pack.reservation.id)"
-                class="flex items-center justify-center px-2 rounded bg-red-100 hover:bg-red-200 transition text-red-800"
+                class="flex items-center justify-center px-2 py-1 rounded-md bg-red-700 hover:bg-red-800 transition text-white"
                 aria-label="Annuler la réservation"
               >
                 <IconX class="w-3 h-3" />
@@ -174,7 +174,7 @@ const getPackStatusConfig = (pack: PackPlanningDto) => {
   if (pack.reservation) {
     const user = getReservedUser(pack.reservation.userId);
     return {
-      backgroundClass: 'bg-red-100 text-red-800',
+      variant: 'danger' as const,
       icon: IconUser,
       label: getUserDisplayName(user) ?? 'Admin',
       phone: user?.phoneNumber,
@@ -183,13 +183,13 @@ const getPackStatusConfig = (pack: PackPlanningDto) => {
   }
   if (pack.pendingWishesCount > 0) {
     return {
-      backgroundClass: 'bg-orange-100 text-orange-800',
+      variant: 'warning' as const,
       icon: IconClock,
       label: `${pack.pendingWishesCount} ${pack.pendingWishesCount > 1 ? 'demandes' : 'demande'}`,
     };
   }
   return {
-    backgroundClass: 'bg-green-100 text-green-800',
+    variant: 'success' as const,
     icon: IconCheck,
     label: 'Disponible',
   };

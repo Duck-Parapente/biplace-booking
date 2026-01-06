@@ -1,19 +1,33 @@
 <template>
-  <span
-    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-    :class="variantClasses"
+  <component
+    :is="as"
+    class="inline-flex items-center px-2.5 py-0.5 text-xs font-medium"
+    :class="[variantClasses, roundedClasses]"
   >
     <slot />
-  </span>
+  </component>
 </template>
 
 <script setup lang="ts">
 interface Props {
   variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info' | 'gray';
+  rounded?: 'squared' | 'rounded' | 'full';
+  as?: 'span' | 'button';
 }
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'gray',
+  rounded: 'full',
+  as: 'span',
+});
+
+const roundedClasses = computed(() => {
+  const roundings = {
+    squared: 'rounded-sm',
+    rounded: 'rounded-md',
+    full: 'rounded-full',
+  };
+  return roundings[props.rounded];
 });
 
 const variantClasses = computed(() => {

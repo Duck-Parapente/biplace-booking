@@ -30,6 +30,7 @@
               v-for="packId in wish.packChoices"
               :key="packId"
               :variant="showPackIsReserved(packId) ? 'success' : 'secondary'"
+              rounded="rounded"
             >
               {{ getPackLabel(packId) }}
             </BaseTag>
