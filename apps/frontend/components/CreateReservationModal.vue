@@ -10,7 +10,7 @@
         <BaseInput
           id="startingDate"
           v-model="form.startingDate"
-          label="Date de début"
+          label="Date"
           type="date"
           required
         />
