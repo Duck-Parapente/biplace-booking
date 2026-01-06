@@ -100,10 +100,10 @@ const sortedEvents = computed(() => {
     const timeB = new Date(b.date).getTime();
 
     if (timeB !== timeA) {
-      return timeA - timeB;
+      return timeB - timeA;
     }
 
-    return a.type === 'cost' ? 1 : -1;
+    return a.type === 'cost' ? -1 : 1;
   });
 });
 
