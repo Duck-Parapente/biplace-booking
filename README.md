@@ -23,5 +23,6 @@ Le repo utilise turborepo pour optimiser les builds, etc.
     - recevoir les backups de la DB (dans Google Drive)
 - [Vercel](https://vercel.com/duckparapente) pour déployer le frontend, qui fournit un plan gratuit jusqu'à 1M de edge requests /mois.
 - [Auth0](https://manage.auth0.com/dashboard/eu/biplace-duckparapente/applications), qui fournit un système d'authentification avec un plan gratuit (jusqu'à 25.000 utilisateurs).
+- [Mailgun](https://app.eu.mailgun.com/) pour l'envoi des emails transactionnels (confirmation de résa, annulation, etc.) avec un plan gratuit jusqu'à 3.000 emails/mois.
 - [NewRelic](https://one.eu.newrelic.com/logger?account=7279493&duration=1800000&state=67344c39-0ea6-054f-a3c4-6dc9061ab82c) pour les logs/APM.
 - Enfin, [Contabo](https://new.contabo.com/servers/vps) pour gérer l'instance VPS Contabo (pour l'instant administrée sur le compte perso de JP)
