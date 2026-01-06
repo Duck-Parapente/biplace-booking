@@ -69,16 +69,6 @@
             Se déconnecter
           </button>
         </nav>
-
-        <!-- Footer -->
-        <div class="pb-6 text-center">
-          <a
-            :href="`mailto:${config.public.supportEmail}`"
-            class="text-secondary-600 text-sm hover:opacity-80 transition-opacity inline-block px-8 py-3"
-          >
-            Une question ou remarque ?
-          </a>
-        </div>
       </div>
     </Transition>
   </Teleport>
@@ -92,7 +82,6 @@ defineOptions({
   inheritAttrs: false,
 });
 
-const config = useRuntimeConfig();
 const { logout, isAuthenticated, hasRole } = useAuth();
 const { maintenanceMode } = usePublicConfig();
 const { pageTitle } = usePageTitle();
@@ -114,13 +103,16 @@ const menuCategories: MenuCategory[] = [
     label: 'Réservations',
     items: [
       { path: '/planning', label: 'Planning' },
-      { path: '/', label: 'Mes demandes' },
+      { path: '/mes-demandes', label: 'Mes demandes' },
       { path: '/carnet-de-vol', label: 'Carnet de vol' },
     ],
   },
   {
     label: 'Informations',
-    items: [{ path: '/contacts', label: 'Contacts' }],
+    items: [
+      { path: '/faq', label: 'FAQ' },
+      { path: '/contacts', label: 'Contacts' },
+    ],
   },
   {
     label: 'Administration',

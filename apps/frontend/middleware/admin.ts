@@ -8,6 +8,6 @@ export default defineNuxtRouteMiddleware(async () => {
   }
 
   if (!hasRole(UserRoles.ADMIN)) {
-    return navigateTo('/');
+    return navigateTo('/mes-demandes');
   }
 });
