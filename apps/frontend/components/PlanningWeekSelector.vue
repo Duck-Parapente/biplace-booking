@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white border-b border-gray-300 shadow-sm">
-    <div class="flex items-center justify-between p-3 max-w-[800px] mx-auto">
+    <div class="flex items-center justify-between p-2 max-w-[800px] mx-auto">
       <button
         @click="previousWeek"
         class="px-2 py-1 text-secondary-600 hover:bg-gray-100 rounded transition"
@@ -14,7 +14,9 @@
         </p>
         <button
           @click="goToCurrentWeek"
-          class="text-blue-500 hover:text-blue-600 transition p-1 hover:bg-gray-100 rounded"
+          :disabled="isCurrentWeek"
+          :class="isCurrentWeek ? 'text-gray-400' : 'text-blue-500 hover:text-blue-600'"
+          class="transition p-1 hover:bg-gray-100 rounded"
           aria-label="Revenir à la semaine actuelle"
         >
           <IconTarget class="w-4 h-4" />
@@ -35,6 +37,10 @@
 import { formatWeekRange, getMonday } from '~/composables/useDateHelpers';
 
 const currentWeekStart = defineModel<Date>({ required: true });
+
+const isCurrentWeek = computed(
+  () => currentWeekStart.value.toDateString() === getMonday(new Date()).toDateString(),
+);
 
 function previousWeek() {
   const newDate = new Date(currentWeekStart.value);
