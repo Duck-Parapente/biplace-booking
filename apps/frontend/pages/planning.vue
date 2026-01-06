@@ -1,7 +1,11 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
-    <!-- Week Selector - Fixed at top -->
     <PlanningWeekSelector v-model="currentWeekStart" />
+    <PlanningPackFilter
+      :sorted-packs="sortedPacks"
+      :selected-packs="selectedPacks"
+      @toggle-pack="togglePack"
+    />
 
     <div class="flex-1 p-2 max-w-[800px] mx-auto w-full flex flex-col min-h-0 mb-16">
       <div class="flex-1 overflow-y-auto pb-2">
@@ -18,13 +22,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Pack Filter Tags - Fixed at bottom -->
-    <PlanningPackFilter
-      :sorted-packs="sortedPacks"
-      :selected-packs="selectedPacks"
-      @toggle-pack="togglePack"
-    />
 
     <!-- Create Reservation Button - Fixed bottom right (only for Admin/Manager) -->
     <button
