@@ -13,7 +13,7 @@
         "
       />
     </button>
-    <div v-show="isOpen" class="px-6 pb-4 text-gray-700 leading-relaxed">
+    <div v-show="isOpen" class="p-4 text-gray-700 leading-relaxed">
       <slot />
     </div>
   </div>
