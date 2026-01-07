@@ -154,7 +154,7 @@ const canCancelReservation = (pack: PackPlanningDto): boolean => {
 };
 
 const handleCancelReservation = async (reservationId: string) => {
-  if (!confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) return;
+  if (!confirm('Es-tu sûr de vouloir annuler cette réservation ?')) return;
 
   try {
     await cancelReservation(reservationId);

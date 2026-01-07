@@ -7,8 +7,12 @@
       >
         <p class="font-medium mb-1">ℹ️ Pourquoi ces informations ?</p>
         <p class="text-xs">
-          Votre adresse et numéro de téléphone sont nécessaires pour faciliter les échanges entre
+          Ton adresse et numéro de téléphone sont nécessaires pour faciliter les échanges entre
           parapentistes.
+        </p>
+        <p class="text-xs mt-2">
+          Pour plus d'informations sur le fonctionnement de l'app, consulte la
+          <NuxtLink to="/faq" class="underline"> FAQ </NuxtLink>
         </p>
       </div>
 
@@ -47,9 +51,8 @@
               class="w-full px-3 py-2 bg-gray-50 text-gray-500 mb-2"
             />
             <InfoBox>
-              Le nombre de coins est mis à jour après chaque réservation. Plus vous réservez, plus
-              le nombre augmente. Il est utilisé pour attribuer les parapentistes de manière
-              équitable.
+              Le nombre de coins est mis à jour après chaque réservation. Plus tu réserves, plus le
+              nombre augmente. Il est utilisé pour attribuer les parapentistes de manière équitable.
             </InfoBox>
           </div>
 

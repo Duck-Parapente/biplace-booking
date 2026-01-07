@@ -2,7 +2,7 @@
   <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg">
     <div class="max-w-4xl mx-auto">
       <div v-if="hasUnclosedOldReservation" class="text-sm text-gray-600 mb-2 text-center">
-        Vous avez une ancienne réservation à clôturer avant de pouvoir créer une nouvelle demande.
+        Tu as une ancienne réservation à clôturer avant de pouvoir créer une nouvelle demande.
       </div>
       <button
         @click="openCreateModal"

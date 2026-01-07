@@ -136,13 +136,13 @@ const canCancel = computed(() => {
 
 const handleCancel = async (wish: ReservationWishDto) => {
   if (wish.reservation?.isCancelable) {
-    if (confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) {
+    if (confirm('Es-tu sûr de vouloir annuler cette réservation ?')) {
       await cancelReservation(wish.reservation.id);
     }
     return;
   }
 
-  if (wish.isCancelable && confirm('Êtes-vous sûr de vouloir annuler cette demande ?')) {
+  if (wish.isCancelable && confirm('Es-tu sûr de vouloir annuler cette demande ?')) {
     await cancelReservationWish(wish.id);
   }
 };
