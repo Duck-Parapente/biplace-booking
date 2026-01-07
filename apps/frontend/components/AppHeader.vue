@@ -102,7 +102,7 @@ const menuCategories: MenuCategory[] = [
   {
     label: 'Réservations',
     items: [
-      { path: '/planning', label: 'Planning' },
+      { path: '/', label: 'Planning' },
       { path: '/mes-demandes', label: 'Mes demandes' },
       { path: '/carnet-de-vol', label: 'Carnet de vol' },
     ],
