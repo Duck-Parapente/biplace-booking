@@ -1,9 +1,9 @@
 <template>
-  <div class="mt-2 p-3 bg-white rounded border border-gray-200 space-y-2" v-if="showHistory">
+  <div class="mt-2 py-2 bg-white rounded border border-gray-300 space-y-2" v-if="showHistory">
     <div
       v-for="(group, groupIndex) in groupedEvents"
       :key="groupIndex"
-      class="pb-2 border-b border-gray-100 last:border-b-0 last:pb-0"
+      class="pb-2 px-2 border-b border-gray-300 last:border-b-0 last:pb-0"
     >
       <div class="flex items-start justify-between gap-1">
         <div class="flex-1 space-y-1">
