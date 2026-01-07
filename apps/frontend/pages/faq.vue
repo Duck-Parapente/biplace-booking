@@ -10,7 +10,7 @@
 
       <div class="bg-white rounded-lg shadow-sm overflow-hidden">
         <FaqItem
-          question="Quelle est la différence entre une demande de réservation et une réservation ?"
+          question="1. Quelle est la différence entre une demande de réservation et une réservation ?"
         >
           <p class="mb-3">
             <strong class="text-gray-900">Une demande de réservation</strong> est ton souhait de
@@ -27,7 +27,7 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="Comment fonctionne le système de canardos ?">
+        <FaqItem question="2. Comment fonctionne le système de canardos ?">
           <p class="mb-3">
             Le système de canardos permet de gérer équitablement les priorités entre tous les
             pilotes qui souhaitent voler.
@@ -231,7 +231,7 @@
           </div>
         </FaqItem>
 
-        <FaqItem question="Comment se déroule le processus de réservation ?">
+        <FaqItem question="3. Comment se déroule le processus de réservation ?">
           <div class="space-y-4">
             <div class="border-l-4 border-blue-500 pl-4 py-2">
               <h4 class="font-semibold text-gray-900 mb-1">
@@ -287,7 +287,7 @@
           </div>
         </FaqItem>
 
-        <FaqItem question="Comment fonctionne l'algorithme d'attribution des packs ?">
+        <FaqItem question="4. Comment fonctionne l'algorithme d'attribution des packs ?">
           <p class="mb-4">
             L'algorithme cherche à <strong>maximiser le nombre de réservations attribuées</strong>
             tout en respectant les priorités. Voici un exemple simple :
@@ -356,7 +356,7 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="Que se passe-t-il si ma demande n'est pas validée ?">
+        <FaqItem question="5. Que se passe-t-il si ma demande n'est pas validée ?">
           <p class="mb-3">
             Si ta demande n'est pas validée à J-1, cela signifie que d'autres pilotes avec un score
             canardos plus bas ont été prioritaires sur les créneaux disponibles.
@@ -377,7 +377,7 @@
           </ul>
         </FaqItem>
 
-        <FaqItem question="Puis-je annuler ou modifier ma réservation après validation ?">
+        <FaqItem question="6. Puis-je annuler ou modifier ma réservation après validation ?">
           <p class="mb-3">Oui, tu peux annuler une réservation validée. Cependant :</p>
           <ul class="list-disc pl-6 space-y-2">
             <li>
@@ -391,7 +391,7 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="Comment consulter mon score canardos actuel ?">
+        <FaqItem question="7. Comment consulter mon score canardos actuel ?">
           <p>
             Ton score canardos est visible sur ta
             <NuxtLink to="/mon-compte" class="text-blue-600 underline">page de profil</NuxtLink>. Il
@@ -399,7 +399,7 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="Qui puis-je contacter si j'ai d'autres questions ?">
+        <FaqItem question="8. Qui puis-je contacter si j'ai d'autres questions ?">
           <p class="mb-3">Pour toute question supplémentaire ou problème technique, tu peux :</p>
           <ul class="list-disc pl-6 space-y-2">
             <li>
