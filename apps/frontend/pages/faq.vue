@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-50">
-    <div class="max-w-4xl mx-auto p-4">
-      <div class="bg-white rounded-lg shadow-sm p-8 mb-8">
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
         <p class="text-gray-600">
           Retrouve ici toutes les réponses aux questions fréquentes sur le système de réservation
           des vols biplaces.
@@ -65,7 +65,7 @@
             nombre de jours entre la création et la date de réservation.
           </p>
 
-          <div class="bg-gray-50 p-6 rounded-lg space-y-6">
+          <div class="space-y-6">
             <!-- Cas 1 : Clôture à temps -->
             <div>
               <h5 class="font-semibold text-gray-900 mb-3">
