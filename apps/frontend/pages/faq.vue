@@ -151,7 +151,7 @@
                       <td class="text-center"></td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
-                      <td class="text-center">15/01<br />Réservation</td>
+                      <td class="text-center">15/01<br />Vol</td>
                       <td class="text-center">16/01<br />Clôture</td>
                     </tr>
                   </tbody>
