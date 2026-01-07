@@ -73,8 +73,8 @@
               </h5>
               <div>
                 <!-- Timeline -->
-                <table class="w-full mb-2 table-fixed">
-                  <tr class="h-3">
+                <table class="w-full text-xs text-gray-600 table-fixed">
+                  <tr class="h-5">
                     <td class="relative">
                       <div class="absolute inset-0 flex items-center justify-center">
                         <div
@@ -146,8 +146,6 @@
                       </div>
                     </td>
                   </tr>
-                </table>
-                <table class="w-full text-xs text-gray-600 table-fixed">
                   <tr>
                     <td class="text-center">10/01<br />Confirmation</td>
                     <td class="text-center"></td>
@@ -173,8 +171,8 @@
               <h5 class="font-semibold text-gray-900 mb-3">⚠️ Cas 2 : Tu annules tard</h5>
               <div>
                 <!-- Timeline -->
-                <table class="w-full mb-2 table-fixed">
-                  <tr class="h-3">
+                <table class="w-full text-xs text-gray-600 table-fixed">
+                  <tr class="h-5">
                     <td class="relative">
                       <div class="absolute inset-0 flex items-center justify-center">
                         <div
@@ -241,8 +239,6 @@
                       </div>
                     </td>
                   </tr>
-                </table>
-                <table class="w-full text-xs text-gray-600 table-fixed">
                   <tr>
                     <td class="text-center">10/01<br />Confirmation</td>
                     <td class="text-center"></td>
