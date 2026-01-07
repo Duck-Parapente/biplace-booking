@@ -123,7 +123,7 @@ export class ReservationEmailNotificationAdapter implements ReservationNotificat
           selectedPackLabel: pack.label,
           initiatorName: initiator
             ? [initiator.firstName, initiator.lastName].filter(Boolean).join(' ')
-            : 'Système',
+            : `l'attribution automatique`,
         },
       });
     } catch (error) {
