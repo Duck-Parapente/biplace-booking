@@ -86,21 +86,41 @@
                       </div>
                     </td>
                     <td class="relative">
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                          class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                        ></div>
+                      </div>
                       <div class="absolute inset-0 flex items-center">
                         <div class="w-full h-0.5 bg-blue-400"></div>
                       </div>
                     </td>
                     <td class="relative">
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                          class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                        ></div>
+                      </div>
                       <div class="absolute inset-0 flex items-center">
                         <div class="w-full h-0.5 bg-blue-400"></div>
                       </div>
                     </td>
                     <td class="relative">
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                          class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                        ></div>
+                      </div>
                       <div class="absolute inset-0 flex items-center">
                         <div class="w-full h-0.5 bg-blue-400"></div>
                       </div>
                     </td>
                     <td class="relative">
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                          class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                        ></div>
+                      </div>
                       <div class="absolute inset-0 flex items-center">
                         <div class="w-full h-0.5 bg-blue-400"></div>
                       </div>
@@ -166,16 +186,31 @@
                       </div>
                     </td>
                     <td class="relative">
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                          class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                        ></div>
+                      </div>
                       <div class="absolute inset-0 flex items-center">
                         <div class="w-full h-0.5 bg-blue-400"></div>
                       </div>
                     </td>
                     <td class="relative">
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                          class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                        ></div>
+                      </div>
                       <div class="absolute inset-0 flex items-center">
                         <div class="w-full h-0.5 bg-blue-400"></div>
                       </div>
                     </td>
                     <td class="relative">
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                          class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                        ></div>
+                      </div>
                       <div class="absolute inset-0 flex items-center">
                         <div class="w-full h-0.5 bg-blue-400"></div>
                       </div>
