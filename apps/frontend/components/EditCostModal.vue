@@ -9,7 +9,7 @@
       <div class="space-y-4">
         <div>
           <label for="cost-input" class="block text-sm font-medium text-gray-700 mb-2">
-            Coût (canardos)
+            Coût (coins)
           </label>
           <input
             id="cost-input"

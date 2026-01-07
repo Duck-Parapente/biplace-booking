@@ -23,14 +23,14 @@
           </p>
           <p>
             Le passage d'une demande à une réservation se fait selon le système de priorité par
-            canardos (voir question suivante).
+            coins (voir question suivante).
           </p>
         </FaqItem>
 
-        <FaqItem question="2. Comment fonctionne le système de canardos ?">
+        <FaqItem question="2. Comment fonctionne le système de coins ?">
           <p class="mb-3">
-            Le système de canardos permet de gérer équitablement les priorités entre tous les
-            pilotes qui souhaitent voler.
+            Le système de coins permet de gérer équitablement les priorités entre tous les pilotes
+            qui souhaitent voler.
           </p>
 
           <h4 class="font-semibold text-gray-900 mt-4 mb-2">Pourquoi ce système ?</h4>
@@ -45,7 +45,7 @@
             <li>Maximiser le nombre de packs attribués</li>
           </ul>
 
-          <h4 class="font-semibold text-gray-900 mt-4 mb-2">Comment évoluent tes canardos ?</h4>
+          <h4 class="font-semibold text-gray-900 mt-4 mb-2">Comment évoluent tes coins ?</h4>
           <ul class="list-disc pl-6 mb-4 space-y-2">
             <li><strong>Ton score augmente</strong> à chaque réservation clôturée ou annulée</li>
             <li>
@@ -57,10 +57,10 @@
           </ul>
 
           <h4 class="font-semibold text-gray-900 mt-4 mb-3">
-            Comment sont calculés les canardos ajoutés ?
+            Comment sont calculés les coins ajoutés ?
           </h4>
           <p class="mb-4 text-gray-700">
-            Le nombre de canardos ajoutés = <strong>1 canardo par jour écoulé</strong> entre la
+            Le nombre de coins ajoutés = <strong>1 canardo par jour écoulé</strong> entre la
             création de la demande et l'action (clôture ou annulation), avec un maximum égal au
             nombre de jours entre la création et la date de réservation.
           </p>
@@ -161,7 +161,7 @@
                 <p class="text-sm">
                   <strong>Calcul :</strong> 5 jours entre la confirmation et la date de la
                   réservation<br />
-                  <strong>Points ajoutés :</strong> 5 canardos (maximum atteint)
+                  <strong>Points ajoutés :</strong> 5 coins (maximum atteint)
                 </p>
               </div>
             </div>
@@ -255,7 +255,7 @@
               <div class="mt-3 p-3 bg-orange-50 rounded border border-orange-200">
                 <p class="text-sm">
                   <strong>Calcul :</strong> 4 jours entre la confirmation et l'annulation<br />
-                  <strong>Points ajoutés :</strong> 4 canardos
+                  <strong>Points ajoutés :</strong> 4 coins
                 </p>
               </div>
             </div>
@@ -286,7 +286,7 @@
               <ul class="list-disc pl-6 mt-2 space-y-1">
                 <li>Des demandes de réservation de tous les pilotes</li>
                 <li>
-                  Du score canardos de chaque pilote (plus le score est bas, plus tu es prioritaire)
+                  Du score coins de chaque pilote (plus le score est bas, plus tu es prioritaire)
                 </li>
                 <li>De la disponibilité des packs</li>
                 <li>De l'optimisation pour maximiser le nombre de réservations attribuées</li>
@@ -312,7 +312,7 @@
               <p>
                 Une fois ton vol effectué, tu peux <strong>clôturer ta réservation</strong> en
                 renseignant les informations dans ton carnet de vol. Cette clôture permettra de
-                mettre à jour ton score canardos pour les prochaines réservations.
+                mettre à jour ton score coins pour les prochaines réservations.
               </p>
             </div>
           </div>
@@ -337,7 +337,7 @@
                   <div class="flex items-center justify-between">
                     <span class="font-medium">Pilote 1</span>
                     <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                      Score: 50 canardos (plus prioritaire)
+                      Score: 50 coins (plus prioritaire)
                     </span>
                   </div>
                   <div class="text-sm text-gray-600 mt-1">Demande : Pack A ou Pack B</div>
@@ -346,7 +346,7 @@
                   <div class="flex items-center justify-between">
                     <span class="font-medium">Pilote 2</span>
                     <span class="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">
-                      Score: 120 canardos (moins prioritaire)
+                      Score: 120 coins (moins prioritaire)
                     </span>
                   </div>
                   <div class="text-sm text-gray-600 mt-1">Demande : Pack A</div>
@@ -390,7 +390,7 @@
         <FaqItem question="5. Que se passe-t-il si ma demande n'est pas validée ?">
           <p class="mb-3">
             Si ta demande n'est pas validée à J-1, cela signifie que d'autres pilotes avec un score
-            canardos plus bas ont été prioritaires sur les créneaux disponibles.
+            coins plus bas ont été prioritaires sur les créneaux disponibles.
           </p>
           <p class="mb-3">
             <strong>Tes options :</strong>
@@ -412,7 +412,7 @@
           <p class="mb-3">Oui, tu peux annuler une réservation validée. Cependant :</p>
           <ul class="list-disc pl-6 space-y-2">
             <li>
-              Ton score canardos augmentera en fonction du nombre de jours entre la création et
+              Ton score coins augmentera en fonction du nombre de jours entre la création et
               l'annulation
             </li>
             <li>L'annulation libère le créneau pour d'autres pilotes en attente</li>
@@ -422,9 +422,9 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="7. Comment consulter mon score canardos actuel ?">
+        <FaqItem question="7. Comment consulter mon score coins actuel ?">
           <p>
-            Ton score canardos est visible sur ta
+            Ton score coins est visible sur ta
             <NuxtLink to="/mon-compte" class="text-blue-600 underline">page de profil</NuxtLink>. Il
             est mis à jour en temps réel.
           </p>
