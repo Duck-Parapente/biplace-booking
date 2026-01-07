@@ -71,50 +71,73 @@
               <h5 class="font-semibold text-gray-900 mb-3">
                 ✅ Cas 1 : Tu clôtures ta réservation après le vol
               </h5>
-              <div class="relative">
+              <div>
                 <!-- Timeline -->
-                <div class="relative text-xs text-gray-600 mb-2" style="min-height: 2.5rem">
-                  <div class="absolute p-1" style="left: 0%; bottom: 0">10/01</div>
-                  <div
-                    class="absolute p-1"
-                    style="left: 83.3%; transform: translateX(-50%); bottom: 0"
-                  >
-                    15/01
-                  </div>
-                  <div
-                    class="absolute p-1"
-                    style="left: 100%; transform: translateX(-100%); bottom: 0"
-                  >
-                    16/01
-                  </div>
-                </div>
-                <div class="flex items-center mb-2">
-                  <div class="flex-1">
-                    <div class="h-2 bg-blue-200 rounded-full relative">
-                      <div
-                        class="absolute p-1 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-600 rounded-full"
-                        style="left: 0%"
-                      ></div>
-                      <div
-                        class="absolute p-1 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-green-600 rounded-full"
-                        style="left: 83.3%"
-                      ></div>
-                      <div
-                        class="absolute p-1 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-green-700 rounded-full"
-                        style="left: 100%"
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="relative text-xs text-gray-600" style="min-height: 2.5rem">
-                  <div class="absolute p-1" style="left: 0%">Confirmation</div>
-                  <div class="absolute p-1" style="left: 83.3%; transform: translateX(-50%)">
-                    Réservation
-                  </div>
-                  <div class="absolute p-1" style="left: 100%; transform: translateX(-100%)">
-                    Clôture
-                  </div>
-                </div>
+                <table class="w-full mb-2 table-fixed">
+                  <tr class="h-3">
+                    <td class="relative">
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                          class="w-3 h-3 bg-blue-600 rounded-full border-2 border-white relative z-10"
+                        ></div>
+                      </div>
+                      <div class="absolute inset-0 flex items-center">
+                        <div class="w-full h-0.5 bg-blue-400"></div>
+                      </div>
+                    </td>
+                    <td class="relative">
+                      <div class="absolute inset-0 flex items-center">
+                        <div class="w-full h-0.5 bg-blue-400"></div>
+                      </div>
+                    </td>
+                    <td class="relative">
+                      <div class="absolute inset-0 flex items-center">
+                        <div class="w-full h-0.5 bg-blue-400"></div>
+                      </div>
+                    </td>
+                    <td class="relative">
+                      <div class="absolute inset-0 flex items-center">
+                        <div class="w-full h-0.5 bg-blue-400"></div>
+                      </div>
+                    </td>
+                    <td class="relative">
+                      <div class="absolute inset-0 flex items-center">
+                        <div class="w-full h-0.5 bg-blue-400"></div>
+                      </div>
+                    </td>
+                    <td class="relative">
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                          class="w-3 h-3 bg-green-600 rounded-full border-2 border-white relative z-10"
+                        ></div>
+                      </div>
+                      <div class="absolute inset-0 flex items-center">
+                        <div class="w-full h-0.5 bg-blue-400"></div>
+                      </div>
+                    </td>
+                    <td class="relative">
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                          class="w-3 h-3 bg-green-700 rounded-full border-2 border-white relative z-10"
+                        ></div>
+                      </div>
+                      <div class="absolute inset-0 flex items-center">
+                        <div class="w-full h-0.5 bg-blue-400"></div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+                <table class="w-full text-xs text-gray-600 table-fixed">
+                  <tr>
+                    <td class="text-center">10/01<br />Confirmation</td>
+                    <td class="text-center"></td>
+                    <td class="text-center"></td>
+                    <td class="text-center"></td>
+                    <td class="text-center"></td>
+                    <td class="text-center">15/01<br />Réservation</td>
+                    <td class="text-center">16/01<br />Clôture</td>
+                  </tr>
+                </table>
               </div>
               <div class="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
                 <p class="text-sm">
@@ -128,54 +151,75 @@
             <!-- Cas 2 : Annulation tardive -->
             <div>
               <h5 class="font-semibold text-gray-900 mb-3">⚠️ Cas 2 : Tu annules tard</h5>
-              <div class="relative">
+              <div>
                 <!-- Timeline -->
-                <div class="relative text-xs text-gray-600 mb-2" style="min-height: 2.5rem">
-                  <div class="absolute p-1" style="left: 0%; bottom: 0">10/01</div>
-                  <div
-                    class="absolute p-1"
-                    style="left: 66.7%; transform: translateX(-50%); bottom: 0"
-                  >
-                    14/01
-                  </div>
-                  <div
-                    class="absolute p-1"
-                    style="left: 83.3%; transform: translateX(-50%); bottom: 0"
-                  >
-                    <span class="text-gray-400">15/01</span>
-                  </div>
-                </div>
-                <div class="flex items-center mb-2">
-                  <div class="flex-1">
-                    <div class="h-2 bg-blue-200 rounded-full relative">
-                      <div
-                        class="absolute p-1 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-600 rounded-full"
-                        style="left: 0%"
-                      ></div>
-                      <div
-                        class="absolute p-1 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-red-600 rounded-full"
-                        style="left: 66.7%"
-                      ></div>
-                      <div
-                        class="absolute p-1 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-gray-400 rounded-full"
-                        style="left: 83.3%"
-                      ></div>
-                      <div
-                        class="absolute p-1 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-transparent rounded-full"
-                        style="left: 100%"
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="relative text-xs text-gray-600" style="min-height: 2.5rem">
-                  <div class="absolute p-1" style="left: 0%">Confirmation</div>
-                  <div class="absolute p-1" style="left: 66.7%; transform: translateX(-50%)">
-                    Annulation
-                  </div>
-                  <div class="absolute p-1" style="left: 83.3%; transform: translateX(-50%)">
-                    <span class="text-gray-400">Créneau libéré</span>
-                  </div>
-                </div>
+                <table class="w-full mb-2 table-fixed">
+                  <tr class="h-3">
+                    <td class="relative">
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                          class="w-3 h-3 bg-blue-600 rounded-full border-2 border-white relative z-10"
+                        ></div>
+                      </div>
+                      <div class="absolute inset-0 flex items-center">
+                        <div class="w-full h-0.5 bg-blue-400"></div>
+                      </div>
+                    </td>
+                    <td class="relative">
+                      <div class="absolute inset-0 flex items-center">
+                        <div class="w-full h-0.5 bg-blue-400"></div>
+                      </div>
+                    </td>
+                    <td class="relative">
+                      <div class="absolute inset-0 flex items-center">
+                        <div class="w-full h-0.5 bg-blue-400"></div>
+                      </div>
+                    </td>
+                    <td class="relative">
+                      <div class="absolute inset-0 flex items-center">
+                        <div class="w-full h-0.5 bg-blue-400"></div>
+                      </div>
+                    </td>
+                    <td class="relative">
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                          class="w-3 h-3 bg-red-600 rounded-full border-2 border-white relative z-10"
+                        ></div>
+                      </div>
+                      <div class="absolute inset-0 flex items-center">
+                        <div class="w-full h-0.5 bg-blue-400"></div>
+                      </div>
+                    </td>
+                    <td class="relative">
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                          class="w-3 h-3 bg-gray-400 rounded-full border-2 border-white relative z-10"
+                        ></div>
+                      </div>
+                      <div class="absolute inset-0 flex items-center">
+                        <div class="w-full h-0.5 bg-blue-400"></div>
+                      </div>
+                    </td>
+                    <td class="relative">
+                      <div class="absolute inset-0 flex items-center">
+                        <div class="w-full h-0.5 bg-blue-400"></div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+                <table class="w-full text-xs text-gray-600 table-fixed">
+                  <tr>
+                    <td class="text-center">10/01<br />Confirmation</td>
+                    <td class="text-center"></td>
+                    <td class="text-center"></td>
+                    <td class="text-center"></td>
+                    <td class="text-center">14/01<br />Annulation</td>
+                    <td class="text-center">
+                      <span class="text-gray-400">15/01<br />-</span>
+                    </td>
+                    <td class="text-center"></td>
+                  </tr>
+                </table>
               </div>
               <div class="mt-3 p-3 bg-orange-50 rounded border border-orange-200">
                 <p class="text-sm">
