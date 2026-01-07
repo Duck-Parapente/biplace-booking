@@ -116,6 +116,75 @@
           </div>
         </FaqItem>
 
+        <FaqItem question="Comment fonctionne l'algorithme d'attribution des packs ?">
+          <p class="mb-4">
+            L'algorithme cherche à <strong>maximiser le nombre de réservations attribuées</strong>
+            tout en respectant les priorités. Voici un exemple simple :
+          </p>
+
+          <div class="bg-gray-50 p-6 rounded-lg mb-4">
+            <h4 class="font-semibold text-gray-900 mb-4 text-center">
+              Exemple d'attribution de packs
+            </h4>
+
+            <!-- Demandes initiales -->
+            <div class="mb-6">
+              <p class="text-sm font-semibold text-gray-700 mb-3">📋 Demandes de réservation :</p>
+              <div class="space-y-2">
+                <div class="bg-white p-3 rounded border-l-4 border-blue-500">
+                  <div class="flex items-center justify-between">
+                    <span class="font-medium">Pilote 1</span>
+                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                      Score: 50 canardos (plus prioritaire)
+                    </span>
+                  </div>
+                  <div class="text-sm text-gray-600 mt-1">Demande : Pack A ou Pack B</div>
+                </div>
+                <div class="bg-white p-3 rounded border-l-4 border-orange-500">
+                  <div class="flex items-center justify-between">
+                    <span class="font-medium">Pilote 2</span>
+                    <span class="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">
+                      Score: 120 canardos (moins prioritaire)
+                    </span>
+                  </div>
+                  <div class="text-sm text-gray-600 mt-1">Demande : Pack A</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Flèche -->
+            <div class="text-center text-2xl text-gray-400 my-4">↓</div>
+
+            <!-- Résultat -->
+            <div>
+              <p class="text-sm font-semibold text-gray-700 mb-3">✅ Attribution finale :</p>
+              <div class="space-y-2">
+                <div class="bg-green-50 p-3 rounded border-l-4 border-green-500">
+                  <p class="text-sm text-gray-700">Le Pack B est attribué à Pilote 1</p>
+                </div>
+                <div class="bg-green-50 p-3 rounded border-l-4 border-green-500">
+                  <p class="text-sm text-gray-700">Le Pack A est attribué à Pilote 2</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Explication -->
+            <div class="mt-4 p-3 bg-blue-50 rounded border border-blue-200">
+              <p class="text-sm text-gray-700">
+                <strong>💡 Pourquoi cette attribution ?</strong><br />
+                Bien que Pilote 1 soit plus prioritaire, l'algorithme lui attribue le Pack B car
+                cela permet d'attribuer aussi le Pack A au Pilote 2.
+                <strong>Résultat : 2 packs attribués au lieu d'un seul</strong>.
+              </p>
+            </div>
+          </div>
+
+          <p class="text-sm text-gray-600 italic">
+            L'algorithme évalue toutes les combinaisons possibles pour trouver celle qui maximise le
+            nombre de réservations tout en respectant au mieux les priorités.
+          </p>
+        </FaqItem>
+
         <FaqItem question="Que se passe-t-il si ma demande n'est pas validée ?">
           <p class="mb-3">
             Si ta demande n'est pas validée à J-1, cela signifie que d'autres pilotes avec un score
