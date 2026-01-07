@@ -30,7 +30,7 @@
         <FaqItem question="Comment fonctionne le système de canardos ?">
           <p class="mb-3">
             Le système de canardos permet de gérer équitablement les priorités entre tous les
-            passagers qui souhaitent voler.
+            pilotes qui souhaitent voler.
           </p>
 
           <h4 class="font-semibold text-gray-900 mt-4 mb-2">Pourquoi ce système ?</h4>
@@ -39,7 +39,7 @@
             <li>Garantir une répartition équitable des créneaux de vol</li>
             <li>Éviter qu'une même personne monopolise toujours les mêmes jours</li>
             <li>
-              Donner leur chance à tous les passagers, même ceux qui réservent moins fréquemment
+              Donner leur chance à tous les pilotes, même ceux qui réservent moins fréquemment
             </li>
             <li>Automatiser et rendre transparent le processus de validation des demandes</li>
             <li>Maximiser le nombre de packs attribués</li>
@@ -82,10 +82,9 @@
                 disponibles en fonction :
               </p>
               <ul class="list-disc pl-6 mt-2 space-y-1">
-                <li>Des demandes de réservation de tous les passagers</li>
+                <li>Des demandes de réservation de tous les pilotes</li>
                 <li>
-                  Du score canardos de chaque passager (plus le score est bas, plus tu es
-                  prioritaire)
+                  Du score canardos de chaque pilote (plus le score est bas, plus tu es prioritaire)
                 </li>
                 <li>De la disponibilité des packs</li>
                 <li>De l'optimisation pour maximiser le nombre de réservations attribuées</li>
@@ -119,8 +118,8 @@
 
         <FaqItem question="Que se passe-t-il si ma demande n'est pas validée ?">
           <p class="mb-3">
-            Si ta demande n'est pas validée à J-1, cela signifie que d'autres passagers avec un
-            score canardos plus bas ont été prioritaires sur les créneaux disponibles.
+            Si ta demande n'est pas validée à J-1, cela signifie que d'autres pilotes avec un score
+            canardos plus bas ont été prioritaires sur les créneaux disponibles.
           </p>
           <p class="mb-3">
             <strong>Tes options :</strong>
@@ -145,7 +144,7 @@
               Ton score canardos augmentera en fonction du nombre de jours entre la création et
               l'annulation
             </li>
-            <li>L'annulation libère le créneau pour d'autres passagers en attente</li>
+            <li>L'annulation libère le créneau pour d'autres pilotes en attente</li>
           </ul>
           <p class="mt-3">
             Privilégie les demandes sur des dates où tu es vraiment disponible pour voler.
