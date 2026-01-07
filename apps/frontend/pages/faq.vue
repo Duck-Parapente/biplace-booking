@@ -46,11 +46,8 @@
           </ul>
 
           <h4 class="font-semibold text-gray-900 mt-4 mb-2">Comment évoluent tes canardos ?</h4>
-          <ul class="list-disc pl-6 space-y-2">
-            <li>
-              <strong>Ton score augmente</strong> à chaque réservation clôturée ou annulée (nombre
-              de jours entre la création de la réservation et l'action)
-            </li>
+          <ul class="list-disc pl-6 mb-4 space-y-2">
+            <li><strong>Ton score augmente</strong> à chaque réservation clôturée ou annulée</li>
             <li>
               <strong>Plus ton score est élevé, moins tu es prioritaire</strong> - cela signifie que
               tu as déjà beaucoup réservé sur les 12 derniers mois
@@ -58,6 +55,136 @@
             <li>Plus ton score est bas, plus tu es prioritaire pour obtenir une réservation</li>
             <li>Cela permet aux personnes n'ayant pas volé récemment d'être avantagées</li>
           </ul>
+
+          <h4 class="font-semibold text-gray-900 mt-4 mb-3">
+            Comment sont calculés les canardos ajoutés ?
+          </h4>
+          <p class="mb-4 text-gray-700">
+            Le nombre de canardos ajoutés = <strong>1 canardo par jour écoulé</strong> entre la
+            création de la demande et l'action (clôture ou annulation), avec un maximum égal au
+            nombre de jours entre la création et la date de réservation.
+          </p>
+
+          <div class="bg-gray-50 p-6 rounded-lg space-y-6">
+            <!-- Cas 1 : Clôture à temps -->
+            <div>
+              <h5 class="font-semibold text-gray-900 mb-3">
+                ✅ Cas 1 : Tu clôtures ta réservation après le vol
+              </h5>
+              <div class="relative">
+                <!-- Timeline -->
+                <div class="relative text-xs text-gray-600 mb-2" style="min-height: 2.5rem">
+                  <div class="absolute p-1" style="left: 0%; bottom: 0">10/01</div>
+                  <div
+                    class="absolute p-1"
+                    style="left: 83.3%; transform: translateX(-50%); bottom: 0"
+                  >
+                    15/01
+                  </div>
+                  <div
+                    class="absolute p-1"
+                    style="left: 100%; transform: translateX(-100%); bottom: 0"
+                  >
+                    16/01
+                  </div>
+                </div>
+                <div class="flex items-center mb-2">
+                  <div class="flex-1">
+                    <div class="h-2 bg-blue-200 rounded-full relative">
+                      <div
+                        class="absolute p-1 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-600 rounded-full"
+                        style="left: 0%"
+                      ></div>
+                      <div
+                        class="absolute p-1 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-green-600 rounded-full"
+                        style="left: 83.3%"
+                      ></div>
+                      <div
+                        class="absolute p-1 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-green-700 rounded-full"
+                        style="left: 100%"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="relative text-xs text-gray-600" style="min-height: 2.5rem">
+                  <div class="absolute p-1" style="left: 0%">Confirmation</div>
+                  <div class="absolute p-1" style="left: 83.3%; transform: translateX(-50%)">
+                    Réservation
+                  </div>
+                  <div class="absolute p-1" style="left: 100%; transform: translateX(-100%)">
+                    Clôture
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
+                <p class="text-sm">
+                  <strong>Calcul :</strong> 5 jours entre la confirmation et la date de la
+                  réservation<br />
+                  <strong>Points ajoutés :</strong> 5 canardos (maximum atteint)
+                </p>
+              </div>
+            </div>
+
+            <!-- Cas 2 : Annulation tardive -->
+            <div>
+              <h5 class="font-semibold text-gray-900 mb-3">⚠️ Cas 2 : Tu annules tard</h5>
+              <div class="relative">
+                <!-- Timeline -->
+                <div class="relative text-xs text-gray-600 mb-2" style="min-height: 2.5rem">
+                  <div class="absolute p-1" style="left: 0%; bottom: 0">10/01</div>
+                  <div
+                    class="absolute p-1"
+                    style="left: 66.7%; transform: translateX(-50%); bottom: 0"
+                  >
+                    14/01
+                  </div>
+                  <div
+                    class="absolute p-1"
+                    style="left: 83.3%; transform: translateX(-50%); bottom: 0"
+                  >
+                    <span class="text-gray-400">15/01</span>
+                  </div>
+                </div>
+                <div class="flex items-center mb-2">
+                  <div class="flex-1">
+                    <div class="h-2 bg-blue-200 rounded-full relative">
+                      <div
+                        class="absolute p-1 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-600 rounded-full"
+                        style="left: 0%"
+                      ></div>
+                      <div
+                        class="absolute p-1 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-red-600 rounded-full"
+                        style="left: 66.7%"
+                      ></div>
+                      <div
+                        class="absolute p-1 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-gray-400 rounded-full"
+                        style="left: 83.3%"
+                      ></div>
+                      <div
+                        class="absolute p-1 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-transparent rounded-full"
+                        style="left: 100%"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="relative text-xs text-gray-600" style="min-height: 2.5rem">
+                  <div class="absolute p-1" style="left: 0%">Confirmation</div>
+                  <div class="absolute p-1" style="left: 66.7%; transform: translateX(-50%)">
+                    Annulation
+                  </div>
+                  <div class="absolute p-1" style="left: 83.3%; transform: translateX(-50%)">
+                    <span class="text-gray-400">Créneau libéré</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3 p-3 bg-orange-50 rounded border border-orange-200">
+                <p class="text-sm">
+                  <strong>Calcul :</strong> 4 jours entre la confirmation et l'annulation<br />
+                  <strong>Points ajoutés :</strong> 4 canardos
+                </p>
+              </div>
+            </div>
+          </div>
         </FaqItem>
 
         <FaqItem question="Comment se déroule le processus de réservation ?">
