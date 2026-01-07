@@ -66,95 +66,95 @@
           </p>
 
           <div class="space-y-6">
-            <!-- Cas 1 : Clôture à temps -->
             <div>
               <h5 class="font-semibold text-gray-900 mb-3">
                 ✅ Cas 1 : Tu clôtures ta réservation après le vol
               </h5>
               <div>
-                <!-- Timeline -->
                 <table class="w-full text-xs text-gray-600 table-fixed">
-                  <tr class="h-5">
-                    <td class="relative">
-                      <div class="absolute inset-0 flex items-center justify-center">
-                        <div
-                          class="w-3 h-3 bg-blue-600 rounded-full border-2 border-white relative z-10"
-                        ></div>
-                      </div>
-                      <div class="absolute inset-0 flex items-center">
-                        <div class="w-full h-0.5 bg-blue-400"></div>
-                      </div>
-                    </td>
-                    <td class="relative">
-                      <div class="absolute inset-0 flex items-center justify-center">
-                        <div
-                          class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
-                        ></div>
-                      </div>
-                      <div class="absolute inset-0 flex items-center">
-                        <div class="w-full h-0.5 bg-blue-400"></div>
-                      </div>
-                    </td>
-                    <td class="relative">
-                      <div class="absolute inset-0 flex items-center justify-center">
-                        <div
-                          class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
-                        ></div>
-                      </div>
-                      <div class="absolute inset-0 flex items-center">
-                        <div class="w-full h-0.5 bg-blue-400"></div>
-                      </div>
-                    </td>
-                    <td class="relative">
-                      <div class="absolute inset-0 flex items-center justify-center">
-                        <div
-                          class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
-                        ></div>
-                      </div>
-                      <div class="absolute inset-0 flex items-center">
-                        <div class="w-full h-0.5 bg-blue-400"></div>
-                      </div>
-                    </td>
-                    <td class="relative">
-                      <div class="absolute inset-0 flex items-center justify-center">
-                        <div
-                          class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
-                        ></div>
-                      </div>
-                      <div class="absolute inset-0 flex items-center">
-                        <div class="w-full h-0.5 bg-blue-400"></div>
-                      </div>
-                    </td>
-                    <td class="relative">
-                      <div class="absolute inset-0 flex items-center justify-center">
-                        <div
-                          class="w-3 h-3 bg-green-600 rounded-full border-2 border-white relative z-10"
-                        ></div>
-                      </div>
-                      <div class="absolute inset-0 flex items-center">
-                        <div class="w-full h-0.5 bg-blue-400"></div>
-                      </div>
-                    </td>
-                    <td class="relative">
-                      <div class="absolute inset-0 flex items-center justify-center">
-                        <div
-                          class="w-3 h-3 bg-green-700 rounded-full border-2 border-white relative z-10"
-                        ></div>
-                      </div>
-                      <div class="absolute inset-0 flex items-center">
-                        <div class="w-full h-0.5 bg-blue-400"></div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="text-center">10/01<br />Confirmation</td>
-                    <td class="text-center"></td>
-                    <td class="text-center"></td>
-                    <td class="text-center"></td>
-                    <td class="text-center"></td>
-                    <td class="text-center">15/01<br />Réservation</td>
-                    <td class="text-center">16/01<br />Clôture</td>
-                  </tr>
+                  <tbody>
+                    <tr class="h-5">
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-blue-600 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-green-600 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-green-700 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-center">10/01<br />Confirmation</td>
+                      <td class="text-center"></td>
+                      <td class="text-center"></td>
+                      <td class="text-center"></td>
+                      <td class="text-center"></td>
+                      <td class="text-center">15/01<br />Réservation</td>
+                      <td class="text-center">16/01<br />Clôture</td>
+                    </tr>
+                  </tbody>
                 </table>
               </div>
               <div class="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
@@ -166,90 +166,90 @@
               </div>
             </div>
 
-            <!-- Cas 2 : Annulation tardive -->
             <div>
               <h5 class="font-semibold text-gray-900 mb-3">⚠️ Cas 2 : Tu annules tard</h5>
               <div>
-                <!-- Timeline -->
                 <table class="w-full text-xs text-gray-600 table-fixed">
-                  <tr class="h-5">
-                    <td class="relative">
-                      <div class="absolute inset-0 flex items-center justify-center">
-                        <div
-                          class="w-3 h-3 bg-blue-600 rounded-full border-2 border-white relative z-10"
-                        ></div>
-                      </div>
-                      <div class="absolute inset-0 flex items-center">
-                        <div class="w-full h-0.5 bg-blue-400"></div>
-                      </div>
-                    </td>
-                    <td class="relative">
-                      <div class="absolute inset-0 flex items-center justify-center">
-                        <div
-                          class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
-                        ></div>
-                      </div>
-                      <div class="absolute inset-0 flex items-center">
-                        <div class="w-full h-0.5 bg-blue-400"></div>
-                      </div>
-                    </td>
-                    <td class="relative">
-                      <div class="absolute inset-0 flex items-center justify-center">
-                        <div
-                          class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
-                        ></div>
-                      </div>
-                      <div class="absolute inset-0 flex items-center">
-                        <div class="w-full h-0.5 bg-blue-400"></div>
-                      </div>
-                    </td>
-                    <td class="relative">
-                      <div class="absolute inset-0 flex items-center justify-center">
-                        <div
-                          class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
-                        ></div>
-                      </div>
-                      <div class="absolute inset-0 flex items-center">
-                        <div class="w-full h-0.5 bg-blue-400"></div>
-                      </div>
-                    </td>
-                    <td class="relative">
-                      <div class="absolute inset-0 flex items-center justify-center">
-                        <div
-                          class="w-3 h-3 bg-red-600 rounded-full border-2 border-white relative z-10"
-                        ></div>
-                      </div>
-                      <div class="absolute inset-0 flex items-center">
-                        <div class="w-full h-0.5 bg-blue-400"></div>
-                      </div>
-                    </td>
-                    <td class="relative">
-                      <div class="absolute inset-0 flex items-center justify-center">
-                        <div
-                          class="w-3 h-3 bg-gray-400 rounded-full border-2 border-white relative z-10"
-                        ></div>
-                      </div>
-                      <div class="absolute inset-0 flex items-center">
-                        <div class="w-full h-0.5 bg-blue-400"></div>
-                      </div>
-                    </td>
-                    <td class="relative">
-                      <div class="absolute inset-0 flex items-center">
-                        <div class="w-full h-0.5 bg-blue-400"></div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="text-center">10/01<br />Confirmation</td>
-                    <td class="text-center"></td>
-                    <td class="text-center"></td>
-                    <td class="text-center"></td>
-                    <td class="text-center">14/01<br />Annulation</td>
-                    <td class="text-center">
-                      <span class="text-gray-400">15/01<br />-</span>
-                    </td>
-                    <td class="text-center"></td>
-                  </tr>
+                  <tbody>
+                    <tr class="h-5">
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-blue-600 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-red-600 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-400 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-center">10/01<br />Confirmation</td>
+                      <td class="text-center"></td>
+                      <td class="text-center"></td>
+                      <td class="text-center"></td>
+                      <td class="text-center">14/01<br />Annulation</td>
+                      <td class="text-center">
+                        <span class="text-gray-400">15/01<br />-</span>
+                      </td>
+                      <td class="text-center"></td>
+                    </tr>
+                  </tbody>
                 </table>
               </div>
               <div class="mt-3 p-3 bg-orange-50 rounded border border-orange-200">
