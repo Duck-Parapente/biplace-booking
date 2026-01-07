@@ -458,7 +458,7 @@
 
       <div class="mt-8 text-center">
         <NuxtLink
-          to="/planning"
+          to="/"
           class="bg-secondary-600 text-white transition text-sm px-4 py-2 rounded disabled:opacity-50"
         >
           Retour au planning
