@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <div class="max-w-4xl mx-auto">
-      <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+      <div class="bg-white rounded-lg shadow-sm p-4 m-4">
         <p class="text-gray-600">
           Retrouve ici toutes les réponses aux questions fréquentes sur le système de réservation
           des vols biplaces.
