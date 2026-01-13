@@ -43,10 +43,10 @@ export const useReservation = () => {
     }
   };
 
-  const updateReservation = async (reservationId: string, cost: number): Promise<void> => {
+  const updateReservation = async (reservationId: string, manualCost: number): Promise<void> => {
     await callApi(`/reservations/${reservationId}`, {
       method: 'PATCH',
-      body: JSON.stringify({ cost }),
+      body: JSON.stringify({ manualCost }),
     });
   };
 

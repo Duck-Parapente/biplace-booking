@@ -67,5 +67,5 @@ export class CloseReservationDto {
 export class UpdateReservationDto {
   @IsNotEmpty()
   @IsInt()
-  cost!: number;
+  manualCost!: number;
 }

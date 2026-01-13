@@ -3,7 +3,7 @@ import { Integer } from '@libs/ddd/integer.value-object';
 import { ReservationCancelledDomainEvent } from '@modules/reservation/domain/events/reservation-cancelled.domain-event';
 import { ReservationClosedDomainEvent } from '@modules/reservation/domain/events/reservation-closed.domain-event';
 import {
-  ReservationEvent,
+  ReservationCostEvent,
   ReservationHistory,
   ReservationWishHistory,
   StatusUpdate,
@@ -69,26 +69,40 @@ export const buildReservationHistory = (
     new StatusUpdate(ReservationStatus.CONFIRMED, reservation.createdAt),
   ];
 
-  const otherEvents: ReservationEvent[] = [];
+  const costEvents: ReservationCostEvent[] = [];
 
   events.forEach((event) => {
-    const payload = event.payload as { status?: string; cost?: { props: { value: number } } };
+    const payload = event.payload as {
+      status?: string;
+      manualCost?: { props: { value: number } };
+      automaticCost?: { props: { value: number } };
+    };
     const status = mapEventNameToReservationStatus(event.name);
 
     if (status) {
       statusUpdates.push(new StatusUpdate(status, DateValueObject.fromDate(event.createdAt)));
     }
 
-    if (payload.cost) {
-      otherEvents.push(
-        new ReservationEvent(
-          'COST_UPDATED',
-          new Integer({ value: payload.cost.props.value }),
+    if (payload.manualCost) {
+      costEvents.push(
+        new ReservationCostEvent(
+          'MANUAL_COST_UPDATED',
+          new Integer({ value: payload.manualCost.props.value }),
+          DateValueObject.fromDate(event.createdAt),
+        ),
+      );
+    }
+
+    if (payload.automaticCost) {
+      costEvents.push(
+        new ReservationCostEvent(
+          'AUTOMATIC_COST_UPDATED',
+          new Integer({ value: payload.automaticCost.props.value }),
           DateValueObject.fromDate(event.createdAt),
         ),
       );
     }
   });
 
-  return new ReservationHistory(reservation, statusUpdates, otherEvents);
+  return new ReservationHistory(reservation, statusUpdates, costEvents);
 };

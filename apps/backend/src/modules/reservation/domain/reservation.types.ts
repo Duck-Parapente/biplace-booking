@@ -13,7 +13,8 @@ interface BaseReservationProps {
 
 export type CreateReservationProps = BaseReservationProps;
 export type ReservationProps = BaseReservationProps & {
-  cost: Integer;
+  manualCost: Integer | null;
+  automaticCost: Integer | null;
   status: ReservationStatus;
 };
 
@@ -52,7 +53,8 @@ interface PackReservation {
   startingDate: DateValueObject;
   endingDate: DateValueObject;
   status: ReservationStatus;
-  cost: Integer;
+  manualCost: Integer | null;
+  automaticCost: Integer | null;
   userName?: string;
   flightLog?: FlightLogProps;
 }

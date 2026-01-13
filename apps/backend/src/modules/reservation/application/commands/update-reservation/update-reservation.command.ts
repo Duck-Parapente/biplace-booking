@@ -4,11 +4,11 @@ import { ReservationEntity } from '@modules/reservation/domain/reservation.entit
 
 export class UpdateReservationCommand extends Command {
   readonly reservation: ReservationEntity;
-  readonly cost: Integer;
+  readonly manualCost: Integer;
 
   constructor(props: CommandProps<UpdateReservationCommand>) {
     super(props);
     this.reservation = props.reservation;
-    this.cost = props.cost;
+    this.manualCost = props.manualCost;
   }
 }

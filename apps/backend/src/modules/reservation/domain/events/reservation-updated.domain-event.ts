@@ -3,10 +3,10 @@ import { DomainEvent } from '@libs/ddd';
 import { Integer } from '@libs/ddd/integer.value-object';
 
 export class ReservationUpdatedDomainEvent extends DomainEvent {
-  readonly cost: Integer;
+  readonly manualCost: Integer;
 
   constructor(props: DomainEventProps<ReservationUpdatedDomainEvent>) {
     super(props);
-    this.cost = props.cost;
+    this.manualCost = props.manualCost;
   }
 }

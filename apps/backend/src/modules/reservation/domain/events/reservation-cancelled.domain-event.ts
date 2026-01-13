@@ -4,12 +4,12 @@ import { Integer } from '@libs/ddd/integer.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
 export class ReservationCancelledDomainEvent extends DomainEvent {
-  readonly cost: Integer;
+  readonly automaticCost: Integer;
   readonly userId?: UUID;
 
   constructor(props: DomainEventProps<ReservationCancelledDomainEvent>) {
     super(props);
-    this.cost = props.cost;
+    this.automaticCost = props.automaticCost;
     this.userId = props.userId;
   }
 }

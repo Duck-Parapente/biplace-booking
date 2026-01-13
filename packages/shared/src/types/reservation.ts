@@ -20,6 +20,8 @@ export enum ReservationWishStatusDto {
   CLOSED = 'CLOSED',
 }
 
+export type CostUpdateType = 'MANUAL_COST_UPDATED' | 'AUTOMATIC_COST_UPDATED';
+
 export enum EventType {
   WISH = 'WISH',
   RESERVATION = 'RESERVATION',
@@ -69,6 +71,10 @@ export class ReservationCostUpdateDto {
   @IsNotEmpty()
   @IsDateString()
   date!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  type!: CostUpdateType;
 }
 
 export class ReservationWishDto {
@@ -145,9 +151,13 @@ class PackReservationDto {
   @IsEnum(ReservationWishStatusDto)
   status!: ReservationWishStatusDto;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsInt()
-  cost!: number;
+  manualCost!: number | null;
+
+  @IsOptional()
+  @IsInt()
+  automaticCost!: number | null;
 
   @IsOptional()
   @IsString()

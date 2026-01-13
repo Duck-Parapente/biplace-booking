@@ -42,7 +42,9 @@ export const toEntity = (record: Reservation): ReservationEntity => {
       reservationWishId: record.reservationWishId
         ? new UUID({ uuid: record.reservationWishId })
         : undefined,
-      cost: new Integer({ value: record.cost }),
+      manualCost: record.manualCost !== null ? new Integer({ value: record.manualCost }) : null,
+      automaticCost:
+        record.automaticCost !== null ? new Integer({ value: record.automaticCost }) : null,
     },
   });
 };
@@ -54,7 +56,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
   constructor(
     @Inject(EVENT_EMITTER)
     private readonly eventEmitter: EventEmitterPort,
-  ) {}
+  ) { }
 
   private buildMatchingConfirmedAndClosedReservationsFilter(
     startingDate: DateValueObject,
@@ -81,7 +83,8 @@ export class ReservationRepository implements ReservationRepositoryPort {
         packId: reservation.packId.uuid,
         userId: reservation.userId?.uuid ?? null,
         reservationWishId: reservation.reservationWishId?.uuid ?? null,
-        cost: reservation.cost.value,
+        automaticCost: reservation.automaticCost?.value ?? null,
+        manualCost: reservation.manualCost?.value ?? null,
       },
     });
 
@@ -161,13 +164,14 @@ export class ReservationRepository implements ReservationRepositoryPort {
       where: { id: reservation.id.uuid },
       data: {
         status: reservation.status,
-        cost: reservation.cost.value,
+        manualCost: reservation.manualCost?.value ?? null,
+        automaticCost: reservation.automaticCost?.value ?? null,
       },
     });
 
     await reservation.publishEvents(this.eventEmitter);
     this.logger.log(
-      `Reservation updated: ${reservation.id.uuid} with status ${reservation.status} and cost ${reservation.cost.value}`,
+      `Reservation updated: ${reservation.id.uuid} with status ${reservation.status} and manualCost ${reservation.manualCost?.value ?? 'null'} and automaticCost ${reservation.automaticCost?.value ?? 'null'}`,
     );
   }
 
@@ -221,13 +225,16 @@ export class ReservationRepository implements ReservationRepositoryPort {
           ? `${reservation.user.firstName ?? ''} ${reservation.user.lastName ?? ''}`.trim()
           : undefined,
         status: mapStatus(reservation.status),
-        cost: new Integer({ value: reservation.cost }),
+        manualCost: reservation.manualCost !== null ? new Integer({ value: reservation.manualCost }) : null,
+        automaticCost: reservation.automaticCost !== null
+          ? new Integer({ value: reservation.automaticCost })
+          : null,
         flightLog: reservation.flightLog
           ? {
-              flightTimeMinutes: new Integer({ value: reservation.flightLog.flightsMinutes }),
-              flightsCount: new Integer({ value: reservation.flightLog.flightsCount }),
-              publicComment: reservation.flightLog.publicComment ?? undefined,
-            }
+            flightTimeMinutes: new Integer({ value: reservation.flightLog.flightsMinutes }),
+            flightsCount: new Integer({ value: reservation.flightLog.flightsCount }),
+            publicComment: reservation.flightLog.publicComment ?? undefined,
+          }
           : undefined,
       })),
       totalFlightsCount,

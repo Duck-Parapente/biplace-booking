@@ -62,7 +62,12 @@
 </template>
 
 <script setup lang="ts">
-import { type ReservationWishDto, type PackDto, ReservationWishStatusDto } from 'shared';
+import {
+  type ReservationWishDto,
+  type PackDto,
+  ReservationWishStatusDto,
+  type CostUpdateType,
+} from 'shared';
 
 interface Props {
   wish: ReservationWishDto;
@@ -83,17 +88,27 @@ const toggleHistory = () => {
 
 const sortedEvents = computed(() => {
   // Combine status updates and cost updates into a single timeline
-  const statusEvents = props.wish.statusUpdates.map((update) => ({
+  const statusEvents = props.wish.statusUpdates.map(({ status, date, type }) => ({
     type: 'status' as const,
-    status: update.status,
-    date: update.date,
-    eventType: update.type,
+    status,
+    date,
+    eventType: type,
   }));
 
-  const costEvents = props.wish.costUpdates.map((update) => ({
-    type: 'cost' as const,
-    cost: update.cost,
-    date: update.date,
+  const getType = (update: CostUpdateType) => {
+    if (update === 'MANUAL_COST_UPDATED') {
+      return 'manual' as const;
+    }
+    if (update === 'AUTOMATIC_COST_UPDATED') {
+      return 'automatic' as const;
+    }
+    return 'unknown' as const;
+  };
+
+  const costEvents = props.wish.costUpdates.map(({ cost, date, type }) => ({
+    type: getType(type),
+    cost,
+    date,
   }));
 
   return [...statusEvents, ...costEvents].sort((a, b) => {
@@ -104,7 +119,7 @@ const sortedEvents = computed(() => {
       return timeB - timeA;
     }
 
-    return a.type === 'cost' ? -1 : 1;
+    return a.type === 'status' ? 1 : -1;
   });
 });
 

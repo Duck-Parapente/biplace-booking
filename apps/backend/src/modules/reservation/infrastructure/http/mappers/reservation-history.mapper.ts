@@ -1,10 +1,15 @@
 import {
-  ReservationEvent,
+  ReservationCostEvent,
   ReservationWishWithHistory,
 } from '@modules/reservation/domain/reservation-wish.read-models';
 import { ReservationWishStatus } from '@modules/reservation/domain/reservation-wish.types';
 import { ReservationStatus } from '@modules/reservation/domain/reservation.types';
-import { ReservationWishDto, ReservationWishStatusDto, EventType } from 'shared';
+import {
+  ReservationWishDto,
+  ReservationWishStatusDto,
+  EventType,
+  ReservationCostUpdateDto,
+} from 'shared';
 
 const mapWishStatusToDto = (status: ReservationWishStatus): ReservationWishStatusDto => {
   switch (status) {
@@ -34,8 +39,9 @@ const mapReservationStatusToDto = (status: ReservationStatus): ReservationWishSt
   }
 };
 
-const mapCostUpdateToDto = (event: ReservationEvent): { cost: number; date: string } => ({
+const mapCostUpdateToDto = (event: ReservationCostEvent): ReservationCostUpdateDto => ({
   cost: event.cost.value,
+  type: event.type,
   date: event.occurredAt.value.toISOString(),
 });
 
@@ -62,7 +68,10 @@ export function mapReservationWishWithHistoryToDto(
           packId: reservationHistory.reservation.packId.uuid,
           isCancelable: reservationHistory.reservation.isCancelable(),
           isClosable: reservationHistory.reservation.isClosable(),
-          cost: reservationHistory.reservation.cost.value,
+          cost:
+            reservationHistory.reservation.manualCost?.value ??
+            reservationHistory.reservation.automaticCost?.value ??
+            0,
         }
       : null,
     statusUpdates: [
@@ -77,6 +86,6 @@ export function mapReservationWishWithHistoryToDto(
         type: EventType.RESERVATION,
       })) ?? []),
     ],
-    costUpdates: reservationHistory?.otherEvents.map(mapCostUpdateToDto) ?? [],
+    costUpdates: reservationHistory?.costEvents.map(mapCostUpdateToDto) ?? [],
   };
 }

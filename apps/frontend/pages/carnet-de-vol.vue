@@ -112,7 +112,7 @@
                 <PilotDisplay :display-name="reservation.userName" />
                 <template v-if="editMode">
                   <span class="font-semibold text-xl text-gray-200">&nbsp;/&nbsp;</span>
-                  <CostDisplay :cost="reservation.cost" />
+                  <CostDisplay :cost="reservation.manualCost ?? reservation.automaticCost ?? 0" />
                 </template>
               </div>
 
@@ -144,9 +144,11 @@
       </div>
     </div>
     <EditCostModal
+      v-if="editingReservation"
       :open="editModalOpen"
-      :reservation-id="editingReservation?.id || ''"
-      :current-cost="editingReservation?.cost || 0"
+      :reservation-id="editingReservation.id"
+      :automatic-cost="editingReservation.automaticCost"
+      :current-manual-cost="editingReservation.manualCost"
       @close="closeEditModal"
       @updated="handleCostUpdated"
     />

@@ -184,10 +184,10 @@ export class ReservationWishRepository implements ReservationWishRepositoryPort 
       const reservationHistory = record.reservation
         ? (() => {
             const reservationEntity = toReservationEntity(record.reservation);
-            const resEvents = reservationEvents.filter(
+            const thisRecordEvents = reservationEvents.filter(
               ({ aggregateId }) => aggregateId === record.reservation?.id,
             );
-            return buildReservationHistory(reservationEntity, resEvents);
+            return buildReservationHistory(reservationEntity, thisRecordEvents);
           })()
         : null;
 

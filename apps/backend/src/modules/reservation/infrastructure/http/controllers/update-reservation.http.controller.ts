@@ -39,7 +39,7 @@ export class UpdateReservationHttpController {
   async updateReservation(
     @Param('id') id: string,
     @Request() { user: { id: userId } }: { user: AuthenticatedUser },
-    @Body() { cost }: UpdateReservationDto,
+    @Body() { manualCost }: UpdateReservationDto,
   ) {
     const reservationId = new UUID({ uuid: id });
     const reservation = await this.reservationRepository.findById(reservationId);
@@ -50,7 +50,7 @@ export class UpdateReservationHttpController {
 
     const command = new UpdateReservationCommand({
       reservation,
-      cost: new Integer({ value: cost }),
+      manualCost: new Integer({ value: manualCost }),
       metadata: {
         userId,
       },

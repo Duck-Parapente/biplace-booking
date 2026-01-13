@@ -8,12 +8,24 @@
       <h3 class="text-xl font-semibold mb-4 text-secondary-600">Modifier la réservation</h3>
       <div class="space-y-4">
         <div>
-          <label for="cost-input" class="block text-sm font-medium text-gray-700 mb-2">
-            Coût (coins)
+          <label for="automatic-cost-input" class="block text-sm font-medium text-gray-700 mb-2">
+            Coût calculé automatiquement
           </label>
           <input
-            id="cost-input"
-            v-model.number="newCost"
+            id="automatic-cost-input"
+            :value="props.automaticCost"
+            type="number"
+            disabled
+            class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500 cursor-not-allowed"
+          />
+        </div>
+        <div>
+          <label for="manual-cost-input" class="block text-sm font-medium text-gray-700 mb-2">
+            Coût manuel (+ prioritaire)
+          </label>
+          <input
+            id="manual-cost-input"
+            v-model.number="newManualCost"
             type="number"
             min="0"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -46,7 +58,8 @@
 interface Props {
   open: boolean;
   reservationId: string;
-  currentCost: number;
+  currentManualCost: number | null;
+  automaticCost: number | null;
 }
 
 const props = defineProps<Props>();
@@ -57,14 +70,14 @@ const emit = defineEmits<{
 
 const { updateReservation } = useReservation();
 
-const newCost = ref(props.currentCost);
+const newManualCost = ref(props.currentManualCost ?? 0);
 const saving = ref(false);
 
 watch(
   () => props.open,
   (isOpen) => {
     if (isOpen) {
-      newCost.value = props.currentCost;
+      newManualCost.value = props.currentManualCost ?? 0;
     }
   },
 );
@@ -76,11 +89,12 @@ const handleClose = () => {
 };
 
 const handleConfirm = async () => {
-  if (newCost.value < 0 || saving.value) return;
+  if (newManualCost.value !== null && newManualCost.value < 0) return;
+  if (saving.value) return;
 
   try {
     saving.value = true;
-    await updateReservation(props.reservationId, newCost.value);
+    await updateReservation(props.reservationId, newManualCost.value);
     emit('updated');
     emit('close');
   } catch (error) {

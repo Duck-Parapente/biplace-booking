@@ -26,21 +26,22 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
 
   static create(props: CreateReservationProps, metadata: DomainEventMetadata) {
     const id = UUID.random();
-    const fullPros = {
+    const fullProps = {
       ...props,
       status: ReservationStatus.CONFIRMED,
-      cost: Integer.zero(),
+      manualCost: null,
+      automaticCost: null,
     };
     const entity = new ReservationEntity({
       id,
       createdAt: DateValueObject.fromDate(new Date()),
-      props: fullPros,
+      props: fullProps,
     });
 
     entity.addEvent(
       new ReservationCreatedDomainEvent({
         aggregateId: id,
-        reservation: fullPros,
+        reservation: fullProps,
         metadata,
       }),
     );
@@ -76,8 +77,12 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     return this.props.status;
   }
 
-  get cost() {
-    return this.props.cost;
+  get manualCost() {
+    return this.props.manualCost;
+  }
+
+  get automaticCost() {
+    return this.props.automaticCost;
   }
 
   cancel(metadata: DomainEventMetadata): ReservationEntity {
@@ -85,13 +90,13 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
       throw new CannotCancelReservationException(this.id, this.props.status);
     }
     this.props.status = ReservationStatus.CANCELLED;
-    this.props.cost = this.calculateCost();
+    this.props.automaticCost = this.calculateCost();
 
     this.addEvent(
       new ReservationCancelledDomainEvent({
         aggregateId: this.id,
         metadata,
-        cost: this.props.cost,
+        automaticCost: this.props.automaticCost,
         userId: this.props.userId,
       }),
     );
@@ -111,7 +116,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
         startingDate: this.startingDate.value.toISOString(),
         now: new Date().toISOString(),
       },
-      output: { cost: result.value },
+      output: { automaticCost: result.value },
     });
 
     return result;
@@ -131,13 +136,13 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     }
 
     this.props.status = ReservationStatus.CLOSED;
-    this.props.cost = this.calculateCost();
+    this.props.automaticCost = this.calculateCost();
 
     this.addEvent(
       new ReservationClosedDomainEvent({
         aggregateId: this.id,
         metadata,
-        cost: this.props.cost,
+        automaticCost: this.props.automaticCost,
         userId: this.props.userId,
         flightLog,
       }),
@@ -146,14 +151,14 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     return this;
   }
 
-  updateCost(cost: Integer, metadata: DomainEventMetadata): ReservationEntity {
-    this.props.cost = cost;
+  updateManualCost(manualCost: Integer, metadata: DomainEventMetadata): ReservationEntity {
+    this.props.manualCost = manualCost;
 
     this.addEvent(
       new ReservationUpdatedDomainEvent({
         aggregateId: this.id,
         metadata,
-        cost,
+        manualCost,
       }),
     );
 

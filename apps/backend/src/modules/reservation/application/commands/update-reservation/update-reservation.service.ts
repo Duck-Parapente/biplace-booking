@@ -14,11 +14,13 @@ export class UpdateReservationService implements ICommandHandler<UpdateReservati
     private readonly reservationRepository: ReservationRepositoryPort,
   ) {}
 
-  async execute({ reservation, cost, metadata }: UpdateReservationCommand): Promise<void> {
-    const updatedReservation = reservation.updateCost(cost, metadata);
+  async execute({ reservation, manualCost, metadata }: UpdateReservationCommand): Promise<void> {
+    const updatedReservation = reservation.updateManualCost(manualCost, metadata);
 
     await this.reservationRepository.update(updatedReservation);
 
-    this.logger.log(`Reservation ${reservation.id.uuid} updated with cost ${cost.value}`);
+    this.logger.log(
+      `Reservation ${reservation.id.uuid} updated with manualCost ${manualCost.value}`,
+    );
   }
 }

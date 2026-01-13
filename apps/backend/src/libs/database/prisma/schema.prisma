@@ -100,7 +100,8 @@ model Reservation {
     createdAt         DateTime          @db.Timestamptz(3)
     reservationWish   ReservationWish?  @relation(fields: [reservationWishId], references: [id])
     reservationWishId String?           @unique
-    cost              Int
+    manualCost        Int?
+    automaticCost     Int?
     flightLog         FlightLog?
 }
 

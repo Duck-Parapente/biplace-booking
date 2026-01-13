@@ -6,7 +6,7 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { FlightLogProps } from '../reservation.types';
 
 export class ReservationClosedDomainEvent extends DomainEvent {
-  readonly cost: Integer;
+  readonly automaticCost: Integer;
   readonly userId?: UUID;
   readonly flightLog: FlightLogProps;
 
@@ -14,6 +14,6 @@ export class ReservationClosedDomainEvent extends DomainEvent {
     super(props);
     this.userId = props.userId;
     this.flightLog = props.flightLog;
-    this.cost = props.cost;
+    this.automaticCost = props.automaticCost;
   }
 }

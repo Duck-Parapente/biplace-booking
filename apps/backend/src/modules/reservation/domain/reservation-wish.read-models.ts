@@ -19,9 +19,9 @@ export class StatusUpdate {
 /**
  * Non-status events - represents other domain events
  */
-export class ReservationEvent {
+export class ReservationCostEvent {
   constructor(
-    public readonly type: 'COST_UPDATED',
+    public readonly type: 'MANUAL_COST_UPDATED' | 'AUTOMATIC_COST_UPDATED',
     public readonly cost: Integer,
     public readonly occurredAt: DateValueObject,
   ) {}
@@ -44,7 +44,7 @@ export class ReservationHistory {
   constructor(
     public readonly reservation: ReservationEntity,
     public readonly statusUpdates: StatusUpdate[],
-    public readonly otherEvents: ReservationEvent[],
+    public readonly costEvents: ReservationCostEvent[],
   ) {}
 }
 

@@ -21,10 +21,17 @@
               </span>
             </div>
             <div
-              v-else-if="event.type === 'cost'"
+              v-else-if="event.type === 'manual'"
               class="flex items-center gap-1 text-xs text-gray-400"
             >
-              <span>Mise à jour des points:</span>
+              <span>Mise à jour manuelle des points:</span>
+              <CostDisplay :cost="event.cost" />
+            </div>
+            <div
+              v-else-if="event.type === 'automatic'"
+              class="flex items-center gap-1 text-xs text-gray-400"
+            >
+              <span>Mise à jour automatique des points:</span>
               <CostDisplay :cost="event.cost" />
             </div>
           </div>
@@ -44,7 +51,7 @@ import { formatDateTimeWithSeconds } from '~/composables/useDateHelpers';
 
 type EventItem =
   | { type: 'status'; status: ReservationWishStatusDto; date: string; eventType: EventType }
-  | { type: 'cost'; cost: number; date: string };
+  | { type: 'manual' | 'automatic' | 'unknown'; cost: number; date: string };
 
 interface Props {
   events: EventItem[];

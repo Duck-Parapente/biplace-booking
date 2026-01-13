@@ -89,20 +89,23 @@ export class UserRepository implements UserRepositoryPort {
     const twelveMonthsAgo = new Date();
     twelveMonthsAgo.setFullYear(twelveMonthsAgo.getFullYear() - 1);
 
-    const {
-      _sum: { cost },
-    } = await prisma.reservation.aggregate({
+    const reservations = await prisma.reservation.findMany({
       where: {
         userId: userId.uuid,
         startingDate: {
           gte: twelveMonthsAgo,
         },
       },
-      _sum: {
-        cost: true,
+      select: {
+        manualCost: true,
+        automaticCost: true,
       },
     });
 
-    return new Integer({ value: cost ?? 0 });
+    const total = reservations.reduce((sum, r) => {
+      return sum + (r.manualCost ?? r.automaticCost ?? 0);
+    }, 0);
+
+    return new Integer({ value: total });
   }
 }
