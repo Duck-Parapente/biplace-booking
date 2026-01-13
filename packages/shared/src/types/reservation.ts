@@ -181,4 +181,8 @@ export class PackReservationsDto {
   @IsInt()
   @IsNotEmpty()
   totalFlightsCount!: number;
+
+  @IsString()
+  @IsNotEmpty()
+  ownerFullName!: string;
 }

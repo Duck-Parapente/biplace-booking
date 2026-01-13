@@ -38,9 +38,13 @@
       <!-- Pack Totals -->
       <div
         v-if="selectedPackId && !loading && !error"
-        class="mb-6 bg-yellow-50 text-yellow-600 border border-yellow-600 p-2 rounded-lg shadow-sm"
+        class="mb-6 bg-yellow-50 text-yellow-600 border border-yellow-600 p-2 rounded-lg shadow-sm text-sm"
       >
-        <div class="flex gap-6 text-sm">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="font-semibold">Respo pack:</span>
+          <span>{{ ownerFullName }}</span>
+        </div>
+        <div class="flex gap-6">
           <div>
             <span class="font-semibold">Heures de vol:</span>
             <span class="ml-2"
@@ -175,6 +179,7 @@ const selectedPackId = ref<string | null>(null);
 const selectedPackLabel = ref<string>('');
 const allReservations = ref<PackReservationsDto['reservations']>([]);
 const totalFlightsMinutes = ref<number>(0);
+const ownerFullName = ref<string>('');
 const totalFlightsCount = ref<number>(0);
 const loading = ref<boolean>(false);
 const error = ref<string | null>(null);
@@ -219,6 +224,7 @@ const fetchPackReservations = async (packId: string) => {
     const data = await callApi<PackReservationsDto>(`/reservations/pack?packId=${packId}`);
     allReservations.value = data.reservations;
     totalFlightsMinutes.value = data.totalFlightsMinutes;
+    ownerFullName.value = data.ownerFullName;
     totalFlightsCount.value = data.totalFlightsCount;
   } catch (err) {
     const errorMessage =

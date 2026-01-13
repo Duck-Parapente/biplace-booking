@@ -41,6 +41,7 @@ export function mapPackReservationsToDto({
   totalFlightsCount,
   totalFlightsMinutes,
   packReservations,
+  ownerFullName,
 }: PackReservationsWithDetails): PackReservationsDto {
   return {
     reservations: packReservations.map((reservation) => ({
@@ -61,5 +62,6 @@ export function mapPackReservationsToDto({
     })),
     totalFlightsCount: totalFlightsCount.value,
     totalFlightsMinutes: totalFlightsMinutes.value,
+    ownerFullName,
   };
 }

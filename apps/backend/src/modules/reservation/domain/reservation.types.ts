@@ -63,4 +63,5 @@ export type PackReservationsWithDetails = {
   packReservations: PackReservation[];
   totalFlightsCount: Integer;
   totalFlightsMinutes: Integer;
+  ownerFullName: string;
 };

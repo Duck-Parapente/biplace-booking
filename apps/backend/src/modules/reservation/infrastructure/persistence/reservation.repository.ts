@@ -56,7 +56,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
   constructor(
     @Inject(EVENT_EMITTER)
     private readonly eventEmitter: EventEmitterPort,
-  ) { }
+  ) {}
 
   private buildMatchingConfirmedAndClosedReservationsFilter(
     startingDate: DateValueObject,
@@ -183,7 +183,11 @@ export class ReservationRepository implements ReservationRepositoryPort {
       include: {
         user: true,
         flightLog: true,
-        pack: true,
+        pack: {
+          include: {
+            owner: true,
+          },
+        },
       },
       orderBy: {
         startingDate: 'desc',
@@ -225,20 +229,23 @@ export class ReservationRepository implements ReservationRepositoryPort {
           ? `${reservation.user.firstName ?? ''} ${reservation.user.lastName ?? ''}`.trim()
           : undefined,
         status: mapStatus(reservation.status),
-        manualCost: reservation.manualCost !== null ? new Integer({ value: reservation.manualCost }) : null,
-        automaticCost: reservation.automaticCost !== null
-          ? new Integer({ value: reservation.automaticCost })
-          : null,
+        manualCost:
+          reservation.manualCost !== null ? new Integer({ value: reservation.manualCost }) : null,
+        automaticCost:
+          reservation.automaticCost !== null
+            ? new Integer({ value: reservation.automaticCost })
+            : null,
         flightLog: reservation.flightLog
           ? {
-            flightTimeMinutes: new Integer({ value: reservation.flightLog.flightsMinutes }),
-            flightsCount: new Integer({ value: reservation.flightLog.flightsCount }),
-            publicComment: reservation.flightLog.publicComment ?? undefined,
-          }
+              flightTimeMinutes: new Integer({ value: reservation.flightLog.flightsMinutes }),
+              flightsCount: new Integer({ value: reservation.flightLog.flightsCount }),
+              publicComment: reservation.flightLog.publicComment ?? undefined,
+            }
           : undefined,
       })),
       totalFlightsCount,
       totalFlightsMinutes,
+      ownerFullName: [pack.owner.firstName, pack.owner.lastName].join(' ').trim(),
     };
   }
 }
