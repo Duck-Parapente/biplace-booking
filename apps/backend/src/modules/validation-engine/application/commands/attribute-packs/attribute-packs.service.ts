@@ -23,8 +23,6 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 @Injectable()
 export class AttributePacksService {
   private readonly logger = new Logger(AttributePacksService.name);
-  private readonly ATTRIBUTION_START_DAY_OFFSET = 1;
-  private readonly ATTRIBUTION_END_DAY_OFFSET = 5;
 
   constructor(
     private readonly getPacksService: GetPacksService,
@@ -38,12 +36,12 @@ export class AttributePacksService {
     private readonly eventEmitter: EventEmitterPort,
   ) {}
 
-  async attributePacks(runForTodayOnly = false): Promise<void> {
+  async attributePacks(): Promise<void> {
     const todayNormalized = DateValueObject.now();
     const errors: Array<{ date: string; error: Error }> = [];
     const allPacks = await this.getPacksService.execute();
 
-    const { startDayOffset, endDayOffset } = this.getDateBoundaries(runForTodayOnly);
+    const { startDayOffset, endDayOffset } = this.getDateBoundaries(todayNormalized);
 
     for (let dayOffset = startDayOffset; dayOffset <= endDayOffset; dayOffset++) {
       const startingDate = todayNormalized.startOfDayInUTC(dayOffset);
@@ -73,17 +71,19 @@ export class AttributePacksService {
     );
   }
 
-  private getDateBoundaries(runForTodayOnly: boolean): {
+  private getDateBoundaries(currentDate: DateValueObject): {
     startDayOffset: number;
     endDayOffset: number;
   } {
-    if (runForTodayOnly) {
-      return { startDayOffset: 0, endDayOffset: 0 };
+    const currentHour = currentDate.value.getHours();
+
+    if (currentHour < 20) {
+      // Before 20h: run from J+0 to J+4
+      return { startDayOffset: 0, endDayOffset: 4 };
+    } else {
+      // After 20h: run from J+1 to J+5
+      return { startDayOffset: 1, endDayOffset: 5 };
     }
-    return {
-      startDayOffset: this.ATTRIBUTION_START_DAY_OFFSET,
-      endDayOffset: this.ATTRIBUTION_END_DAY_OFFSET,
-    };
   }
 
   private async processAttributionsForDate(

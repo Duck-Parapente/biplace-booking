@@ -53,16 +53,11 @@ Voici la config du cron:
 
 ### Attribution automatique des packs
 
-Tous les soirs à 20h, l'attribution automatique des packs est exécutée via `pnpm attribute`:
-
-- Staging: attribution à 20h
-- Prod: attribution à 20h
+Tous les jours, toutes les 30mn, l'attribution automatique des packs est exécutée via `pnpm attribute`. Avant 20h, l'algo n'attribue des packs que pour J+0 à J+4. Après 20h, il regarde de J+1 à J+5.
 
 Voici la config du cron:
 
 ```
-    30 20 * * * docker exec bb-staging-backend sh -c "cd apps/backend && pnpm attribute" >> /var/log/attribute.log 2>&1
-    0 20 * * * docker exec bb-prod-backend sh -c "cd apps/backend && pnpm attribute" >> /var/log/attribute.log 2>&1
-    30 7,9,11,13,15,17 * * * docker exec bb-staging-backend sh -c "cd apps/backend && pnpm attribute:today" >> /var/log/attribute-today.log 2>&1
-    0 7,9,11,13,15,17 * * * docker exec bb-prod-backend sh -c "cd apps/backend && pnpm attribute:today" >> /var/log/attribute-today.log 2>&1
+    0,30 * * * * docker exec bb-staging-backend sh -c "cd apps/backend && pnpm attribute" >> /var/log/attribute.log 2>&1
+    0,30 * * * * docker exec bb-prod-backend sh -c "cd apps/backend && pnpm attribute" >> /var/log/attribute.log 2>&1
 ```
