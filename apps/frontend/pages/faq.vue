@@ -24,7 +24,7 @@
         <FaqItem question="2. Qu'est-ce qu'un Coin ?">
           <p>
             C'est le petit nom donné aux points qui sont attribués aux pilotes pour déterminer leur
-            priorité. <strong>Plus tu as de coins, moins tu es prioritaire.</strong> Lis la suite
+            priorité. <strong>Plus tu as de Coins, moins tu es prioritaire.</strong> Lis la suite
             pour comprendre comment ils sont calculés.
           </p>
         </FaqItem>
@@ -44,7 +44,7 @@
           </p>
           <p>
             Le passage d'une demande à une réservation confirmée se fait selon le système de
-            priorité par coins (voir question suivante).
+            priorité par Coins (voir question suivante).
           </p>
         </FaqItem>
 
@@ -99,7 +99,7 @@
               <p class="mb-3">
                 Une fois ton vol effectué, tu dois <strong>clôturer ta réservation</strong> en
                 renseignant les informations dans ton carnet de vol. Cette clôture permettra de
-                mettre à jour tes coins pour les prochaines réservations.
+                mettre à jour tes Coins pour les prochaines réservations.
               </p>
               <p class="mb-3">
                 La clôture est <strong>obligatoire</strong> même si tu n'as pas volé. Tu ne pourras
@@ -113,7 +113,7 @@
           <p class="mb-4">Deux critères sont utilisés :</p>
           <ol class="list-decimal pl-6 mb-4 space-y-3">
             <li>
-              <strong>La priorité du pilote</strong> est déterminée par le nombre de coins (plus il
+              <strong>La priorité du pilote</strong> est déterminée par le nombre de Coins (plus il
               est élevé, moins tu es prioritaire). En cas d'égalité, le pilote qui a déposé sa
               demande le premier est prioritaire. Ce critère de priorité du pilote est absolu : s'il
               existe une combinaison pour qu'un pilote de priorité plus élevée qu'un autre ait du
@@ -139,7 +139,7 @@
                   <div class="flex items-center justify-between">
                     <span class="font-medium">Pilote 1</span>
                     <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                      Score: 50 coins (plus prioritaire)
+                      Score: 50 Coins (plus prioritaire)
                     </span>
                   </div>
                   <div class="text-sm text-gray-600 mt-1">Demande : Pack A sinon Pack B</div>
@@ -148,7 +148,7 @@
                   <div class="flex items-center justify-between">
                     <span class="font-medium">Pilote 2</span>
                     <span class="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">
-                      Score: 120 coins (moins prioritaire)
+                      Score: 120 Coins (moins prioritaire)
                     </span>
                   </div>
                   <div class="text-sm text-gray-600 mt-1">Demande : Pack A</div>
@@ -184,18 +184,18 @@
           </div>
         </FaqItem>
 
-        <FaqItem question="6. Comment sont comptés les coins ?">
+        <FaqItem question="6. Comment sont comptés les Coins ?">
           <p class="mb-4">
-            Un certain nombre de coins sont attribués à toute demande de réservation validée. Lors
-            du process d'attribution, l'application utilise la somme de coins de toutes les
+            Un certain nombre de Coins sont attribués à toute demande de réservation validée. Lors
+            du process d'attribution, l'application utilise la somme de Coins de toutes les
             réservations effectuées dans les <strong>365 jours qui précèdent</strong> la date
             d'attribution (une année glissante).
           </p>
           <p class="mb-4">
-            Les coins d'une réservation sont calculés lorsque celle-ci est clôturée ou annulée.
+            Les Coins d'une réservation sont calculés lorsque celle-ci est clôturée ou annulée.
           </p>
           <p class="mb-4">
-            <strong>Le nombre de coins ajoutés</strong> = 1 Coin par jour écoulé entre l'attribution
+            <strong>Le nombre de Coins ajoutés</strong> = 1 Coin par jour écoulé entre l'attribution
             du matériel et la date du vol si vol il y a ou 1 Coin par jour écoulé entre
             l'attribution du matériel et l'annulation si la réservation est annulée.
           </p>
@@ -295,7 +295,7 @@
               <div class="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
                 <p class="text-sm">
                   <strong>Calcul :</strong> 5 jours entre la confirmation et la date du vol<br />
-                  <strong>Points ajoutés :</strong> 5 coins
+                  <strong>Points ajoutés :</strong> 5 Coins
                 </p>
               </div>
             </div>
@@ -389,7 +389,7 @@
               <div class="mt-3 p-3 bg-orange-50 rounded border border-orange-200">
                 <p class="text-sm">
                   <strong>Calcul :</strong> 4 jours entre la confirmation et l'annulation<br />
-                  <strong>Points ajoutés :</strong> 4 coins
+                  <strong>Points ajoutés :</strong> 4 Coins
                 </p>
               </div>
             </div>
@@ -399,7 +399,7 @@
         <FaqItem question="7. Que se passe-t-il si ma demande n'est pas validée ?">
           <p class="mb-3">
             Si ta demande n'est pas validée à J-5, cela signifie que d'autres pilotes avec un nombre
-            de coins plus faible ont été prioritaires sur les matériels disponibles.
+            de Coins plus faible ont été prioritaires sur les matériels disponibles.
           </p>
           <p class="mb-3"><strong>Tes options :</strong></p>
           <ul class="list-disc pl-6 space-y-2">
@@ -416,7 +416,7 @@
           <p class="mb-3">Oui, tu peux annuler une réservation validée. Cependant :</p>
           <ul class="list-disc pl-6 space-y-2">
             <li>
-              Ton nombre de coins sera augmenté en fonction du nombre de jours entre la validation
+              Ton nombre de Coins sera augmenté en fonction du nombre de jours entre la validation
               et l'annulation.
             </li>
             <li>En d'autres termes, plus tu annules tôt moins tu seras pénalisé.</li>
@@ -429,7 +429,7 @@
 
         <FaqItem question="9. Il a plu, je n'ai pas pu voler">
           <p class="mb-3">
-            Désolé mais les coins seront quand même comptés. Outre le fait que personne ne peut
+            Désolé mais les Coins seront quand même comptés. Outre le fait que personne ne peut
             vérifier tes dires, tu as eu le matériel pour toi alors qu'un autre pilote aurait
             peut-être fait le choix d'un endroit où il n'a pas plu.
           </p>
@@ -462,7 +462,7 @@
             </li>
             <li>
               <strong>Si tu sens que la météo va tourner au vinaigre,</strong> annule ta réservation
-              le plus tôt possible, cela coûte moins de coins que la veille ou le jour même.
+              le plus tôt possible, cela coûte moins de Coins que la veille ou le jour même.
             </li>
             <li>
               <strong>Réserver peu</strong> permet d'avoir plus de choix dans la date et d'augmenter
@@ -475,7 +475,7 @@
           question="11. J'ai besoin d'un bi pour une formation, un examen ou une journée club"
         >
           <p class="mb-3">
-            Ces événements sont prioritaires par rapport au système de coins. Contacte un
+            Ces événements sont prioritaires par rapport au système de Coins. Contacte un
             administrateur pour qu'il te crée la réservation.
           </p>
           <p>
@@ -508,9 +508,9 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="13. Comment consulter mon score coins actuel ?">
+        <FaqItem question="13. Comment consulter mon score Coins actuel ?">
           <p>
-            Ton score coins est visible sur ta
+            Ton score Coins est visible sur ta
             <NuxtLink to="/mon-compte" class="text-blue-600 underline">page de profil</NuxtLink>. Il
             est mis à jour en temps réel.
           </p>
