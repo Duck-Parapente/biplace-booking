@@ -3,7 +3,7 @@
 ## Monorepo
 
 Pour l'instant, il y a 4 services pour gérer la réservation des biplaces:
-- 1 backend (+ db + reverse proxy) déployé sur un serveur Contabo+Docker.
+- 1 backend (+ db + reverse proxy) déployé sur un serveur Hetzner+Docker.
 - 1 frontend déployé sur Vercel.
 
 Le repo utilise turborepo pour optimiser les builds, etc.
@@ -25,4 +25,4 @@ Le repo utilise turborepo pour optimiser les builds, etc.
 - [Auth0](https://manage.auth0.com/dashboard/eu/biplace-duckparapente/applications), qui fournit un système d'authentification avec un plan gratuit (jusqu'à 25.000 utilisateurs).
 - [Mailgun](https://app.eu.mailgun.com/) pour l'envoi des emails transactionnels (confirmation de résa, annulation, etc.) avec un plan gratuit jusqu'à 3.000 emails/mois.
 - [NewRelic](https://one.eu.newrelic.com/logger?account=7279493&duration=1800000&state=67344c39-0ea6-054f-a3c4-6dc9061ab82c) pour les logs/APM.
-- Enfin, [Contabo](https://new.contabo.com/servers/vps) pour gérer l'instance VPS Contabo (pour l'instant administrée sur le compte perso de JP)
+- Enfin, [Hetzner](https://console.hetzner.com/projects) pour gérer l'instance VPS Hetzner.
