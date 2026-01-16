@@ -475,12 +475,13 @@
           question="11. J'ai besoin d'un bi pour une formation, un examen ou une journée club"
         >
           <p class="mb-3">
-            Ces événements sont prioritaires par rapport au système de Coins. Contacte un
-            administrateur pour qu'il te crée la réservation.
+            Ces événements sont prioritaires par rapport au système de Coins. Contacte un 
+            administrateur pour qu'il valide ta demande de réservation avant J-5. Le plus tôt possible 
+            est le mieux.
           </p>
           <p>
-            Pour la bonne ambiance, il est bon que tu demandes plus de 5 jours avant les jours que
-            tu souhaites réserver.
+            Après J-5, il te faudra soit postuler sur un matériel disponible soit négocier avec les 
+            pilotes plus prioritaires pour en obtenir un.
           </p>
         </FaqItem>
 
