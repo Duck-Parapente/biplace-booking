@@ -21,7 +21,7 @@
           </ul>
         </FaqItem>
 
-        <FaqItem question="2. Qu'est-ce qu'un coin ?">
+        <FaqItem question="2. Qu'est-ce qu'un Coin ?">
           <p>
             C'est le petit nom donné aux points qui sont attribués aux pilotes pour déterminer leur
             priorité. <strong>Plus tu as de coins, moins tu es prioritaire.</strong> Lis la suite
@@ -142,7 +142,7 @@
                       Score: 50 coins (plus prioritaire)
                     </span>
                   </div>
-                  <div class="text-sm text-gray-600 mt-1">Demande : Pack A ou Pack B</div>
+                  <div class="text-sm text-gray-600 mt-1">Demande : Pack A sinon Pack B</div>
                 </div>
                 <div class="bg-white p-3 rounded border-l-4 border-orange-500">
                   <div class="flex items-center justify-between">
@@ -195,8 +195,8 @@
             Les coins d'une réservation sont calculés lorsque celle-ci est clôturée ou annulée.
           </p>
           <p class="mb-4">
-            <strong>Le nombre de coins ajoutés</strong> = 1 coin par jour écoulé entre l'attribution
-            du matériel et la date du vol si vol il y a ou 1 coin par jour écoulé entre
+            <strong>Le nombre de coins ajoutés</strong> = 1 Coin par jour écoulé entre l'attribution
+            du matériel et la date du vol si vol il y a ou 1 Coin par jour écoulé entre
             l'attribution du matériel et l'annulation si la réservation est annulée.
           </p>
 
@@ -409,7 +409,7 @@
             </li>
             <li>Annuler ta demande.</li>
           </ul>
-          <p class="mt-3">En tout état de cause aucun coin n'est crédité.</p>
+          <p class="mt-3">En tout état de cause aucun Coin n'est crédité.</p>
         </FaqItem>
 
         <FaqItem question="8. Puis-je annuler ou modifier ma réservation après validation ?">
@@ -448,7 +448,7 @@
               sera peut-être attribué. Par contre, si le 2, tu décides que comme tu n'as pas de
               biplace, tu iras grimper avec tes potes, annule ta demande. Dans le cas contraire, si
               le pilote à qui il est attribué se désiste, il te sera peut-être attribué et tu seras
-              redevable d'au moins un coin même si tu l'annules rapidement.
+              redevable d'au moins un Coin même si tu l'annules rapidement.
             </li>
             <li>
               <strong>Postule à tous les biplaces qui t'intéressent</strong> plutôt qu'à un seul.
