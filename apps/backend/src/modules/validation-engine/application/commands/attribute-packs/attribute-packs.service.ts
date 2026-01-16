@@ -37,14 +37,14 @@ export class AttributePacksService {
   ) {}
 
   async attributePacks(): Promise<void> {
-    const todayNormalized = DateValueObject.now();
     const errors: Array<{ date: string; error: Error }> = [];
     const allPacks = await this.getPacksService.execute();
 
-    const { startDayOffset, endDayOffset } = this.getDateBoundaries(todayNormalized);
+    const { startDayOffset, endDayOffset } = this.getDateBoundaries();
+    const todayInParis = DateValueObject.todayInParis();
 
     for (let dayOffset = startDayOffset; dayOffset <= endDayOffset; dayOffset++) {
-      const startingDate = todayNormalized.startOfDayInUTC(dayOffset);
+      const startingDate = todayInParis.startOfDayInUTC(dayOffset);
       const endingDate = startingDate.startOfDayInUTC(1);
 
       this.logger.warn(`Will process attributions for ${startingDate.value.toISOString()}`);
@@ -71,17 +71,17 @@ export class AttributePacksService {
     );
   }
 
-  private getDateBoundaries(currentDate: DateValueObject): {
+  private getDateBoundaries(): {
     startDayOffset: number;
     endDayOffset: number;
   } {
-    const currentHour = currentDate.value.getHours();
+    const currentHourInParis = DateValueObject.currentHourInParis();
 
-    if (currentHour < 20) {
-      // Before 20h: run from J+0 to J+4
+    if (currentHourInParis < 20) {
+      // Before 20h Paris time: run from J+0 to J+4
       return { startDayOffset: 0, endDayOffset: 4 };
     } else {
-      // After 20h: run from J+1 to J+5
+      // After 20h Paris time: run from J+1 to J+5
       return { startDayOffset: 1, endDayOffset: 5 };
     }
   }
