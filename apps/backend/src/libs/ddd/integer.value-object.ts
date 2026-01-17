@@ -26,6 +26,10 @@ export class Integer extends ValueObject<IntegerProps> {
     return new Integer({ value: 0 });
   }
 
+  public static one(): Integer {
+    return new Integer({ value: 1 });
+  }
+
   public add(other: Integer): Integer {
     return new Integer({ value: this.value + other.value });
   }

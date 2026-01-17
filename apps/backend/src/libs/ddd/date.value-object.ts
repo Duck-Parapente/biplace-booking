@@ -31,7 +31,7 @@ export class DateValueObject extends ValueObject<DateProps> {
 
   daysBetween(other: DateValueObject): Integer {
     const diffMs = other.value.getTime() - this.value.getTime();
-    return new Integer({ value: Math.round(diffMs / (1000 * 60 * 60 * 24)) });
+    return new Integer({ value: Math.ceil(diffMs / (1000 * 60 * 60 * 24)) });
   }
 
   static now(): DateValueObject {
