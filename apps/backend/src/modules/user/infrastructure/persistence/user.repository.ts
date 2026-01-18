@@ -64,6 +64,8 @@ export class UserRepository implements UserRepositoryPort {
         address: user.address,
         phoneNumber: user.phoneNumber,
         currentScore: user.currentScore.value,
+        isActive: user.isActive,
+        activeUntil: user.activeUntil ? user.activeUntil.value : null,
       },
     });
 

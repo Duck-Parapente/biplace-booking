@@ -13,6 +13,8 @@ export interface UserProfile {
   lastName?: string;
   phoneNumber?: string;
   address?: string;
+  isActive?: boolean;
+  activeUntil?: DateValueObject | null;
 }
 
 export interface UserProps extends UserProfile {

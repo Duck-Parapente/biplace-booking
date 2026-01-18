@@ -25,6 +25,16 @@ export class UserProfileDto {
   phoneNumber?: string;
 }
 
+export class AdminUpdateUserProfileDto {
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+
+  @IsOptional()
+  @IsDateString()
+  activeUntil?: string;
+}
+
 export class UserDto extends UserProfileDto {
   @IsUUID()
   @IsNotEmpty()
