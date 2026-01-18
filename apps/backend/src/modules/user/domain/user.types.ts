@@ -1,4 +1,5 @@
 import { Email } from '@libs/ddd';
+import { DateValueObject } from '@libs/ddd/date.value-object';
 import { Integer } from '@libs/ddd/integer.value-object';
 
 export interface ExternalUser {
@@ -18,6 +19,8 @@ export interface UserProps extends UserProfile {
   email: Email;
   externalAuthId: string;
   currentScore: Integer;
+  isActive: boolean;
+  activeUntil: DateValueObject | null;
 }
 
 export type CreateUserProps = ExternalUser;

@@ -33,6 +33,8 @@ model User {
     phoneNumber       String?
     address           String?
     currentScore      Int
+    isActive          Boolean
+    activeUntil       DateTime?         @db.Timestamptz(3)
     createdAt         DateTime          @db.Timestamptz(3)
     ownedPacks        Pack[]
     reservationWishes ReservationWish[]

@@ -24,6 +24,8 @@ const toEntity = (user: User): UserEntity => {
       phoneNumber: phoneNumber ?? undefined,
       address: address ?? undefined,
       currentScore: new Integer({ value: currentScore }),
+      isActive: user.isActive,
+      activeUntil: user.activeUntil ? DateValueObject.fromDate(user.activeUntil) : null,
     },
   });
 };
@@ -45,6 +47,7 @@ export class UserRepository implements UserRepositoryPort {
         currentScore: user.currentScore.value,
         email: user.email.email,
         externalAuthId: user.externalAuthId,
+        isActive: user.isActive,
       },
     });
 

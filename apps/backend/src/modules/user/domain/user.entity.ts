@@ -18,6 +18,8 @@ export class UserEntity extends AggregateRoot<UserProps> {
       props: {
         ...props,
         currentScore: Integer.zero(),
+        isActive: false,
+        activeUntil: null,
       },
     });
     user.addEvent(
@@ -55,6 +57,14 @@ export class UserEntity extends AggregateRoot<UserProps> {
 
   get currentScore() {
     return this.props.currentScore;
+  }
+
+  get isActive() {
+    return this.props.isActive;
+  }
+
+  get activeUntil() {
+    return this.props.activeUntil;
   }
 
   update(props: UpdateUserProps): void {
