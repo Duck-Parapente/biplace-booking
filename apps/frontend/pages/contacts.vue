@@ -10,44 +10,73 @@
       </div>
 
       <template v-else>
-        <!-- Search filter -->
+        <!-- Header and Search -->
         <div class="mb-4">
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Rechercher par prénom, nom, etc."
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+            placeholder="Rechercher un contact..."
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white shadow-sm"
           />
+          <p class="text-sm text-gray-500 mt-2">{{ filteredUsers.length }} contact(s)</p>
         </div>
 
-        <div v-if="filteredUsers.length > 0" class="space-y-3 flex-1 min-h-0 overflow-y-auto">
+        <div v-if="filteredUsers.length > 0" class="space-y-3 flex-1 min-h-0 overflow-y-auto pb-4">
           <div
             v-for="user in filteredUsers"
             :key="user.id"
-            class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+            class="group bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary-300 transition-all duration-200 overflow-hidden"
           >
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-              <div class="flex-1">
-                <h3 class="text-lg font-semibold text-secondary-600">
-                  {{ user.firstName }} {{ user.lastName }}
-                </h3>
-                <p v-if="user.address" class="text-xs text-gray-500 mt-1">
-                  {{ user.address }}
-                </p>
+            <div class="p-4">
+              <!-- Header with name and status -->
+              <div class="flex items-start justify-between gap-3 mb-2">
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-lg font-semibold text-gray-900 truncate">
+                    {{ user.firstName }} {{ user.lastName }}
+                  </h3>
+                  <p v-if="user.address" class="text-sm text-gray-500 mt-0.5 truncate">
+                    📍 {{ user.address }}
+                  </p>
+                </div>
+
+                <!-- Admin badges -->
+                <div v-if="isAdmin" class="flex flex-col items-end gap-1.5">
+                  <span
+                    :class="[
+                      'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium',
+                      user.isActive
+                        ? 'bg-green-100 text-green-800 border border-green-200'
+                        : 'bg-red-100 text-red-800 border border-red-200',
+                    ]"
+                  >
+                    <span
+                      class="w-1.5 h-1.5 rounded-full"
+                      :class="user.isActive ? 'bg-green-600' : 'bg-red-600'"
+                    ></span>
+                    {{ user.isActive ? 'Actif' : 'Inactif' }}
+                  </span>
+                  <span
+                    v-if="user.activeUntil"
+                    class="text-xs text-gray-500 bg-gray-50 px-2.5 py-1 rounded-full border border-gray-200"
+                  >
+                    Jusqu'au {{ new Date(user.activeUntil).toLocaleDateString('fr-FR') }}
+                  </span>
+                </div>
               </div>
 
-              <div class="flex flex-col gap-2 sm:items-end">
+              <!-- Contact links -->
+              <div class="flex flex-wrap gap-2 mt-3">
                 <a
                   v-if="user.phoneNumber"
                   :href="`tel:${user.phoneNumber}`"
-                  class="text-sm text-secondary-600 hover:opacity-80 transition-opacity"
+                  class="px-3 py-1.5 bg-gradient-to-r from-primary-50 to-primary-100 text-primary-700 rounded-md hover:from-primary-100 hover:to-primary-200 transition-all duration-200 text-sm font-medium border border-primary-200 shadow-sm hover:shadow"
                 >
                   📞 {{ user.phoneNumber }}
                 </a>
                 <a
                   v-if="user.email"
                   :href="`mailto:${user.email}`"
-                  class="text-sm text-secondary-600 hover:opacity-80 transition-opacity"
+                  class="px-3 py-1.5 bg-gradient-to-r from-secondary-50 to-secondary-100 text-secondary-700 rounded-md hover:from-secondary-100 hover:to-secondary-200 transition-all duration-200 text-sm font-medium border border-secondary-200 shadow-sm hover:shadow"
                 >
                   ✉️ {{ user.email }}
                 </a>
@@ -56,8 +85,9 @@
           </div>
         </div>
 
-        <div v-else class="text-center py-8 text-gray-500">
-          <p>Aucun contact trouvé</p>
+        <div v-else class="text-center py-8">
+          <p class="text-gray-500 font-medium">Aucun contact trouvé</p>
+          <p class="text-sm text-gray-400 mt-1">Essayez de modifier votre recherche</p>
         </div>
       </template>
     </div>
@@ -67,6 +97,7 @@
 <script setup lang="ts">
 import { chain, filter } from 'lodash';
 import type { UserDto } from 'shared';
+import { UserRoles } from 'shared';
 
 definePageMeta({
   middleware: 'auth',
@@ -74,6 +105,8 @@ definePageMeta({
 });
 
 const { getUsers, isProfileComplete } = useUser();
+const { hasRole } = useAuth();
+const isAdmin = computed(() => hasRole(UserRoles.ADMIN));
 
 const users = ref<UserDto[]>([]);
 const loading = ref(true);
