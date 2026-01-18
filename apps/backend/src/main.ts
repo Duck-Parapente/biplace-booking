@@ -16,6 +16,10 @@ async function bootstrap() {
   app.use((req: Request, res: Response, next: NextFunction) => {
     const origin = req.headers.origin;
 
+    if (req.path === '/user/sync') {
+      return next();
+    }
+
     if (process.env.FRONTEND_URL !== origin) {
       return res.status(403).json({ error: 'Forbidden' });
     }
