@@ -96,6 +96,40 @@ export const useUser = () => {
   };
 
   /**
+   * Admin update user status
+   */
+  const adminUpdateUser = async (
+    userId: string,
+    data: { isActive?: boolean; activeUntil?: Date | null },
+  ): Promise<UserDto> => {
+    try {
+      updating.value = true;
+      updateError.value = null;
+
+      const user = await callApi<UserDto>(`/user/${userId}`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+      });
+
+      // Update the users list if it exists
+      const userIndex = users.value.findIndex((u) => u.id === userId);
+      if (userIndex !== -1) {
+        users.value[userIndex] = user;
+      }
+
+      return user;
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Impossible de mettre à jour l'utilisateur";
+      updateError.value = errorMessage;
+      console.error('Failed to update user:', err);
+      throw new Error(errorMessage);
+    } finally {
+      updating.value = false;
+    }
+  };
+
+  /**
    * Validate user form data
    */
   const validateUserForm = (
@@ -137,6 +171,7 @@ export const useUser = () => {
     getUser,
     getUsers,
     updateUser,
+    adminUpdateUser,
     validateUserForm,
     isProfileComplete,
   };

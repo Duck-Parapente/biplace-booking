@@ -26,6 +26,8 @@
             v-for="user in filteredUsers"
             :key="user.id"
             class="group bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary-300 transition-all duration-200 overflow-hidden"
+            :class="{ 'cursor-pointer': isAdmin }"
+            @click="isAdmin ? openEditModal(user) : null"
           >
             <div class="p-4">
               <!-- Header with name and status -->
@@ -70,6 +72,7 @@
                   v-if="user.phoneNumber"
                   :href="`tel:${user.phoneNumber}`"
                   class="px-3 py-1.5 bg-gradient-to-r from-primary-50 to-primary-100 text-primary-700 rounded-md hover:from-primary-100 hover:to-primary-200 transition-all duration-200 text-sm font-medium border border-primary-200 shadow-sm hover:shadow"
+                  @click.stop
                 >
                   📞 {{ user.phoneNumber }}
                 </a>
@@ -77,6 +80,7 @@
                   v-if="user.email"
                   :href="`mailto:${user.email}`"
                   class="px-3 py-1.5 bg-gradient-to-r from-secondary-50 to-secondary-100 text-secondary-700 rounded-md hover:from-secondary-100 hover:to-secondary-200 transition-all duration-200 text-sm font-medium border border-secondary-200 shadow-sm hover:shadow"
+                  @click.stop
                 >
                   ✉️ {{ user.email }}
                 </a>
@@ -91,6 +95,14 @@
         </div>
       </template>
     </div>
+
+    <!-- Edit User Modal -->
+    <EditUserModal
+      :open="editModalOpen"
+      :user="selectedUser"
+      @close="closeEditModal"
+      @updated="handleUserUpdated"
+    />
   </main>
 </template>
 
@@ -112,6 +124,8 @@ const users = ref<UserDto[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const searchQuery = ref('');
+const editModalOpen = ref(false);
+const selectedUser = ref<UserDto | null>(null);
 
 const filteredUsers = computed(() => {
   if (!searchQuery.value.trim()) {
@@ -127,16 +141,37 @@ const filteredUsers = computed(() => {
   });
 });
 
+const loadUsers = async () => {
+  const response = await getUsers();
+  users.value = chain(response)
+    .filter(isProfileComplete)
+    .orderBy([(user) => user.lastName || ''], ['asc'])
+    .value();
+};
+
+const openEditModal = (user: UserDto) => {
+  selectedUser.value = user;
+  editModalOpen.value = true;
+};
+
+const closeEditModal = () => {
+  editModalOpen.value = false;
+  selectedUser.value = null;
+};
+
+const handleUserUpdated = async () => {
+  try {
+    await loadUsers();
+  } catch (e: any) {
+    console.error('Error reloading users:', e);
+  }
+};
+
 onMounted(async () => {
   try {
     loading.value = true;
     error.value = null;
-
-    const response = await getUsers();
-    users.value = chain(response)
-      .filter(isProfileComplete)
-      .orderBy([(user) => user.lastName || ''], ['asc'])
-      .value();
+    await loadUsers();
   } catch (e: any) {
     console.error('Error loading users:', e);
     error.value = e.message || 'Impossible de charger les contacts';
