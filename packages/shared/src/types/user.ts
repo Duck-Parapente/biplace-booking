@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsDate,
   IsDateString,
   IsEmail,
@@ -45,4 +46,12 @@ export class UserDto extends UserProfileDto {
   @IsNotEmpty()
   @IsDateString()
   createdAt!: string;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isActive!: boolean;
+
+  @IsNotEmpty()
+  @IsDateString()
+  activeUntil!: string | null;
 }
