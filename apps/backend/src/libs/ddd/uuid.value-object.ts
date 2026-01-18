@@ -24,6 +24,10 @@ export class UUID extends ValueObject<UuidProps> {
     return new UUID({ uuid: randomUUID() });
   }
 
+  static empty(): UUID {
+    return new UUID({ uuid: '00000000-0000-0000-0000-000000000000' });
+  }
+
   public equals(comparedTo?: UUID): boolean {
     if (!comparedTo) return false;
     return this.uuid === comparedTo.uuid;
