@@ -29,14 +29,11 @@
 
         <!-- Active Until Date -->
         <div>
-          <label for="active-until-input" class="block text-sm font-medium text-gray-700 mb-2">
-            Actif jusqu'au (optionnel)
-          </label>
-          <input
+          <BaseInput
             id="active-until-input"
             v-model="formData.activeUntil"
             type="date"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+            label="Actif jusqu'au (optionnel)"
           />
           <p class="text-xs text-gray-500 mt-1">
             Laissez vide pour une activation sans limite de temps
