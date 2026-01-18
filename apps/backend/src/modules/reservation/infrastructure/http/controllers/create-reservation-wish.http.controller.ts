@@ -1,6 +1,7 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { ExceptionBase } from '@libs/exceptions';
+import { ActiveUserGuard } from '@libs/guards/active-user.guard';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
@@ -23,7 +24,7 @@ import {
 import { CreateReservationWishDto } from 'shared';
 
 @Controller('reservation-wishes')
-@UseGuards(JwtAuthGuard, MaintenanceModeGuard)
+@UseGuards(JwtAuthGuard, MaintenanceModeGuard, ActiveUserGuard)
 export class CreateReservationWishHttpController {
   private readonly logger = new Logger(CreateReservationWishHttpController.name);
 

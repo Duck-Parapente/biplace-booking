@@ -28,6 +28,7 @@ export interface JwtPayload {
 export interface AuthenticatedUser {
   id: UUID;
   roles: UserRoles[];
+  isActive: boolean;
 }
 
 @Injectable()
@@ -65,6 +66,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    return { id: new UUID({ uuid: user.id }), roles: payload[DUCK_ROLES_CLAIM] ?? [] };
+    return {
+      id: new UUID({ uuid: user.id }),
+      roles: payload[DUCK_ROLES_CLAIM] ?? [],
+      isActive: user.isActive && (!user.activeUntil || user.activeUntil > new Date()),
+    };
   }
 }
