@@ -131,22 +131,6 @@ deploy_full_stack() {
     deploy_containers
 }
 
-# Ensure main Caddy entrypoint is running
-ensure_caddy_entrypoint_running() {
-    if [[ -z "$(docker ps --filter name=caddy-entrypoint --filter status=running -q)" ]]; then
-        log_warning "Main caddy-entrypoint container is NOT running."
-        log_info "Starting caddy-entrypoint..."
-        if command -v pnpm >/dev/null; then
-            pnpm dc:caddy:up || log_error "Failed to start caddy-entrypoint"
-            log_success "caddy-entrypoint started."
-        else
-            log_warning "pnpm not found, skipping caddy-entrypoint start"
-        fi
-    else
-        log_success "caddy-entrypoint is running."
-    fi
-}
-
 #----------------------------- Main execution -----------------------------#
 
 echo "----- RESTART STARTED -----"
@@ -160,7 +144,6 @@ validate_environment
 load_prebuilt_image
 handle_running_containers
 deploy_full_stack
-ensure_caddy_entrypoint_running
 
 # Disable maintenance mode after successful deployment
 toggle_maintenance_mode "false" "Disabling"
