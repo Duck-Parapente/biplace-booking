@@ -16,6 +16,25 @@
         </p>
       </div>
 
+      <div
+        v-if="userData"
+        class="mb-4 p-4 bg-white shadow-sm border-l-4"
+        :class="userStatus(userData).borderColor"
+      >
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <p class="text-sm font-medium text-gray-900">Statut de ton compte</p>
+            <p v-if="userData.activeUntil" class="text-xs text-gray-500 mt-1">
+              Actif jusqu'au {{ new Date(userData.activeUntil).toLocaleDateString('fr-FR') }}
+            </p>
+          </div>
+          <span :class="userStatus(userData).badgeClasses">
+            <span :class="userStatus(userData).dotClasses"></span>
+            {{ userStatus(userData).label }}
+          </span>
+        </div>
+      </div>
+
       <div v-if="loading">
         <p class="text-gray-500">Chargement...</p>
       </div>
@@ -171,6 +190,8 @@ const {
   validateUserForm,
   isProfileComplete,
 } = useUser();
+
+const { getDisplay: userStatus } = useUserStatus();
 
 const formData = ref<UserFormData>({
   firstName: '',

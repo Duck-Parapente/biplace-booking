@@ -43,9 +43,9 @@
 
                 <!-- Admin badges -->
                 <div v-if="isAdmin" class="flex flex-col items-end gap-1.5">
-                  <span :class="userStatus.getDisplay(user).badgeClasses">
-                    <span :class="userStatus.getDisplay(user).dotClasses"></span>
-                    {{ userStatus.getDisplay(user).label }}
+                  <span :class="userStatus(user).badgeClasses">
+                    <span :class="userStatus(user).dotClasses"></span>
+                    {{ userStatus(user).label }}
                   </span>
                   <span
                     v-if="user.activeUntil"
@@ -131,36 +131,7 @@ const filteredUsers = computed(() => {
   });
 });
 
-const userStatus = {
-  getDisplay(user: UserDto) {
-    const isExpired = user.activeUntil && new Date(user.activeUntil) < new Date();
-
-    if (!user.isActive) {
-      return {
-        badgeClasses:
-          'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-200',
-        dotClasses: 'w-1.5 h-1.5 rounded-full bg-red-600',
-        label: 'Inactif',
-      };
-    }
-
-    if (isExpired) {
-      return {
-        badgeClasses:
-          'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 border border-yellow-200',
-        dotClasses: 'w-1.5 h-1.5 rounded-full bg-yellow-600',
-        label: 'Expiré',
-      };
-    }
-
-    return {
-      badgeClasses:
-        'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200',
-      dotClasses: 'w-1.5 h-1.5 rounded-full bg-green-600',
-      label: 'Actif',
-    };
-  },
-};
+const { getDisplay: userStatus } = useUserStatus();
 
 const loadUsers = async () => {
   const response = await getUsers();
