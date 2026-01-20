@@ -20,19 +20,21 @@ export class AttributionExplanationHtmlDomainService {
   ): string {
     const allPackLabels = allPacks.map((p) => p.label);
 
-    const pilots = reservationWishes.map((wish) => {
-      const attribution = attributions.find((a) => a.reservationWishId.equals(wish.id));
-      const attributedPack = attribution
-        ? allPacks.find((p) => p.id.equals(attribution.assignedPackId))
-        : null;
+    const pilots = reservationWishes
+      .map((wish) => {
+        const attribution = attributions.find((a) => a.reservationWishId.equals(wish.id));
+        const attributedPack = attribution
+          ? allPacks.find((p) => p.id.equals(attribution.assignedPackId))
+          : null;
 
-      return {
-        userNickname: wish.user.nickname,
-        score: wish.user.currentScore,
-        attributedPackLabel: attributedPack?.label || null,
-        packChoices: wish.packChoices.map((p) => p.label),
-      };
-    });
+        return {
+          userNickname: wish.user.nickname,
+          score: wish.user.currentScore,
+          attributedPackLabel: attributedPack?.label || null,
+          packChoices: wish.packChoices.map((p) => p.label),
+        };
+      })
+      .sort((a, b) => a.score - b.score);
 
     const tableRows = pilots
       .map((pilot) => {
@@ -63,6 +65,7 @@ export class AttributionExplanationHtmlDomainService {
         return `
           <tr>
             <td style="padding: 8px; border: 1px solid #ddd;">${pilot.userNickname}</td>
+            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${pilot.score}</td>
             ${packCells}
           </tr>
         `;
@@ -76,6 +79,7 @@ export class AttributionExplanationHtmlDomainService {
           <thead>
             <tr style="background-color: #f8f9fa;">
               <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Pilote</th>
+              <th style="padding: 8px; border: 1px solid #ddd; text-align: center;">Coins</th>
               ${allPackLabels.map((label) => `<th style="padding: 8px; border: 1px solid #ddd; text-align: center;">${label}</th>`).join('')}
             </tr>
           </thead>
