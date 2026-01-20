@@ -60,7 +60,7 @@
 
           <div>
             <label for="currentScore" class="block text-sm font-medium text-secondary-600 mb-1">
-              Coins
+              Coins (12 derniers mois)
             </label>
             <input
               id="currentScore"
