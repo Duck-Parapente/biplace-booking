@@ -30,51 +30,51 @@
             @click="isAdmin ? openEditModal(user) : null"
           >
             <div class="p-4">
-              <!-- Header with name and status -->
+              <!-- Header with name and contact icons -->
               <div class="flex items-start justify-between gap-3 mb-2">
                 <div class="flex-1 min-w-0">
-                  <div class="flex items-center gap-2">
-                    <h3 class="text-lg font-semibold text-gray-900 truncate">
-                      {{ user.firstName }} {{ user.lastName }}
-                    </h3>
-                    <div class="flex gap-1.5">
-                      <a
-                        v-if="user.phoneNumber"
-                        :href="`tel:${user.phoneNumber}`"
-                        class="px-2 py-1 bg-gradient-to-r from-primary-50 to-primary-100 text-primary-700 rounded-md hover:from-primary-100 hover:to-primary-200 transition-all duration-200 text-base border border-primary-200 shadow-sm hover:shadow"
-                        :title="user.phoneNumber"
-                        @click.stop
-                      >
-                        📞
-                      </a>
-                      <a
-                        v-if="user.email"
-                        :href="`mailto:${user.email}`"
-                        class="px-2 py-1 bg-gradient-to-r from-secondary-50 to-secondary-100 text-secondary-700 rounded-md hover:from-secondary-100 hover:to-secondary-200 transition-all duration-200 text-base border border-secondary-200 shadow-sm hover:shadow"
-                        :title="user.email"
-                        @click.stop
-                      >
-                        ✉️
-                      </a>
-                    </div>
-                  </div>
+                  <h3 class="text-lg font-semibold text-gray-900 truncate">
+                    {{ user.firstName }} {{ user.lastName }}
+                  </h3>
                   <p v-if="user.address" class="text-sm text-gray-500 mt-0.5 truncate">
                     📍 {{ user.address }}
                   </p>
+
+                  <!-- Admin badges below address -->
+                  <div v-if="isAdmin" class="flex flex-wrap items-center gap-2 mt-2">
+                    <span :class="userStatus(user).badgeClasses">
+                      <span :class="userStatus(user).dotClasses"></span>
+                      {{ userStatus(user).label }}
+                    </span>
+                    <span
+                      v-if="user.activeUntil"
+                      class="text-xs text-gray-500 bg-gray-50 px-2.5 py-1 rounded-full border border-gray-200"
+                    >
+                      Jusqu'au {{ new Date(user.activeUntil).toLocaleDateString('fr-FR') }}
+                    </span>
+                  </div>
                 </div>
 
-                <!-- Admin badges -->
-                <div v-if="isAdmin" class="flex flex-col items-end gap-1.5">
-                  <span :class="userStatus(user).badgeClasses">
-                    <span :class="userStatus(user).dotClasses"></span>
-                    {{ userStatus(user).label }}
-                  </span>
-                  <span
-                    v-if="user.activeUntil"
-                    class="text-xs text-gray-500 bg-gray-50 px-2.5 py-1 rounded-full border border-gray-200"
+                <!-- Contact icons vertically -->
+                <div class="flex flex-col gap-1.5">
+                  <a
+                    v-if="user.phoneNumber"
+                    :href="`tel:${user.phoneNumber}`"
+                    class="px-2 py-1 bg-gradient-to-r from-primary-50 to-primary-100 text-primary-700 rounded-md hover:from-primary-100 hover:to-primary-200 transition-all duration-200 text-base border border-primary-200 shadow-sm hover:shadow"
+                    :title="user.phoneNumber"
+                    @click.stop
                   >
-                    Jusqu'au {{ new Date(user.activeUntil).toLocaleDateString('fr-FR') }}
-                  </span>
+                    📞
+                  </a>
+                  <a
+                    v-if="user.email"
+                    :href="`mailto:${user.email}`"
+                    class="px-2 py-1 bg-gradient-to-r from-secondary-50 to-secondary-100 text-secondary-700 rounded-md hover:from-secondary-100 hover:to-secondary-200 transition-all duration-200 text-base border border-secondary-200 shadow-sm hover:shadow"
+                    :title="user.email"
+                    @click.stop
+                  >
+                    ✉️
+                  </a>
                 </div>
               </div>
             </div>
