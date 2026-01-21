@@ -33,9 +33,31 @@
               <!-- Header with name and status -->
               <div class="flex items-start justify-between gap-3 mb-2">
                 <div class="flex-1 min-w-0">
-                  <h3 class="text-lg font-semibold text-gray-900 truncate">
-                    {{ user.firstName }} {{ user.lastName }}
-                  </h3>
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-lg font-semibold text-gray-900 truncate">
+                      {{ user.firstName }} {{ user.lastName }}
+                    </h3>
+                    <div class="flex gap-1.5">
+                      <a
+                        v-if="user.phoneNumber"
+                        :href="`tel:${user.phoneNumber}`"
+                        class="px-2 py-1 bg-gradient-to-r from-primary-50 to-primary-100 text-primary-700 rounded-md hover:from-primary-100 hover:to-primary-200 transition-all duration-200 text-base border border-primary-200 shadow-sm hover:shadow"
+                        :title="user.phoneNumber"
+                        @click.stop
+                      >
+                        📞
+                      </a>
+                      <a
+                        v-if="user.email"
+                        :href="`mailto:${user.email}`"
+                        class="px-2 py-1 bg-gradient-to-r from-secondary-50 to-secondary-100 text-secondary-700 rounded-md hover:from-secondary-100 hover:to-secondary-200 transition-all duration-200 text-base border border-secondary-200 shadow-sm hover:shadow"
+                        :title="user.email"
+                        @click.stop
+                      >
+                        ✉️
+                      </a>
+                    </div>
+                  </div>
                   <p v-if="user.address" class="text-sm text-gray-500 mt-0.5 truncate">
                     📍 {{ user.address }}
                   </p>
@@ -54,26 +76,6 @@
                     Jusqu'au {{ new Date(user.activeUntil).toLocaleDateString('fr-FR') }}
                   </span>
                 </div>
-              </div>
-
-              <!-- Contact links -->
-              <div class="flex flex-wrap gap-2 mt-3">
-                <a
-                  v-if="user.phoneNumber"
-                  :href="`tel:${user.phoneNumber}`"
-                  class="px-3 py-1.5 bg-gradient-to-r from-primary-50 to-primary-100 text-primary-700 rounded-md hover:from-primary-100 hover:to-primary-200 transition-all duration-200 text-sm font-medium border border-primary-200 shadow-sm hover:shadow"
-                  @click.stop
-                >
-                  📞 {{ user.phoneNumber }}
-                </a>
-                <a
-                  v-if="user.email"
-                  :href="`mailto:${user.email}`"
-                  class="px-3 py-1.5 bg-gradient-to-r from-secondary-50 to-secondary-100 text-secondary-700 rounded-md hover:from-secondary-100 hover:to-secondary-200 transition-all duration-200 text-sm font-medium border border-secondary-200 shadow-sm hover:shadow"
-                  @click.stop
-                >
-                  ✉️ {{ user.email }}
-                </a>
               </div>
             </div>
           </div>
