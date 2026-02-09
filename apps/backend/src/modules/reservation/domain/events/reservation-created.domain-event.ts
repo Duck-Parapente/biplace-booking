@@ -5,9 +5,11 @@ import { ReservationProps } from '../reservation.types';
 
 export class ReservationCreatedDomainEvent extends DomainEvent {
   readonly reservation: ReservationProps;
+  readonly explanationTable: string;
 
   constructor(props: DomainEventProps<ReservationCreatedDomainEvent>) {
     super(props);
     this.reservation = props.reservation;
+    this.explanationTable = props.explanationTable;
   }
 }

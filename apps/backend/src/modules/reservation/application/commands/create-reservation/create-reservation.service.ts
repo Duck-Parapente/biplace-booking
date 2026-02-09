@@ -28,11 +28,12 @@ export class CreateReservationService implements ICommandHandler<CreateReservati
   async execute({
     reservation: inputReservation,
     metadata,
+    explanationTable,
   }: CreateReservationCommand): Promise<void> {
     await this.reservationDomainService.validateCreateReservation(inputReservation);
     const reservation = await this.createWishIfNeeded(inputReservation, metadata);
 
-    const entity = ReservationEntity.create(reservation, metadata);
+    const entity = ReservationEntity.create(reservation, metadata, explanationTable);
     await this.reservationRepository.create(entity);
 
     if (reservation.reservationWishId) {

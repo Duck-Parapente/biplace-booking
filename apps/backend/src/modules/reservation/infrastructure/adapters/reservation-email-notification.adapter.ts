@@ -23,11 +23,16 @@ export class ReservationEmailNotificationAdapter implements ReservationNotificat
 
   constructor(private readonly mailClient: MailClient) {}
 
-  async notifyReservationCreated(reservationId: UUID, initiatedBy?: UUID): Promise<void> {
+  async notifyReservationCreated(
+    reservationId: UUID,
+    explanationTable: string,
+    initiatedBy?: UUID,
+  ): Promise<void> {
     await this.sendReservationNotificationEmail(
       reservationId,
       initiatedBy,
       TEMPLATE_RESERVATION_CONFIRMATION,
+      explanationTable,
     );
   }
 
@@ -87,6 +92,7 @@ export class ReservationEmailNotificationAdapter implements ReservationNotificat
     reservationId: UUID,
     initiatedBy: UUID | undefined,
     template: string,
+    explanationTable?: string,
   ): Promise<void> {
     this.logger.log(
       `sendNotificationEmail called for ${reservationId.uuid} with template ${template}`,
@@ -124,6 +130,7 @@ export class ReservationEmailNotificationAdapter implements ReservationNotificat
           initiatorName: initiator
             ? [initiator.firstName, initiator.lastName].filter(Boolean).join(' ')
             : `l'attribution automatique`,
+          explanationTable,
         },
       });
     } catch (error) {

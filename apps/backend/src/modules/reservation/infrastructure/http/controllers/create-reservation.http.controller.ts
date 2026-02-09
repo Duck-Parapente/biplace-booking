@@ -48,6 +48,7 @@ export class CreateReservationHttpController {
         publicComment: publicComment,
       },
       metadata: { userId: createdById },
+      explanationTable: '',
     });
 
     try {

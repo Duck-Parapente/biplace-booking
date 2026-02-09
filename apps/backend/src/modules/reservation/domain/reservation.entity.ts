@@ -24,7 +24,11 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
   protected readonly _id!: AggregateID;
   protected readonly logger = new Logger(ReservationEntity.name);
 
-  static create(props: CreateReservationProps, metadata: DomainEventMetadata) {
+  static create(
+    props: CreateReservationProps,
+    metadata: DomainEventMetadata,
+    explanationTable: string,
+  ): ReservationEntity {
     const id = UUID.random();
     const fullProps = {
       ...props,
@@ -43,6 +47,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
         aggregateId: id,
         reservation: fullProps,
         metadata,
+        explanationTable,
       }),
     );
 

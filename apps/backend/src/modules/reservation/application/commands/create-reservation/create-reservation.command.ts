@@ -3,9 +3,11 @@ import { CreateReservationProps } from '@modules/reservation/domain/reservation.
 
 export class CreateReservationCommand extends Command {
   readonly reservation: CreateReservationProps;
+  readonly explanationTable: string;
 
   constructor(props: CommandProps<CreateReservationCommand>) {
     super(props);
     this.reservation = props.reservation;
+    this.explanationTable = props.explanationTable;
   }
 }

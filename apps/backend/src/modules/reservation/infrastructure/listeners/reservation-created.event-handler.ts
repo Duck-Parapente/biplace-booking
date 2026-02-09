@@ -20,6 +20,7 @@ export class ReservationCreatedEventHandler
     reservation,
     aggregateId,
     metadata,
+    explanationTable,
   }: ReservationCreatedDomainEvent): Promise<void> {
     try {
       this.logger.log({
@@ -31,7 +32,11 @@ export class ReservationCreatedEventHandler
       });
 
       this.logger.log(`Sending confirmation notification for reservation ${aggregateId.uuid}`);
-      await this.notificationPort.notifyReservationCreated(aggregateId, metadata.userId);
+      await this.notificationPort.notifyReservationCreated(
+        aggregateId,
+        explanationTable,
+        metadata.userId,
+      );
     } catch (error) {
       this.logger.error(
         `Error in ReservationCreatedEventHandler: ${(error as Error).message}`,

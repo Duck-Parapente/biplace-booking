@@ -122,8 +122,20 @@ export class AttributePacksService {
 
     this.logger.log(`Generated ${attributions.length} attributions`);
 
-    await this.createReservations(attributions, pendingWishes, startingDate, endingDate);
-    await this.refuseUnattributedWishes(allPacks, engineInput, attributions);
+    const explanationTable = this.attributionExplanationHtmlDomainService.generateHtmlTable(
+      allPacks,
+      engineInput,
+      attributions,
+    );
+
+    await this.createReservations(
+      attributions,
+      pendingWishes,
+      startingDate,
+      endingDate,
+      explanationTable,
+    );
+    await this.refuseUnattributedWishes(engineInput, attributions, explanationTable);
 
     await this.eventEmitter.logDomainEvent(
       new ValidationEngineRunDomainEvent({
@@ -141,6 +153,7 @@ export class AttributePacksService {
     pendingWishes: ReservationWishForAttribution[],
     startingDate: DateValueObject,
     endingDate: DateValueObject,
+    explanationTable: string,
   ): Promise<void> {
     for (const attribution of attributions) {
       const wish = pendingWishes.find((w) => w.id.equals(attribution.reservationWishId));
@@ -159,6 +172,7 @@ export class AttributePacksService {
             reservationWishId: wish.id,
             publicComment: wish.publicComment,
           },
+          explanationTable,
           metadata: VALIDATION_ENGINE_MODULE,
         }),
       );
@@ -170,9 +184,9 @@ export class AttributePacksService {
   }
 
   private async refuseUnattributedWishes(
-    allPacks: EnginePack[],
     engineInput: BaseValidationEngineProps,
     attributions: Attribution[],
+    explanationTable: string,
   ): Promise<void> {
     const attributedWishIds = new Set(attributions.map((a) => a.reservationWishId.uuid));
     const refusedWishes = engineInput.reservationWishes.filter(
@@ -182,12 +196,6 @@ export class AttributePacksService {
     if (refusedWishes.length === 0) {
       return;
     }
-
-    const explanationTable = this.attributionExplanationHtmlDomainService.generateHtmlTable(
-      allPacks,
-      engineInput,
-      attributions,
-    );
 
     for (const wish of refusedWishes) {
       await this.updateReservationWishService.refuseReservationWish(
