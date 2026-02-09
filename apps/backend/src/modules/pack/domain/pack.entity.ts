@@ -18,6 +18,7 @@ export class PackEntity extends AggregateRoot<PackProps> {
         ...profile,
         flightsCount: profile.flightsCount ?? 0,
         flightsHours: profile.flightsHours ?? 0,
+        description: profile.description ?? null,
       },
     });
     user.addEvent(
@@ -48,6 +49,10 @@ export class PackEntity extends AggregateRoot<PackProps> {
 
   get flightsHours() {
     return this.props.flightsHours;
+  }
+
+  get description() {
+    return this.props.description;
   }
 
   get flightsCount() {

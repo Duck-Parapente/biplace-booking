@@ -49,6 +49,7 @@ model Pack {
     flightsHours      Int
     flightsCount      Int
     createdAt         DateTime                    @db.Timestamptz(3)
+    description       String?
     reservationWishes ReservationWishPackChoice[]
     reservations      Reservation[]
 }

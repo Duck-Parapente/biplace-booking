@@ -5,6 +5,7 @@ export interface PackProfile {
   label: string;
   flightsHours?: number;
   flightsCount?: number;
+  description?: string | null;
 }
 
 export type PackProps = Required<PackProfile>;

@@ -16,6 +16,10 @@ export class CreatePackDto {
   @IsNumber()
   @IsOptional()
   flightsCount?: number;
+
+  @IsString()
+  @IsOptional()
+  description?: string | null;
 }
 
 export class UpdatePackDto {
@@ -34,6 +38,10 @@ export class UpdatePackDto {
   @IsNumber()
   @IsOptional()
   flightsCount?: number;
+
+  @IsString()
+  @IsOptional()
+  description?: string | null;
 }
 
 export class PackDto {
@@ -56,4 +64,8 @@ export class PackDto {
   @IsNumber()
   @IsNotEmpty()
   flightsCount!: number;
+
+  @IsString()
+  @IsOptional()
+  description?: string | null;
 }

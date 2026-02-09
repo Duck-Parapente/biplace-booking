@@ -37,6 +37,7 @@ export class PackRepository implements PackRepositoryPort {
         label: pack.label,
         flightsHours: pack.flightsHours ?? 0,
         flightsCount: pack.flightsCount ?? 0,
+        description: pack.description ?? null,
         owner: {
           connect: { id: pack.ownerId.uuid },
         },
@@ -72,6 +73,7 @@ export class PackRepository implements PackRepositoryPort {
         flightsHours: pack.flightsHours,
         flightsCount: pack.flightsCount,
         ownerId: pack.ownerId.uuid,
+        description: pack.description,
       },
     });
 
