@@ -86,6 +86,7 @@
               required
               minlength="2"
               maxlength="50"
+              placeholder="Utilise ton vrai prénom"
               class="w-full px-3 py-2 bg-gray-50 focus:bg-primary-400/10 focus:outline-none"
             />
             <p v-if="validationErrors.firstName" class="mt-1 text-xs text-red-600">
@@ -104,6 +105,7 @@
               required
               minlength="2"
               maxlength="50"
+              placeholder="Utilise ton vrai nom"
               class="w-full px-3 py-2 bg-gray-50 focus:bg-primary-400/10 focus:outline-none"
             />
             <p v-if="validationErrors.lastName" class="mt-1 text-xs text-red-600">

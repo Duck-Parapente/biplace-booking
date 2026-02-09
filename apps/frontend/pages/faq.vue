@@ -8,7 +8,7 @@
         </p>
       </div>
 
-      <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div class="bg-white rounded-lg shadow-sm">
         <FaqItem question="1. J'aimais bien la Duck sheet">
           <p class="mb-3">
             Nous aussi mais cette bonne vieille sheet avait un certain nombre de limites que cette
