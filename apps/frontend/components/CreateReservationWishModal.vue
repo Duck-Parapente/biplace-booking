@@ -161,7 +161,7 @@ const packOptions = computed(() =>
     .filter((pack) => !selectedPacks.value.find((p) => p.id === pack.id))
     .map((pack) => ({
       value: pack.id,
-      label: pack.label,
+      label: `${pack.label}${pack.description ? ` (${pack.description})` : ''}`,
     })),
 );
 

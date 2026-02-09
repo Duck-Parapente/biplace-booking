@@ -35,6 +35,8 @@
       :min="0"
     />
 
+    <BaseInput id="description" v-model="localForm.description" label="Description" type="text" />
+
     <div v-if="error" class="p-3 bg-red-50 text-red-700 text-sm">
       <p><strong>Erreur:</strong> {{ error }}</p>
     </div>

@@ -58,6 +58,7 @@ export const usePack = () => {
     ownerId: '',
     flightsHours: undefined,
     flightsCount: undefined,
+    description: undefined,
   }));
 
   const openCreatePackModal = () => {
@@ -72,6 +73,7 @@ export const usePack = () => {
       ownerId: '',
       flightsHours: undefined,
       flightsCount: undefined,
+      description: undefined,
     };
   };
 
@@ -88,6 +90,7 @@ export const usePack = () => {
       ownerId: pack.ownerId,
       flightsHours: pack.flightsHours,
       flightsCount: pack.flightsCount,
+      description: pack.description,
     };
     showModal.value = true;
     submitError.value = null;

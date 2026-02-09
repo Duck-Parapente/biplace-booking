@@ -26,7 +26,7 @@
 <script setup lang="ts">
 interface Props {
   id: string;
-  modelValue?: string | number;
+  modelValue?: string | number | null;
   label?: string;
   type?: 'text' | 'number' | 'email' | 'password' | 'tel' | 'date';
   required?: boolean;
