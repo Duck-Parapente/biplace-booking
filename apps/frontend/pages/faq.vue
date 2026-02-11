@@ -457,7 +457,7 @@
                       <td class="text-center"><br /></td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
-                      <td class="text-center">15/01<br />Demande et confirmatoin</td>
+                      <td class="text-center">15/01<br />Demande et confirmation</td>
                       <td class="text-center"><br /></td>
                       <td class="text-center"></td>
                       <td class="text-center">18/01<br />Vol</td>
