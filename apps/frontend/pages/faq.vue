@@ -199,11 +199,10 @@
             du matériel et la date du vol si vol il y a ou 1 Coin par jour écoulé entre
             l'attribution du matériel et l'annulation si la réservation est annulée.
           </p>
-
           <div class="space-y-6">
             <div>
               <h5 class="font-semibold text-gray-900 mb-3">
-                ✅ Cas 1 : Tu clôtures ta réservation après le vol
+                ✅ Cas 1 : Tu réserves tôt et clôtures ta réservation après le vol
               </h5>
               <div>
                 <table class="w-full text-xs text-gray-600 table-fixed">
@@ -219,6 +218,40 @@
                           <div class="w-full h-0.5 bg-blue-400"></div>
                         </div>
                       </td>
+
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-blue-600 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+
                       <td class="relative">
                         <div class="absolute inset-0 flex items-center justify-center">
                           <div
@@ -281,27 +314,170 @@
                       </td>
                     </tr>
                     <tr>
-                      <td class="text-center">10/01<br />Confirmation</td>
+                      <td class="text-center">10/01<br />Demande</td>
+                      <td class="text-center"></td>
+                      <td class="text-center">12/01<br />Confirmation</td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
-                      <td class="text-center">15/01<br />Vol</td>
-                      <td class="text-center">16/01<br />Clôture</td>
+                      <td class="text-center"></td>
+                      <td class="text-center">18/01<br />Vol</td>
+                      <td class="text-center">19/01<br />Clôture</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
               <div class="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
                 <p class="text-sm">
-                  <strong>Calcul :</strong> 5 jours entre la confirmation et la date du vol<br />
-                  <strong>Points ajoutés :</strong> 5 Coins
+                  <strong>Calcul :</strong> 5 jours entre la confirmation et la date du vol<br /><strong
+                    >Points ajoutés :</strong
+                  >
+                  5 Coins
                 </p>
               </div>
             </div>
 
             <div>
-              <h5 class="font-semibold text-gray-900 mb-3">⚠️ Cas 2 : Tu annules</h5>
+              <h5 class="font-semibold text-gray-900 mb-3">
+                ✅ Cas 2 : Tu réserves tardivement et clôtures ta réservation après le vol
+              </h5>
+              <p class="mb-4">
+                C'est possible si du matériel est encore disponible ou qu'une réservation a été
+                annulée à moins de 5 jours du jour J.
+              </p>
+              <div>
+                <table class="w-full text-xs text-gray-600 table-fixed">
+                  <tbody>
+                    <tr class="h-5">
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-blue-600 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-green-600 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-green-700 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-center"><br /></td>
+                      <td class="text-center"><br /></td>
+                      <td class="text-center"><br /></td>
+                      <td class="text-center"></td>
+                      <td class="text-center"></td>
+                      <td class="text-center">15/01<br />Demande et confirmatoin</td>
+                      <td class="text-center"><br /></td>
+                      <td class="text-center"></td>
+                      <td class="text-center">18/01<br />Vol</td>
+                      <td class="text-center">19/01<br />Clôture</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
+                <p class="text-sm">
+                  <strong>Calcul :</strong> 2 jours entre la confirmation et la date du vol<br /><strong
+                    >Points ajoutés :</strong
+                  >
+                  2 Coins
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <h5 class="font-semibold text-gray-900 mb-3">⚠️ Cas 3 : Tu annules</h5>
               <div>
                 <table class="w-full text-xs text-gray-600 table-fixed">
                   <tbody>
@@ -316,6 +492,28 @@
                           <div class="w-full h-0.5 bg-blue-400"></div>
                         </div>
                       </td>
+
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-blue-600 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+
                       <td class="relative">
                         <div class="absolute inset-0 flex items-center justify-center">
                           <div
@@ -356,10 +554,11 @@
                           <div class="w-full h-0.5 bg-blue-400"></div>
                         </div>
                       </td>
+
                       <td class="relative">
                         <div class="absolute inset-0 flex items-center justify-center">
                           <div
-                            class="w-3 h-3 bg-gray-400 rounded-full border-2 border-white relative z-10"
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
                           ></div>
                         </div>
                         <div class="absolute inset-0 flex items-center">
@@ -367,20 +566,35 @@
                         </div>
                       </td>
                       <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full h-0.5 bg-blue-400"></div>
+                        </div>
+                      </td>
+                      <td class="relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <div
+                            class="w-3 h-3 bg-gray-300 rounded-full border-2 border-white relative z-10"
+                          ></div>
+                        </div>
                         <div class="absolute inset-0 flex items-center">
                           <div class="w-full h-0.5 bg-blue-400"></div>
                         </div>
                       </td>
                     </tr>
                     <tr>
-                      <td class="text-center">10/01<br />Confirmation</td>
+                      <td class="text-center">10/01<br />Demande</td>
+                      <td class="text-center"></td>
+                      <td class="text-center">12/01<br />Confirmation</td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
-                      <td class="text-center">14/01<br />Annulation</td>
-                      <td class="text-center">
-                        <span class="text-gray-400">15/01<br />-</span>
-                      </td>
+                      <td class="text-center">16/01<br />Annulation</td>
+                      <td class="text-center"></td>
                       <td class="text-center"></td>
                     </tr>
                   </tbody>
@@ -388,8 +602,10 @@
               </div>
               <div class="mt-3 p-3 bg-orange-50 rounded border border-orange-200">
                 <p class="text-sm">
-                  <strong>Calcul :</strong> 4 jours entre la confirmation et l'annulation<br />
-                  <strong>Points ajoutés :</strong> 4 Coins
+                  <strong>Calcul :</strong> 3 jours entre la confirmation et l'annulation<br /><strong
+                    >Points ajoutés :</strong
+                  >
+                  3 Coins
                 </p>
               </div>
             </div>
@@ -442,31 +658,47 @@
         <FaqItem question="10. Comment maximiser mes chances ?">
           <ul class="list-disc pl-6 space-y-3">
             <li>
-              <strong>Gère tes demandes :</strong> Nous sommes le 1er jour du mois, tu as demandé un
-              pack pour le 4. Aucun pack ne t'a été attribué. Tant qu'un biplace t'intéresse,
-              conserve ta demande pour le 4. Si le pilote à qui il est attribué se désiste, il te
-              sera peut-être attribué. Par contre, si le 2, tu décides que comme tu n'as pas de
-              biplace, tu iras grimper avec tes potes, annule ta demande. Dans le cas contraire, si
-              le pilote à qui il est attribué se désiste, il te sera peut-être attribué et tu seras
-              redevable d'au moins un Coin même si tu l'annules rapidement.
+              <strong>Postule à tous les biplaces qui peuvent te convenir</strong> plutôt qu'à un
+              seulement ton préféré.
             </li>
             <li>
-              <strong>Postule à tous les biplaces qui t'intéressent</strong> plutôt qu'à un seul.
-            </li>
-            <li>
-              <strong>Postule aux jours avec une faible demande.</strong> Typiquement, en semaine.
-            </li>
-            <li>
-              <strong>Réserver plus tard que J-5 coûte moins cher mais est plus risqué.</strong> Ça
-              peut être une stratégie plus économique dans les périodes de faible demande.
-            </li>
-            <li>
-              <strong>Si tu sens que la météo va tourner au vinaigre,</strong> annule ta réservation
-              le plus tôt possible, cela coûte moins de Coins que la veille ou le jour même.
+              <strong>Postule aux jours avec une faible demande.</strong> <br />De façon
+              caricaturale : en semaine et ou en hiver. Tu as compris l'idée.<br />
+              Même si tu as beaucoup de Coins, tu peux te placer dans les trous pour voler quand
+              même.
             </li>
             <li>
               <strong>Réserver peu</strong> permet d'avoir plus de choix dans la date et d'augmenter
               la probabilité d'avoir du matériel plusieurs jours consécutifs (voir plus bas).
+            </li>
+            <li>
+              <strong>En engrangeant le moins de Coins possibles :</strong>
+              <ul class="list-disc pl-6 space-y-3">
+                <li>
+                  <strong>Gère tes demandes :</strong><br />
+                  Nous sommes le 1er jour du mois, tu as demandé un pack pour le 4 mais aucun pack
+                  ne t'a été attribué. <br />Tant qu'un biplace t'intéresse, conserve ta demande
+                  pour le 4. En effet, si le pilote à qui il est attribué se désiste, il te sera
+                  peut-être attribué.<br />
+                  Par contre, si le 2, tu décides que comme tu n'as pas de biplace, tu iras grimper
+                  avec tes potes, annule ta demande. Dans le cas contraire, si le pilote à qui il
+                  est attribué se désiste, il te sera peut-être attribué et tu seras redevable d'au
+                  moins un Coin même si tu l'annules rapidement.
+                </li>
+                <li>
+                  <strong>Réserver plus tard que J-5 coûte moins cher mais est plus risqué.</strong
+                  ><br />
+                  Cela peut être une stratégie plus économique dans les périodes de faible demande :
+                  Si tu désires voler en février, la demande est généralement faible. En consultant
+                  régulièrement le planning, tu peux attendre le dernier moment pour réserver et
+                  ainsi limiter le nombre de Coins.
+                </li>
+                <li>
+                  <strong>Si tu sens que la météo va tourner au vinaigre,</strong> annule ta
+                  réservation le plus tôt possible, cela coûte moins de Coins que la veille du vol
+                  ou le jour même.
+                </li>
+              </ul>
             </li>
           </ul>
         </FaqItem>
@@ -528,7 +760,7 @@
             <li>
               Envoyer un message sur
               <a
-                href="https://discord.com/channels/943454897431523349/943504854746271794"
+                href="https://discord.com/channels/943454897431523349/1471134092497129492"
                 class="text-blue-600 underline"
               >
                 Discord
