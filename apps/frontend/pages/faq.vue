@@ -760,7 +760,7 @@
             <li>
               Envoyer un message sur
               <a
-                href="https://discord.com/channels/943454897431523349/943504854746271794"
+                href="https://discord.com/channels/943454897431523349/1471134092497129492"
                 class="text-blue-600 underline"
               >
                 Discord
