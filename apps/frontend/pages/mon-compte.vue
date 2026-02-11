@@ -71,7 +71,7 @@
             />
             <InfoBox>
               Le nombre de Coins est mis à jour après chaque réservation. Plus tu réserves, plus le
-              nombre augmente. Il est utilisé pour attribuer les parapentistes de manière équitable.
+              nombre augmente. Il est utilisé pour attribuer les biplaces de manière équitable.
             </InfoBox>
           </div>
 
