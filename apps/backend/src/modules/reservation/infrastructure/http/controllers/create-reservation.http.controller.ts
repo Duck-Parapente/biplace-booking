@@ -35,7 +35,7 @@ export class CreateReservationHttpController {
   ) {}
 
   @Post()
-  async createReservationWish(
+  async createReservation(
     @Request() { user: { id: createdById, roles } }: { user: AuthenticatedUser },
     @Body() { startingDate, packId, userId, publicComment }: CreateReservationDto,
   ) {
