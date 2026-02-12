@@ -45,7 +45,7 @@ export class CreateReservationHttpController {
         userId: userId ? new UUID({ uuid: userId }) : undefined,
         startingDate: DateValueObject.fromDateString(startingDate).startOfDayInUTC(0),
         endingDate: DateValueObject.fromDateString(startingDate).startOfDayInUTC(1),
-        publicComment: publicComment,
+        publicComment,
       },
       metadata: { userId: createdById },
       explanationTable: '',
