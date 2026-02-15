@@ -29,9 +29,9 @@ export class DateValueObject extends ValueObject<DateProps> {
     return this.value.getTime() < other.value.getTime();
   }
 
-  daysBetween(other: DateValueObject): Integer {
+  hoursBetween(other: DateValueObject): Integer {
     const diffMs = other.value.getTime() - this.value.getTime();
-    return new Integer({ value: Math.ceil(diffMs / (1000 * 60 * 60 * 24)) });
+    return new Integer({ value: Math.floor(diffMs / (1000 * 60 * 60)) });
   }
 
   static now(): DateValueObject {
