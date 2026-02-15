@@ -176,29 +176,29 @@ export class ReservationRepository implements ReservationRepositoryPort {
   }
 
   async findAllReservationsByPackId(packId: UUID): Promise<PackReservationsWithDetails> {
-    const reservations = await prisma.reservation.findMany({
-      where: {
-        packId: packId.uuid,
-      },
-      include: {
-        user: true,
-        flightLog: true,
-        pack: {
-          include: {
-            owner: true,
-          },
+    const [reservations, pack] = await Promise.all([
+      prisma.reservation.findMany({
+        where: {
+          packId: packId.uuid,
         },
-      },
-      orderBy: {
-        startingDate: 'desc',
-      },
-    });
+        include: {
+          user: true,
+          flightLog: true,
+        },
+        orderBy: {
+          startingDate: 'desc',
+        },
+      }),
+      prisma.pack.findUniqueOrThrow({
+        where: { id: packId.uuid },
+        include: {
+          owner: true,
+        },
+      }),
+    ]);
 
-    const pack = reservations[0]?.pack;
-    const initialFlightsCount = pack ? new Integer({ value: pack.flightsCount }) : Integer.zero();
-    const initialFlightsMinutes = pack
-      ? new Integer({ value: pack.flightsHours * 60 })
-      : Integer.zero();
+    const initialFlightsCount = new Integer({ value: pack.flightsCount });
+    const initialFlightsMinutes = new Integer({ value: pack.flightsHours * 60 });
 
     const reservationFlightStats = reservations.reduce(
       (acc, reservation) => {
