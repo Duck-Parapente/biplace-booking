@@ -112,6 +112,7 @@ const menuCategories: MenuCategory[] = [
     items: [
       { path: '/faq', label: 'FAQ' },
       { path: '/contacts', label: 'Contacts' },
+      { path: '/helloasso', label: 'HelloAsso' },
     ],
   },
   {
