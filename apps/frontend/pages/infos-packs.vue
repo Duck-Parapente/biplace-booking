@@ -46,11 +46,11 @@
         v-if="selectedPackId && !loading && !error"
         class="mb-6 bg-yellow-50 text-yellow-600 border border-yellow-600 p-2 rounded-lg shadow-sm text-sm"
       >
-        <div class="flex items-center gap-2 mb-1">
+        <div class="flex items-center gap-2">
           <span class="font-semibold">Respo pack:</span>
           <span>{{ ownerFullName }}</span>
         </div>
-        <div class="flex gap-6">
+        <div class="flex gap-6 mt-1">
           <div>
             <span class="font-semibold">Heures de vol:</span>
             <span class="ml-2"
@@ -61,6 +61,10 @@
             <span class="font-semibold">Nombre de vols:</span>
             <span class="ml-2">{{ totalFlightsCount }}</span>
           </div>
+        </div>
+        <div v-if="selectedPackDescription" class="mt-1">
+          <span class="font-semibold">Description:</span>
+          <span class="ml-2">{{ selectedPackDescription }}</span>
         </div>
       </div>
 
@@ -197,6 +201,12 @@ const packOptions = computed<AutocompleteOption[]>(() => {
     value: pack.id,
     label: pack.label,
   }));
+});
+
+const selectedPackDescription = computed(() => {
+  if (!selectedPackId.value) return null;
+  const pack = packs.value.find((p) => p.id === selectedPackId.value);
+  return pack?.description || null;
 });
 
 const reservations = computed(() => {
