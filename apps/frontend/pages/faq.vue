@@ -320,7 +320,7 @@
           </p>
           <p class="mb-4">
             <strong>Pour une réservation avec vol</strong>, le nombre de Coins correspond au nombre
-            d'heures écoulées entre l'attribution du matériel et 23:59 de la date du vol.<br/>
+            d'heures écoulées entre l'attribution du matériel et 23:59 de la date du vol.<br />
             <strong>Pour une réservation annulée</strong>, le nombre de Coins correspond au nombre
             d'heures écoulées entre l'attribution du matériel et l'heure d'annulation.
           </p>
@@ -789,9 +789,9 @@
         <FaqItem question="8. Puis-je annuler ma réservation après validation ?">
           <p class="mb-3">
             Bien sûr. Note cependant que ton nombre de Coins sera quand même augmenté en fonction du
-            temps écoulé entre la validation et l'annulation (Voir paragraphe "Comment sont comptés les Coins ?"). En d'autres termes, plus tu annules
-            tôt moins tu seras pénalisé parce que cela laisse plus de temps à un autre pilote pour
-            s'organiser.
+            temps écoulé entre la validation et l'annulation (Voir paragraphe "Comment sont comptés
+            les Coins ?"). En d'autres termes, plus tu annules tôt moins tu seras pénalisé parce que
+            cela laisse plus de temps à un autre pilote pour s'organiser.
           </p>
           <p class="mt-3">
             Privilégie les demandes sur des dates où tu es vraiment certain d'être disponible pour
@@ -806,8 +806,8 @@
             peut-être fait le choix d'un endroit où il n'a pas plu.<br />
           </p>
           <p class="mb-3">
-            L'autre raison est pour éviter les réservations posées "au cas où j'aurais le temps" et 
-            qui ne sont pas honorées ni annulées. Le principe étant de favoriser l'annulation au
+            L'autre raison est pour limiter les réservations posées "au cas où j'aurais envie" et
+            qui ne sont ni honorées ni annulées. Le principe étant de favoriser l'annulation au
             plus tôt pour permettre à d'autres pilotes de s'organiser.
           </p>
           <p class="mb-3">
@@ -911,7 +911,59 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="14. Qui puis-je contacter si j'ai d'autres questions ?">
+        <FaqItem question="14. Pourquoi ne puis-je pas déposer de demande de réservation ?">
+          <p>
+            Soit tu n'as pas cloturé une de tes réservations précédentes, soit ton compte est
+            désactivé parce que tu n'as pas payé ton supplément de cotisation biplace annuel. <br />
+            <a
+              href="
+https://www.helloasso.com/associations/duck/adhesions/adhesion-biplace-duck-2026"
+              class="text-blue-600 underline"
+              >Tu peux le faire avec ce lien</a
+            >. Dès que c'est fait, envoie un message
+            <a
+              href="https://discord.com/channels/943454897431523349/1471134092497129492"
+              class="text-blue-600 underline"
+            >
+              sur discord</a
+            >
+            afin qu'admin réactive ton compte.
+          </p>
+        </FaqItem>
+
+        <FaqItem
+          question="15. Mon passager a surkiffé le vol et veut absolument donner de l'argent. Que dois-je faire ?"
+        >
+          <p>
+            Pas de chance ! Tu n'agis pas dans le cadre de d'une activité professionnelle, tu ne
+            peux pas encaisser d'argent pour te payer une Rolex. Par contre, tu peux suggérer à ton
+            passager de faire un don au club et ainsi le dédommager de l'usure du matériel.
+            <br />
+            A titre d'information, un vol coûte environ 20€ de frais d'achat et d'entretien.<br />
+            <a
+              href="
+https://www.helloasso.com/associations/duck/boutiques/participation-biplace-duck-2026"
+              class="text-blue-600 underline"
+              >Ceci est le lien de l'helloasso du club.</a
+            >
+          </p>
+          <p>
+            Tu peux également lui faire flasher ce QR code pour faire un don directement depuis son
+            téléphone. Il faut battre le fer tant qu'il est chaud !<br />
+
+            <center>
+              <big
+                ><big
+                  ><big
+                    ><big><big>Mettre le qr code ici</big></big></big
+                  ></big
+                ></big
+              >
+            </center>
+          </p>
+        </FaqItem>
+
+        <FaqItem question="16. Qui puis-je contacter si j'ai d'autres questions ?">
           <p class="mb-3">Pour toute question supplémentaire ou problème technique, tu peux :</p>
           <ul class="list-disc pl-6 space-y-2">
             <li>
