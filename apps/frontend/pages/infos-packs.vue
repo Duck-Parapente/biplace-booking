@@ -166,7 +166,7 @@ import type { AutocompleteOption } from '~/components/atoms/BaseAutocomplete.vue
 
 definePageMeta({
   middleware: 'auth',
-  pageTitle: 'Carnet de vol',
+  pageTitle: 'Infos packs',
 });
 
 const { callApi } = useApi();

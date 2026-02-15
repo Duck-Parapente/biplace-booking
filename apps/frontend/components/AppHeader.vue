@@ -104,7 +104,7 @@ const menuCategories: MenuCategory[] = [
     items: [
       { path: '/', label: 'Planning' },
       { path: '/mes-demandes', label: 'Mes demandes' },
-      { path: '/carnet-de-vol', label: 'Carnet de vol' },
+      { path: '/infos-packs', label: 'Infos packs' },
     ],
   },
   {
