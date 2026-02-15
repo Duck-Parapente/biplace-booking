@@ -43,8 +43,9 @@
             système. Tu as alors un créneau garanti pour voler avec un pack attribué.
           </p>
           <p>
-            Le passage d'une demande à une réservation confirmée se fait selon le système de
-            priorité par Coins (voir question suivante).
+            Le passage d'une demande à une réservation confirmée est réalisée par l'application en
+            assurant une équité maximale entre les pilotes (voir question "comment fonctionne
+            l'algorithme d'attribution des packs ?").
           </p>
         </FaqItem>
 
@@ -81,10 +82,10 @@
               </p>
               <p class="mb-3">En encore d'autres termes :</p>
               <ul class="list-disc pl-6 space-y-1">
-                <li>Avant J-5, rien n'est attribué.</li>
-                <li>À J-5, l'attribution est faite.</li>
+                <li>Avant J-6, rien n'est attribué.</li>
+                <li>À J-6, l'attribution est faite.</li>
                 <li>
-                  À partir de J-5 20h00, tout événement qui nécessite une ré-attribution est traité
+                  À partir de J-6 20h00, tout événement qui nécessite une ré-attribution est traité
                   dans les 30 minutes.
                 </li>
               </ul>
@@ -127,9 +128,61 @@
           </ol>
 
           <div class="bg-gray-50 p-6 rounded-lg mb-4">
-            <h4 class="font-semibold text-gray-900 mb-4 text-center">
-              Exemple d'attribution de packs
-            </h4>
+            <h4 class="font-semibold text-gray-900 mb-4 text-center">Exemple numéro 1</h4>
+
+            <!-- Demandes initiales -->
+            <div class="mb-6">
+              <p class="text-sm font-semibold text-gray-700 mb-3">📋 Demandes de réservation :</p>
+              <div class="space-y-2">
+                <div class="bg-white p-3 rounded border-l-4 border-blue-500">
+                  <div class="flex items-center justify-between">
+                    <span class="font-medium">Pilote 1</span>
+                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                      Score: 50 Coins (plus prioritaire)
+                    </span>
+                  </div>
+                  <div class="text-sm text-gray-600 mt-1">Demande : Pack A sinon Pack B</div>
+                </div>
+                <div class="bg-white p-3 rounded border-l-4 border-orange-500">
+                  <div class="flex items-center justify-between">
+                    <span class="font-medium">Pilote 2</span>
+                    <span class="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">
+                      Score: 120 Coins (moins prioritaire)
+                    </span>
+                  </div>
+                  <div class="text-sm text-gray-600 mt-1">Demande : Pack A sinon Pack B</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-center text-2xl text-gray-400 my-4">↓</div>
+
+            <!-- Résultat -->
+            <div>
+              <p class="text-sm font-semibold text-gray-700 mb-3">✅ Attribution finale :</p>
+              <div class="space-y-2">
+                <div class="bg-green-50 p-3 rounded border-l-4 border-green-500">
+                  <p class="text-sm text-gray-700">Le pack A est attribué au pilote 1</p>
+                </div>
+                <div class="bg-green-50 p-3 rounded border-l-4 border-green-500">
+                  <p class="text-sm text-gray-700">Le pack B est attribué au pilote 2</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Explication -->
+            <div class="mt-4 p-3 bg-blue-50 rounded border border-blue-200">
+              <p class="text-sm text-gray-700">
+                <strong>💡 Pourquoi cette attribution ?</strong><br />
+                Les deux pilotes demandent les même packs. Pilote 1 est plus prioritaire,
+                l'algorithme lui attribue son pack préféré (A) et attribue à Pilote 2 le Pack
+                restant (B).<br />
+                <strong>Résultat : les deux demandes sont satisfaites.</strong>.
+              </p>
+            </div>
+          </div>
+          <div class="bg-gray-50 p-6 rounded-lg mb-4">
+            <h4 class="font-semibold text-gray-900 mb-4 text-center">Exemple numéro 2</h4>
 
             <!-- Demandes initiales -->
             <div class="mb-6">
@@ -156,7 +209,6 @@
               </div>
             </div>
 
-            <!-- Flèche -->
             <div class="text-center text-2xl text-gray-400 my-4">↓</div>
 
             <!-- Résultat -->
@@ -164,10 +216,10 @@
               <p class="text-sm font-semibold text-gray-700 mb-3">✅ Attribution finale :</p>
               <div class="space-y-2">
                 <div class="bg-green-50 p-3 rounded border-l-4 border-green-500">
-                  <p class="text-sm text-gray-700">Le Pack B est attribué à Pilote 1</p>
+                  <p class="text-sm text-gray-700">Le pack B est attribué au pilote 1</p>
                 </div>
                 <div class="bg-green-50 p-3 rounded border-l-4 border-green-500">
-                  <p class="text-sm text-gray-700">Le Pack A est attribué à Pilote 2</p>
+                  <p class="text-sm text-gray-700">Le pack A est attribué au pilote 2</p>
                 </div>
               </div>
             </div>
@@ -178,7 +230,79 @@
                 <strong>💡 Pourquoi cette attribution ?</strong><br />
                 Bien que Pilote 1 soit plus prioritaire, l'algorithme lui attribue le Pack B car
                 cela permet d'attribuer aussi le Pack A au Pilote 2.
-                <strong>Résultat : 2 packs attribués au lieu d'un seul</strong>.
+                <strong>Résultat : les deux demandes sont satisfaites.</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 p-6 rounded-lg mb-4">
+            <h4 class="font-semibold text-gray-900 mb-4 text-center">Exemple numéro 3</h4>
+
+            <!-- Demandes initiales -->
+            <div class="mb-6">
+              <p class="text-sm font-semibold text-gray-700 mb-3">📋 Demandes de réservation :</p>
+              <div class="space-y-2">
+                <div class="bg-white p-3 rounded border-l-4 border-blue-500">
+                  <div class="flex items-center justify-between">
+                    <span class="font-medium">Pilote 1</span>
+                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                      Score: 50 Coins (plus prioritaire)
+                    </span>
+                  </div>
+                  <div class="text-sm text-gray-600 mt-1">Demande : Pack A</div>
+                </div>
+                <div class="bg-white p-3 rounded border-l-4 border-orange-500">
+                  <div class="flex items-center justify-between">
+                    <span class="font-medium">Pilote 2</span>
+                    <span class="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">
+                      Score: 120 Coins (moins prioritaire)
+                    </span>
+                  </div>
+                  <div class="text-sm text-gray-600 mt-1">Demande : Pack A</div>
+                </div>
+                <div class="bg-white p-3 rounded border-l-4 border-red-500">
+                  <div class="flex items-center justify-between">
+                    <span class="font-medium">Pilote 3</span>
+                    <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">
+                      Score: 130 Coins (le moins prioritaire)
+                    </span>
+                  </div>
+                  <div class="text-sm text-gray-600 mt-1">Demande : Pack A sinon B</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-center text-2xl text-gray-400 my-4">↓</div>
+
+            <!-- Résultat -->
+            <div>
+              <p class="text-sm font-semibold text-gray-700 mb-3">✅ Attribution finale :</p>
+              <div class="space-y-2">
+                <div class="bg-green-50 p-3 rounded border-l-4 border-green-500">
+                  <p class="text-sm text-gray-700">Le pack A est attribué au pilote 1</p>
+                </div>
+                <div class="bg-orange-50 p-3 rounded border-l-4 border-orange-500">
+                  <p class="text-sm text-gray-700">Aucun pack est attribué au pilote 2</p>
+                </div>
+                <div class="bg-green-50 p-3 rounded border-l-4 border-green-500">
+                  <p class="text-sm text-gray-700">Le pack B est attributé au pilote 3</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Explication -->
+            <div class="mt-4 p-3 bg-blue-50 rounded border border-blue-200">
+              <p class="text-sm text-gray-700">
+                <strong>💡 Pourquoi cette attribution ?</strong><br />
+                Bien que le pilote 2 soit plus prioritaire que le pilote 3, l'algorithme ne lui
+                attribue aucun pack parce que le seul qu'il désirait (A) est déjà attribué au pilote
+                1 plus prioritaire. <br />
+                Le pilote 3 reçoit le pack B qu'il avait mis en second choix.<br />
+                <strong
+                  >Résultat : Une demande plus prioritaire n'est pas satisfaite parce que tous les
+                  packs souhaités sont déjà attribués à un (des) pilotes encore plus prioritaires.
+                  Le pilote B aurait pu augumenter ses chances en postulant à plus de packs.</strong
+                >
               </p>
             </div>
           </div>
@@ -186,8 +310,8 @@
 
         <FaqItem question="6. Comment sont comptés les Coins ?">
           <p class="mb-4">
-            Un certain nombre de Coins sont attribués à toute demande de réservation validée. Lors
-            du process d'attribution, l'application utilise la somme de Coins de toutes les
+            Un certain nombre de Coins est attribué à toute demande de réservation validée. Lors du
+            process d'attribution, l'application utilise la somme des Coins de toutes les
             réservations effectuées dans les <strong>365 jours qui précèdent</strong> la date
             d'attribution (une année glissante).
           </p>
@@ -195,10 +319,12 @@
             Les Coins d'une réservation sont calculés lorsque celle-ci est clôturée ou annulée.
           </p>
           <p class="mb-4">
-            <strong>Le nombre de Coins ajoutés</strong> = 1 Coin par jour écoulé entre l'attribution
-            du matériel et la date du vol si vol il y a ou 1 Coin par jour écoulé entre
-            l'attribution du matériel et l'annulation si la réservation est annulée.
+            <strong>Pour une réservation avec vol</strong>, le nombre de Coins correspond au nombre
+            d'heures écoulées entre l'attribution du matériel et 23:59 de la date du vol.<br />
+            <strong>Pour une réservation annulée</strong>, le nombre de Coins correspond au nombre
+            d'heures écoulées entre l'attribution du matériel et l'heure d'annulation.
           </p>
+          <p class="mb-4">Voici quelques exemples pour illustrer cela :</p>
           <div class="space-y-6">
             <div>
               <h5 class="font-semibold text-gray-900 mb-3">
@@ -316,7 +442,7 @@
                     <tr>
                       <td class="text-center">10/01<br />Demande</td>
                       <td class="text-center"></td>
-                      <td class="text-center">12/01<br />Confirmation</td>
+                      <td class="text-center">12/01<br />20:00<br />Confirmation</td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
@@ -325,15 +451,26 @@
                       <td class="text-center">18/01<br />Vol</td>
                       <td class="text-center">19/01<br />Clôture</td>
                     </tr>
+                    <tr>
+                      <td class="text-center"></td>
+                      <td class="text-center"></td>
+                      <td class="text-center">4 Coins</td>
+                      <td class="text-center">24 Coins</td>
+                      <td class="text-center">24 Coins</td>
+                      <td class="text-center">24 Coins</td>
+                      <td class="text-center">24 Coins</td>
+                      <td class="text-center">24 Coins</td>
+                      <td class="text-center">24 Coins</td>
+                      <td class="text-center"></td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
               <div class="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
                 <p class="text-sm">
-                  <strong>Calcul :</strong> 5 jours entre la confirmation et la date du vol<br /><strong
-                    >Points ajoutés :</strong
-                  >
-                  5 Coins
+                  <strong>Calcul :</strong> 4+24+24+24+24+24+24 heures entre confirmation et la date
+                  du vol (23:59)<br /><strong>Coins ajoutés :</strong>
+                  148 Coins
                 </p>
               </div>
             </div>
@@ -457,21 +594,32 @@
                       <td class="text-center"><br /></td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
-                      <td class="text-center">15/01<br />Demande et confirmation</td>
-                      <td class="text-center"><br /></td>
+                      <td class="text-center">15/01<br />18:00<br />Demande et confirmation</td>
+                      <td class="text-center"></td>
                       <td class="text-center"></td>
                       <td class="text-center">18/01<br />Vol</td>
                       <td class="text-center">19/01<br />Clôture</td>
+                    </tr>
+                    <tr>
+                      <td class="text-center"></td>
+                      <td class="text-center"></td>
+                      <td class="text-center"></td>
+                      <td class="text-center"></td>
+                      <td class="text-center"></td>
+                      <td class="text-center">6 Coins</td>
+                      <td class="text-center">24 Coins</td>
+                      <td class="text-center">24 Coins</td>
+                      <td class="text-center">24 Coins</td>
+                      <td class="text-center"></td>
                     </tr>
                   </tbody>
                 </table>
               </div>
               <div class="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
                 <p class="text-sm">
-                  <strong>Calcul :</strong> 2 jours entre la confirmation et la date du vol<br /><strong
-                    >Points ajoutés :</strong
-                  >
-                  2 Coins
+                  <strong>Calcul :</strong> 6+24+24+24 heures entre confirmation et la date du vol
+                  (23:59)<br /><strong>Points ajoutés :</strong>
+                  78 Coins
                 </p>
               </div>
             </div>
@@ -589,11 +737,22 @@
                     <tr>
                       <td class="text-center">10/01<br />Demande</td>
                       <td class="text-center"></td>
-                      <td class="text-center">12/01<br />Confirmation</td>
+                      <td class="text-center">12/01<br />20:00<br />Confirmation</td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
-                      <td class="text-center">16/01<br />Annulation</td>
+                      <td class="text-center">16/01<br />07:00<br />Annulation</td>
+                      <td class="text-center"></td>
+                      <td class="text-center"></td>
+                    </tr>
+                    <tr>
+                      <td class="text-center">10/01<br />Demande</td>
+                      <td class="text-center"></td>
+                      <td class="text-center">4 Coins</td>
+                      <td class="text-center">24 Coins</td>
+                      <td class="text-center">24 Coins</td>
+                      <td class="text-center">24 Coins</td>
+                      <td class="text-center">7 Coins</td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
                     </tr>
@@ -602,10 +761,9 @@
               </div>
               <div class="mt-3 p-3 bg-orange-50 rounded border border-orange-200">
                 <p class="text-sm">
-                  <strong>Calcul :</strong> 3 jours entre la confirmation et l'annulation<br /><strong
-                    >Points ajoutés :</strong
-                  >
-                  3 Coins
+                  <strong>Calcul :</strong> 4+24+24+24+7 heures entre confirmation et
+                  l'annulation.<br /><strong>Points ajoutés :</strong>
+                  83 Coins
                 </p>
               </div>
             </div>
@@ -614,7 +772,7 @@
 
         <FaqItem question="7. Que se passe-t-il si ma demande n'est pas validée ?">
           <p class="mb-3">
-            Si ta demande n'est pas validée à J-5, cela signifie que d'autres pilotes avec un nombre
+            Si ta demande n'est pas validée à J-6, cela signifie que d'autres pilotes avec un nombre
             de Coins plus faible ont été prioritaires sur les matériels disponibles.
           </p>
           <p class="mb-3"><strong>Tes options :</strong></p>
@@ -628,18 +786,16 @@
           <p class="mt-3">En tout état de cause aucun Coin n'est crédité.</p>
         </FaqItem>
 
-        <FaqItem question="8. Puis-je annuler ou modifier ma réservation après validation ?">
-          <p class="mb-3">Oui, tu peux annuler une réservation validée. Cependant :</p>
-          <ul class="list-disc pl-6 space-y-2">
-            <li>
-              Ton nombre de Coins sera augmenté en fonction du nombre de jours entre la validation
-              et l'annulation.
-            </li>
-            <li>En d'autres termes, plus tu annules tôt moins tu seras pénalisé.</li>
-            <li>L'annulation libère le biplace pour d'autres pilotes en attente.</li>
-          </ul>
+        <FaqItem question="8. Puis-je annuler ma réservation après validation ?">
+          <p class="mb-3">
+            Bien sûr. Note cependant que ton nombre de Coins sera quand même augmenté en fonction du
+            temps écoulé entre la validation et l'annulation (Voir paragraphe "Comment sont comptés
+            les Coins ?"). En d'autres termes, plus tu annules tôt moins tu seras pénalisé parce que
+            cela laisse plus de temps à un autre pilote pour s'organiser.
+          </p>
           <p class="mt-3">
-            Privilégie les demandes sur des dates où tu es vraiment disponible pour voler.
+            Privilégie les demandes sur des dates où tu es vraiment certain d'être disponible pour
+            voler pour éviter ce désagrément.
           </p>
         </FaqItem>
 
@@ -647,11 +803,17 @@
           <p class="mb-3">
             Désolé mais les Coins seront quand même comptés. Outre le fait que personne ne peut
             vérifier tes dires, tu as eu le matériel pour toi alors qu'un autre pilote aurait
-            peut-être fait le choix d'un endroit où il n'a pas plu.
+            peut-être fait le choix d'un endroit où il n'a pas plu.<br />
           </p>
           <p class="mb-3">
-            Nous sommes conscients que cela est frustrant mais tout le monde est soumis aux aléas
-            météo de la même façon, cela est donc équitable dans le temps.
+            L'autre raison est pour limiter les réservations posées "au cas où j'aurais envie" et
+            qui ne sont ni honorées ni annulées. Le principe étant de favoriser l'annulation au plus
+            tôt pour permettre à d'autres pilotes de s'organiser.
+          </p>
+          <p class="mb-3">
+            Sur le plan strict de la météo, nous sommes conscients que cela est frustrant mais tout
+            le monde est soumis aux aléas météo de la même façon, cela est donc équitable dans la
+            durée.
           </p>
         </FaqItem>
 
@@ -686,7 +848,7 @@
                   moins un Coin même si tu l'annules rapidement.
                 </li>
                 <li>
-                  <strong>Réserver plus tard que J-5 coûte moins cher mais est plus risqué.</strong
+                  <strong>Réserver plus tard que J-6 coûte moins cher mais est plus risqué.</strong
                   ><br />
                   Cela peut être une stratégie plus économique dans les périodes de faible demande :
                   Si tu désires voler en février, la demande est généralement faible. En consultant
@@ -708,11 +870,11 @@
         >
           <p class="mb-3">
             Ces événements sont prioritaires par rapport au système de Coins. Contacte un
-            administrateur pour qu'il valide ta demande de réservation avant J-5. Le plus tôt
+            administrateur pour qu'il valide ta demande de réservation avant J-6. Le plus tôt
             possible est le mieux.
           </p>
           <p>
-            Après J-5, il te faudra soit postuler sur un matériel disponible soit négocier avec les
+            Après J-6, il te faudra soit postuler sur un matériel disponible soit négocier avec les
             pilotes plus prioritaires pour en obtenir un.
           </p>
         </FaqItem>
@@ -749,7 +911,57 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="14. Qui puis-je contacter si j'ai d'autres questions ?">
+        <FaqItem question="14. Pourquoi ne puis-je pas déposer de demande de réservation ?">
+          <p>
+            Soit tu n'as pas cloturé une de tes réservations précédentes, soit ton compte est
+            désactivé parce que tu n'as pas payé ton supplément de cotisation biplace annuel. <br />
+            <a
+              href="
+https://www.helloasso.com/associations/duck/adhesions/adhesion-biplace-duck-2026"
+              class="text-blue-600 underline"
+              >Tu peux le faire avec ce lien</a
+            >. Dès que c'est fait, envoie un message
+            <a
+              href="https://discord.com/channels/943454897431523349/1471134092497129492"
+              class="text-blue-600 underline"
+            >
+              sur discord</a
+            >
+            afin qu'admin réactive ton compte.
+          </p>
+        </FaqItem>
+
+        <FaqItem
+          question="15. Mon passager a surkiffé le vol et veut absolument donner de l'argent. Que dois-je faire ?"
+        >
+          <p>
+            Pas de chance ! Tu n'agis pas dans le cadre de d'une activité professionnelle, tu ne
+            peux pas encaisser d'argent pour te payer une Rolex. Par contre, tu peux suggérer à ton
+            passager de faire un don au club et ainsi le dédommager de l'usure du matériel.
+            <br />
+            A titre d'information, un vol coûte environ 20€ de frais d'achat et d'entretien.<br />
+            <a
+              href="
+https://www.helloasso.com/associations/duck/boutiques/participation-biplace-duck-2026"
+              class="text-blue-600 underline"
+              >Ceci est le lien de l'helloasso du club.</a
+            >
+          </p>
+          <p>
+            Tu peux également lui faire flasher ce QR code pour faire un don directement depuis son
+            téléphone. Il faut battre le fer tant qu'il est chaud !<br />
+
+            <center>
+              <img
+                src="~/assets/png/qr-participation.png"
+                alt="QR Code participation biplace"
+                class="w-64 h-auto mx-auto my-4 rounded-lg"
+              />
+            </center>
+          </p>
+        </FaqItem>
+
+        <FaqItem question="16. Qui puis-je contacter si j'ai d'autres questions ?">
           <p class="mb-3">Pour toute question supplémentaire ou problème technique, tu peux :</p>
           <ul class="list-disc pl-6 space-y-2">
             <li>
