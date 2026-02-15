@@ -161,6 +161,7 @@ const handleSubmit = async () => {
 const packOptions = computed(() =>
   props.packs
     .filter((pack) => !selectedPacks.value.find((p) => p.id === pack.id))
+    .sort((a, b) => a.order - b.order)
     .map((pack) => ({
       value: pack.id,
       label: `${pack.label}${pack.description ? ` (${pack.description})` : ''}`,

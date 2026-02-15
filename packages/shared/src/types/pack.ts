@@ -68,4 +68,8 @@ export class PackDto {
   @IsString()
   @IsOptional()
   description?: string | null;
+
+  @IsNumber()
+  @IsNotEmpty()
+  order!: number;
 }

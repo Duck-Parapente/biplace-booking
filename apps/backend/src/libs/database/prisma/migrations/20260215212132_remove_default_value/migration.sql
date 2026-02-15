@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Pack" ALTER COLUMN "order" DROP DEFAULT;

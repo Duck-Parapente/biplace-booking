@@ -8,7 +8,9 @@ export interface PackProfile {
   description?: string | null;
 }
 
-export type PackProps = Required<PackProfile>;
+export type PackProps = Required<PackProfile> & {
+  order: number;
+};
 
 export type CreatePackProps = PackProfile;
 

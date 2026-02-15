@@ -19,6 +19,7 @@ export class PackEntity extends AggregateRoot<PackProps> {
         flightsCount: profile.flightsCount ?? 0,
         flightsHours: profile.flightsHours ?? 0,
         description: profile.description ?? null,
+        order: 1000, // default order, should be set properly after creation
       },
     });
     user.addEvent(
@@ -61,6 +62,10 @@ export class PackEntity extends AggregateRoot<PackProps> {
 
   get ownerId() {
     return this.props.ownerId;
+  }
+
+  get order() {
+    return this.props.order;
   }
 
   validate(): void {

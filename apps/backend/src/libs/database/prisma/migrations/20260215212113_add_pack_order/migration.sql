@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Pack" ADD COLUMN     "order" INTEGER NOT NULL DEFAULT 1000;

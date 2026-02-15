@@ -38,6 +38,7 @@ export class PackRepository implements PackRepositoryPort {
         flightsHours: pack.flightsHours ?? 0,
         flightsCount: pack.flightsCount ?? 0,
         description: pack.description ?? null,
+        order: pack.order,
         owner: {
           connect: { id: pack.ownerId.uuid },
         },

@@ -9,5 +9,6 @@ export function mapPackToDto(pack: PackEntity): PackDto {
     flightsHours: pack.flightsHours,
     flightsCount: pack.flightsCount,
     description: pack.description,
+    order: pack.order,
   };
 }
