@@ -110,8 +110,10 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
   }
 
   private calculateCost(): Integer {
-    const hoursSinceCreation = this.createdAt.hoursBetween(DateValueObject.now());
-    const maxAllowedCost = this.createdAt.hoursBetween(this.startingDate.startOfDayInUTC(1));
+    const hoursSinceCreation = this.createdAt.completeHoursBetween(DateValueObject.now());
+    const maxAllowedCost = this.createdAt.completeHoursBetween(
+      this.startingDate.startOfDayInUTC(1),
+    );
     const result = hoursSinceCreation.min(maxAllowedCost);
 
     this.logger.log({
