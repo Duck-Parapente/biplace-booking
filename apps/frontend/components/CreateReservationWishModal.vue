@@ -36,15 +36,17 @@
             <span class="text-red-500">*</span>
           </label>
           <div class="space-y-2">
-            <BaseAutocomplete
+            <select
               id="packSearch"
-              ref="packSearchRef"
-              v-model="packSearch"
-              :options="packOptions"
-              placeholder="Rechercher un pack..."
-              no-results-text="Aucun pack trouvé"
-              @select="handlePackSelect"
-            />
+              :value="packSearch"
+              @change="handlePackSelectFromDropdown($event)"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-600 focus:border-transparent"
+            >
+              <option value="">Sélectionner un pack...</option>
+              <option v-for="pack in packOptions" :key="pack.value" :value="pack.value">
+                {{ pack.label }}
+              </option>
+            </select>
             <div v-if="selectedPacks.length > 0" class="flex flex-wrap gap-2">
               <div
                 v-for="(pack, index) in selectedPacks"
@@ -172,6 +174,14 @@ const handlePackSelect = (packId: string) => {
     addReservationWishForm.value.packChoices = selectedPacks.value.map((p) => p.id);
   }
   packSearch.value = '';
+};
+
+const handlePackSelectFromDropdown = (event: Event) => {
+  const target = event.target as HTMLSelectElement;
+  const packId = target.value;
+  if (packId) {
+    handlePackSelect(packId);
+  }
 };
 
 const removePackChoice = (packId: string) => {

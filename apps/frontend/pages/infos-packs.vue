@@ -3,14 +3,20 @@
     <div class="flex-1 p-4 max-w-4xl mx-auto w-full flex flex-col min-h-0">
       <!-- Pack Selection -->
       <div class="mb-2 bg-white p-4 rounded-lg shadow-sm border border-gray-300">
-        <BaseAutocomplete
+        <label for="pack-select" class="block text-sm font-medium text-gray-700 mb-1">
+          Sélectionner un pack
+        </label>
+        <select
           id="pack-select"
-          v-model="selectedPackLabel"
-          :options="packOptions"
-          label="Sélectionner un pack"
-          placeholder="Rechercher un pack..."
-          @select="handlePackSelect"
-        />
+          v-model="selectedPackId"
+          @change="handlePackSelect(selectedPackId)"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-600 focus:border-transparent"
+        >
+          <option :value="null">Sélectionner un pack...</option>
+          <option v-for="pack in packOptions" :key="pack.value" :value="pack.value">
+            {{ pack.label }}
+          </option>
+        </select>
         <div v-if="isAdmin" class="mt-3 flex items-center justify-between">
           <label class="flex items-center gap-2 text-sm cursor-pointer">
             <span>Mode édition</span>
@@ -176,7 +182,6 @@ const { hasRole } = useAuth();
 const isAdmin = computed(() => hasRole(UserRoles.ADMIN));
 
 const selectedPackId = ref<string | null>(null);
-const selectedPackLabel = ref<string>('');
 const allReservations = ref<PackReservationsDto['reservations']>([]);
 const totalFlightsMinutes = ref<number>(0);
 const ownerFullName = ref<string>('');
@@ -202,18 +207,12 @@ const reservations = computed(() => {
     .sort((a, b) => new Date(b.startingDate).getTime() - new Date(a.startingDate).getTime());
 });
 
-const handlePackSelect = async (packId: string) => {
+const handlePackSelect = async (packId: string | null) => {
   if (!packId) {
-    selectedPackId.value = null;
     allReservations.value = [];
     return;
   }
 
-  selectedPackId.value = packId;
-  const pack = packs.value.find((p) => p.id === packId);
-  if (pack) {
-    selectedPackLabel.value = pack.label;
-  }
   await fetchPackReservations(packId);
 };
 

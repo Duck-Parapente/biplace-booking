@@ -20,24 +20,17 @@
             Pack
             <span class="text-red-500">*</span>
           </label>
-          <BaseAutocomplete
+          <select
             id="packSearch"
-            v-model="packSearch"
-            :options="packOptions"
-            placeholder="Rechercher un pack..."
-            no-results-text="Aucun pack trouvé"
-            @select="handlePackSelect"
-          />
-          <div v-if="selectedPack" class="mt-2">
-            <div
-              class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-secondary-100 text-secondary-800"
-            >
-              {{ selectedPack.label }}
-              <button type="button" @click="clearPackSelection" class="hover:text-secondary-900">
-                <IconXCircle class="h-3 w-3" />
-              </button>
-            </div>
-          </div>
+            v-model="form.packId"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-600 focus:border-transparent"
+            required
+          >
+            <option value="">Sélectionner un pack...</option>
+            <option v-for="pack in packOptions" :key="pack.value" :value="pack.value">
+              {{ pack.label }}
+            </option>
+          </select>
         </div>
 
         <div>
@@ -134,7 +127,6 @@ const form = computed({
 });
 
 // Selection state (for autocomplete search)
-const packSearch = ref('');
 const userSearch = ref('');
 
 // Derive selected entities from form IDs (cached by computed)
@@ -155,13 +147,10 @@ const filteredPacks = computed(() => {
 
 // Autocomplete options
 const packOptions = computed(() => {
-  const searchTerm = packSearch.value?.toLowerCase();
-  return filteredPacks.value
-    .filter((pack) => !searchTerm || pack.label.toLowerCase().includes(searchTerm))
-    .map((pack) => ({
-      value: pack.id,
-      label: pack.label,
-    }));
+  return filteredPacks.value.map((pack) => ({
+    value: pack.id,
+    label: pack.label,
+  }));
 });
 
 const userOptions = computed(() => {
@@ -187,18 +176,9 @@ const isFormValid = computed(() => {
 });
 
 // Selection handlers - update form directly
-const handlePackSelect = (packId: string) => {
-  form.value.packId = packId;
-  packSearch.value = '';
-};
-
 const handleUserSelect = (userId: string) => {
   form.value.userId = userId;
   userSearch.value = '';
-};
-
-const clearPackSelection = () => {
-  form.value.packId = '';
 };
 
 const clearUserSelection = () => {
@@ -221,7 +201,6 @@ const handleSubmit = async () => {
 
 // Reset form when modal opens
 const resetForm = () => {
-  packSearch.value = '';
   userSearch.value = '';
 };
 
