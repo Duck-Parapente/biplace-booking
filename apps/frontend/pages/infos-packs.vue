@@ -44,27 +44,27 @@
       <!-- Pack Totals -->
       <div
         v-if="selectedPackId && !loading && !error"
-        class="mb-6 bg-yellow-50 text-yellow-600 border border-yellow-600 p-2 rounded-lg shadow-sm text-sm"
+        class="mb-6 bg-blue-50 border-l-4 border-blue-600 p-4 rounded-lg shadow-md"
       >
-        <div class="flex items-center gap-2">
-          <span class="font-semibold">Respo pack:</span>
+        <div class="flex items-center gap-2 mb-2 text-gray-800">
+          <span class="text-sm text-gray-600">Respo:</span>
           <span>{{ ownerFullName }}</span>
         </div>
-        <div class="flex gap-6 mt-1">
-          <div>
-            <span class="font-semibold">Heures de vol:</span>
-            <span class="ml-2"
-              >{{ Math.floor(totalFlightsMinutes / 60) }}h{{ totalFlightsMinutes % 60 }}mn</span
-            >
+        <div class="flex gap-8 text-gray-700">
+          <div class="flex items-center gap-2">
+            <span>⏱️</span>
+            <span class="text-2xl">{{ Math.round(totalFlightsMinutes / 60) }}h</span>
           </div>
-          <div>
-            <span class="font-semibold">Nombre de vols:</span>
-            <span class="ml-2">{{ totalFlightsCount }}</span>
+          <div class="flex items-center gap-2">
+            <span>✈️</span>
+            <span class="text-2xl">{{ totalFlightsCount }} vols</span>
           </div>
         </div>
-        <div v-if="selectedPackDescription" class="mt-1">
-          <span class="font-semibold">Description:</span>
-          <span class="ml-2">{{ selectedPackDescription }}</span>
+        <div
+          v-if="selectedPackDescription"
+          class="mt-3 pt-3 border-t border-blue-200 text-sm text-gray-600"
+        >
+          {{ selectedPackDescription }}
         </div>
       </div>
 
