@@ -63,8 +63,7 @@ definePageMeta({
   pageTitle: 'HelloAsso',
 });
 
-const participationLink =
-  'https://www.helloasso.com/associations/duck/boutiques/participation-biplace-duck-2026';
+const { participationLink } = useHelloAssoLinks();
 
 const linkInput = ref<HTMLInputElement | null>(null);
 const copied = ref(false);

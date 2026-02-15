@@ -915,11 +915,7 @@
           <p>
             Soit tu n'as pas cloturé une de tes réservations précédentes, soit ton compte est
             désactivé parce que tu n'as pas payé ton supplément de cotisation biplace annuel. <br />
-            <a
-              href="
-https://www.helloasso.com/associations/duck/adhesions/adhesion-biplace-duck-2026"
-              class="text-blue-600 underline"
-              >Tu peux le faire avec ce lien</a
+            <a :href="adhesionLink" class="text-blue-600 underline">Tu peux le faire avec ce lien</a
             >. Dès que c'est fait, envoie un message
             <a
               href="https://discord.com/channels/943454897431523349/1471134092497129492"
@@ -940,10 +936,7 @@ https://www.helloasso.com/associations/duck/adhesions/adhesion-biplace-duck-2026
             passager de faire un don au club et ainsi le dédommager de l'usure du matériel.
             <br />
             A titre d'information, un vol coûte environ 20€ de frais d'achat et d'entretien.<br />
-            <a
-              href="
-https://www.helloasso.com/associations/duck/boutiques/participation-biplace-duck-2026"
-              class="text-blue-600 underline"
+            <a :href="participationLink" class="text-blue-600 underline"
               >Ceci est le lien de l'helloasso du club.</a
             >
           </p>
@@ -1005,4 +998,5 @@ definePageMeta({
 });
 
 const config = useRuntimeConfig();
+const { adhesionLink, participationLink } = useHelloAssoLinks();
 </script>

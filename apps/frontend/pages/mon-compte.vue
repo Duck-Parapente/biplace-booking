@@ -45,7 +45,7 @@
           ton statut. Sinon, tu peux payer ta cotisation:
         </p>
         <a
-          href="https://www.helloasso.com/associations/duck/adhesions/adhesion-biplace-duck-2026"
+          :href="adhesionLink"
           target="_blank"
           rel="noopener noreferrer"
           class="inline-block bg-yellow-600 text-white text-sm px-4 py-2 rounded hover:bg-yellow-700 transition"
@@ -210,6 +210,7 @@ const {
 } = useUser();
 
 const { getDisplay: userStatus } = useUserStatus();
+const { adhesionLink } = useHelloAssoLinks();
 
 const formData = ref<UserFormData>({
   firstName: '',
