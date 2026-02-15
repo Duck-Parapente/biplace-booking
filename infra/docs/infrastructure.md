@@ -23,7 +23,7 @@ Pour déployer un environnement, tu peux lancer `pnpm deploy:(staging|prod)` dep
 
 ### Attribution automatique des packs
 
-Tous les jours, toutes les 30mn, l'attribution automatique des packs est exécutée via `pnpm attribute`. Avant 20h, l'algo n'attribue des packs que pour J+0 à J+4. Après 20h, il regarde de J+1 à J+5.
+Tous les jours, toutes les 30mn, l'attribution automatique des packs est exécutée via `pnpm attribute`. Avant 20h, l'algo n'attribue des packs que pour J+0 à J+5. Après 20h, il regarde de J+1 à J+6.
 
 Voici la config du cron:
 
@@ -33,8 +33,8 @@ Voici la config du cron:
 ```
 
 **Comportement**:
-- Avant 20h: attribue des packs pour J+0 à J+4
-- Après 20h: attribue des packs pour J+1 à J+5
+- Avant 20h: attribue des packs pour J+0 à J+5
+- Après 20h: attribue des packs pour J+1 à J+6
 
 
 ---

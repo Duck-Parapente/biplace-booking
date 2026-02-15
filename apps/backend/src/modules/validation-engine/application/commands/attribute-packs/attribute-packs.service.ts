@@ -78,11 +78,11 @@ export class AttributePacksService {
     const currentHourInParis = DateValueObject.currentHourInParis();
 
     if (currentHourInParis < 20) {
-      // Before 20h Paris time: run from J+0 to J+4
-      return { startDayOffset: 0, endDayOffset: 4 };
+      // Before 20h Paris time: run from J+0 to J+5
+      return { startDayOffset: 0, endDayOffset: 5 };
     } else {
-      // After 20h Paris time: run from J+1 to J+5
-      return { startDayOffset: 1, endDayOffset: 5 };
+      // After 20h Paris time: run from J+1 to J+6
+      return { startDayOffset: 1, endDayOffset: 6 };
     }
   }
 
