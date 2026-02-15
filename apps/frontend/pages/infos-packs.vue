@@ -197,10 +197,12 @@ const editModalOpen = ref<boolean>(false);
 const editingReservation = ref<PackReservationsDto['reservations'][0] | null>(null);
 
 const packOptions = computed<AutocompleteOption[]>(() => {
-  return packs.value.map((pack) => ({
-    value: pack.id,
-    label: pack.label,
-  }));
+  return packs.value
+    .sort((a, b) => a.order - b.order)
+    .map((pack) => ({
+      value: pack.id,
+      label: pack.label,
+    }));
 });
 
 const selectedPackDescription = computed(() => {
