@@ -88,10 +88,6 @@
               readonly
               class="w-full px-3 py-2 bg-gray-50 text-gray-500 mb-2"
             />
-            <InfoBox>
-              Le nombre de Coins est mis à jour après chaque réservation. Plus tu réserves, plus le
-              nombre augmente. Il est utilisé pour attribuer les biplaces de manière équitable.
-            </InfoBox>
           </div>
 
           <div>
