@@ -27,7 +27,7 @@
           label="Date"
           type="date"
           required
-          :min="today"
+          :min="minDate"
         />
 
         <div>
@@ -129,7 +129,11 @@ const packSearch = ref('');
 const showModal = ref(false);
 const selectedPacks = ref<PackDto[]>([]);
 
-const today = computed(() => formatDateToString(new Date()));
+const minDate = computed(() => {
+  const todayDate = formatDateToString(new Date());
+  const march1st2026 = '2026-03-01';
+  return todayDate > march1st2026 ? todayDate : march1st2026;
+});
 
 const openCreateModal = () => {
   showModal.value = true;
