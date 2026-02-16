@@ -95,7 +95,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
       throw new CannotCancelReservationException(this.id, this.props.status);
     }
     this.props.status = ReservationStatus.CANCELLED;
-    this.props.automaticCost = this.calculateCost();
+    this.props.automaticCost = this.calculateCost({ maxCost: false });
 
     this.addEvent(
       new ReservationCancelledDomainEvent({
@@ -109,11 +109,24 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     return this;
   }
 
-  private calculateCost(): Integer {
-    const hoursSinceCreation = this.createdAt.completeHoursBetween(DateValueObject.now());
+  private calculateCost({ maxCost }: { maxCost: boolean }): Integer {
     const maxAllowedCost = this.createdAt.completeHoursBetween(
       this.startingDate.startOfDayInUTC(1),
     );
+
+    if (maxCost) {
+      this.logger.log({
+        reservationId: this.id.uuid,
+        input: {
+          createdAt: this.createdAt.value.toISOString(),
+          startingDate: this.startingDate.value.toISOString(),
+        },
+        output: { automaticCost: maxAllowedCost.value },
+      });
+      return maxAllowedCost;
+    }
+
+    const hoursSinceCreation = this.createdAt.completeHoursBetween(DateValueObject.now());
     const result = hoursSinceCreation.min(maxAllowedCost);
 
     this.logger.log({
@@ -143,7 +156,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     }
 
     this.props.status = ReservationStatus.CLOSED;
-    this.props.automaticCost = this.calculateCost();
+    this.props.automaticCost = this.calculateCost({ maxCost: true });
 
     this.addEvent(
       new ReservationClosedDomainEvent({
