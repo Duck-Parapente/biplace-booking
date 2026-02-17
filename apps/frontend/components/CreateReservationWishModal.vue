@@ -128,10 +128,14 @@ const props = defineProps<Props>();
 const packSearch = ref('');
 const showModal = ref(false);
 const selectedPacks = ref<PackDto[]>([]);
+const config = useRuntimeConfig();
 
 const minDate = computed(() => {
   const todayDate = formatDateToString(new Date());
   const march1st2026 = '2026-03-01';
+
+  if (config.public.env !== 'prod') return todayDate;
+
   return todayDate > march1st2026 ? todayDate : march1st2026;
 });
 

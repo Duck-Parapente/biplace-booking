@@ -17,6 +17,7 @@ export default defineNuxtConfig({
       auth0Audience: process.env.NUXT_PUBLIC_AUTH0_AUDIENCE,
       backendDomain: process.env.NUXT_PUBLIC_BACKEND_BASE_URL,
       supportEmail: process.env.NUXT_PUBLIC_SUPPORT_EMAIL,
+      env: process.env.NUXT_PUBLIC_ENV,
     },
   },
   app: {
