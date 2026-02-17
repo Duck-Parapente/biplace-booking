@@ -68,6 +68,14 @@ describe('calculateReservationCost', () => {
       now: '2024-03-02T00:00:00Z',
       expected: 14,
     },
+    {
+      name: 'closed a reservation in summer with Paris timezone (UTC+2)',
+      eventType: ReservationCostEventType.CLOSE,
+      createdAt: '2024-07-15T08:30:00Z',
+      startingDate: '2024-07-16T00:00:00Z',
+      now: '2024-07-16T07:51:00Z',
+      expected: 37,
+    },
   ])('$name', ({ eventType, createdAt, startingDate, now, expected }) => {
     const result = calculateReservationCost({
       eventType,
