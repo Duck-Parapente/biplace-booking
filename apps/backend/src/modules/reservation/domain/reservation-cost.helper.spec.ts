@@ -44,6 +44,30 @@ describe('calculateReservationCost', () => {
       now: '2024-02-17T07:51:00Z',
       expected: 38,
     },
+    {
+      name: 'cancelled immediately after creation (0 hours)',
+      eventType: ReservationCostEventType.CANCEL,
+      createdAt: '2024-03-01T10:00:00Z',
+      startingDate: '2024-03-03T00:00:00Z',
+      now: '2024-03-01T10:01:00Z',
+      expected: 0,
+    },
+    {
+      name: 'cancelled late - cost capped at max allowed (hours until end of starting day)',
+      eventType: ReservationCostEventType.CANCEL,
+      createdAt: '2024-03-01T10:00:00Z',
+      startingDate: '2024-03-02T00:00:00Z',
+      now: '2024-03-05T10:00:00Z',
+      expected: 37,
+    },
+    {
+      name: 'cancelled exactly at max allowed cost boundary',
+      eventType: ReservationCostEventType.CANCEL,
+      createdAt: '2024-03-01T10:00:00Z',
+      startingDate: '2024-03-02T00:00:00Z',
+      now: '2024-03-02T00:00:00Z',
+      expected: 14,
+    },
   ])('$name', ({ eventType, createdAt, startingDate, now, expected }) => {
     const result = calculateReservationCost({
       eventType,
