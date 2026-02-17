@@ -1,10 +1,12 @@
 import { Guard } from '@libs/guards/primitive.guard';
+import { fromZonedTime } from 'date-fns-tz';
 
 import { ArgumentInvalidException } from '../exceptions/exceptions';
 
 import { Integer } from './integer.value-object';
 import { ValueObject } from './value-object.base';
 
+const PARIS_TZ = 'Europe/Paris';
 export interface DateProps {
   value: Date;
 }
@@ -19,6 +21,12 @@ export class DateValueObject extends ValueObject<DateProps> {
     startOfDay.setUTCDate(startOfDay.getUTCDate() + offset);
     startOfDay.setUTCHours(0, 0, 0, 0);
     return new DateValueObject({ value: startOfDay });
+  }
+
+  interpretAsParisTime(): DateValueObject {
+    return new DateValueObject({
+      value: fromZonedTime(this.value, PARIS_TZ),
+    });
   }
 
   isInTheFuture(): boolean {
@@ -79,7 +87,7 @@ export class DateValueObject extends ValueObject<DateProps> {
 
   static todayInParis(): DateValueObject {
     const now = new Date();
-    const dateInTimezone = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Paris' }));
+    const dateInTimezone = new Date(now.toLocaleString('en-US', { timeZone: PARIS_TZ }));
     return DateValueObject.fromDateString(
       `${dateInTimezone.getFullYear()}-${String(dateInTimezone.getMonth() + 1).padStart(2, '0')}-${String(dateInTimezone.getDate()).padStart(2, '0')}`,
     );
@@ -87,7 +95,7 @@ export class DateValueObject extends ValueObject<DateProps> {
 
   static currentHourInParis(): number {
     const now = new Date();
-    const parisDate = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Paris' }));
+    const parisDate = new Date(now.toLocaleString('en-US', { timeZone: PARIS_TZ }));
     return parisDate.getHours();
   }
 
