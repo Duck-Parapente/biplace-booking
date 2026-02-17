@@ -799,7 +799,13 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="9. Il a plu, je n'ai pas pu voler">
+        <FaqItem question="9. J'ai une réservation, chez qui dois-je récupérer le matériel ?">
+          <p class="mb-3">
+            Tu trouveras cette information avec le menu planning. Bon vol !
+          </p>
+        </FaqItem>
+
+        <FaqItem question="10. Il a plu, je n'ai pas pu voler">
           <p class="mb-3">
             Désolé mais les Coins seront quand même comptés. Outre le fait que personne ne peut
             vérifier tes dires, tu as eu le matériel pour toi alors qu'un autre pilote aurait
@@ -817,7 +823,7 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="10. Comment maximiser mes chances ?">
+        <FaqItem question="11. Comment maximiser mes chances ?">
           <ul class="list-disc pl-6 space-y-3">
             <li>
               <strong>Postule à tous les biplaces qui peuvent te convenir</strong> plutôt qu'à un
@@ -866,7 +872,7 @@
         </FaqItem>
 
         <FaqItem
-          question="11. J'ai besoin d'un bi pour une formation, un examen ou une journée club"
+          question="12. J'ai besoin d'un bi pour une formation, un examen ou une journée club"
         >
           <p class="mb-3">
             Ces événements sont prioritaires par rapport au système de Coins. Contacte un
@@ -879,7 +885,7 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="12. Je veux réserver plusieurs jours">
+        <FaqItem question="13. Je veux réserver plusieurs jours">
           <p class="mb-3">
             Aujourd'hui, et probablement pour encore quelques temps, la notion de "réserver
             plusieurs jours" n'existe pas. Tu fais autant de demandes que de jours désirés et chaque
@@ -911,7 +917,7 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="13. Comment consulter mon score Coins actuel ?">
+        <FaqItem question="14. Comment consulter mon score Coins actuel ?">
           <p>
             Ton score Coins est visible sur ta
             <NuxtLink to="/mon-compte" class="text-blue-600 underline">page de profil</NuxtLink>. Il
@@ -919,7 +925,7 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="14. Pourquoi ne puis-je pas déposer de demande de réservation ?">
+        <FaqItem question="15. Pourquoi ne puis-je pas déposer de demande de réservation ?">
           <p>
             Soit tu n'as pas cloturé une de tes réservations précédentes, soit ton compte est
             désactivé parce que tu n'as pas payé ton supplément de cotisation biplace annuel. <br />
@@ -936,7 +942,7 @@
         </FaqItem>
 
         <FaqItem
-          question="15. Mon passager a surkiffé le vol et veut absolument donner de l'argent. Que dois-je faire ?"
+          question="16. Mon passager a surkiffé le vol et veut absolument donner de l'argent. Que dois-je faire ?"
         >
           <p>
             Pas de chance ! Tu n'agis pas dans le cadre de d'une activité professionnelle, tu ne
@@ -962,7 +968,7 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="16. Qui puis-je contacter si j'ai d'autres questions ?">
+        <FaqItem question="17. Qui puis-je contacter si j'ai d'autres questions ?">
           <p class="mb-3">Pour toute question supplémentaire ou problème technique, tu peux :</p>
           <ul class="list-disc pl-6 space-y-2">
             <li>
