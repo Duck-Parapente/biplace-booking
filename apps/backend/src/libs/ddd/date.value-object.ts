@@ -1,5 +1,14 @@
 import { Guard } from '@libs/guards/primitive.guard';
-import { fromZonedTime } from 'date-fns-tz';
+import {
+  addDays,
+  startOfDay,
+  differenceInHours,
+  isFuture,
+  isBefore,
+  parse,
+  isValid,
+} from 'date-fns';
+import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 
 import { ArgumentInvalidException } from '../exceptions/exceptions';
 
@@ -7,8 +16,9 @@ import { Integer } from './integer.value-object';
 import { ValueObject } from './value-object.base';
 
 const PARIS_TZ = 'Europe/Paris';
+
 export interface DateProps {
-  value: Date;
+  value: Date; // Always stored as UTC internally
 }
 
 export class DateValueObject extends ValueObject<DateProps> {
@@ -16,92 +26,97 @@ export class DateValueObject extends ValueObject<DateProps> {
     return this.props.value;
   }
 
-  startOfDayInUTC(offset: number = 0): DateValueObject {
-    const startOfDay = new Date(this.props.value);
-    startOfDay.setUTCDate(startOfDay.getUTCDate() + offset);
-    startOfDay.setUTCHours(0, 0, 0, 0);
-    return new DateValueObject({ value: startOfDay });
+  /* -------------------- Core Helpers -------------------- */
+
+  private static ensureValid(date: Date) {
+    if (!(date instanceof Date) || !isValid(date)) {
+      throw new ArgumentInvalidException('Invalid Date instance');
+    }
   }
 
+  /* -------------------- Business Methods -------------------- */
+
+  startOfDayInUTC(offset: number = 0): DateValueObject {
+    const shifted = addDays(this.value, offset);
+    const start = startOfDay(shifted); // UTC-safe because value is UTC
+    return new DateValueObject({ value: start });
+  }
+
+  /**
+   * Interpret the current date as Paris local time
+   * and convert it to its true UTC instant.
+   */
   interpretAsParisTime(): DateValueObject {
-    return new DateValueObject({
-      value: fromZonedTime(this.value, PARIS_TZ),
-    });
+    const utcDate = fromZonedTime(this.value, PARIS_TZ);
+    return new DateValueObject({ value: utcDate });
   }
 
   isInTheFuture(): boolean {
-    return this.value > new Date();
+    return isFuture(this.value);
   }
 
   isBefore(other: DateValueObject): boolean {
-    return this.value.getTime() < other.value.getTime();
+    return isBefore(this.value, other.value);
   }
 
   completeHoursBetween(other: DateValueObject): Integer {
-    const diffMs = other.value.getTime() - this.value.getTime();
-    return new Integer({ value: Math.floor(diffMs / (1000 * 60 * 60)) });
+    return new Integer({
+      value: differenceInHours(other.value, this.value),
+    });
   }
+
+  /* -------------------- Factories -------------------- */
 
   static now(): DateValueObject {
-    return DateValueObject.fromDate(new Date());
+    return new DateValueObject({ value: new Date() });
   }
 
+  /**
+   * Expects YYYY-MM-DD
+   * Interpreted as Paris local date at 00:00,
+   * then converted to UTC.
+   */
   static fromDateString(date: string): DateValueObject {
     if (Guard.isEmpty(date)) {
       throw new ArgumentInvalidException('Date string cannot be empty');
     }
 
-    const regex = /^\d{4}-\d{2}-\d{2}$/;
-    if (!regex.test(date)) {
+    const parsed = parse(date, 'yyyy-MM-dd', new Date());
+
+    if (!isValid(parsed)) {
       throw new ArgumentInvalidException(`Invalid date format '${date}', expected YYYY-MM-DD`);
     }
 
-    const [year, month, day] = date.split('-').map(Number);
-
-    // Validate calendar correctness
-    const utcDate = new Date(Date.UTC(year, month - 1, day, 0, 0, 0));
-    if (
-      utcDate.getUTCFullYear() !== year ||
-      utcDate.getUTCMonth() !== month - 1 ||
-      utcDate.getUTCDate() !== day
-    ) {
-      throw new ArgumentInvalidException(`Invalid calendar date: ${date}`);
-    }
+    // Treat as Paris local midnight
+    const utcDate = fromZonedTime(parsed, PARIS_TZ);
 
     return new DateValueObject({ value: utcDate });
   }
 
   static fromDate(date: Date): DateValueObject {
-    if (!(date instanceof Date) || isNaN(date.getTime())) {
-      throw new ArgumentInvalidException('Invalid Date instance');
-    }
-
-    // Check if date is in UTC by verifying minutes and seconds match ISO string ending with "Z"
-    const iso = date.toISOString();
-    if (!iso.endsWith('Z')) {
-      throw new ArgumentInvalidException('Date must be in UTC');
-    }
-
-    return new DateValueObject({ value: date });
+    DateValueObject.ensureValid(date);
+    return new DateValueObject({ value: new Date(date.getTime()) });
   }
 
+  /**
+   * Returns today's date in Paris (00:00 Paris → UTC)
+   */
   static todayInParis(): DateValueObject {
-    const now = new Date();
-    const dateInTimezone = new Date(now.toLocaleString('en-US', { timeZone: PARIS_TZ }));
-    return DateValueObject.fromDateString(
-      `${dateInTimezone.getFullYear()}-${String(dateInTimezone.getMonth() + 1).padStart(2, '0')}-${String(dateInTimezone.getDate()).padStart(2, '0')}`,
-    );
+    const parisNow = toZonedTime(new Date(), PARIS_TZ);
+    const start = startOfDay(parisNow);
+    const utc = fromZonedTime(start, PARIS_TZ);
+
+    return new DateValueObject({ value: utc });
   }
 
   static currentHourInParis(): number {
-    const now = new Date();
-    const parisDate = new Date(now.toLocaleString('en-US', { timeZone: PARIS_TZ }));
-    return parisDate.getHours();
+    const parisNow = toZonedTime(new Date(), PARIS_TZ);
+    return parisNow.getHours();
   }
 
+  /* -------------------- Validation -------------------- */
+
   protected validate(props: DateProps): void {
-    if (!(props.value instanceof Date) || isNaN(props.value.getTime())) {
-      throw new ArgumentInvalidException('Invalid DateValueObject value');
-    }
+    DateValueObject.ensureValid(props.value);
   }
 }

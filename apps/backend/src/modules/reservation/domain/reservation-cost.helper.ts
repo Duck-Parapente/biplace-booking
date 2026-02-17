@@ -28,8 +28,7 @@ export function calculateReservationCost({
 
 function calculateCloseCost(createdAt: DateValueObject, startingDate: DateValueObject): Integer {
   const effectiveCreatedAt = createdAt.interpretAsParisTime();
-  const maxAllowedCost = calculateMaxAllowedCost(effectiveCreatedAt, startingDate, 24);
-  return maxAllowedCost;
+  return calculateMaxAllowedCost(effectiveCreatedAt, startingDate, 24);
 }
 
 function calculateCancelCost(
