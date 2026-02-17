@@ -1,4 +1,5 @@
 import { Guard } from '@libs/guards/primitive.guard';
+import { getTimezoneOffset } from 'date-fns-tz';
 
 import { ArgumentInvalidException } from '../exceptions/exceptions';
 
@@ -32,6 +33,14 @@ export class DateValueObject extends ValueObject<DateProps> {
   completeHoursBetween(other: DateValueObject): Integer {
     const diffMs = other.value.getTime() - this.value.getTime();
     return new Integer({ value: Math.floor(diffMs / (1000 * 60 * 60)) });
+  }
+
+  interpretAsParisTime(): DateValueObject {
+    // Get the Paris timezone offset in milliseconds for this date
+    const parisOffset = getTimezoneOffset('Europe/Paris', this.value);
+    // Add the offset to interpret UTC components as Paris local time
+    const adjustedTime = new Date(this.value.getTime() + parisOffset);
+    return DateValueObject.fromDate(adjustedTime);
   }
 
   static now(): DateValueObject {

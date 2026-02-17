@@ -19,24 +19,29 @@ export function calculateReservationCost({
   startingDate,
   now = DateValueObject.now(),
 }: CalculateReservationCostParams): Integer {
+  const effectiveCreatedAt = createdAt.interpretAsParisTime();
+
   if (eventType === ReservationCostEventType.CLOSE) {
-    return calculateCloseCost(createdAt, startingDate);
+    return calculateCloseCost(effectiveCreatedAt, startingDate);
   }
 
-  return calculateCancelCost(createdAt, startingDate, now);
+  return calculateCancelCost(effectiveCreatedAt, createdAt, startingDate, now);
 }
 
-function calculateCloseCost(createdAt: DateValueObject, startingDate: DateValueObject): Integer {
-  const effectiveCreatedAt = createdAt.interpretAsParisTime();
+function calculateCloseCost(
+  effectiveCreatedAt: DateValueObject,
+  startingDate: DateValueObject,
+): Integer {
   return calculateMaxAllowedCost(effectiveCreatedAt, startingDate, 24);
 }
 
 function calculateCancelCost(
+  effectiveCreatedAt: DateValueObject,
   createdAt: DateValueObject,
   startingDate: DateValueObject,
   now: DateValueObject,
 ): Integer {
-  const maxAllowedCost = calculateMaxAllowedCost(createdAt, startingDate, 0);
+  const maxAllowedCost = calculateMaxAllowedCost(effectiveCreatedAt, startingDate, 0);
   const hoursSinceCreation = createdAt.completeHoursBetween(now);
   return hoursSinceCreation.min(maxAllowedCost);
 }
