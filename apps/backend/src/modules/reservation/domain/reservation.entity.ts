@@ -8,6 +8,7 @@ import { ReservationCancelledDomainEvent } from './events/reservation-cancelled.
 import { ReservationClosedDomainEvent } from './events/reservation-closed.domain-event';
 import { ReservationCreatedDomainEvent } from './events/reservation-created.domain-event';
 import { ReservationUpdatedDomainEvent } from './events/reservation-updated.domain-event';
+import { calculateReservationCost, ReservationCostEventType } from './reservation-cost.helper';
 import {
   CannotCancelReservationException,
   CannotCloseReservationException,
@@ -95,7 +96,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
       throw new CannotCancelReservationException(this.id, this.props.status);
     }
     this.props.status = ReservationStatus.CANCELLED;
-    this.props.automaticCost = this.calculateCost({ maxCost: false });
+    this.props.automaticCost = this.calculateCost(ReservationCostEventType.CANCEL);
 
     this.addEvent(
       new ReservationCancelledDomainEvent({
@@ -109,37 +110,27 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     return this;
   }
 
-  private calculateCost({ maxCost }: { maxCost: boolean }): Integer {
-    const maxAllowedCost = this.createdAt.completeHoursBetween(
-      this.startingDate.startOfDayInUTC(1),
-    );
+  private calculateCost(eventType: ReservationCostEventType): Integer {
+    const now = DateValueObject.now();
 
-    if (maxCost) {
-      this.logger.log({
-        reservationId: this.id.uuid,
-        input: {
-          createdAt: this.createdAt.value.toISOString(),
-          startingDate: this.startingDate.value.toISOString(),
-        },
-        output: { automaticCost: maxAllowedCost.value },
-      });
-      return maxAllowedCost;
-    }
-
-    const hoursSinceCreation = this.createdAt.completeHoursBetween(DateValueObject.now());
-    const result = hoursSinceCreation.min(maxAllowedCost);
+    const cost = calculateReservationCost({
+      eventType,
+      createdAt: this.createdAt,
+      startingDate: this.startingDate,
+      now,
+    });
 
     this.logger.log({
       reservationId: this.id.uuid,
       input: {
         createdAt: this.createdAt.value.toISOString(),
         startingDate: this.startingDate.value.toISOString(),
-        now: new Date().toISOString(),
+        now: now.value.toISOString(),
       },
-      output: { automaticCost: result.value },
+      output: { automaticCost: cost.value },
     });
 
-    return result;
+    return cost;
   }
 
   isCancelable(): boolean {
@@ -156,7 +147,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     }
 
     this.props.status = ReservationStatus.CLOSED;
-    this.props.automaticCost = this.calculateCost({ maxCost: true });
+    this.props.automaticCost = this.calculateCost(ReservationCostEventType.CLOSE);
 
     this.addEvent(
       new ReservationClosedDomainEvent({
