@@ -945,7 +945,7 @@
         >
           <p>
             Pas de chance ! Tu n'agis pas dans le cadre de d'une activité professionnelle, tu ne
-            peux pas encaisser d'argent pour te payer une Rolex. Par contre, tu peux suggérer à ton
+            peux pas encaisser d'argent pour te payer la Rolex de Rihana. Par contre, tu peux suggérer à ton
             passager de faire un don au club et ainsi le dédommager de l'usure du matériel.
             <br />
             A titre d'information, un vol coûte environ 20€ de frais d'achat et d'entretien.<br />
@@ -967,7 +967,26 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="17. Qui puis-je contacter si j'ai d'autres questions ?">
+        <FaqItem question="17. Où sont les administrateurs ?">
+          <p class="mb-3">
+            Tu peux les contacter à travers le
+            <a
+              href="https://discord.com/channels/943454897431523349/1471134092497129492"
+              class="text-blue-600 underline"
+            >
+              Discord
+            </a>
+            ou
+            <a :href="`mailto:${config.public.supportEmail}`" class="text-blue-600 underline">
+              en envoyant un email au support </a
+            >. Il seront très heureux de résoudre tes problèmes liés à la réservation des
+            biplaces.<br />
+            Pense néanmoins, qu'ils ont des métiers et qu'ils vont parfois voler. Si tu t'y prends
+            une heure avant ta deadline, tu risques de rester avec ton problème.
+          </p>
+        </FaqItem>
+
+        <FaqItem question="18. Qui puis-je contacter si j'ai d'autres questions ?">
           <p class="mb-3">Pour toute question supplémentaire ou problème technique, tu peux :</p>
           <ul class="list-disc pl-6 space-y-2">
             <li>
