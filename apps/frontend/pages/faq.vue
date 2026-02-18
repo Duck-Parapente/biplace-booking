@@ -43,9 +43,9 @@
             système. Tu as alors un créneau garanti pour voler avec un pack attribué.
           </p>
           <p>
-            Le passage d'une demande à une réservation confirmée est réalisée par l'application en
-            assurant une équité maximale entre les pilotes (voir question "comment fonctionne
-            l'algorithme d'attribution des packs ?").
+            Le passage d'une demande à une réservation est réalisée par l'application en assurant
+            une équité maximale entre les pilotes (voir question "comment fonctionne l'algorithme
+            d'attribution des packs ?").
           </p>
         </FaqItem>
 
@@ -64,7 +64,7 @@
             <div class="border-l-4 border-green-500 pl-4 py-2">
               <h4 class="font-semibold text-gray-900 mb-1">✅ L'attribution du matériel</h4>
               <p class="mb-3">
-                L'application attribue le matériel toutes les 30 minutes pour les 5 jours qui
+                L'application attribue le matériel toutes les 30 minutes pour les 6 jours qui
                 viennent en commençant à 20h00.
               </p>
               <p class="mb-3">
@@ -83,7 +83,7 @@
               <p class="mb-3">En encore d'autres termes :</p>
               <ul class="list-disc pl-6 space-y-1">
                 <li>Avant J-6, rien n'est attribué.</li>
-                <li>À J-6, l'attribution est faite.</li>
+                <li>À J-6 20h00, l'attribution est faite.</li>
                 <li>
                   À partir de J-6 20h00, tout événement qui nécessite une ré-attribution est traité
                   dans les 30 minutes.
@@ -117,8 +117,8 @@
               <strong>La priorité du pilote</strong> est déterminée par le nombre de Coins (plus il
               est élevé, moins tu es prioritaire). En cas d'égalité, le pilote qui a déposé sa
               demande le premier est prioritaire. Ce critère de priorité du pilote est absolu : s'il
-              existe une combinaison pour qu'un pilote de priorité plus élevée qu'un autre ait du
-              matériel, alors celle-ci est retenue.
+              existe une combinaison d'attributions pour qu'un pilote de priorité plus élevée qu'un
+              autre ait du matériel, alors celle-ci est retenue.
             </li>
             <li>
               <strong>Le critère de priorité dans les souhaits de pack.</strong> Ce critère est
@@ -229,7 +229,7 @@
               <p class="text-sm text-gray-700">
                 <strong>💡 Pourquoi cette attribution ?</strong><br />
                 Bien que Pilote 1 soit plus prioritaire, l'algorithme lui attribue le Pack B car
-                cela permet d'attribuer aussi le Pack A au Pilote 2.
+                cela permet d'attribuer aussi le Pack A au Pilote 2.<br />
                 <strong>Résultat : les deux demandes sont satisfaites.</strong>.
               </p>
             </div>
@@ -300,7 +300,7 @@
                 Le pilote 3 reçoit le pack B qu'il avait mis en second choix.<br />
                 <strong
                   >Résultat : Une demande plus prioritaire n'est pas satisfaite parce que tous les
-                  packs souhaités sont déjà attribués à un (des) pilotes encore plus prioritaires.
+                  packs souhaités sont déjà attribués à un (des) pilote(s) encore plus prioritaires.
                   Le pilote B aurait pu augumenter ses chances en postulant à plus de packs.</strong
                 >
               </p>
@@ -442,7 +442,7 @@
                     <tr>
                       <td class="text-center">10/01<br />Demande</td>
                       <td class="text-center"></td>
-                      <td class="text-center">12/01<br />20:00<br />Confirmation</td>
+                      <td class="text-center">12/01<br />20:00<br />Attibution</td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
@@ -468,7 +468,7 @@
               </div>
               <div class="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
                 <p class="text-sm">
-                  <strong>Calcul :</strong> 4+24+24+24+24+24+24 heures entre confirmation et la date
+                  <strong>Calcul :</strong> 4+24+24+24+24+24+24 heures entre attibution et la date
                   du vol (23:59)<br /><strong>Coins ajoutés :</strong>
                   148 Coins
                 </p>
@@ -481,7 +481,7 @@
               </h5>
               <p class="mb-4">
                 C'est possible si du matériel est encore disponible ou qu'une réservation a été
-                annulée à moins de 5 jours du jour J.
+                annulée à moins de 6 jours du jour J.
               </p>
               <div>
                 <table class="w-full text-xs text-gray-600 table-fixed">
@@ -594,7 +594,7 @@
                       <td class="text-center"><br /></td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
-                      <td class="text-center">15/01<br />18:00<br />Demande et confirmation</td>
+                      <td class="text-center">15/01<br />18:00<br />Demande et attribution</td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
                       <td class="text-center">18/01<br />Vol</td>
@@ -617,7 +617,7 @@
               </div>
               <div class="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
                 <p class="text-sm">
-                  <strong>Calcul :</strong> 6+24+24+24 heures entre confirmation et la date du vol
+                  <strong>Calcul :</strong> 6+24+24+24 heures entre attribution et la date du vol
                   (23:59)<br /><strong>Points ajoutés :</strong>
                   78 Coins
                 </p>
@@ -737,7 +737,7 @@
                     <tr>
                       <td class="text-center">10/01<br />Demande</td>
                       <td class="text-center"></td>
-                      <td class="text-center">12/01<br />20:00<br />Confirmation</td>
+                      <td class="text-center">12/01<br />20:00<br />Attibution</td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
@@ -746,7 +746,7 @@
                       <td class="text-center"></td>
                     </tr>
                     <tr>
-                      <td class="text-center">10/01<br />Demande</td>
+                      <td class="text-center"></td>
                       <td class="text-center"></td>
                       <td class="text-center">4 Coins</td>
                       <td class="text-center">24 Coins</td>
@@ -761,8 +761,9 @@
               </div>
               <div class="mt-3 p-3 bg-orange-50 rounded border border-orange-200">
                 <p class="text-sm">
-                  <strong>Calcul :</strong> 4+24+24+24+7 heures entre confirmation et
-                  l'annulation.<br /><strong>Points ajoutés :</strong>
+                  <strong>Calcul :</strong> 4+24+24+24+7 heures entre attibution et l'annulation.<br /><strong
+                    >Points ajoutés :</strong
+                  >
                   83 Coins
                 </p>
               </div>
@@ -800,9 +801,7 @@
         </FaqItem>
 
         <FaqItem question="9. J'ai une réservation, chez qui dois-je récupérer le matériel ?">
-          <p class="mb-3">
-            Tu trouveras cette information avec le menu planning. Bon vol !
-          </p>
+          <p class="mb-3">Tu trouveras cette information avec le menu planning. Bon vol !</p>
         </FaqItem>
 
         <FaqItem question="10. Il a plu, je n'ai pas pu voler">
@@ -885,7 +884,7 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="13. Je veux réserver plusieurs jours">
+        <FaqItem question="13. Je veux réserver plusieurs jours consécutifs">
           <p class="mb-3">
             Aujourd'hui, et probablement pour encore quelques temps, la notion de "réserver
             plusieurs jours" n'existe pas. Tu fais autant de demandes que de jours désirés et chaque
