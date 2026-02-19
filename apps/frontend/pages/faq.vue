@@ -43,9 +43,9 @@
             système. Tu as alors un créneau garanti pour voler avec un pack attribué.
           </p>
           <p>
-            Le passage d'une demande à une réservation confirmée est réalisée par l'application en
-            assurant une équité maximale entre les pilotes (voir question "comment fonctionne
-            l'algorithme d'attribution des packs ?").
+            Le passage d'une demande à une réservation est réalisée par l'application en assurant
+            une équité maximale entre les pilotes (voir question "comment fonctionne l'algorithme
+            d'attribution des packs ?").
           </p>
         </FaqItem>
 
@@ -64,7 +64,7 @@
             <div class="border-l-4 border-green-500 pl-4 py-2">
               <h4 class="font-semibold text-gray-900 mb-1">✅ L'attribution du matériel</h4>
               <p class="mb-3">
-                L'application attribue le matériel toutes les 30 minutes pour les 5 jours qui
+                L'application attribue le matériel toutes les 30 minutes pour les 6 jours qui
                 viennent en commençant à 20h00.
               </p>
               <p class="mb-3">
@@ -83,7 +83,7 @@
               <p class="mb-3">En encore d'autres termes :</p>
               <ul class="list-disc pl-6 space-y-1">
                 <li>Avant J-6, rien n'est attribué.</li>
-                <li>À J-6, l'attribution est faite.</li>
+                <li>À J-6 20h00, l'attribution est faite.</li>
                 <li>
                   À partir de J-6 20h00, tout événement qui nécessite une ré-attribution est traité
                   dans les 30 minutes.
@@ -117,8 +117,8 @@
               <strong>La priorité du pilote</strong> est déterminée par le nombre de Coins (plus il
               est élevé, moins tu es prioritaire). En cas d'égalité, le pilote qui a déposé sa
               demande le premier est prioritaire. Ce critère de priorité du pilote est absolu : s'il
-              existe une combinaison pour qu'un pilote de priorité plus élevée qu'un autre ait du
-              matériel, alors celle-ci est retenue.
+              existe une combinaison d'attributions pour qu'un pilote de priorité plus élevée qu'un
+              autre ait du matériel, alors celle-ci est retenue.
             </li>
             <li>
               <strong>Le critère de priorité dans les souhaits de pack.</strong> Ce critère est
@@ -229,7 +229,7 @@
               <p class="text-sm text-gray-700">
                 <strong>💡 Pourquoi cette attribution ?</strong><br />
                 Bien que Pilote 1 soit plus prioritaire, l'algorithme lui attribue le Pack B car
-                cela permet d'attribuer aussi le Pack A au Pilote 2.
+                cela permet d'attribuer aussi le Pack A au Pilote 2.<br />
                 <strong>Résultat : les deux demandes sont satisfaites.</strong>.
               </p>
             </div>
@@ -300,7 +300,7 @@
                 Le pilote 3 reçoit le pack B qu'il avait mis en second choix.<br />
                 <strong
                   >Résultat : Une demande plus prioritaire n'est pas satisfaite parce que tous les
-                  packs souhaités sont déjà attribués à un (des) pilotes encore plus prioritaires.
+                  packs souhaités sont déjà attribués à un (des) pilote(s) encore plus prioritaires.
                   Le pilote B aurait pu augumenter ses chances en postulant à plus de packs.</strong
                 >
               </p>
@@ -442,7 +442,7 @@
                     <tr>
                       <td class="text-center">10/01<br />Demande</td>
                       <td class="text-center"></td>
-                      <td class="text-center">12/01<br />20:00<br />Confirmation</td>
+                      <td class="text-center">12/01<br />20:00<br />Attibution</td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
@@ -468,7 +468,7 @@
               </div>
               <div class="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
                 <p class="text-sm">
-                  <strong>Calcul :</strong> 4+24+24+24+24+24+24 heures entre confirmation et la date
+                  <strong>Calcul :</strong> 4+24+24+24+24+24+24 heures entre attibution et la date
                   du vol (23:59)<br /><strong>Coins ajoutés :</strong>
                   148 Coins
                 </p>
@@ -481,7 +481,7 @@
               </h5>
               <p class="mb-4">
                 C'est possible si du matériel est encore disponible ou qu'une réservation a été
-                annulée à moins de 5 jours du jour J.
+                annulée à moins de 6 jours du jour J.
               </p>
               <div>
                 <table class="w-full text-xs text-gray-600 table-fixed">
@@ -594,7 +594,7 @@
                       <td class="text-center"><br /></td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
-                      <td class="text-center">15/01<br />18:00<br />Demande et confirmation</td>
+                      <td class="text-center">15/01<br />18:00<br />Demande et attribution</td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
                       <td class="text-center">18/01<br />Vol</td>
@@ -617,7 +617,7 @@
               </div>
               <div class="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
                 <p class="text-sm">
-                  <strong>Calcul :</strong> 6+24+24+24 heures entre confirmation et la date du vol
+                  <strong>Calcul :</strong> 6+24+24+24 heures entre attribution et la date du vol
                   (23:59)<br /><strong>Points ajoutés :</strong>
                   78 Coins
                 </p>
@@ -737,7 +737,7 @@
                     <tr>
                       <td class="text-center">10/01<br />Demande</td>
                       <td class="text-center"></td>
-                      <td class="text-center">12/01<br />20:00<br />Confirmation</td>
+                      <td class="text-center">12/01<br />20:00<br />Attibution</td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
                       <td class="text-center"></td>
@@ -746,7 +746,7 @@
                       <td class="text-center"></td>
                     </tr>
                     <tr>
-                      <td class="text-center">10/01<br />Demande</td>
+                      <td class="text-center"></td>
                       <td class="text-center"></td>
                       <td class="text-center">4 Coins</td>
                       <td class="text-center">24 Coins</td>
@@ -761,8 +761,9 @@
               </div>
               <div class="mt-3 p-3 bg-orange-50 rounded border border-orange-200">
                 <p class="text-sm">
-                  <strong>Calcul :</strong> 4+24+24+24+7 heures entre confirmation et
-                  l'annulation.<br /><strong>Points ajoutés :</strong>
+                  <strong>Calcul :</strong> 4+24+24+24+7 heures entre attibution et l'annulation.<br /><strong
+                    >Points ajoutés :</strong
+                  >
                   83 Coins
                 </p>
               </div>
@@ -799,7 +800,11 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="9. Il a plu, je n'ai pas pu voler">
+        <FaqItem question="9. J'ai une réservation, chez qui dois-je récupérer le matériel ?">
+          <p class="mb-3">Tu trouveras cette information avec le menu planning. Bon vol !</p>
+        </FaqItem>
+
+        <FaqItem question="10. Il a plu, je n'ai pas pu voler">
           <p class="mb-3">
             Désolé mais les Coins seront quand même comptés. Outre le fait que personne ne peut
             vérifier tes dires, tu as eu le matériel pour toi alors qu'un autre pilote aurait
@@ -817,7 +822,7 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="10. Comment maximiser mes chances ?">
+        <FaqItem question="11. Comment maximiser mes chances ?">
           <ul class="list-disc pl-6 space-y-3">
             <li>
               <strong>Postule à tous les biplaces qui peuvent te convenir</strong> plutôt qu'à un
@@ -866,7 +871,7 @@
         </FaqItem>
 
         <FaqItem
-          question="11. J'ai besoin d'un bi pour une formation, un examen ou une journée club"
+          question="12. J'ai besoin d'un bi pour une formation, un examen ou une journée club"
         >
           <p class="mb-3">
             Ces événements sont prioritaires par rapport au système de Coins. Contacte un
@@ -879,14 +884,14 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="12. Je veux réserver plusieurs jours">
+        <FaqItem question="13. Je veux réserver plusieurs jours consécutifs">
           <p class="mb-3">
             Aujourd'hui, et probablement pour encore quelques temps, la notion de "réserver
             plusieurs jours" n'existe pas. Tu fais autant de demandes que de jours désirés et chaque
             demande est gérée indépendamment des autres.
           </p>
           <p class="mb-3">
-            <strong>Exemple :</strong> Tu fais des demandes pour samedi et dimanche, il est
+            <strong>Exemple :</strong> Tu fais des demandes à J-7 pour samedi et dimanche, il est
             absolument possible que tu n'aies du matériel que pour samedi, que pour dimanche, pour
             samedi et dimanche mais il est possible que les matériels soient différents.
           </p>
@@ -895,15 +900,23 @@
             Nous sommes un club. Il est toujours temps de discuter pour tenter de trouver un
             arrangement avec les pilotes plus prioritaires que toi.
           </p>
-          <p>
+          <p class="mb-3">
             Par ailleurs, si tu as du matériel affecté pour deux jours mais que ce n'est pas le
             même, contacte un canard qui a un autre matériel pour échanger l'un des deux jours. En
             cas d'accord, contacte un admin pour qu'il intervertisse les réservations (nécessaire
             pour le carnet de vol).
           </p>
+          <p class="mb-3"><strong>Pro tip :</strong></p>
+          <p>
+            Imaginons que tu désires un biplace samedi et un dimanche. Si le lundi soir après
+            l'attribution de J-6 (à 20:00), tu constates qu'un biplace est disponible pour samedi et
+            dimanche. Dépose une demande pour chaque jour sur ce biplace et il te sera attribué pour
+            les deux jours dans les 30 minutes sous réserve que personne de plus prioritaire ne se
+            soit positionné pendant ces 30 minutes.
+          </p>
         </FaqItem>
 
-        <FaqItem question="13. Comment consulter mon score Coins actuel ?">
+        <FaqItem question="14. Comment consulter mon score Coins actuel ?">
           <p>
             Ton score Coins est visible sur ta
             <NuxtLink to="/mon-compte" class="text-blue-600 underline">page de profil</NuxtLink>. Il
@@ -911,7 +924,7 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="14. Pourquoi ne puis-je pas déposer de demande de réservation ?">
+        <FaqItem question="15. Pourquoi ne puis-je pas déposer de demande de réservation ?">
           <p>
             Soit tu n'as pas cloturé une de tes réservations précédentes, soit ton compte est
             désactivé parce que tu n'as pas payé ton supplément de cotisation biplace annuel. <br />
@@ -928,11 +941,11 @@
         </FaqItem>
 
         <FaqItem
-          question="15. Mon passager a surkiffé le vol et veut absolument donner de l'argent. Que dois-je faire ?"
+          question="16. Mon passager a surkiffé le vol et veut absolument donner de l'argent. Que dois-je faire ?"
         >
           <p>
             Pas de chance ! Tu n'agis pas dans le cadre de d'une activité professionnelle, tu ne
-            peux pas encaisser d'argent pour te payer une Rolex. Par contre, tu peux suggérer à ton
+            peux pas encaisser d'argent pour te payer la Rolex de Rihana. Par contre, tu peux suggérer à ton
             passager de faire un don au club et ainsi le dédommager de l'usure du matériel.
             <br />
             A titre d'information, un vol coûte environ 20€ de frais d'achat et d'entretien.<br />
@@ -954,7 +967,26 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="16. Qui puis-je contacter si j'ai d'autres questions ?">
+        <FaqItem question="17. Où sont les administrateurs ?">
+          <p class="mb-3">
+            Tu peux les contacter à travers le
+            <a
+              href="https://discord.com/channels/943454897431523349/1471134092497129492"
+              class="text-blue-600 underline"
+            >
+              Discord
+            </a>
+            ou
+            <a :href="`mailto:${config.public.supportEmail}`" class="text-blue-600 underline">
+              en envoyant un email au support </a
+            >. Il seront très heureux de résoudre tes problèmes liés à la réservation des
+            biplaces.<br />
+            Pense néanmoins, qu'ils ont des métiers et qu'ils vont parfois voler. Si tu t'y prends
+            une heure avant ta deadline, tu risques de rester avec ton problème.
+          </p>
+        </FaqItem>
+
+        <FaqItem question="18. Qui puis-je contacter si j'ai d'autres questions ?">
           <p class="mb-3">Pour toute question supplémentaire ou problème technique, tu peux :</p>
           <ul class="list-disc pl-6 space-y-2">
             <li>
