@@ -59,6 +59,9 @@ export const usePack = () => {
     flightsHours: undefined,
     flightsCount: undefined,
     description: undefined,
+    details: undefined,
+    lastControlDate: undefined,
+    lastRescueFoldingDate: undefined,
   }));
 
   const openCreatePackModal = () => {
@@ -74,6 +77,9 @@ export const usePack = () => {
       flightsHours: undefined,
       flightsCount: undefined,
       description: undefined,
+      details: undefined,
+      lastControlDate: undefined,
+      lastRescueFoldingDate: undefined,
     };
   };
 
@@ -91,6 +97,9 @@ export const usePack = () => {
       flightsHours: pack.flightsHours,
       flightsCount: pack.flightsCount,
       description: pack.description,
+      details: pack.details,
+      lastControlDate: pack.lastControlDate,
+      lastRescueFoldingDate: pack.lastRescueFoldingDate,
     };
     showModal.value = true;
     submitError.value = null;

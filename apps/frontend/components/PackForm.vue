@@ -37,6 +37,22 @@
 
     <BaseInput id="description" v-model="localForm.description" label="Description" type="text" />
 
+    <BaseInput id="details" v-model="localForm.details" label="Détails" type="text" />
+
+    <BaseInput
+      id="lastControlDate"
+      v-model="localForm.lastControlDate"
+      label="Date du dernier contrôle"
+      type="date"
+    />
+
+    <BaseInput
+      id="lastRescueFoldingDate"
+      v-model="localForm.lastRescueFoldingDate"
+      label="Date du dernier pliage secours"
+      type="date"
+    />
+
     <div v-if="error" class="p-3 bg-red-50 text-red-700 text-sm">
       <p><strong>Erreur:</strong> {{ error }}</p>
     </div>

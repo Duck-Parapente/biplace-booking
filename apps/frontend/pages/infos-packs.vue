@@ -40,12 +40,12 @@
             <span>{{ formatDate(packData.lastControlDate) }}</span>
             <span
               v-if="packData.flightsMinutesSinceLastControlDate != null"
-              class="text-sm text-gray-500"
+              class="text-sm text-gray-400"
             >
               ({{ Math.round(packData.flightsMinutesSinceLastControlDate / 60) }}h depuis)
             </span>
           </template>
-          <span v-else class="italic text-gray-400">Non renseigné</span>
+          <span v-else class="text-sm text-gray-400">Non renseigné</span>
         </div>
 
         <div class="flex items-center gap-2 text-gray-800">
@@ -53,7 +53,7 @@
           <span v-if="packData.lastRescueFoldingDate">{{
             formatDate(packData.lastRescueFoldingDate)
           }}</span>
-          <span v-else class="italic text-gray-400">Non renseigné</span>
+          <span v-else class="text-sm text-gray-400">Non renseigné</span>
         </div>
 
         <!-- Expanded info -->
