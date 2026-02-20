@@ -17,28 +17,6 @@
             {{ pack.label }}
           </option>
         </select>
-        <div v-if="isAdmin" class="mt-3 flex items-center justify-between">
-          <label class="flex items-center gap-2 text-sm cursor-pointer">
-            <span>Mode édition</span>
-            <button
-              type="button"
-              :class="[
-                editMode ? 'bg-primary-400' : 'bg-gray-200',
-                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2',
-              ]"
-              role="switch"
-              :aria-checked="editMode"
-              @click="editMode = !editMode"
-            >
-              <span
-                :class="[
-                  editMode ? 'translate-x-5' : 'translate-x-0',
-                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                ]"
-              />
-            </button>
-          </label>
-        </div>
       </div>
 
       <!-- Pack Totals -->
@@ -80,76 +58,105 @@
         <p>Veuillez sélectionner un pack pour voir le carnet de vol.</p>
       </div>
 
-      <div v-else class="flex-1 overflow-y-auto">
-        <div class="rounded-lg shadow-sm">
-          <div
-            v-if="reservations.length === 0"
-            class="text-gray-500 text-sm bg-white p-4 rounded-lg"
-          >
-            <p>Aucun vol enregistré pour ce pack.</p>
-          </div>
-
-          <div v-else class="space-y-2">
-            <div
-              v-for="reservation in reservations"
-              :key="reservation.id"
-              class="border bg-white border-gray-300 rounded-lg p-3 hover:shadow-md transition"
-              :class="{ 'cursor-pointer hover:bg-gray-50': editMode }"
-              @click="handleReservationClick(reservation)"
-            >
-              <div class="flex justify-between items-start mb-2">
-                <DateDisplay :date="reservation.startingDate" />
-                <div class="flex flex-col items-end gap-1.5">
-                  <BaseTag
-                    v-if="reservation.status === ReservationWishStatusDto.CANCELLED"
-                    variant="danger"
-                  >
-                    Annulé
-                  </BaseTag>
-                  <BaseTag
-                    v-else-if="reservation.status === ReservationWishStatusDto.CLOSED"
-                    variant="success"
-                  >
-                    Clôturé
-                  </BaseTag>
-                  <BaseTag
-                    v-else-if="reservation.status === ReservationWishStatusDto.CONFIRMED"
-                    variant="gray"
-                  >
-                    Confirmé
-                  </BaseTag>
-                </div>
-              </div>
-
-              <div v-if="reservation.userName" class="mb-2 text-sm flex items-center gap-2">
-                <span class="font-semibold">Pilote:</span>
-                <PilotDisplay :display-name="reservation.userName" />
-                <template v-if="editMode">
-                  <span class="font-semibold text-xl text-gray-200">&nbsp;/&nbsp;</span>
-                  <CostDisplay :cost="reservation.manualCost ?? reservation.automaticCost ?? 0" />
-                </template>
-              </div>
-
-              <div
-                v-if="reservation.flightLog"
-                class="bg-gray-100 rounded-lg p-2 space-y-1.5 text-sm"
+      <div v-else class="flex-1 flex flex-col min-h-0">
+        <!-- Carnet de vol title with edit button -->
+        <div class="mb-4 flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-gray-800">Carnet de vol</h2>
+          <div v-if="isAdmin" class="flex items-center gap-2">
+            <label class="flex items-center gap-2 text-sm cursor-pointer">
+              <span>Mode édition</span>
+              <button
+                type="button"
+                :class="[
+                  editMode ? 'bg-primary-400' : 'bg-gray-200',
+                  'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2',
+                ]"
+                role="switch"
+                :aria-checked="editMode"
+                @click="editMode = !editMode"
               >
-                <div class="flex items-center gap-2">
-                  <span class="font-semibold">Temps de vol:</span>
-                  <span>{{ reservation.flightLog.flightTimeMinutes }} minutes</span>
+                <span
+                  :class="[
+                    editMode ? 'translate-x-5' : 'translate-x-0',
+                    'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                  ]"
+                />
+              </button>
+            </label>
+          </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto">
+          <div class="rounded-lg shadow-sm">
+            <div
+              v-if="reservations.length === 0"
+              class="text-gray-500 text-sm bg-white p-4 rounded-lg"
+            >
+              <p>Aucun vol enregistré pour ce pack.</p>
+            </div>
+
+            <div v-else class="space-y-2">
+              <div
+                v-for="reservation in reservations"
+                :key="reservation.id"
+                class="border bg-white border-gray-300 rounded-lg p-3 hover:shadow-md transition"
+                :class="{ 'cursor-pointer hover:bg-gray-50': editMode }"
+                @click="handleReservationClick(reservation)"
+              >
+                <div class="flex justify-between items-start mb-2">
+                  <DateDisplay :date="reservation.startingDate" />
+                  <div class="flex flex-col items-end gap-1.5">
+                    <BaseTag
+                      v-if="reservation.status === ReservationWishStatusDto.CANCELLED"
+                      variant="danger"
+                    >
+                      Annulé
+                    </BaseTag>
+                    <BaseTag
+                      v-else-if="reservation.status === ReservationWishStatusDto.CLOSED"
+                      variant="success"
+                    >
+                      Clôturé
+                    </BaseTag>
+                    <BaseTag
+                      v-else-if="reservation.status === ReservationWishStatusDto.CONFIRMED"
+                      variant="gray"
+                    >
+                      Confirmé
+                    </BaseTag>
+                  </div>
                 </div>
 
-                <div class="flex items-center gap-2">
-                  <span class="font-semibold">Nombre de vols:</span>
-                  <span>{{ reservation.flightLog.flightsCount }}</span>
+                <div v-if="reservation.userName" class="mb-2 text-sm flex items-center gap-2">
+                  <span class="font-semibold">Pilote:</span>
+                  <PilotDisplay :display-name="reservation.userName" />
+                  <template v-if="editMode">
+                    <span class="font-semibold text-xl text-gray-200">&nbsp;/&nbsp;</span>
+                    <CostDisplay :cost="reservation.manualCost ?? reservation.automaticCost ?? 0" />
+                  </template>
                 </div>
 
                 <div
-                  v-if="reservation.flightLog.publicComment"
-                  class="pt-1.5 border-t border-gray-200"
+                  v-if="reservation.flightLog"
+                  class="bg-gray-100 rounded-lg p-2 space-y-1.5 text-sm"
                 >
-                  <p class="font-semibold mb-1">Commentaire:</p>
-                  <p class="italic text-gray-600">"{{ reservation.flightLog.publicComment }}"</p>
+                  <div class="flex items-center gap-2">
+                    <span class="font-semibold">Temps de vol:</span>
+                    <span>{{ reservation.flightLog.flightTimeMinutes }} minutes</span>
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <span class="font-semibold">Nombre de vols:</span>
+                    <span>{{ reservation.flightLog.flightsCount }}</span>
+                  </div>
+
+                  <div
+                    v-if="reservation.flightLog.publicComment"
+                    class="pt-1.5 border-t border-gray-200"
+                  >
+                    <p class="font-semibold mb-1">Commentaire:</p>
+                    <p class="italic text-gray-600">"{{ reservation.flightLog.publicComment }}"</p>
+                  </div>
                 </div>
               </div>
             </div>
