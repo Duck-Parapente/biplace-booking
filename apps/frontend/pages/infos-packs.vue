@@ -14,32 +14,70 @@
         </option>
       </select>
 
-      <!-- Pack Totals -->
+      <!-- Pack Info -->
       <div
-        v-if="selectedPackId && !loading && !error"
-        class="mb-6 bg-blue-50 border-l-4 border-blue-600 p-4 rounded-lg shadow-md"
+        v-if="selectedPackId && !loading && !error && packData"
+        class="relative mb-6 bg-blue-50 border-l-4 border-blue-600 p-4 rounded-lg shadow-md space-y-2"
       >
-        <div class="flex items-center gap-2 mb-2 text-gray-800">
-          <span class="text-sm text-gray-600">Respo:</span>
-          <span>{{ packData?.ownerFullName }}</span>
-        </div>
-        <div class="flex gap-8 text-gray-700">
-          <div class="flex items-center gap-2">
-            <span>⏱️</span>
-            <span class="text-2xl"
-              >{{ Math.round((packData?.totalFlightsMinutes ?? 0) / 60) }}h</span
-            >
-          </div>
-          <div class="flex items-center gap-2">
-            <span>✈️</span>
-            <span class="text-2xl">{{ packData?.totalFlightsCount }} vols</span>
-          </div>
-        </div>
-        <div
-          v-if="packData?.description"
-          class="mt-3 pt-3 border-t border-blue-200 text-sm text-gray-600"
+        <!-- Toggle button (top right) -->
+        <button
+          type="button"
+          class="absolute top-2 right-2 text-lg leading-none text-blue-600 hover:text-blue-800"
+          @click="showMoreInfo = !showMoreInfo"
         >
-          {{ packData.description }}
+          {{ showMoreInfo ? '➖' : '➕' }}
+        </button>
+
+        <!-- Always displayed -->
+        <div class="flex items-center gap-2 text-gray-800">
+          <span class="text-sm text-gray-600">Respo:</span>
+          <span class="font-bold">{{ packData.ownerFullName }}</span>
+        </div>
+
+        <div class="flex items-center gap-2 text-gray-800">
+          <span class="text-sm text-gray-600">Contrôle:</span>
+          <template v-if="packData.lastControlDate">
+            <span>{{ formatDate(packData.lastControlDate) }}</span>
+            <span
+              v-if="packData.flightsMinutesSinceLastControlDate != null"
+              class="text-sm text-gray-500"
+            >
+              ({{ Math.round(packData.flightsMinutesSinceLastControlDate / 60) }}h depuis)
+            </span>
+          </template>
+          <span v-else class="italic text-gray-400">Non renseigné</span>
+        </div>
+
+        <div class="flex items-center gap-2 text-gray-800">
+          <span class="text-sm text-gray-600">Pliage secours:</span>
+          <span v-if="packData.lastRescueFoldingDate">{{
+            formatDate(packData.lastRescueFoldingDate)
+          }}</span>
+          <span v-else class="italic text-gray-400">Non renseigné</span>
+        </div>
+
+        <!-- Expanded info -->
+        <div v-if="showMoreInfo" class="pt-2 border-t border-blue-200 space-y-2 text-sm">
+          <div v-if="packData.description" class="text-gray-700">
+            <span class="text-gray-600">Description:</span> {{ packData.description }}
+          </div>
+
+          <div v-if="packData.details" class="text-gray-700">
+            <span class="text-gray-600">Détails:</span> {{ packData.details }}
+          </div>
+
+          <div class="flex gap-8 text-gray-700">
+            <div class="flex items-center gap-2">
+              <span>✈️</span>
+              <span class="text-lg">{{ packData.totalFlightsCount }} vols</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span>⏱️</span>
+              <span class="text-lg"
+                >{{ Math.round((packData.totalFlightsMinutes ?? 0) / 60) }}h</span
+              >
+            </div>
+          </div>
         </div>
       </div>
 
@@ -177,6 +215,7 @@
 import { ReservationWishStatusDto, type PackReservationsDto, UserRoles } from 'shared';
 
 import type { AutocompleteOption } from '~/components/atoms/BaseAutocomplete.vue';
+import { formatDate } from '~/composables/useDateHelpers';
 
 definePageMeta({
   middleware: 'auth',
@@ -194,6 +233,7 @@ const packData = ref<PackReservationsDto | null>(null);
 const loading = ref<boolean>(false);
 const error = ref<string | null>(null);
 const editMode = ref<boolean>(false);
+const showMoreInfo = ref<boolean>(false);
 const editModalOpen = ref<boolean>(false);
 const editingReservation = ref<PackReservationsDto['reservations'][0] | null>(null);
 
