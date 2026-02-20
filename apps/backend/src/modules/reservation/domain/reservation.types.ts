@@ -68,4 +68,5 @@ export type PackReservationsWithDetails = {
   details: string | null;
   lastControlDate: DateValueObject | null;
   lastRescueFoldingDate: DateValueObject | null;
+  flightsMinutesSinceLastControlDate: Integer | null;
 };

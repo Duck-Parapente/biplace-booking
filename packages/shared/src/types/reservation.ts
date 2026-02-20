@@ -201,4 +201,8 @@ export class PackReservationsDto {
   @IsDateString()
   @IsOptional()
   lastRescueFoldingDate?: string | null;
+
+  @IsInt()
+  @IsOptional()
+  flightsMinutesSinceLastControlDate?: number | null;
 }
