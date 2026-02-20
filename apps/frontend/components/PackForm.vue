@@ -38,7 +38,7 @@
     <BaseInput
       id="description"
       v-model="localForm.description"
-      label="Description"
+      label="Description succinte"
       placeholder="Visible à la création d'une demande"
       type="text"
     />
