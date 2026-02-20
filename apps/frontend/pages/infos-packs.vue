@@ -21,23 +21,25 @@
       >
         <div class="flex items-center gap-2 mb-2 text-gray-800">
           <span class="text-sm text-gray-600">Respo:</span>
-          <span>{{ ownerFullName }}</span>
+          <span>{{ packData?.ownerFullName }}</span>
         </div>
         <div class="flex gap-8 text-gray-700">
           <div class="flex items-center gap-2">
             <span>⏱️</span>
-            <span class="text-2xl">{{ Math.round(totalFlightsMinutes / 60) }}h</span>
+            <span class="text-2xl"
+              >{{ Math.round((packData?.totalFlightsMinutes ?? 0) / 60) }}h</span
+            >
           </div>
           <div class="flex items-center gap-2">
             <span>✈️</span>
-            <span class="text-2xl">{{ totalFlightsCount }} vols</span>
+            <span class="text-2xl">{{ packData?.totalFlightsCount }} vols</span>
           </div>
         </div>
         <div
-          v-if="selectedPackDescription"
+          v-if="packData?.description"
           class="mt-3 pt-3 border-t border-blue-200 text-sm text-gray-600"
         >
-          {{ selectedPackDescription }}
+          {{ packData.description }}
         </div>
       </div>
 
@@ -188,10 +190,7 @@ const { hasRole } = useAuth();
 const isAdmin = computed(() => hasRole(UserRoles.ADMIN));
 
 const selectedPackId = ref<string | null>(null);
-const allReservations = ref<PackReservationsDto['reservations']>([]);
-const totalFlightsMinutes = ref<number>(0);
-const ownerFullName = ref<string>('');
-const totalFlightsCount = ref<number>(0);
+const packData = ref<PackReservationsDto | null>(null);
 const loading = ref<boolean>(false);
 const error = ref<string | null>(null);
 const editMode = ref<boolean>(false);
@@ -207,14 +206,8 @@ const packOptions = computed<AutocompleteOption[]>(() => {
     }));
 });
 
-const selectedPackDescription = computed(() => {
-  if (!selectedPackId.value) return null;
-  const pack = packs.value.find((p) => p.id === selectedPackId.value);
-  return pack?.description || null;
-});
-
 const reservations = computed(() => {
-  return allReservations.value
+  return (packData.value?.reservations ?? [])
     .filter(
       (reservation) => editMode.value || reservation.status !== ReservationWishStatusDto.CANCELLED,
     )
@@ -223,7 +216,7 @@ const reservations = computed(() => {
 
 const handlePackSelect = async (packId: string | null) => {
   if (!packId) {
-    allReservations.value = [];
+    packData.value = null;
     return;
   }
 
@@ -234,11 +227,7 @@ const fetchPackReservations = async (packId: string) => {
   try {
     loading.value = true;
     error.value = null;
-    const data = await callApi<PackReservationsDto>(`/reservations/pack?packId=${packId}`);
-    allReservations.value = data.reservations;
-    totalFlightsMinutes.value = data.totalFlightsMinutes;
-    ownerFullName.value = data.ownerFullName;
-    totalFlightsCount.value = data.totalFlightsCount;
+    packData.value = await callApi<PackReservationsDto>(`/reservations/pack?packId=${packId}`);
   } catch (err) {
     const errorMessage =
       err instanceof Error ? err.message : 'Impossible de charger les réservations du pack';
