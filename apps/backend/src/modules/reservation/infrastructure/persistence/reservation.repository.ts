@@ -246,6 +246,14 @@ export class ReservationRepository implements ReservationRepositoryPort {
       totalFlightsCount,
       totalFlightsMinutes,
       ownerFullName: [pack.owner.firstName, pack.owner.lastName].join(' ').trim(),
+      description: pack.description ?? null,
+      details: pack.details ?? null,
+      lastControlDate: pack.lastControlDate
+        ? DateValueObject.fromDate(pack.lastControlDate)
+        : null,
+      lastRescueFoldingDate: pack.lastRescueFoldingDate
+        ? DateValueObject.fromDate(pack.lastRescueFoldingDate)
+        : null,
     };
   }
 }

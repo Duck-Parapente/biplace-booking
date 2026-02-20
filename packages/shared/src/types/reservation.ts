@@ -185,4 +185,20 @@ export class PackReservationsDto {
   @IsString()
   @IsNotEmpty()
   ownerFullName!: string;
+
+  @IsString()
+  @IsOptional()
+  description?: string | null;
+
+  @IsString()
+  @IsOptional()
+  details?: string | null;
+
+  @IsDateString()
+  @IsOptional()
+  lastControlDate?: string | null;
+
+  @IsDateString()
+  @IsOptional()
+  lastRescueFoldingDate?: string | null;
 }
