@@ -1,3 +1,4 @@
+import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
@@ -19,12 +20,18 @@ export class CreatePackHttpController {
 
   @Post()
   async createPack(
-    @Body() body: CreatePackDto,
+    @Body() { lastControlDate, lastRescueFoldingDate, ...body }: CreatePackDto,
     @Request() { user: { id: userId } }: { user: AuthenticatedUser },
   ) {
     const command = new CreatePackCommand({
       profile: {
         ...body,
+        ...(lastControlDate && {
+          lastControlDate: DateValueObject.fromDateString(lastControlDate),
+        }),
+        ...(lastRescueFoldingDate && {
+          lastRescueFoldingDate: DateValueObject.fromDateString(lastRescueFoldingDate),
+        }),
         ownerId: new UUID({ uuid: body.ownerId }),
       },
       metadata: {
