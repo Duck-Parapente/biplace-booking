@@ -2,22 +2,17 @@
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
     <div class="flex-1 p-4 max-w-4xl mx-auto w-full flex flex-col min-h-0">
       <!-- Pack Selection -->
-      <div class="mb-2 bg-white p-4 rounded-lg shadow-sm border border-gray-300">
-        <label for="pack-select" class="block text-sm font-medium text-gray-700 mb-1">
-          Sélectionner un pack
-        </label>
-        <select
-          id="pack-select"
-          v-model="selectedPackId"
-          @change="handlePackSelect(selectedPackId)"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-600 focus:border-transparent"
-        >
-          <option :value="null">Sélectionner un pack...</option>
-          <option v-for="pack in packOptions" :key="pack.value" :value="pack.value">
-            {{ pack.label }}
-          </option>
-        </select>
-      </div>
+      <select
+        id="pack-select"
+        v-model="selectedPackId"
+        @change="handlePackSelect(selectedPackId)"
+        class="mb-2 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-600 focus:border-transparent"
+      >
+        <option :value="null">Sélectionner un pack...</option>
+        <option v-for="pack in packOptions" :key="pack.value" :value="pack.value">
+          {{ pack.label }}
+        </option>
+      </select>
 
       <!-- Pack Totals -->
       <div
