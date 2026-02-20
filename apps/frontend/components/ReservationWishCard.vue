@@ -14,10 +14,13 @@
         <span>{{ statusConfig.label }}</span>
       </button>
       <span
-        v-if="wish.reservation && ReservationWishStatusDto.CONFIRMED !== currentStatus"
+        v-if="
+          (wish.reservation && ReservationWishStatusDto.CONFIRMED !== currentStatus) ||
+          currentStatus === ReservationWishStatusDto.CANCELLED
+        "
         class="inline-flex items-center text-gray-400 mt-1"
       >
-        <CostDisplay :cost="wish.reservation.cost" />
+        <CostDisplay :cost="wish.reservation?.cost ?? 0" />
       </span>
     </div>
 
