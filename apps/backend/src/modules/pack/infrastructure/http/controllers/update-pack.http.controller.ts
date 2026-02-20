@@ -1,3 +1,4 @@
+import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
@@ -7,6 +8,7 @@ import { RolesGuard } from '@libs/guards/roles.guard';
 import { UpdatePackCommand } from '@modules/pack/application/commands/update-pack/update-pack.command';
 import { UpdatePackService } from '@modules/pack/application/commands/update-pack/update-pack.service';
 import { Controller, Patch, Body, Logger, UseGuards, Param, Request } from '@nestjs/common';
+import { last } from 'rxjs';
 import { UpdatePackDto, UserRoles } from 'shared';
 
 @Controller('packs')
@@ -20,13 +22,15 @@ export class UpdatePackHttpController {
   @Patch(':id')
   async updatePack(
     @Param('id') id: string,
-    @Body() { ownerId, ...otherUpdates }: UpdatePackDto,
+    @Body() { ownerId, lastControlDate, lastRescueFoldingDate, ...otherUpdates }: UpdatePackDto,
     @Request() { user: { id: userId } }: { user: AuthenticatedUser },
   ) {
     const command = new UpdatePackCommand({
       packId: new UUID({ uuid: id }),
       updates: {
         ...(ownerId && { ownerId: new UUID({ uuid: ownerId }) }),
+        ...(lastControlDate && { lastControlDate: DateValueObject.fromDateString(lastControlDate)}),
+        ...(lastRescueFoldingDate && { lastRescueFoldingDate: DateValueObject.fromDateString(lastRescueFoldingDate)}),
         ...otherUpdates,
       },
       metadata: {

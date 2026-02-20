@@ -42,6 +42,11 @@ export function mapPackReservationsToDto({
   totalFlightsMinutes,
   packReservations,
   ownerFullName,
+  description,
+  details,
+  lastControlDate,
+  lastRescueFoldingDate,
+  flightsMinutesSinceLastControlDate,
 }: PackReservationsWithDetails): PackReservationsDto {
   return {
     reservations: packReservations.map((reservation) => ({
@@ -63,5 +68,10 @@ export function mapPackReservationsToDto({
     totalFlightsCount: totalFlightsCount.value,
     totalFlightsMinutes: totalFlightsMinutes.value,
     ownerFullName,
+    description: description ?? null,
+    details: details ?? null,
+    lastControlDate: lastControlDate?.value.toISOString() ?? null,
+    lastRescueFoldingDate: lastRescueFoldingDate?.value.toISOString() ?? null,
+    flightsMinutesSinceLastControlDate: flightsMinutesSinceLastControlDate?.value ?? null,
   };
 }

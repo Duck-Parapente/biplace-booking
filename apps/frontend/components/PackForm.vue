@@ -35,7 +35,39 @@
       :min="0"
     />
 
-    <BaseInput id="description" v-model="localForm.description" label="Description" type="text" />
+    <BaseInput
+      id="description"
+      v-model="localForm.description"
+      label="Description succinte"
+      placeholder="Visible à la création d'une demande"
+      type="text"
+    />
+
+    <div>
+      <label for="details" class="block text-sm font-medium text-secondary-600 mb-1">Détails</label>
+      <textarea
+        id="details"
+        :value="localForm.details ?? ''"
+        @input="localForm.details = ($event.target as HTMLTextAreaElement).value"
+        placeholder="Visible dans Infos Packs"
+        rows="3"
+        class="appearance-none w-full min-w-0 max-w-full px-3 py-2 border border-gray-300 rounded text-[16px] leading-normal focus:outline-none focus:ring-2 focus:ring-secondary-600 bg-white resize-y"
+      />
+    </div>
+
+    <BaseInput
+      id="lastControlDate"
+      v-model="localForm.lastControlDate"
+      label="Date du dernier contrôle"
+      type="date"
+    />
+
+    <BaseInput
+      id="lastRescueFoldingDate"
+      v-model="localForm.lastRescueFoldingDate"
+      label="Date du dernier pliage secours"
+      type="date"
+    />
 
     <div v-if="error" class="p-3 bg-red-50 text-red-700 text-sm">
       <p><strong>Erreur:</strong> {{ error }}</p>

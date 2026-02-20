@@ -42,17 +42,20 @@ model User {
 }
 
 model Pack {
-    id                String                      @id
-    ownerId           String
-    owner             User                        @relation(fields: [ownerId], references: [id])
-    label             String
-    flightsHours      Int
-    flightsCount      Int
-    createdAt         DateTime                    @db.Timestamptz(3)
-    description       String?
-    order             Int
-    reservationWishes ReservationWishPackChoice[]
-    reservations      Reservation[]
+    id                    String                      @id
+    ownerId               String
+    owner                 User                        @relation(fields: [ownerId], references: [id])
+    label                 String
+    flightsHours          Int
+    flightsCount          Int
+    createdAt             DateTime                    @db.Timestamptz(3)
+    description           String?
+    details               String?
+    lastControlDate       DateTime?                   @db.Timestamptz(3)
+    lastRescueFoldingDate DateTime?                   @db.Timestamptz(3)
+    order                 Int
+    reservationWishes     ReservationWishPackChoice[]
+    reservations          Reservation[]
 }
 
 enum ReservationWishStatus {

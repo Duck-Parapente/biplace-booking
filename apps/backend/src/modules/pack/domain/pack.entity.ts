@@ -19,6 +19,9 @@ export class PackEntity extends AggregateRoot<PackProps> {
         flightsCount: profile.flightsCount ?? 0,
         flightsHours: profile.flightsHours ?? 0,
         description: profile.description ?? null,
+        details: profile.details ?? null,
+        lastControlDate: profile.lastControlDate ?? null,
+        lastRescueFoldingDate: profile.lastRescueFoldingDate ?? null,
         order: 1000, // default order, should be set properly after creation
       },
     });
@@ -54,6 +57,18 @@ export class PackEntity extends AggregateRoot<PackProps> {
 
   get description() {
     return this.props.description;
+  }
+
+  get details() {
+    return this.props.details;
+  }
+
+  get lastControlDate() {
+    return this.props.lastControlDate;
+  }
+
+  get lastRescueFoldingDate() {
+    return this.props.lastRescueFoldingDate;
   }
 
   get flightsCount() {

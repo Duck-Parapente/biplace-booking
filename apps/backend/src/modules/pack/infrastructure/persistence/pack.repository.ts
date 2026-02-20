@@ -9,12 +9,16 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Pack } from '@prisma/client';
 
 const toEntity = (pack: Pack): PackEntity => {
-  const { id, ownerId, ...otherProps } = pack;
+  const { id, ownerId, lastControlDate, lastRescueFoldingDate, ...otherProps } = pack;
   return new PackEntity({
     id: new UUID({ uuid: id }),
     createdAt: DateValueObject.fromDate(pack.createdAt),
     props: {
       ownerId: new UUID({ uuid: ownerId }),
+      lastControlDate: lastControlDate ? DateValueObject.fromDate(lastControlDate) : null,
+      lastRescueFoldingDate: lastRescueFoldingDate
+        ? DateValueObject.fromDate(lastRescueFoldingDate)
+        : null,
       ...otherProps,
     },
   });
@@ -38,6 +42,9 @@ export class PackRepository implements PackRepositoryPort {
         flightsHours: pack.flightsHours ?? 0,
         flightsCount: pack.flightsCount ?? 0,
         description: pack.description ?? null,
+        details: pack.details ?? null,
+        lastControlDate: pack.lastControlDate?.value ?? null,
+        lastRescueFoldingDate: pack.lastRescueFoldingDate?.value ?? null,
         order: pack.order,
         owner: {
           connect: { id: pack.ownerId.uuid },
@@ -75,6 +82,9 @@ export class PackRepository implements PackRepositoryPort {
         flightsCount: pack.flightsCount,
         ownerId: pack.ownerId.uuid,
         description: pack.description,
+        details: pack.details,
+        lastControlDate: pack.lastControlDate?.value ?? null,
+        lastRescueFoldingDate: pack.lastRescueFoldingDate?.value ?? null,
       },
     });
 

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreatePackDto {
   @IsNotEmpty()
@@ -20,6 +20,18 @@ export class CreatePackDto {
   @IsString()
   @IsOptional()
   description?: string | null;
+
+  @IsString()
+  @IsOptional()
+  details?: string | null;
+
+  @IsDateString()
+  @IsOptional()
+  lastControlDate?: string | null;
+
+  @IsDateString()
+  @IsOptional()
+  lastRescueFoldingDate?: string | null;
 }
 
 export class UpdatePackDto {
@@ -42,6 +54,18 @@ export class UpdatePackDto {
   @IsString()
   @IsOptional()
   description?: string | null;
+
+  @IsString()
+  @IsOptional()
+  details?: string | null;
+
+  @IsDateString()
+  @IsOptional()
+  lastControlDate?: string | null;
+
+  @IsDateString()
+  @IsOptional()
+  lastRescueFoldingDate?: string | null;
 }
 
 export class PackDto {
@@ -68,6 +92,18 @@ export class PackDto {
   @IsString()
   @IsOptional()
   description?: string | null;
+
+  @IsString()
+  @IsOptional()
+  details?: string | null;
+
+  @IsDateString()
+  @IsOptional()
+  lastControlDate?: string | null;
+
+  @IsDateString()
+  @IsOptional()
+  lastRescueFoldingDate?: string | null;
 
   @IsNumber()
   @IsNotEmpty()

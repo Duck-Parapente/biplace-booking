@@ -14,30 +14,67 @@
         </option>
       </select>
 
-      <!-- Pack Totals -->
+      <!-- Pack Info -->
       <div
-        v-if="selectedPackId && !loading && !error"
-        class="mb-6 bg-blue-50 border-l-4 border-blue-600 p-4 rounded-lg shadow-md"
+        v-if="selectedPackId && !loading && !error && packData"
+        class="relative mb-6 bg-blue-50 border-l-4 border-blue-600 p-4 rounded-lg shadow-md space-y-2 cursor-pointer"
+        @click="showMoreInfo = !showMoreInfo"
       >
-        <div class="flex items-center gap-2 mb-2 text-gray-800">
-          <span class="text-sm text-gray-600">Respo:</span>
-          <span>{{ ownerFullName }}</span>
+        <!-- Toggle icon (top right) -->
+        <span class="absolute top-2 right-2 text-lg leading-none text-blue-600">
+          {{ showMoreInfo ? '➖' : '➕' }}
+        </span>
+
+        <!-- Always displayed -->
+        <div class="flex items-center gap-2 text-gray-800">
+          <span class="text-sm text-gray-500">Respo:</span>
+          <span>{{ packData.ownerFullName }}</span>
         </div>
-        <div class="flex gap-8 text-gray-700">
-          <div class="flex items-center gap-2">
-            <span>⏱️</span>
-            <span class="text-2xl">{{ Math.round(totalFlightsMinutes / 60) }}h</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span>✈️</span>
-            <span class="text-2xl">{{ totalFlightsCount }} vols</span>
-          </div>
+
+        <div class="flex items-center gap-2 text-gray-800">
+          <span class="text-sm text-gray-500">Contrôle:</span>
+          <template v-if="packData.lastControlDate">
+            <span>{{ formatDate(packData.lastControlDate) }}</span>
+            <span
+              v-if="packData.flightsMinutesSinceLastControlDate != null"
+              class="text-sm text-gray-400"
+            >
+              ({{ Math.round(packData.flightsMinutesSinceLastControlDate / 60) }}h depuis)
+            </span>
+          </template>
+          <span v-else class="text-sm text-gray-400">Non renseigné</span>
         </div>
-        <div
-          v-if="selectedPackDescription"
-          class="mt-3 pt-3 border-t border-blue-200 text-sm text-gray-600"
-        >
-          {{ selectedPackDescription }}
+
+        <div class="flex items-center gap-2 text-gray-800">
+          <span class="text-sm text-gray-500">Pliage secours:</span>
+          <span v-if="packData.lastRescueFoldingDate">{{
+            formatDate(packData.lastRescueFoldingDate)
+          }}</span>
+          <span v-else class="text-sm text-gray-400">Non renseigné</span>
+        </div>
+
+        <!-- Expanded info -->
+        <div v-if="showMoreInfo" class="pt-2 border-t border-blue-200 space-y-2">
+          <div v-if="packData.description" class="flex items-baseline gap-2 text-gray-800">
+            <span class="text-sm text-gray-500">Description:</span>
+            <span>{{ packData.description }}</span>
+          </div>
+
+          <div v-if="packData.details" class="text-gray-800">
+            <span class="text-sm text-gray-500">Détails:</span>
+            <div class="whitespace-pre-line mt-1" v-html="packData.details"></div>
+          </div>
+
+          <div class="border-t border-blue-200 pt-2 flex justify-center gap-8 text-gray-800">
+            <div class="flex items-center gap-2">
+              <span>✈️</span>
+              <span>{{ packData.totalFlightsCount }} vols</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span>⏱️</span>
+              <span>{{ Math.round((packData.totalFlightsMinutes ?? 0) / 60) }}h</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -175,6 +212,7 @@
 import { ReservationWishStatusDto, type PackReservationsDto, UserRoles } from 'shared';
 
 import type { AutocompleteOption } from '~/components/atoms/BaseAutocomplete.vue';
+import { formatDate } from '~/composables/useDateHelpers';
 
 definePageMeta({
   middleware: 'auth',
@@ -188,13 +226,11 @@ const { hasRole } = useAuth();
 const isAdmin = computed(() => hasRole(UserRoles.ADMIN));
 
 const selectedPackId = ref<string | null>(null);
-const allReservations = ref<PackReservationsDto['reservations']>([]);
-const totalFlightsMinutes = ref<number>(0);
-const ownerFullName = ref<string>('');
-const totalFlightsCount = ref<number>(0);
+const packData = ref<PackReservationsDto | null>(null);
 const loading = ref<boolean>(false);
 const error = ref<string | null>(null);
 const editMode = ref<boolean>(false);
+const showMoreInfo = ref<boolean>(false);
 const editModalOpen = ref<boolean>(false);
 const editingReservation = ref<PackReservationsDto['reservations'][0] | null>(null);
 
@@ -207,14 +243,8 @@ const packOptions = computed<AutocompleteOption[]>(() => {
     }));
 });
 
-const selectedPackDescription = computed(() => {
-  if (!selectedPackId.value) return null;
-  const pack = packs.value.find((p) => p.id === selectedPackId.value);
-  return pack?.description || null;
-});
-
 const reservations = computed(() => {
-  return allReservations.value
+  return (packData.value?.reservations ?? [])
     .filter(
       (reservation) => editMode.value || reservation.status !== ReservationWishStatusDto.CANCELLED,
     )
@@ -223,7 +253,7 @@ const reservations = computed(() => {
 
 const handlePackSelect = async (packId: string | null) => {
   if (!packId) {
-    allReservations.value = [];
+    packData.value = null;
     return;
   }
 
@@ -234,11 +264,7 @@ const fetchPackReservations = async (packId: string) => {
   try {
     loading.value = true;
     error.value = null;
-    const data = await callApi<PackReservationsDto>(`/reservations/pack?packId=${packId}`);
-    allReservations.value = data.reservations;
-    totalFlightsMinutes.value = data.totalFlightsMinutes;
-    ownerFullName.value = data.ownerFullName;
-    totalFlightsCount.value = data.totalFlightsCount;
+    packData.value = await callApi<PackReservationsDto>(`/reservations/pack?packId=${packId}`);
   } catch (err) {
     const errorMessage =
       err instanceof Error ? err.message : 'Impossible de charger les réservations du pack';

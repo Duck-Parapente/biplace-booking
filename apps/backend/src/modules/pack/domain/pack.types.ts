@@ -1,3 +1,4 @@
+import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
 export interface PackProfile {
@@ -6,6 +7,9 @@ export interface PackProfile {
   flightsHours?: number;
   flightsCount?: number;
   description?: string | null;
+  details?: string | null;
+  lastControlDate?: DateValueObject | null;
+  lastRescueFoldingDate?: DateValueObject | null;
 }
 
 export type PackProps = Required<PackProfile> & {
