@@ -65,7 +65,7 @@
             <p class="whitespace-pre-line mt-1">{{ packData.details }}</p>
           </div>
 
-          <div class="flex gap-8 text-gray-800">
+          <div class="border-t border-blue-200 pt-2 flex justify-center gap-8 text-gray-800">
             <div class="flex items-center gap-2">
               <span>✈️</span>
               <span>{{ packData.totalFlightsCount }} vols</span>
