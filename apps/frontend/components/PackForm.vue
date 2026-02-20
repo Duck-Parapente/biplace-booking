@@ -35,9 +35,25 @@
       :min="0"
     />
 
-    <BaseInput id="description" v-model="localForm.description" label="Description" type="text" />
+    <BaseInput
+      id="description"
+      v-model="localForm.description"
+      label="Description"
+      placeholder="Visible à la création d'une demande"
+      type="text"
+    />
 
-    <BaseInput id="details" v-model="localForm.details" label="Détails" type="text" />
+    <div>
+      <label for="details" class="block text-sm font-medium text-secondary-600 mb-1">Détails</label>
+      <textarea
+        id="details"
+        :value="localForm.details ?? ''"
+        @input="localForm.details = ($event.target as HTMLTextAreaElement).value"
+        placeholder="Visible dans Infos Packs"
+        rows="3"
+        class="appearance-none w-full min-w-0 max-w-full px-3 py-2 border border-gray-300 rounded text-[16px] leading-normal focus:outline-none focus:ring-2 focus:ring-secondary-600 bg-white resize-y"
+      />
+    </div>
 
     <BaseInput
       id="lastControlDate"

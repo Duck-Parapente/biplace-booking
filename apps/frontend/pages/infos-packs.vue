@@ -56,11 +56,12 @@
         <!-- Expanded info -->
         <div v-if="showMoreInfo" class="pt-2 border-t border-blue-200 space-y-2 text-sm">
           <div v-if="packData.description" class="text-gray-700">
-            <span class="text-gray-600">Description:</span> {{ packData.description }}
+            <span class="underline text-gray-600">Description:</span> {{ packData.description }}
           </div>
 
           <div v-if="packData.details" class="text-gray-700">
-            <span class="text-gray-600">Détails:</span> {{ packData.details }}
+            <span class="underline text-gray-600">Détails:</span>
+            <p class="whitespace-pre-line">{{ packData.details }}</p>
           </div>
 
           <div class="flex gap-8 text-gray-700">
