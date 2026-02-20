@@ -27,12 +27,12 @@
 
         <!-- Always displayed -->
         <div class="flex items-center gap-2 text-gray-800">
-          <span class="text-sm text-gray-600">Respo:</span>
-          <span class="font-bold">{{ packData.ownerFullName }}</span>
+          <span class="text-sm text-gray-500">Respo:</span>
+          <span>{{ packData.ownerFullName }}</span>
         </div>
 
         <div class="flex items-center gap-2 text-gray-800">
-          <span class="text-sm text-gray-600">Contrôle:</span>
+          <span class="text-sm text-gray-500">Contrôle:</span>
           <template v-if="packData.lastControlDate">
             <span>{{ formatDate(packData.lastControlDate) }}</span>
             <span
@@ -46,7 +46,7 @@
         </div>
 
         <div class="flex items-center gap-2 text-gray-800">
-          <span class="text-sm text-gray-600">Pliage secours:</span>
+          <span class="text-sm text-gray-500">Pliage secours:</span>
           <span v-if="packData.lastRescueFoldingDate">{{
             formatDate(packData.lastRescueFoldingDate)
           }}</span>
@@ -54,26 +54,25 @@
         </div>
 
         <!-- Expanded info -->
-        <div v-if="showMoreInfo" class="pt-2 border-t border-blue-200 space-y-2 text-sm">
-          <div v-if="packData.description" class="text-gray-700">
-            <span class="underline text-gray-600">Description:</span> {{ packData.description }}
+        <div v-if="showMoreInfo" class="pt-2 border-t border-blue-200 space-y-2">
+          <div v-if="packData.description" class="flex items-baseline gap-2 text-gray-800">
+            <span class="text-sm text-gray-500">Description:</span>
+            <span>{{ packData.description }}</span>
           </div>
 
-          <div v-if="packData.details" class="text-gray-700">
-            <span class="underline text-gray-600">Détails:</span>
-            <p class="whitespace-pre-line">{{ packData.details }}</p>
+          <div v-if="packData.details" class="text-gray-800">
+            <span class="text-sm text-gray-500">Détails:</span>
+            <p class="whitespace-pre-line mt-1">{{ packData.details }}</p>
           </div>
 
-          <div class="flex gap-8 text-gray-700">
+          <div class="flex gap-8 text-gray-800">
             <div class="flex items-center gap-2">
               <span>✈️</span>
-              <span class="text-lg">{{ packData.totalFlightsCount }} vols</span>
+              <span>{{ packData.totalFlightsCount }} vols</span>
             </div>
             <div class="flex items-center gap-2">
               <span>⏱️</span>
-              <span class="text-lg"
-                >{{ Math.round((packData.totalFlightsMinutes ?? 0) / 60) }}h</span
-              >
+              <span>{{ Math.round((packData.totalFlightsMinutes ?? 0) / 60) }}h</span>
             </div>
           </div>
         </div>
