@@ -17,16 +17,13 @@
       <!-- Pack Info -->
       <div
         v-if="selectedPackId && !loading && !error && packData"
-        class="relative mb-6 bg-blue-50 border-l-4 border-blue-600 p-4 rounded-lg shadow-md space-y-2"
+        class="relative mb-6 bg-blue-50 border-l-4 border-blue-600 p-4 rounded-lg shadow-md space-y-2 cursor-pointer"
+        @click="showMoreInfo = !showMoreInfo"
       >
-        <!-- Toggle button (top right) -->
-        <button
-          type="button"
-          class="absolute top-2 right-2 text-lg leading-none text-blue-600 hover:text-blue-800"
-          @click="showMoreInfo = !showMoreInfo"
-        >
+        <!-- Toggle icon (top right) -->
+        <span class="absolute top-2 right-2 text-lg leading-none text-blue-600">
           {{ showMoreInfo ? '➖' : '➕' }}
-        </button>
+        </span>
 
         <!-- Always displayed -->
         <div class="flex items-center gap-2 text-gray-800">
