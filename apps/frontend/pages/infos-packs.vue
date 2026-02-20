@@ -62,7 +62,7 @@
 
           <div v-if="packData.details" class="text-gray-800">
             <span class="text-sm text-gray-500">Détails:</span>
-            <p class="whitespace-pre-line mt-1">{{ packData.details }}</p>
+            <div class="whitespace-pre-line mt-1" v-html="packData.details"></div>
           </div>
 
           <div class="border-t border-blue-200 pt-2 flex justify-center gap-8 text-gray-800">
