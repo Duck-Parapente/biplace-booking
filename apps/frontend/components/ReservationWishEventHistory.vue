@@ -63,7 +63,7 @@ const { getConfigFromStatus } = useReservationWishStatus();
 
 const groupedEvents = computed(() => {
   const groups: { date: string; events: EventItem[] }[] = [];
-  const ONE_SECOND_MS = 1 * 60 * 1000;
+  const THRESHOLD = 0;
 
   props.events.forEach((event) => {
     const eventTime = new Date(event.date).getTime();
@@ -71,7 +71,7 @@ const groupedEvents = computed(() => {
     // Find if there's an existing group within 5 minutes
     const existingGroup = groups.find((group) => {
       const groupTime = new Date(group.date).getTime();
-      return Math.abs(eventTime - groupTime) < ONE_SECOND_MS;
+      return Math.abs(eventTime - groupTime) < THRESHOLD;
     });
 
     if (existingGroup) {
