@@ -87,7 +87,7 @@
 import type { UserDto } from 'shared';
 
 definePageMeta({
-  middleware: ['auth', 'admin'],
+  middleware: ['auth', 'moderator'],
   pageTitle: 'Gestion des Packs',
 });
 

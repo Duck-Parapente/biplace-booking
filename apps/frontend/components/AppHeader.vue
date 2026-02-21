@@ -90,7 +90,7 @@ const isMenuOpen = ref(false);
 interface MenuItem {
   path: string;
   label: string;
-  requiresRole?: UserRoles;
+  requiresRole?: UserRoles[];
 }
 
 interface MenuCategory {
@@ -119,7 +119,11 @@ const menuCategories: MenuCategory[] = [
     label: 'Administration',
     items: [
       { path: '/mon-compte', label: 'Mon compte' },
-      { path: '/gestion-packs', label: 'Gestion des Packs', requiresRole: UserRoles.ADMIN },
+      {
+        path: '/gestion-packs',
+        label: 'Gestion des Packs',
+        requiresRole: [UserRoles.ADMIN, UserRoles.MANAGER],
+      },
     ],
   },
 ];
@@ -130,7 +134,7 @@ const visibleMenuCategories = computed(() => {
       ...category,
       items: category.items.filter((item) => {
         if (!item.requiresRole) return true;
-        return hasRole(item.requiresRole);
+        return item.requiresRole.some((role) => hasRole(role));
       }),
     }))
     .filter((category) => category.items.length > 0);

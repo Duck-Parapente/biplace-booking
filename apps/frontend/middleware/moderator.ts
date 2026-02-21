@@ -3,11 +3,8 @@ import { UserRoles } from 'shared';
 export default defineNuxtRouteMiddleware(async () => {
   const { isLoading, hasRole } = useAuth();
 
-  if (isLoading.value) {
-    return;
-  }
+  if (isLoading.value) return;
+  if (hasRole(UserRoles.MANAGER) || hasRole(UserRoles.ADMIN)) return;
 
-  if (!hasRole(UserRoles.ADMIN)) {
-    return navigateTo('/');
-  }
+  return navigateTo('/');
 });
