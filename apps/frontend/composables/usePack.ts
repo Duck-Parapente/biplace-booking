@@ -1,4 +1,5 @@
 import type { CreatePackDto, PackDto, UpdatePackDto } from 'shared';
+import { UserRoles } from 'shared';
 
 const BASE_PATH = '/packs';
 
@@ -164,6 +165,33 @@ export const usePack = () => {
   // Computed wording based on current mode
   const currentOperationConfig = computed(() => PACK_OPERATION_CONFIG[modalMode.value]);
 
+  // Role-based pack filtering
+  const { hasRole } = useAuth();
+  const { userData } = useUser();
+
+  const filteredPacks = computed(() => {
+    if (hasRole(UserRoles.ADMIN)) {
+      return packs.value;
+    }
+
+    if (hasRole(UserRoles.MANAGER) && userData.value) {
+      return packs.value.filter((pack) => pack.ownerId === userData.value?.id);
+    }
+
+    return [];
+  });
+
+  const isPackManagedByCurrentUser = (packId: string): boolean => {
+    if (hasRole(UserRoles.ADMIN)) return true;
+
+    if (hasRole(UserRoles.MANAGER)) {
+      const packDetails = packs.value.find((p) => p.id === packId);
+      return packDetails?.ownerId === userData.value?.id;
+    }
+
+    return false;
+  };
+
   return {
     packs,
     loading,
@@ -175,6 +203,8 @@ export const usePack = () => {
     submitSuccess,
     packForm,
     currentOperationConfig,
+    filteredPacks,
+    isPackManagedByCurrentUser,
     getPacks,
     openCreatePackModal,
     openEditPackModal,

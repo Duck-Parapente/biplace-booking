@@ -97,7 +97,6 @@
 
 <script setup lang="ts">
 import type { PackPlanningDto } from 'shared';
-import { UserRoles } from 'shared';
 
 import IconCheck from '~/components/icons/IconCheck.vue';
 import IconClock from '~/components/icons/IconClock.vue';
@@ -122,10 +121,9 @@ const emit = defineEmits<{
   'after-cancel-reservation': [];
 }>();
 
-const { hasRole } = useAuth();
 const { userData: currentUser, users } = useUser();
 const { getUserDisplayName } = useUserHelpers();
-const { packs: allPacks } = usePack();
+const { isPackManagedByCurrentUser } = usePack();
 const { cancelReservation } = useReservation();
 
 const toggleExpanded = () => {
@@ -141,16 +139,8 @@ const canCancelReservation = (pack: PackPlanningDto): boolean => {
   // User can cancel their own reservation
   if (pack.reservation.userId === currentUser.value?.id && isAfterNow) return true;
 
-  // Admin can delete any reservation
-  if (hasRole(UserRoles.ADMIN)) return true;
-
-  // Manager can delete reservations on packs they own
-  if (hasRole(UserRoles.MANAGER)) {
-    const packDetails = allPacks.value.find((p) => p.id === pack.packId);
-    return packDetails?.ownerId === currentUser.value?.id;
-  }
-
-  return false;
+  // Admin/Manager can cancel reservations on packs they manage
+  return isPackManagedByCurrentUser(pack.packId);
 };
 
 const handleCancelReservation = async (reservationId: string) => {

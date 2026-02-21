@@ -95,7 +95,7 @@ definePageMeta({
 });
 
 const {
-  packs,
+  filteredPacks,
   loading,
   error,
   showModal,
@@ -112,20 +112,8 @@ const {
 } = usePack();
 const { hasRole } = useAuth();
 
-const { userData, users, getUser, getUsers } = useUser();
+const { users, getUser, getUsers } = useUser();
 const { getUserDisplayName } = useUserHelpers();
-
-const filteredPacks = computed(() => {
-  if (hasRole(UserRoles.ADMIN)) {
-    return packs.value;
-  }
-
-  if (hasRole(UserRoles.MANAGER) && userData.value) {
-    return packs.value.filter((pack) => pack.ownerId === userData.value?.id);
-  }
-
-  return [];
-});
 
 onMounted(() => {
   getPacks();
