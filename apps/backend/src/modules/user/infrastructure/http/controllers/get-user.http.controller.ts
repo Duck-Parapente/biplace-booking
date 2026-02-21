@@ -1,14 +1,17 @@
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
+import { Roles } from '@libs/guards/roles.decorator';
+import { RolesGuard } from '@libs/guards/roles.guard';
 import { GetUserCommand } from '@modules/user/application/queries/get-user/get-user.command';
 import { GetUserService } from '@modules/user/application/queries/get-user/get-user.service';
 import { Controller, Logger, Get, UseGuards, Request } from '@nestjs/common';
-import { UserDto } from 'shared';
+import { UserDto, UserRoles } from 'shared';
 
 import { mapUserToDto } from '../mappers/user.mapper';
 
 @Controller('user/me')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(UserRoles.USER)
 export class GetUserHttpController {
   private readonly logger = new Logger(GetUserHttpController.name);
 

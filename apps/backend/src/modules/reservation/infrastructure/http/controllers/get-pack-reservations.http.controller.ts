@@ -1,13 +1,16 @@
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
+import { Roles } from '@libs/guards/roles.decorator';
+import { RolesGuard } from '@libs/guards/roles.guard';
 import { GetPackReservationsService } from '@modules/reservation/application/queries/get-pack-reservations/get-pack-reservations.service';
 import { Controller, Logger, Get, Query, UseGuards } from '@nestjs/common';
-import { PackReservationsDto } from 'shared';
+import { PackReservationsDto, UserRoles } from 'shared';
 
 import { mapPackReservationsToDto } from '../mappers/reservation.mapper';
 
 @Controller('reservations')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(UserRoles.USER)
 export class GetPackReservationsHttpController {
   private readonly logger = new Logger(GetPackReservationsHttpController.name);
 

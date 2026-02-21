@@ -5,6 +5,8 @@ import { ActiveUserGuard } from '@libs/guards/active-user.guard';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
+import { Roles } from '@libs/guards/roles.decorator';
+import { RolesGuard } from '@libs/guards/roles.guard';
 import { CreateReservationWishCommand } from '@modules/reservation/application/commands/create-reservation-wish/create-reservation-wish.command';
 import { CreateReservationWishService } from '@modules/reservation/application/commands/create-reservation-wish/create-reservation-wish.service';
 import {
@@ -21,10 +23,11 @@ import {
   Request,
   BadRequestException,
 } from '@nestjs/common';
-import { CreateReservationWishDto } from 'shared';
+import { CreateReservationWishDto, UserRoles } from 'shared';
 
 @Controller('reservation-wishes')
-@UseGuards(JwtAuthGuard, MaintenanceModeGuard, ActiveUserGuard)
+@UseGuards(JwtAuthGuard, MaintenanceModeGuard, ActiveUserGuard, RolesGuard)
+@Roles(UserRoles.USER)
 export class CreateReservationWishHttpController {
   private readonly logger = new Logger(CreateReservationWishHttpController.name);
 

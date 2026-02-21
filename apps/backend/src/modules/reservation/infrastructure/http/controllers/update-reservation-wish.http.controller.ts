@@ -2,6 +2,8 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
+import { Roles } from '@libs/guards/roles.decorator';
+import { RolesGuard } from '@libs/guards/roles.guard';
 import { UpdateReservationWishCommand } from '@modules/reservation/application/commands/update-reservation-wish/update-reservation-wish.command';
 import { UpdateReservationWishService } from '@modules/reservation/application/commands/update-reservation-wish/update-reservation-wish.service';
 import { ReservationWishRepositoryPort } from '@modules/reservation/domain/ports/reservation-wish.repository.port';
@@ -23,9 +25,11 @@ import {
   Inject,
   ForbiddenException,
 } from '@nestjs/common';
+import { UserRoles } from 'shared';
 
 @Controller('reservation-wishes')
-@UseGuards(JwtAuthGuard, MaintenanceModeGuard)
+@UseGuards(JwtAuthGuard, MaintenanceModeGuard, RolesGuard)
+@Roles(UserRoles.USER)
 export class UpdateReservationWishHttpController {
   private readonly logger = new Logger(UpdateReservationWishHttpController.name);
 

@@ -8,7 +8,6 @@ import { RolesGuard } from '@libs/guards/roles.guard';
 import { UpdatePackCommand } from '@modules/pack/application/commands/update-pack/update-pack.command';
 import { UpdatePackService } from '@modules/pack/application/commands/update-pack/update-pack.service';
 import { Controller, Patch, Body, Logger, UseGuards, Param, Request } from '@nestjs/common';
-import { last } from 'rxjs';
 import { UpdatePackDto, UserRoles } from 'shared';
 
 @Controller('packs')

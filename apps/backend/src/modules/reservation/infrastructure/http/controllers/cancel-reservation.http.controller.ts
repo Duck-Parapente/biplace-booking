@@ -2,6 +2,8 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
+import { Roles } from '@libs/guards/roles.decorator';
+import { RolesGuard } from '@libs/guards/roles.guard';
 import { CancelReservationCommand } from '@modules/reservation/application/commands/cancel-reservation/cancel-reservation.command';
 import { CancelReservationService } from '@modules/reservation/application/commands/cancel-reservation/cancel-reservation.service';
 import { ReservationAuthorizationService } from '@modules/reservation/application/services/reservation-authorization.service';
@@ -22,9 +24,11 @@ import {
   Inject,
   BadRequestException,
 } from '@nestjs/common';
+import { UserRoles } from 'shared';
 
 @Controller('reservations')
-@UseGuards(JwtAuthGuard, MaintenanceModeGuard)
+@UseGuards(JwtAuthGuard, MaintenanceModeGuard, RolesGuard)
+@Roles(UserRoles.USER)
 export class CancelReservationHttpController {
   private readonly logger = new Logger(CancelReservationHttpController.name);
 

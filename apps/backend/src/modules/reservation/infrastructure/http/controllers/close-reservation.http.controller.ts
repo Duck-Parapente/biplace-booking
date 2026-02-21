@@ -3,6 +3,8 @@ import { UUID } from '@libs/ddd/uuid.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
+import { Roles } from '@libs/guards/roles.decorator';
+import { RolesGuard } from '@libs/guards/roles.guard';
 import { CloseReservationCommand } from '@modules/reservation/application/commands/close-reservation/close-reservation.command';
 import { CloseReservationService } from '@modules/reservation/application/commands/close-reservation/close-reservation.service';
 import { ReservationAuthorizationService } from '@modules/reservation/application/services/reservation-authorization.service';
@@ -24,10 +26,11 @@ import {
   BadRequestException,
   Body,
 } from '@nestjs/common';
-import { CloseReservationDto } from 'shared';
+import { CloseReservationDto, UserRoles } from 'shared';
 
 @Controller('reservations')
-@UseGuards(JwtAuthGuard, MaintenanceModeGuard)
+@UseGuards(JwtAuthGuard, MaintenanceModeGuard, RolesGuard)
+@Roles(UserRoles.USER)
 export class CloseReservationHttpController {
   private readonly logger = new Logger(CloseReservationHttpController.name);
 
