@@ -9,7 +9,7 @@ export class ReservationAuthorizationService {
   constructor(private readonly getPacksService: GetPacksService) {}
 
   async checkUserIsAllowedToCancelReservation(
-    { packId, userId: reservationUserId }: ReservationEntity,
+    { packId, userId: reservationUserId, startingDate }: ReservationEntity,
     userId: UUID,
     roles: UserRoles[],
   ): Promise<void> {
@@ -17,7 +17,8 @@ export class ReservationAuthorizationService {
       return;
     }
 
-    if (reservationUserId && reservationUserId.equals(userId)) {
+    const isInTheFuture = startingDate.value > new Date();
+    if (reservationUserId && reservationUserId.equals(userId) && isInTheFuture) {
       return;
     }
 
@@ -25,7 +26,7 @@ export class ReservationAuthorizationService {
   }
 
   async checkUserIsAllowedToCloseReservation(
-    { packId, userId: reservationUserId }: ReservationEntity,
+    { packId, userId: reservationUserId, startingDate }: ReservationEntity,
     userId: UUID,
     roles: UserRoles[],
   ): Promise<void> {
@@ -33,7 +34,8 @@ export class ReservationAuthorizationService {
       return;
     }
 
-    if (reservationUserId && reservationUserId.equals(userId)) {
+    const isInThePast = startingDate.value < new Date();
+    if (reservationUserId && reservationUserId.equals(userId) && isInThePast) {
       return;
     }
 
