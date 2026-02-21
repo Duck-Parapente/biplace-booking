@@ -130,7 +130,6 @@ const form = computed({
 const userSearch = ref('');
 
 // Derive selected entities from form IDs (cached by computed)
-const selectedPack = computed(() => packs.value.find((p) => p.id === form.value.packId) ?? null);
 const selectedUser = computed(() => users.value.find((u) => u.id === form.value.userId) ?? null);
 
 const filteredPacks = computed(() => {
