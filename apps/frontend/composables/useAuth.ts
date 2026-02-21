@@ -9,6 +9,8 @@ export interface UseAuth {
   isLoading: Ref<boolean>;
   getAccessToken: () => Promise<string>;
   hasRole: (role: UserRoles) => boolean;
+  isAdmin: ComputedRef<boolean>;
+  isAdminOrManager: ComputedRef<boolean>;
 }
 
 export const useAuth = (): UseAuth => {
@@ -51,5 +53,18 @@ export const useAuth = (): UseAuth => {
     }
   };
 
-  return { login, logout, isAuthenticated, user, isLoading, getAccessToken, hasRole };
+  const isAdmin = computed(() => hasRole(UserRoles.ADMIN));
+  const isAdminOrManager = computed(() => hasRole(UserRoles.ADMIN) || hasRole(UserRoles.MANAGER));
+
+  return {
+    login,
+    logout,
+    isAuthenticated,
+    user,
+    isLoading,
+    getAccessToken,
+    hasRole,
+    isAdmin,
+    isAdminOrManager,
+  };
 };

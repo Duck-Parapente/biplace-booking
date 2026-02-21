@@ -166,11 +166,11 @@ export const usePack = () => {
   const currentOperationConfig = computed(() => PACK_OPERATION_CONFIG[modalMode.value]);
 
   // Role-based pack filtering
-  const { hasRole } = useAuth();
+  const { isAdmin, hasRole } = useAuth();
   const { userData } = useUser();
 
   const filteredPacks = computed(() => {
-    if (hasRole(UserRoles.ADMIN)) {
+    if (isAdmin.value) {
       return packs.value;
     }
 
@@ -182,7 +182,7 @@ export const usePack = () => {
   });
 
   const isPackManagedByCurrentUser = (packId: string): boolean => {
-    if (hasRole(UserRoles.ADMIN)) return true;
+    if (isAdmin.value) return true;
 
     if (hasRole(UserRoles.MANAGER)) {
       const packDetails = packs.value.find((p) => p.id === packId);

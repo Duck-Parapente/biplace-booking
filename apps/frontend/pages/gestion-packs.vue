@@ -49,7 +49,7 @@
     <!-- Sticky Bottom Button -->
     <div
       class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg"
-      v-if="hasRole(UserRoles.ADMIN)"
+      v-if="isAdmin"
     >
       <div class="max-w-4xl mx-auto">
         <button
@@ -87,8 +87,6 @@
 </template>
 
 <script setup lang="ts">
-import { UserRoles } from 'shared';
-
 definePageMeta({
   middleware: ['auth', 'moderator'],
   pageTitle: 'Gestion des Packs',
@@ -110,7 +108,7 @@ const {
   submitPack,
   getPacks,
 } = usePack();
-const { hasRole } = useAuth();
+const { isAdmin } = useAuth();
 
 const { users, getUser, getUsers } = useUser();
 const { getUserDisplayName } = useUserHelpers();
