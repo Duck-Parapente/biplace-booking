@@ -12,7 +12,7 @@ import { UpdatePackDto, UserRoles } from 'shared';
 
 @Controller('packs')
 @UseGuards(JwtAuthGuard, RolesGuard, MaintenanceModeGuard)
-@Roles(UserRoles.ADMIN)
+@Roles(UserRoles.ADMIN, UserRoles.MANAGER) //TODO3 : use new getPacksService.isUserAllowedToManagePack to allow managers to update their own packs
 export class UpdatePackHttpController {
   private readonly logger = new Logger(UpdatePackHttpController.name);
 

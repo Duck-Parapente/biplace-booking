@@ -8,6 +8,10 @@ import { UserRoles } from 'shared';
 export class ReservationAuthorizationService {
   constructor(private readonly getPacksService: GetPacksService) {}
 
+  //TODO 1: change isPackOwnedByUser to isUserAllowedToManagePack and check manager role + ownership in the same method (with admin)
+  //TODO 2: split modify into cancel and close methods
+      // close = see canClose in ClosReservationModal
+      // cancel = PlanningDayCard rule
   async checkUserIsAllowedToModifyReservation(
     { packId, userId: reservationUserId }: ReservationEntity,
     userId: UUID,
