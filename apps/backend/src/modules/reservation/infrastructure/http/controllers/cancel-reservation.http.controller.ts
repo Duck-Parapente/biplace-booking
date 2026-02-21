@@ -51,7 +51,7 @@ export class CancelReservationHttpController {
       throw new NotFoundException(`Reservation not found: ${id}`);
     }
 
-    await this.reservationAuthorizationService.checkUserIsAllowedToModifyReservation(
+    await this.reservationAuthorizationService.checkUserIsAllowedToCancelReservation(
       reservation,
       userId,
       roles,

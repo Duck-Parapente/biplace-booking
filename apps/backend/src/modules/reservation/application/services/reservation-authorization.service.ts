@@ -8,20 +8,12 @@ import { UserRoles } from 'shared';
 export class ReservationAuthorizationService {
   constructor(private readonly getPacksService: GetPacksService) {}
 
-  //TODO 1: change isPackOwnedByUser to isUserAllowedToManagePack and check manager role + ownership in the same method (with admin)
-  //TODO 2: split modify into cancel and close methods
-      // close = see canClose in ClosReservationModal
-      // cancel = PlanningDayCard rule
-  async checkUserIsAllowedToModifyReservation(
+  async checkUserIsAllowedToCancelReservation(
     { packId, userId: reservationUserId }: ReservationEntity,
     userId: UUID,
     roles: UserRoles[],
   ): Promise<void> {
-    if (roles.includes(UserRoles.ADMIN)) {
-      return;
-    }
-
-    if (await this.getPacksService.isPackOwnedByUser(packId, userId)) {
+    if (await this.getPacksService.isUserAllowedToManagePack(packId, userId, roles)) {
       return;
     }
 
@@ -29,7 +21,23 @@ export class ReservationAuthorizationService {
       return;
     }
 
-    throw new ForbiddenException('User is not allowed to modify this reservation');
+    throw new ForbiddenException('User is not allowed to cancel this reservation');
+  }
+
+  async checkUserIsAllowedToCloseReservation(
+    { packId, userId: reservationUserId }: ReservationEntity,
+    userId: UUID,
+    roles: UserRoles[],
+  ): Promise<void> {
+    if (await this.getPacksService.isUserAllowedToManagePack(packId, userId, roles)) {
+      return;
+    }
+
+    if (reservationUserId && reservationUserId.equals(userId)) {
+      return;
+    }
+
+    throw new ForbiddenException('User is not allowed to close this reservation');
   }
 
   async checkUserIsAllowedToCreateReservation(
@@ -37,11 +45,7 @@ export class ReservationAuthorizationService {
     userId: UUID,
     roles: UserRoles[],
   ): Promise<void> {
-    if (roles.includes(UserRoles.ADMIN)) {
-      return;
-    }
-
-    if (await this.getPacksService.isPackOwnedByUser(packId, userId)) {
+    if (await this.getPacksService.isUserAllowedToManagePack(packId, userId, roles)) {
       return;
     }
 

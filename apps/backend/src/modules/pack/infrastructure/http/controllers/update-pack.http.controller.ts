@@ -7,25 +7,49 @@ import { Roles } from '@libs/guards/roles.decorator';
 import { RolesGuard } from '@libs/guards/roles.guard';
 import { UpdatePackCommand } from '@modules/pack/application/commands/update-pack/update-pack.command';
 import { UpdatePackService } from '@modules/pack/application/commands/update-pack/update-pack.service';
-import { Controller, Patch, Body, Logger, UseGuards, Param, Request } from '@nestjs/common';
+import { GetPacksService } from '@modules/pack/application/queries/get-packs/get-packs.service';
+import {
+  Controller,
+  Patch,
+  Body,
+  Logger,
+  UseGuards,
+  Param,
+  Request,
+  ForbiddenException,
+} from '@nestjs/common';
 import { UpdatePackDto, UserRoles } from 'shared';
 
 @Controller('packs')
 @UseGuards(JwtAuthGuard, RolesGuard, MaintenanceModeGuard)
-@Roles(UserRoles.ADMIN, UserRoles.MANAGER) //TODO3 : use new getPacksService.isUserAllowedToManagePack to allow managers to update their own packs
+@Roles(UserRoles.ADMIN, UserRoles.MANAGER)
 export class UpdatePackHttpController {
   private readonly logger = new Logger(UpdatePackHttpController.name);
 
-  constructor(private readonly updatePackService: UpdatePackService) {}
+  constructor(
+    private readonly updatePackService: UpdatePackService,
+    private readonly getPacksService: GetPacksService,
+  ) {}
 
   @Patch(':id')
   async updatePack(
     @Param('id') id: string,
     @Body() { ownerId, lastControlDate, lastRescueFoldingDate, ...otherUpdates }: UpdatePackDto,
-    @Request() { user: { id: userId } }: { user: AuthenticatedUser },
+    @Request() { user: { id: userId, roles } }: { user: AuthenticatedUser },
   ) {
+    const packId = new UUID({ uuid: id });
+    const isUserAllowedToManagePack = await this.getPacksService.isUserAllowedToManagePack(
+      packId,
+      userId,
+      roles,
+    );
+
+    if (!isUserAllowedToManagePack) {
+      throw new ForbiddenException('User is not allowed to update this pack');
+    }
+
     const command = new UpdatePackCommand({
-      packId: new UUID({ uuid: id }),
+      packId,
       updates: {
         ...(ownerId && { ownerId: new UUID({ uuid: ownerId }) }),
         ...(lastControlDate && {

@@ -3,6 +3,7 @@ import { PackEntity } from '@modules/pack/domain/pack.entity';
 import { PackRepositoryPort } from '@modules/pack/domain/ports/pack.repository.port';
 import { PACK_REPOSITORY } from '@modules/pack/pack.di-tokens';
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { UserRoles } from 'shared';
 
 @Injectable()
 export class GetPacksService {
@@ -17,7 +18,19 @@ export class GetPacksService {
     return this.packRepository.findAll();
   }
 
-  async isPackOwnedByUser(packId: UUID, userId: UUID): Promise<boolean> {
-    return this.packRepository.isPackOwnedByUser(packId, userId);
+  async isUserAllowedToManagePack(
+    packId: UUID,
+    userId: UUID,
+    roles: UserRoles[],
+  ): Promise<boolean> {
+    if (roles.includes(UserRoles.ADMIN)) {
+      return true;
+    }
+
+    if (roles.includes(UserRoles.MANAGER)) {
+      return this.packRepository.isPackOwnedByUser(packId, userId);
+    }
+
+    return false;
   }
 }
