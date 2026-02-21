@@ -28,8 +28,12 @@ export class UpdatePackHttpController {
       packId: new UUID({ uuid: id }),
       updates: {
         ...(ownerId && { ownerId: new UUID({ uuid: ownerId }) }),
-        ...(lastControlDate && { lastControlDate: DateValueObject.fromDateString(lastControlDate)}),
-        ...(lastRescueFoldingDate && { lastRescueFoldingDate: DateValueObject.fromDateString(lastRescueFoldingDate)}),
+        ...(lastControlDate && {
+          lastControlDate: DateValueObject.fromDateString(lastControlDate),
+        }),
+        ...(lastRescueFoldingDate && {
+          lastRescueFoldingDate: DateValueObject.fromDateString(lastRescueFoldingDate),
+        }),
         ...otherUpdates,
       },
       metadata: {
