@@ -12,13 +12,13 @@
       <div v-else class="flex-1 overflow-y-auto pb-20">
         <div class="rounded-lg shadow-sm">
           <!-- Pack List -->
-          <div v-if="packs.length === 0" class="text-gray-500 text-sm">
+          <div v-if="filteredPacks.length === 0" class="text-gray-500 text-sm">
             <p>Aucun pack créé pour le moment.</p>
           </div>
 
           <div v-else class="space-y-3">
             <div
-              v-for="pack in packs"
+              v-for="pack in filteredPacks"
               :key="pack.id"
               class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition"
             >
@@ -47,7 +47,10 @@
     </div>
 
     <!-- Sticky Bottom Button -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg">
+    <div
+      class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg"
+      v-if="hasRole(UserRoles.ADMIN)"
+    >
       <div class="max-w-4xl mx-auto">
         <button
           @click="openCreatePackModal"
@@ -84,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-import type { UserDto } from 'shared';
+import { UserRoles } from 'shared';
 
 definePageMeta({
   middleware: ['auth', 'moderator'],
@@ -107,26 +110,26 @@ const {
   submitPack,
   getPacks,
 } = usePack();
+const { hasRole } = useAuth();
 
-const { getUsers } = useUser();
+const { userData, users, getUser, getUsers } = useUser();
 const { getUserDisplayName } = useUserHelpers();
 
-const users = ref<UserDto[]>([]);
-const loadingUsers = ref(false);
-
-const loadUsers = async () => {
-  try {
-    loadingUsers.value = true;
-    users.value = await getUsers();
-  } catch (err) {
-    console.error('Failed to load users:', err);
-  } finally {
-    loadingUsers.value = false;
+const filteredPacks = computed(() => {
+  if (hasRole(UserRoles.ADMIN)) {
+    return packs.value;
   }
-};
+
+  if (hasRole(UserRoles.MANAGER) && userData.value) {
+    return packs.value.filter((pack) => pack.ownerId === userData.value?.id);
+  }
+
+  return [];
+});
 
 onMounted(() => {
   getPacks();
-  loadUsers();
+  getUser();
+  getUsers();
 });
 </script>
