@@ -75,14 +75,13 @@
 </template>
 
 <script setup lang="ts">
-import { UserRoles } from 'shared';
 import { computed, ref } from 'vue';
 
 defineOptions({
   inheritAttrs: false,
 });
 
-const { logout, isAuthenticated, hasRole } = useAuth();
+const { logout, isAuthenticated, isAdminOrManager } = useAuth();
 const { maintenanceMode } = usePublicConfig();
 const { pageTitle } = usePageTitle();
 const isMenuOpen = ref(false);
@@ -90,7 +89,7 @@ const isMenuOpen = ref(false);
 interface MenuItem {
   path: string;
   label: string;
-  requiresRole?: UserRoles[];
+  requiresAdminOrManager?: boolean;
 }
 
 interface MenuCategory {
@@ -122,7 +121,7 @@ const menuCategories: MenuCategory[] = [
       {
         path: '/gestion-packs',
         label: 'Gestion des Packs',
-        requiresRole: [UserRoles.ADMIN, UserRoles.MANAGER],
+        requiresAdminOrManager: true,
       },
     ],
   },
@@ -133,8 +132,8 @@ const visibleMenuCategories = computed(() => {
     .map((category) => ({
       ...category,
       items: category.items.filter((item) => {
-        if (!item.requiresRole) return true;
-        return item.requiresRole.some((role) => hasRole(role));
+        if (!item.requiresAdminOrManager) return true;
+        return isAdminOrManager.value;
       }),
     }))
     .filter((category) => category.items.length > 0);

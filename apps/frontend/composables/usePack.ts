@@ -169,28 +169,20 @@ export const usePack = () => {
   const { isAdmin, hasRole } = useAuth();
   const { userData } = useUser();
 
-  const filteredPacks = computed(() => {
-    if (isAdmin.value) {
-      return packs.value;
-    }
-
-    if (hasRole(UserRoles.MANAGER) && userData.value) {
-      return packs.value.filter((pack) => pack.ownerId === userData.value?.id);
-    }
-
-    return [];
-  });
-
   const isPackManagedByCurrentUser = (packId: string): boolean => {
     if (isAdmin.value) return true;
 
-    if (hasRole(UserRoles.MANAGER)) {
-      const packDetails = packs.value.find((p) => p.id === packId);
-      return packDetails?.ownerId === userData.value?.id;
+    if (hasRole(UserRoles.MANAGER) && userData.value) {
+      const pack = packs.value.find((p) => p.id === packId);
+      return pack?.ownerId === userData.value.id;
     }
 
     return false;
   };
+
+  const filteredPacks = computed(() => {
+    return packs.value.filter((pack) => isPackManagedByCurrentUser(pack.id));
+  });
 
   return {
     packs,
