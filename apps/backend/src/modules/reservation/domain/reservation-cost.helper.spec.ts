@@ -21,6 +21,14 @@ describe('calculateReservationCost', () => {
       expected: 24,
     },
     {
+      name: 'closed a reservation where the cost should be rounded up to the next hour',
+      eventType: ReservationCostEventType.CLOSE,
+      createdAt: '2026-02-16T19:00:06Z',
+      startingDate: '2026-02-22T00:00:00Z',
+      now: '2026-02-22T13:20:00Z',
+      expected: 148,
+    },
+    {
       name: 'cancelled a reservation created after the starting date',
       eventType: ReservationCostEventType.CANCEL,
       createdAt: '2024-03-05T15:00:00Z',
