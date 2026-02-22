@@ -17,7 +17,7 @@
       <!-- Pack Info -->
       <div
         v-if="selectedPackId && !loading && !error && packData"
-        class="relative mb-6 bg-blue-50 border-l-4 border-blue-600 p-4 rounded-lg shadow-md space-y-2 cursor-pointer"
+        class="relative mb-4 bg-blue-50 border-l-4 border-blue-600 p-4 rounded-lg shadow-md space-y-2 cursor-pointer"
         @click="showMoreInfo = !showMoreInfo"
       >
         <!-- Toggle icon (top right) -->
@@ -92,7 +92,7 @@
 
       <div v-else class="flex-1 flex flex-col min-h-0">
         <!-- Carnet de vol title with edit button -->
-        <div class="mb-4 flex items-center justify-between">
+        <div class="mb-2 flex items-center justify-between">
           <h2 class="text-xl font-semibold text-gray-800">Carnet de vol</h2>
           <div v-if="isAdmin" class="flex items-center gap-2">
             <label class="flex items-center gap-2 text-sm cursor-pointer">

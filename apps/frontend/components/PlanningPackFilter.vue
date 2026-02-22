@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-gray-50">
-    <div class="overflow-x-auto px-3 py-2 max-w-[800px] mx-auto">
+  <div class="bg-gray-50 p-2">
+    <div class="overflow-x-auto scrollbar-hide max-w-[800px] mx-auto">
       <div class="flex gap-1.5 min-w-min">
         <button
           v-for="pack in sortedPacks"

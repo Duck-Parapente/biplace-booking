@@ -18,7 +18,7 @@
 
       <div
         v-if="userData"
-        class="mb-4 p-4 bg-white shadow-sm border-l-4"
+        class="mb-4 p-3 bg-white shadow-sm border-l-4"
         :class="userStatus(userData).borderColor"
       >
         <div class="flex items-center justify-between gap-3">
@@ -37,7 +37,7 @@
 
       <div
         v-if="userData && userStatus(userData).status !== UserStatus.ACTIVE"
-        class="mb-4 p-4 bg-yellow-50 border-l-4 border-yellow-600 shadow-sm"
+        class="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-600 shadow-sm"
       >
         <p class="text-sm font-medium text-gray-900 mb-2">💳 Cotisation biplace 2026</p>
         <p class="text-xs text-gray-700 mb-3">
@@ -63,7 +63,7 @@
       </div>
 
       <div v-else-if="userData" class="flex-1 overflow-y-auto">
-        <form @submit.prevent="updateUser" class="space-y-3 bg-white p-4 rounded-lg shadow-sm">
+        <form @submit.prevent="updateUser" class="space-y-3 bg-white p-3 rounded-lg shadow-sm">
           <div>
             <label for="email" class="block text-sm font-medium text-secondary-600 mb-1">
               Email
