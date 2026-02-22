@@ -30,9 +30,13 @@ export class DateValueObject extends ValueObject<DateProps> {
     return this.value.getTime() < other.value.getTime();
   }
 
-  completeHoursBetween(other: DateValueObject): Integer {
+  roundedUpHoursBetween(other: DateValueObject, thresholdToCeilInMinutes: number = 0): Integer {
     const diffMs = other.value.getTime() - this.value.getTime();
-    return new Integer({ value: Math.floor(diffMs / (1000 * 60 * 60)) });
+    const diffHours = diffMs / (1000 * 60 * 60);
+    const fractionalPart = diffHours - Math.floor(diffHours);
+    const roundUp =
+      thresholdToCeilInMinutes > 0 && fractionalPart >= (60 - thresholdToCeilInMinutes) / 60;
+    return new Integer({ value: roundUp ? Math.ceil(diffHours) : Math.floor(diffHours) });
   }
 
   interpretAsParisTime(): DateValueObject {

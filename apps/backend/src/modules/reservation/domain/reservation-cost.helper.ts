@@ -1,6 +1,8 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { Integer } from '@libs/ddd/integer.value-object';
 
+const THRESHOLD_TO_CEIL_IN_MINUTES = 5;
+
 export enum ReservationCostEventType {
   CANCEL = 'cancel',
   CLOSE = 'close',
@@ -42,7 +44,7 @@ function calculateCancelCost(
   now: DateValueObject,
 ): Integer {
   const maxAllowedCost = calculateMaxAllowedCost(effectiveCreatedAt, startingDate, 0);
-  const hoursSinceCreation = createdAt.completeHoursBetween(now);
+  const hoursSinceCreation = createdAt.roundedUpHoursBetween(now, THRESHOLD_TO_CEIL_IN_MINUTES);
   return hoursSinceCreation.min(maxAllowedCost);
 }
 
@@ -51,8 +53,9 @@ function calculateMaxAllowedCost(
   startingDate: DateValueObject,
   minCost: number,
 ): Integer {
-  const hoursToEndOfStartingDay = effectiveCreatedAt.completeHoursBetween(
+  const hoursToEndOfStartingDay = effectiveCreatedAt.roundedUpHoursBetween(
     startingDate.startOfDayInUTC(1),
+    THRESHOLD_TO_CEIL_IN_MINUTES,
   );
   return hoursToEndOfStartingDay.max(new Integer({ value: minCost }));
 }
