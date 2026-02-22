@@ -1,7 +1,7 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { Integer } from '@libs/ddd/integer.value-object';
 
-const THRESHOLD_TO_CEIL_IN_MINUTES = 5;
+const THRESHOLD_TO_CEIL_IN_MINUTES = 55;
 
 export enum ReservationCostEventType {
   CANCEL = 'cancel',
