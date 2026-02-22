@@ -1,6 +1,6 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
-    <div class="flex-1 p-4 max-w-4xl mx-auto w-full flex flex-col min-h-0">
+    <div class="flex-1 p-3 max-w-4xl mx-auto w-full flex flex-col min-h-0">
       <div v-if="loading" class="text-center py-8">
         <p class="text-gray-500">Chargement...</p>
       </div>
@@ -29,7 +29,7 @@
             :class="{ 'cursor-pointer': isAdmin }"
             @click="isAdmin ? openEditModal(user) : null"
           >
-            <div class="p-4">
+            <div class="p-3">
               <!-- Header with name and contact icons -->
               <div class="flex items-start justify-between gap-3 mb-2">
                 <div class="flex-1 min-w-0">

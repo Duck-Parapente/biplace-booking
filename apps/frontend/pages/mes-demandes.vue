@@ -1,6 +1,6 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
-    <div class="flex-1 p-4 max-w-4xl mx-auto w-full flex flex-col min-h-0">
+    <div class="flex-1 p-3 max-w-4xl mx-auto w-full flex flex-col min-h-0">
       <ReservationWishFilters
         :available-statuses="availableStatuses"
         :selected-statuses="selectedStatuses"
@@ -11,7 +11,7 @@
         <p>Chargement...</p>
       </div>
 
-      <div v-else-if="error" class="bg-red-50 text-red-700 p-4 rounded-lg">
+      <div v-else-if="error" class="bg-red-50 text-red-700 p-3 rounded-lg">
         <p><strong>Erreur:</strong> {{ error }}</p>
       </div>
 

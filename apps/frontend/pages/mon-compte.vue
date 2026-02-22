@@ -1,6 +1,6 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
-    <div class="flex-1 p-4 max-w-xl mx-auto w-full flex flex-col min-h-0">
+    <div class="flex-1 p-3 max-w-xl mx-auto w-full flex flex-col min-h-0">
       <div
         v-if="!isProfileComplete(userData)"
         class="mb-6 p-3 bg-white border-l-4 border-blue-400 text-sm text-blue-800 shadow-sm"

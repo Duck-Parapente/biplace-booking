@@ -1,6 +1,6 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
-    <div class="flex-1 p-4 pb-8 max-w-xl mx-auto w-full flex flex-col gap-6 overflow-y-auto">
+    <div class="flex-1 p-3 pb-8 max-w-xl mx-auto w-full flex flex-col gap-6 overflow-y-auto">
       <div class="bg-white p-6 rounded-lg shadow-sm">
         <h1 class="text-xl font-semibold text-secondary-600 mb-4">💰 Participation passager</h1>
         <div class="text-sm text-gray-700 mb-6">

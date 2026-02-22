@@ -1,6 +1,6 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
-    <div class="flex-1 p-4 max-w-4xl mx-auto w-full flex flex-col min-h-0">
+    <div class="flex-1 p-3 max-w-4xl mx-auto w-full flex flex-col min-h-0">
       <!-- Pack Selection -->
       <select
         id="pack-select"
@@ -17,7 +17,7 @@
       <!-- Pack Info -->
       <div
         v-if="selectedPackId && !loading && !error && packData"
-        class="relative mb-4 bg-blue-50 border-l-4 border-blue-600 p-4 rounded-lg shadow-md space-y-2 cursor-pointer"
+        class="relative mb-4 bg-blue-50 border-l-4 border-blue-600 p-3 rounded-lg shadow-md space-y-2 cursor-pointer"
         @click="showMoreInfo = !showMoreInfo"
       >
         <!-- Toggle icon (top right) -->
@@ -82,7 +82,7 @@
         <p>Chargement...</p>
       </div>
 
-      <div v-else-if="error" class="bg-red-50 text-red-700 p-4 rounded-lg">
+      <div v-else-if="error" class="bg-red-50 text-red-700 p-3 rounded-lg">
         <p><strong>Erreur:</strong> {{ error }}</p>
       </div>
 
@@ -122,7 +122,7 @@
           <div class="rounded-lg shadow-sm">
             <div
               v-if="reservations.length === 0"
-              class="text-gray-500 text-sm bg-white p-4 rounded-lg"
+              class="text-gray-500 text-sm bg-white p-3 rounded-lg"
             >
               <p>Aucun vol enregistré pour ce pack.</p>
             </div>

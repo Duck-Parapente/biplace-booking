@@ -1,6 +1,6 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
-    <div class="flex-1 p-4 max-w-4xl mx-auto w-full flex flex-col min-h-0">
+    <div class="flex-1 p-3 max-w-4xl mx-auto w-full flex flex-col min-h-0">
       <div v-if="loading" class="text-gray-500">
         <p>Chargement...</p>
       </div>
@@ -20,21 +20,21 @@
             <div
               v-for="pack in filteredPacks"
               :key="pack.id"
-              class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition"
+              class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition"
             >
-              <div class="flex justify-between items-center">
-                <div class="flex-1">
-                  <h3 class="text-lg font-semibold text-secondary-600">{{ pack.label }}</h3>
-                  <div class="mt-2 text-sm text-gray-600">
-                    <p>
-                      <span class="font-medium">Responsable:</span>
-                      {{ getUserDisplayName(users.find((u) => u.id === pack.ownerId)) }}
-                    </p>
-                  </div>
+              <div class="bg-secondary-100 px-3 py-2">
+                <h3 class="text-lg font-semibold text-secondary-700">{{ pack.label }}</h3>
+              </div>
+              <div class="px-3 py-2 flex justify-between items-center">
+                <div class="text-sm text-gray-600">
+                  <p>
+                    <span class="font-medium">Responsable:</span>
+                    {{ getUserDisplayName(users.find((u) => u.id === pack.ownerId)) }}
+                  </p>
                 </div>
                 <button
                   @click="openEditPackModal(pack)"
-                  class="ml-4 p-2 bg-secondary-600 text-white hover:bg-secondary-700 transition rounded-lg"
+                  class="ml-4 px-4 py-2 text-gray-400 hover:text-secondary-600 hover:bg-secondary-100 transition rounded-lg"
                   title="Modifier"
                 >
                   <IconPencil class="w-5 h-5" />
