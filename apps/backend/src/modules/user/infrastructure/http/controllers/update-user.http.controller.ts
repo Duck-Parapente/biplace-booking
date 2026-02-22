@@ -20,6 +20,8 @@ export class UpdateUserHttpController {
   constructor(private readonly updateUserService: UpdateUserService) {}
 
   @Patch('/me')
+  @UseGuards(RolesGuard)
+  @Roles(UserRoles.USER)
   async updateUser(
     @Request() { user: { id: userId } }: { user: AuthenticatedUser },
     @Body() profile: UserProfileDto,

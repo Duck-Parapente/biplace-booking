@@ -101,7 +101,6 @@
 <script setup lang="ts">
 import { chain, filter } from 'lodash';
 import type { UserDto } from 'shared';
-import { UserRoles } from 'shared';
 
 definePageMeta({
   middleware: 'auth',
@@ -109,8 +108,7 @@ definePageMeta({
 });
 
 const { getUsers, isProfileComplete } = useUser();
-const { hasRole } = useAuth();
-const isAdmin = computed(() => hasRole(UserRoles.ADMIN));
+const { isAdmin } = useAuth();
 
 const users = ref<UserDto[]>([]);
 const loading = ref(true);

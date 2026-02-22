@@ -1,13 +1,16 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
+import { Roles } from '@libs/guards/roles.decorator';
+import { RolesGuard } from '@libs/guards/roles.guard';
 import { GetPlanningService } from '@modules/reservation/application/queries/get-planning/get-planning.service';
 import { Controller, Logger, Get, Query, UseGuards } from '@nestjs/common';
-import { PlanningDayDto } from 'shared';
+import { PlanningDayDto, UserRoles } from 'shared';
 
 import { mapPlanningDataToDto } from '../mappers/reservation.mapper';
 
 @Controller('planning')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(UserRoles.USER)
 export class GetPlanningHttpController {
   private readonly logger = new Logger(GetPlanningHttpController.name);
 

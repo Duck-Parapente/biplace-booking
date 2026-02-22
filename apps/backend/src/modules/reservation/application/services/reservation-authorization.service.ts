@@ -8,24 +8,38 @@ import { UserRoles } from 'shared';
 export class ReservationAuthorizationService {
   constructor(private readonly getPacksService: GetPacksService) {}
 
-  async checkUserIsAllowedToModifyReservation(
-    { packId, userId: reservationUserId }: ReservationEntity,
+  async checkUserIsAllowedToCancelReservation(
+    { packId, userId: reservationUserId, startingDate }: ReservationEntity,
     userId: UUID,
     roles: UserRoles[],
   ): Promise<void> {
-    if (roles.includes(UserRoles.ADMIN)) {
+    if (await this.getPacksService.isUserAllowedToManagePack(packId, userId, roles)) {
       return;
     }
 
-    if (await this.getPacksService.isPackOwnedByUser(packId, userId)) {
+    const isInTheFuture = startingDate.value > new Date();
+    if (reservationUserId && reservationUserId.equals(userId) && isInTheFuture) {
       return;
     }
 
-    if (reservationUserId && reservationUserId.equals(userId)) {
+    throw new ForbiddenException('User is not allowed to cancel this reservation');
+  }
+
+  async checkUserIsAllowedToCloseReservation(
+    { packId, userId: reservationUserId, startingDate }: ReservationEntity,
+    userId: UUID,
+    roles: UserRoles[],
+  ): Promise<void> {
+    if (await this.getPacksService.isUserAllowedToManagePack(packId, userId, roles)) {
       return;
     }
 
-    throw new ForbiddenException('User is not allowed to modify this reservation');
+    const isInThePast = startingDate.value < new Date();
+    if (reservationUserId && reservationUserId.equals(userId) && isInThePast) {
+      return;
+    }
+
+    throw new ForbiddenException('User is not allowed to close this reservation');
   }
 
   async checkUserIsAllowedToCreateReservation(
@@ -33,11 +47,7 @@ export class ReservationAuthorizationService {
     userId: UUID,
     roles: UserRoles[],
   ): Promise<void> {
-    if (roles.includes(UserRoles.ADMIN)) {
-      return;
-    }
-
-    if (await this.getPacksService.isPackOwnedByUser(packId, userId)) {
+    if (await this.getPacksService.isUserAllowedToManagePack(packId, userId, roles)) {
       return;
     }
 

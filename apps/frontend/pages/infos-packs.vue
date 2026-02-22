@@ -209,7 +209,7 @@
 </template>
 
 <script setup lang="ts">
-import { ReservationWishStatusDto, type PackReservationsDto, UserRoles } from 'shared';
+import { ReservationWishStatusDto, type PackReservationsDto } from 'shared';
 
 import type { AutocompleteOption } from '~/components/atoms/BaseAutocomplete.vue';
 import { formatDate } from '~/composables/useDateHelpers';
@@ -221,9 +221,7 @@ definePageMeta({
 
 const { callApi } = useApi();
 const { packs, getPacks } = usePack();
-const { hasRole } = useAuth();
-
-const isAdmin = computed(() => hasRole(UserRoles.ADMIN));
+const { isAdmin } = useAuth();
 
 const selectedPackId = ref<string | null>(null);
 const packData = ref<PackReservationsDto | null>(null);

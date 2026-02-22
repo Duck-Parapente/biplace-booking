@@ -97,7 +97,6 @@
 
 <script setup lang="ts">
 import type { CreateReservationDto } from 'shared';
-import { UserRoles } from 'shared';
 
 interface Props {
   show: boolean;
@@ -116,9 +115,8 @@ const emit = defineEmits<Emits>();
 // Composables
 const { getUserDisplayName } = useUserHelpers();
 const { submitReservation, submitting, submitError, submitSuccess } = useReservationForm();
-const { hasRole } = useAuth();
-const { users, userData } = useUser();
-const { packs } = usePack();
+const { users } = useUser();
+const { filteredPacks } = usePack();
 
 // Form state with computed setter for two-way binding
 const form = computed({
@@ -130,20 +128,7 @@ const form = computed({
 const userSearch = ref('');
 
 // Derive selected entities from form IDs (cached by computed)
-const selectedPack = computed(() => packs.value.find((p) => p.id === form.value.packId) ?? null);
 const selectedUser = computed(() => users.value.find((u) => u.id === form.value.userId) ?? null);
-
-const filteredPacks = computed(() => {
-  if (hasRole(UserRoles.ADMIN)) {
-    return packs.value;
-  }
-
-  if (hasRole(UserRoles.MANAGER) && userData.value) {
-    return packs.value.filter((pack) => pack.ownerId === userData.value?.id);
-  }
-
-  return [];
-});
 
 // Autocomplete options
 const packOptions = computed(() => {

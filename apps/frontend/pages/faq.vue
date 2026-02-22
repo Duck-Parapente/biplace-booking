@@ -945,8 +945,9 @@
         >
           <p>
             Pas de chance ! Tu n'agis pas dans le cadre de d'une activité professionnelle, tu ne
-            peux pas encaisser d'argent pour te payer la Rolex de Rihana. Par contre, tu peux suggérer à ton
-            passager de faire un don au club et ainsi le dédommager de l'usure du matériel.
+            peux pas encaisser d'argent pour te payer la Rolex de Rihana. Par contre, tu peux
+            suggérer à ton passager de faire un don au club et ainsi le dédommager de l'usure du
+            matériel.
             <br />
             A titre d'information, un vol coûte environ 20€ de frais d'achat et d'entretien.<br />
             <a :href="participationLink" class="text-blue-600 underline"

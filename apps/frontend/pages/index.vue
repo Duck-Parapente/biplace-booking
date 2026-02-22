@@ -45,7 +45,6 @@
 
 <script setup lang="ts">
 import type { CreateReservationDto } from 'shared';
-import { UserRoles } from 'shared';
 import { ref, computed, watch, onMounted } from 'vue';
 
 import IconPlus from '~/components/icons/IconPlus.vue';
@@ -58,17 +57,12 @@ definePageMeta({
 
 const { packs, planningDays, fetchPlanning } = usePlanning();
 const { getUsers, getUser } = useUser();
-const { hasRole } = useAuth();
+const { isAdminOrManager } = useAuth();
 const { getPacks } = usePack();
 const { resetSubmissionState } = useReservationForm();
 
 const currentWeekStart = ref<Date>(getMonday(new Date()));
 const week = computed(() => getWeekDays(currentWeekStart.value));
-
-// Check if user has Admin or Manager role
-const isAdminOrManager = computed(() => {
-  return hasRole(UserRoles.ADMIN) || hasRole(UserRoles.MANAGER);
-});
 
 // Create Reservation Modal
 const showCreateReservationModal = ref(false);
