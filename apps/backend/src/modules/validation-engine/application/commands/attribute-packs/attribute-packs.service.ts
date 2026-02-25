@@ -1,3 +1,4 @@
+import { algorithmConfig } from '@libs/config/algorithm.constants';
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
@@ -77,12 +78,12 @@ export class AttributePacksService {
   } {
     const currentHourInParis = DateValueObject.currentHourInParis();
 
-    if (currentHourInParis < 20) {
+    if (currentHourInParis < algorithmConfig.runHourParis) {
       // Before 20h Paris time: run from J+0 to J+5
-      return { startDayOffset: 0, endDayOffset: 5 };
+      return algorithmConfig.beforeRunHour;
     } else {
       // After 20h Paris time: run from J+1 to J+6
-      return { startDayOffset: 1, endDayOffset: 6 };
+      return algorithmConfig.afterRunHour;
     }
   }
 

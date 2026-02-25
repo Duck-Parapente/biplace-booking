@@ -1,9 +1,8 @@
+import { algorithmConfig } from '@libs/config/algorithm.constants';
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { Integer } from '@libs/ddd/integer.value-object';
 
 const THRESHOLD_TO_CEIL_IN_MINUTES = 55;
-const ALGO_RUN_HOUR_PARIS = 20;
-const ALGO_WINDOW_DAYS = 6;
 
 export enum ReservationCostEventType {
   CANCEL = 'cancel',
@@ -78,9 +77,9 @@ function getWindowEntryTime(
 ): DateValueObject | null {
   // Calculate when this starting date FIRST entered the 6-day window
   // It enters as J+6, which is 6 days before the starting date at 20:00 Paris
-  const sixDaysBefore = startingDate.startOfDayInUTC(-ALGO_WINDOW_DAYS);
+  const sixDaysBefore = startingDate.startOfDayInUTC(-algorithmConfig.windowDays);
   const dateAtAlgoRun = new Date(sixDaysBefore.value);
-  dateAtAlgoRun.setUTCHours(ALGO_RUN_HOUR_PARIS, 0, 0, 0);
+  dateAtAlgoRun.setUTCHours(algorithmConfig.runHourParis, 0, 0, 0);
   const firstEntryTime = DateValueObject.fromDate(dateAtAlgoRun).convertFromParisTime();
 
   // If we're cancelling before the reservation entered the window, no cost
