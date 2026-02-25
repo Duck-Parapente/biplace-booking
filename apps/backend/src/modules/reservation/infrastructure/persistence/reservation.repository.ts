@@ -226,7 +226,8 @@ export class ReservationRepository implements ReservationRepositoryPort {
         startingDate: DateValueObject.fromDate(reservation.startingDate),
         endingDate: DateValueObject.fromDate(reservation.endingDate),
         userName: reservation.user
-          ? `${reservation.user.firstName ?? ''} ${reservation.user.lastName ?? ''}`.trim()
+          ? `${reservation.user.firstName ?? ''} ${reservation.user.lastName ?? ''}`.trim() ||
+            reservation.user.email
           : undefined,
         status: mapStatus(reservation.status),
         manualCost:
