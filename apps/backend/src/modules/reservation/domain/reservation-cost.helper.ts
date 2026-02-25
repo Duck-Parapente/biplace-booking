@@ -79,7 +79,7 @@ function getWindowEntryTime(
   // It enters as J+6, which is 6 days before the starting date at 20:00 Paris
   const sixDaysBefore = startingDate.startOfDayInUTC(-algorithmConfig.windowDays);
   const dateAtAlgoRun = new Date(sixDaysBefore.value);
-  dateAtAlgoRun.setUTCHours(algorithmConfig.runHourParis, 0, 0, 0);
+  dateAtAlgoRun.setUTCHours(algorithmConfig.newDateOpeningHourParis, 0, 0, 0);
   const firstEntryTime = DateValueObject.fromDate(dateAtAlgoRun).convertFromParisTime();
 
   // If we're cancelling before the reservation entered the window, no cost

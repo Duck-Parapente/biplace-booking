@@ -78,12 +78,12 @@ export class AttributePacksService {
   } {
     const currentHourInParis = DateValueObject.currentHourInParis();
 
-    if (currentHourInParis < algorithmConfig.runHourParis) {
+    if (currentHourInParis < algorithmConfig.newDateOpeningHourParis) {
       // Before 20h Paris time: run from J+0 to J+5
-      return algorithmConfig.beforeRunHour;
+      return algorithmConfig.beforeNewDateOpeningHour;
     } else {
       // After 20h Paris time: run from J+1 to J+6
-      return algorithmConfig.afterRunHour;
+      return algorithmConfig.afterNewDateOpeningHour;
     }
   }
 
