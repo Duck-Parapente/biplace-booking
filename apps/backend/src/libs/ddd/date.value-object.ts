@@ -46,6 +46,14 @@ export class DateValueObject extends ValueObject<DateProps> {
     return DateValueObject.fromDate(adjustedTime);
   }
 
+  convertFromParisTime(): DateValueObject {
+    // Get the Paris timezone offset in milliseconds for this date
+    const parisOffset = getTimezoneOffset('Europe/Paris', this.value);
+    // Subtract the offset to convert Paris local time back to UTC
+    const utcTime = new Date(this.value.getTime() - parisOffset);
+    return DateValueObject.fromDate(utcTime);
+  }
+
   static now(): DateValueObject {
     return DateValueObject.fromDate(new Date());
   }
