@@ -52,8 +52,7 @@ function calculateCancelCost(
   }
 
   // Determine when to start counting: creation time or window entry time
-  const costStartTime =
-    createdAt.value.getTime() >= windowEntryTime.value.getTime() ? createdAt : windowEntryTime;
+  const costStartTime = windowEntryTime.isBefore(createdAt) ? createdAt : windowEntryTime;
 
   const maxAllowedCost = calculateMaxAllowedCost(effectiveCreatedAt, startingDate, 0);
   const hoursSinceStart = costStartTime.roundedUpHoursBetween(now, THRESHOLD_TO_CEIL_IN_MINUTES);
@@ -85,7 +84,7 @@ function getWindowEntryTime(
   const firstEntryTime = DateValueObject.fromDate(dateAtAlgoRun).convertFromParisTime();
 
   // If we're cancelling before the reservation entered the window, no cost
-  if (now.value.getTime() < firstEntryTime.value.getTime()) {
+  if (now.isBefore(firstEntryTime)) {
     return null;
   }
 
