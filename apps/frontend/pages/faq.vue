@@ -8,8 +8,33 @@
         </p>
       </div>
 
-      <div class="bg-white rounded-lg shadow-sm">
-        <FaqItem question="1. J'aimais bien la Duck sheet">
+      <!-- Search Bar -->
+      <div class="bg-white rounded-lg shadow-sm p-4 m-4">
+        <div class="relative">
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Rechercher dans la FAQ..."
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          <div v-if="searchQuery" class="absolute right-3 top-2.5">
+            <button @click="searchQuery = ''" class="text-gray-400 hover:text-gray-600 transition">
+              ✕
+            </button>
+          </div>
+        </div>
+        <p v-if="searchQuery && filteredCount === 0" class="mt-2 text-sm text-gray-500">
+          Aucun résultat trouvé pour "{{ searchQuery }}"
+        </p>
+        <p v-else-if="searchQuery && filteredCount > 0" class="mt-2 text-sm text-gray-500">
+          {{ filteredCount }} résultat{{ filteredCount > 1 ? 's' : '' }} trouvé{{
+            filteredCount > 1 ? 's' : ''
+          }}
+        </p>
+      </div>
+
+      <div ref="faqContainer" class="bg-white rounded-lg shadow-sm">
+        <FaqItem question="1. J'aimais bien la Duck sheet" v-show="isItemVisible(0)">
           <p class="mb-3">
             Nous aussi mais cette bonne vieille sheet avait un certain nombre de limites que cette
             application vise à combler :
@@ -21,7 +46,7 @@
           </ul>
         </FaqItem>
 
-        <FaqItem question="2. Qu'est-ce qu'un Coin ?">
+        <FaqItem question="2. Qu'est-ce qu'un Coin ?" v-show="isItemVisible(1)">
           <p>
             C'est le petit nom donné aux points qui sont attribués aux pilotes pour déterminer leur
             priorité. <strong>Plus tu as de Coins, moins tu es prioritaire.</strong> Lis la suite
@@ -31,6 +56,7 @@
 
         <FaqItem
           question="3. Quelle est la différence entre une demande de réservation et une réservation ?"
+          v-show="isItemVisible(2)"
         >
           <p class="mb-3">
             <strong class="text-gray-900">Une demande de réservation</strong> est ton souhait de
@@ -49,7 +75,10 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="4. Comment se déroule le processus de réservation ?">
+        <FaqItem
+          question="4. Comment se déroule le processus de réservation ?"
+          v-show="isItemVisible(3)"
+        >
           <div class="space-y-4">
             <div class="border-l-4 border-blue-500 pl-4 py-2">
               <h4 class="font-semibold text-gray-900 mb-1">📅 Faire tes demandes</h4>
@@ -110,7 +139,10 @@
           </div>
         </FaqItem>
 
-        <FaqItem question="5. Comment fonctionne l'algorithme d'attribution des packs ?">
+        <FaqItem
+          question="5. Comment fonctionne l'algorithme d'attribution des packs ?"
+          v-show="isItemVisible(4)"
+        >
           <p class="mb-4">Deux critères sont utilisés :</p>
           <ol class="list-decimal pl-6 mb-4 space-y-3">
             <li>
@@ -308,7 +340,7 @@
           </div>
         </FaqItem>
 
-        <FaqItem question="6. Comment sont comptés les Coins ?">
+        <FaqItem question="6. Comment sont comptés les Coins ?" v-show="isItemVisible(5)">
           <p class="mb-4">
             Un certain nombre de Coins est attribué à toute demande de réservation validée. Lors du
             process d'attribution, l'application utilise la somme des Coins de toutes les
@@ -771,7 +803,10 @@
           </div>
         </FaqItem>
 
-        <FaqItem question="7. Que se passe-t-il si ma demande n'est pas validée ?">
+        <FaqItem
+          question="7. Que se passe-t-il si ma demande n'est pas validée ?"
+          v-show="isItemVisible(6)"
+        >
           <p class="mb-3">
             Si ta demande n'est pas validée à J-6, cela signifie que d'autres pilotes avec un nombre
             de Coins plus faible ont été prioritaires sur les matériels disponibles.
@@ -787,7 +822,10 @@
           <p class="mt-3">En tout état de cause aucun Coin n'est crédité.</p>
         </FaqItem>
 
-        <FaqItem question="8. Puis-je annuler ma réservation après validation ?">
+        <FaqItem
+          question="8. Puis-je annuler ma réservation après validation ?"
+          v-show="isItemVisible(7)"
+        >
           <p class="mb-3">
             Bien sûr. Note cependant que ton nombre de Coins sera quand même augmenté en fonction du
             temps écoulé entre la validation et l'annulation (Voir paragraphe "Comment sont comptés
@@ -800,11 +838,14 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="9. J'ai une réservation, chez qui dois-je récupérer le matériel ?">
+        <FaqItem
+          question="9. J'ai une réservation, chez qui dois-je récupérer le matériel ?"
+          v-show="isItemVisible(8)"
+        >
           <p class="mb-3">Tu trouveras cette information avec le menu planning. Bon vol !</p>
         </FaqItem>
 
-        <FaqItem question="10. Il a plu, je n'ai pas pu voler">
+        <FaqItem question="10. Il a plu, je n'ai pas pu voler" v-show="isItemVisible(9)">
           <p class="mb-3">
             Désolé mais les Coins seront quand même comptés. Outre le fait que personne ne peut
             vérifier tes dires, tu as eu le matériel pour toi alors qu'un autre pilote aurait
@@ -822,7 +863,7 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="11. Comment maximiser mes chances ?">
+        <FaqItem question="11. Comment maximiser mes chances ?" v-show="isItemVisible(10)">
           <ul class="list-disc pl-6 space-y-3">
             <li>
               <strong>Postule à tous les biplaces qui peuvent te convenir</strong> plutôt qu'à un
@@ -872,6 +913,7 @@
 
         <FaqItem
           question="12. J'ai besoin d'un bi pour une formation, un examen ou une journée club"
+          v-show="isItemVisible(11)"
         >
           <p class="mb-3">
             Ces événements sont prioritaires par rapport au système de Coins. Contacte un
@@ -884,7 +926,10 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="13. Je veux réserver plusieurs jours consécutifs">
+        <FaqItem
+          question="13. Je veux réserver plusieurs jours consécutifs"
+          v-show="isItemVisible(12)"
+        >
           <p class="mb-3">
             Aujourd'hui, et probablement pour encore quelques temps, la notion de "réserver
             plusieurs jours" n'existe pas. Tu fais autant de demandes que de jours désirés et chaque
@@ -916,7 +961,10 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="14. Comment consulter mon score Coins actuel ?">
+        <FaqItem
+          question="14. Comment consulter mon score Coins actuel ?"
+          v-show="isItemVisible(13)"
+        >
           <p>
             Ton score Coins est visible sur ta
             <NuxtLink to="/mon-compte" class="text-blue-600 underline">page de profil</NuxtLink>. Il
@@ -924,7 +972,10 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="15. Pourquoi ne puis-je pas déposer de demande de réservation ?">
+        <FaqItem
+          question="15. Pourquoi ne puis-je pas déposer de demande de réservation ?"
+          v-show="isItemVisible(14)"
+        >
           <p>
             Soit tu n'as pas cloturé une de tes réservations précédentes, soit ton compte est
             désactivé parce que tu n'as pas payé ton supplément de cotisation biplace annuel. <br />
@@ -942,6 +993,7 @@
 
         <FaqItem
           question="16. Mon passager a surkiffé le vol et veut absolument donner de l'argent. Que dois-je faire ?"
+          v-show="isItemVisible(15)"
         >
           <p>
             Pas de chance ! Tu n'agis pas dans le cadre de d'une activité professionnelle, tu ne
@@ -958,17 +1010,15 @@
             Tu peux également lui faire flasher ce QR code pour faire un don directement depuis son
             téléphone. Il faut battre le fer tant qu'il est chaud !<br />
 
-            <center>
-              <img
-                src="~/assets/png/qr-participation.png"
-                alt="QR Code participation biplace"
-                class="w-64 h-auto mx-auto my-4 rounded-lg"
-              />
-            </center>
+            <img
+              src="~/assets/png/qr-participation.png"
+              alt="QR Code participation biplace"
+              class="w-64 h-auto mx-auto my-4 rounded-lg"
+            />
           </p>
         </FaqItem>
 
-        <FaqItem question="17. Où sont les administrateurs ?">
+        <FaqItem question="17. Où sont les administrateurs ?" v-show="isItemVisible(16)">
           <p class="mb-3">
             Tu peux les contacter à travers le
             <a
@@ -987,7 +1037,10 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="18. Qui puis-je contacter si j'ai d'autres questions ?">
+        <FaqItem
+          question="18. Qui puis-je contacter si j'ai d'autres questions ?"
+          v-show="isItemVisible(17)"
+        >
           <p class="mb-3">Pour toute question supplémentaire ou problème technique, tu peux :</p>
           <ul class="list-disc pl-6 space-y-2">
             <li>
@@ -1032,4 +1085,54 @@ definePageMeta({
 
 const config = useRuntimeConfig();
 const { adhesionLink, participationLink } = useHelloAssoLinks();
+
+// Search functionality
+const searchQuery = ref('');
+const faqContainer = ref<HTMLElement>();
+
+const isItemVisible = (index: number) => {
+  if (!searchQuery.value.trim()) {
+    return true;
+  }
+
+  if (!faqContainer.value) {
+    return true;
+  }
+
+  // Get the specific FaqItem component
+  const faqItemElement = faqContainer.value.children[index] as any;
+  if (!faqItemElement) {
+    return true;
+  }
+
+  const query = searchQuery.value.toLowerCase();
+
+  // Get text content from the FaqItem's question and content
+  const questionEl = faqItemElement.querySelector('h3');
+  const contentEl = faqItemElement.querySelector('.p-4');
+
+  const questionText = questionEl?.textContent?.toLowerCase() || '';
+  const contentText = contentEl?.textContent?.toLowerCase() || '';
+  const searchableText = questionText + ' ' + contentText;
+
+  return searchableText.includes(query);
+};
+
+const filteredCount = computed(() => {
+  if (!faqContainer.value) {
+    return 0;
+  }
+
+  if (!searchQuery.value.trim()) {
+    return faqContainer.value.children.length;
+  }
+
+  let count = 0;
+  for (let i = 0; i < faqContainer.value.children.length; i++) {
+    if (isItemVisible(i)) {
+      count++;
+    }
+  }
+  return count;
+});
 </script>
