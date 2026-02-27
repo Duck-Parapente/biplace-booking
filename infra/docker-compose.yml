@@ -55,6 +55,37 @@ services:
           memory: ${BACKEND_MEMORY_RESERVATION}
           cpus: ${BACKEND_CPU_RESERVATION}
 
+  # Metabase Analytics
+  metabase:
+    image: metabase/metabase:v0.49.3
+    container_name: bb-${ENV}-metabase
+    environment:
+      MB_SITE_URL: ${METABASE_SITE_URL:-https://metabase-staging.duckparapente.fr}
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: ${METABASE_DB:-metabase}
+      MB_DB_PORT: 5432
+      MB_DB_HOST: postgres
+      JAVA_OPTS: -Xmx1g
+    networks:
+      - internal
+      - proxy
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    profiles: ['staging', 'prod']
+    volumes:
+      - metabase_data:/metabase-data
+    expose:
+      - '3000'
+    deploy:
+      resources:
+        limits:
+          memory: ${METABASE_MEMORY_LIMIT:-1536M}
+          cpus: ${METABASE_CPU_LIMIT:-1.0}
+        reservations:
+          memory: ${METABASE_MEMORY_RESERVATION:-768M}
+          cpus: ${METABASE_CPU_RESERVATION:-0.5}
+
   # Caddy Reverse Proxy (only for staging/prod)
   caddy:
     image: caddy:2
@@ -86,6 +117,7 @@ volumes:
   postgres_data:
   caddy_data:
   caddy_config:
+  metabase_data:
 
 networks:
   internal:
