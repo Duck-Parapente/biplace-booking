@@ -246,7 +246,8 @@ export class ReservationRepository implements ReservationRepositoryPort {
       })),
       totalFlightsCount,
       totalFlightsMinutes,
-      ownerFullName: [pack.owner.firstName, pack.owner.lastName].join(' ').trim(),
+      ownerFullName:
+        [pack.owner.firstName, pack.owner.lastName].join(' ').trim() || pack.owner.email,
       description: pack.description ?? null,
       details: pack.details ?? null,
       lastControlDate: pack.lastControlDate ? DateValueObject.fromDate(pack.lastControlDate) : null,
