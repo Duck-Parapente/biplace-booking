@@ -34,7 +34,12 @@
               <div class="flex items-start justify-between gap-3 mb-2">
                 <div class="flex-1 min-w-0">
                   <h3 class="text-lg font-semibold text-gray-900 truncate">
-                    {{ user.firstName }} {{ user.lastName }}
+                    <template v-if="user.firstName || user.lastName">
+                      {{ user.firstName }} {{ user.lastName }}
+                    </template>
+                    <template v-else>
+                      {{ user.email }}
+                    </template>
                   </h3>
                   <p v-if="user.address" class="text-sm text-gray-500 mt-0.5 truncate">
                     📍 {{ user.address }}
@@ -107,7 +112,7 @@ definePageMeta({
   pageTitle: 'Contacts',
 });
 
-const { getUsers, isProfileComplete } = useUser();
+const { getUsers } = useUser();
 const { isAdmin } = useAuth();
 
 const users = ref<UserDto[]>([]);
@@ -136,8 +141,7 @@ const { getDisplay: userStatus } = useUserStatus();
 const loadUsers = async () => {
   const response = await getUsers();
   users.value = chain(response)
-    .filter(isProfileComplete)
-    .orderBy([(user) => user.lastName || ''], ['asc'])
+    .orderBy([(user) => user.lastName || user.email || ''], ['asc'])
     .value();
 };
 
