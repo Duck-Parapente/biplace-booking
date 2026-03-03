@@ -60,6 +60,7 @@ const { getUsers, getUser } = useUser();
 const { isAdminOrManager } = useAuth();
 const { getPacks } = usePack();
 const { resetSubmissionState } = useReservationForm();
+const { selectedPacks, togglePack, setSelectedPacks } = useSelectedPacks();
 
 const currentWeekStart = ref<Date>(getMonday(new Date()));
 const week = computed(() => getWeekDays(currentWeekStart.value));
@@ -88,16 +89,13 @@ const refreshPlanning = async () => {
   await fetchPlanning(week.value.monday, week.value.sunday);
 };
 
-// Selected packs filter
-const selectedPacks = ref<Set<string>>(new Set());
-
 // Fetch planning when week changes
 watch(currentWeekStart, async () => {
   await refreshPlanning();
 
   // Select all packs by default if none selected
   if (selectedPacks.value.size === 0) {
-    selectedPacks.value = new Set(packs.value.map((p) => p.packId));
+    setSelectedPacks(packs.value.map((p) => p.packId));
   }
 });
 
@@ -107,7 +105,7 @@ onMounted(async () => {
 
   // Select all packs by default if none selected
   if (selectedPacks.value.size === 0) {
-    selectedPacks.value = new Set(packs.value.map((p) => p.packId));
+    setSelectedPacks(packs.value.map((p) => p.packId));
   }
 });
 
@@ -124,11 +122,6 @@ const filteredPlanningDays = computed(() => {
 });
 
 const expandedDays = ref<Set<string>>(new Set());
-
-const togglePack = (packId: string) => {
-  const set = selectedPacks.value;
-  set.has(packId) ? set.delete(packId) : set.add(packId);
-};
 
 const toggleDay = (dateKey: string) => {
   const set = expandedDays.value;
