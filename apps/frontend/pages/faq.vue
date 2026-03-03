@@ -1164,8 +1164,10 @@ const isItemVisible = (index: number) => {
     return true;
   }
 
-  // Get the specific FaqItem component
-  const faqItemElement = faqContainer.value.children[index] as any;
+  // Get only FaqItem elements using data attribute
+  const faqItems = Array.from(faqContainer.value.querySelectorAll('[data-faq-item]'));
+
+  const faqItemElement = faqItems[index] as HTMLElement;
   if (!faqItemElement) {
     return true;
   }
@@ -1188,12 +1190,14 @@ const filteredCount = computed(() => {
     return 0;
   }
 
+  const faqItems = faqContainer.value.querySelectorAll('[data-faq-item]');
+
   if (!searchQuery.value.trim()) {
-    return faqContainer.value.children.length;
+    return faqItems.length;
   }
 
   let count = 0;
-  for (let i = 0; i < faqContainer.value.children.length; i++) {
+  for (let i = 0; i < faqItems.length; i++) {
     if (isItemVisible(i)) {
       count++;
     }
