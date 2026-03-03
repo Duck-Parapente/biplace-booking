@@ -18,7 +18,29 @@
             placeholder="Rechercher un contact..."
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white shadow-sm"
           />
-          <p class="text-sm text-gray-500 mt-2">{{ filteredUsers.length }} contact(s)</p>
+
+          <!-- Contact count and Sort Controls -->
+          <div class="flex items-center justify-between mt-2">
+            <p class="text-sm text-gray-500">{{ filteredUsers.length }} contact(s)</p>
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-gray-600">Trier par:</span>
+              <select
+                v-model="sortBy"
+                class="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white text-sm"
+                @change="loadUsers"
+              >
+                <option value="firstName">Prénom</option>
+                <option value="lastName">Nom</option>
+              </select>
+              <button
+                @click="toggleSortOrder"
+                class="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white text-sm transition-colors"
+                :title="sortOrder === 'asc' ? 'Croissant' : 'Décroissant'"
+              >
+                {{ sortOrder === 'asc' ? '↑' : '↓' }}
+              </button>
+            </div>
+          </div>
         </div>
 
         <div v-if="filteredUsers.length > 0" class="space-y-3 flex-1 min-h-0 overflow-y-auto pb-4">
@@ -119,6 +141,8 @@ const users = ref<UserDto[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const searchQuery = ref('');
+const sortBy = ref<'firstName' | 'lastName'>('lastName');
+const sortOrder = ref<'asc' | 'desc'>('asc');
 const editModalOpen = ref(false);
 const selectedUser = ref<UserDto | null>(null);
 
@@ -141,8 +165,13 @@ const { getDisplay: userStatus } = useUserStatus();
 const loadUsers = async () => {
   const response = await getUsers();
   users.value = chain(response)
-    .orderBy([(user) => user.lastName || user.email || ''], ['asc'])
+    .orderBy([(user) => (user[sortBy.value] || user.email || '').toLowerCase()], [sortOrder.value])
     .value();
+};
+
+const toggleSortOrder = async () => {
+  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+  await loadUsers();
 };
 
 const openEditModal = (user: UserDto) => {
