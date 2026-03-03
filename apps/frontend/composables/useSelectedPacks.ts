@@ -1,51 +1,33 @@
 const STORAGE_KEY = 'selectedPacks';
 
 export const useSelectedPacks = () => {
-  const selectedPacks = useState<Set<string>>('selectedPacks', () => {
-    // Load from localStorage on client-side only
-    if (process.client) {
-      try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-          const packIds = JSON.parse(stored) as string[];
-          return new Set(packIds);
-        }
-      } catch (error) {
-        console.error('Failed to load selected packs from localStorage:', error);
-      }
-    }
-    return new Set<string>();
+  // Use generic localStorage composable for storing array of pack IDs
+  const { value: packIdsArray, setValue: setPackIds } = useLocalStorage<string[]>(STORAGE_KEY, []);
+
+  // Convert to Set for easier manipulation
+  const selectedPacks = computed<Set<string>>({
+    get: () => new Set(packIdsArray.value),
+    set: (newSet) => {
+      setPackIds(Array.from(newSet));
+    },
   });
 
-  const saveToLocalStorage = () => {
-    if (process.client) {
-      try {
-        const packIds = Array.from(selectedPacks.value);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(packIds));
-      } catch (error) {
-        console.error('Failed to save selected packs to localStorage:', error);
-      }
-    }
-  };
-
   const togglePack = (packId: string) => {
-    const set = selectedPacks.value;
-    if (set.has(packId)) {
-      set.delete(packId);
+    const currentSet = new Set(packIdsArray.value);
+    if (currentSet.has(packId)) {
+      currentSet.delete(packId);
     } else {
-      set.add(packId);
+      currentSet.add(packId);
     }
-    saveToLocalStorage();
+    setPackIds(Array.from(currentSet));
   };
 
   const setSelectedPacks = (packIds: string[]) => {
-    selectedPacks.value = new Set(packIds);
-    saveToLocalStorage();
+    setPackIds(packIds);
   };
 
   const clearSelectedPacks = () => {
-    selectedPacks.value.clear();
-    saveToLocalStorage();
+    setPackIds([]);
   };
 
   return {
