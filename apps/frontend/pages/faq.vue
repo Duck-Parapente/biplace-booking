@@ -61,12 +61,13 @@
               <a href="https://drive.google.com/file/d/1GSdB7lp_31N4jSX0m7lzxjC3m1EXwyn0/view">
                 charte</a
               >
-              au président du duck.
+              au président du Duck.
             </li>
+            <li>Avoir envoyé ton chèque de caution au président du Duck.</li>
           </ul>
           <p class="mb-3">
             Si tu coches toutes les cases, tu peux demander la création de ton compte sur le channel
-            discord biplace-reservations.
+            discord biplace-reservations. Prévois un peu de délai.
           </p>
         </FaqItem>
 
