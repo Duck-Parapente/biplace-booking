@@ -6,6 +6,9 @@
     >
       Se connecter
     </button>
+    <NuxtLink to="/faq" class="mt-6 text-primary-400 hover:text-primary-300 transition underline">
+      Besoin d'aide ? Consultez notre FAQ
+    </NuxtLink>
   </main>
 </template>
 <script setup lang="ts">
