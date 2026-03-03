@@ -48,7 +48,7 @@
 
         <FaqItem
           question="2. Quels sont les pré-requis pour obtenir un compte sur l'application ?"
-          v-show="isItemVisible(0)"
+          v-show="isItemVisible(1)"
         >
           <ul class="list-disc pl-6 space-y-2">
             <li>Être à jour de ta cotisation au duck parapente.</li>
@@ -73,7 +73,7 @@
 
         <FaqItem
           question="3. Un admin m'a créé un compte mais je n'ai pas le mot de passe..."
-          v-show="isItemVisible(0)"
+          v-show="isItemVisible(2)"
         >
           <p class="mb-3">
             Depuis la page d'accueil, clique sur bouton "Se connecter" puis sur "mot de passe
@@ -81,7 +81,7 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="4. Qu'est-ce qu'un Coin ?" v-show="isItemVisible(1)">
+        <FaqItem question="4. Qu'est-ce qu'un Coin ?" v-show="isItemVisible(3)">
           <p>
             C'est le petit nom donné aux points qui sont attribués aux pilotes pour déterminer leur
             priorité. <strong>Plus tu as de Coins, moins tu es prioritaire.</strong> Lis la suite
@@ -91,7 +91,7 @@
 
         <FaqItem
           question="5. Quelle est la différence entre une demande de réservation et une réservation ?"
-          v-show="isItemVisible(2)"
+          v-show="isItemVisible(4)"
         >
           <p class="mb-3">
             <strong class="text-gray-900">Une demande de réservation</strong> est ton souhait de
@@ -112,7 +112,7 @@
 
         <FaqItem
           question="6. Comment se déroule le processus de réservation ?"
-          v-show="isItemVisible(3)"
+          v-show="isItemVisible(5)"
         >
           <div class="space-y-4">
             <div class="border-l-4 border-blue-500 pl-4 py-2">
@@ -176,7 +176,7 @@
 
         <FaqItem
           question="7. Comment fonctionne l'algorithme d'attribution des packs ?"
-          v-show="isItemVisible(4)"
+          v-show="isItemVisible(6)"
         >
           <p class="mb-4">Deux critères sont utilisés :</p>
           <ol class="list-decimal pl-6 mb-4 space-y-3">
@@ -375,7 +375,7 @@
           </div>
         </FaqItem>
 
-        <FaqItem question="8. Comment sont comptés les Coins ?" v-show="isItemVisible(5)">
+        <FaqItem question="8. Comment sont comptés les Coins ?" v-show="isItemVisible(7)">
           <p class="mb-4">
             Un certain nombre de Coins est attribué à toute demande de réservation validée. Lors du
             process d'attribution, l'application utilise la somme des Coins de toutes les
@@ -840,7 +840,7 @@
 
         <FaqItem
           question="9. Que se passe-t-il si ma demande n'est pas validée ?"
-          v-show="isItemVisible(6)"
+          v-show="isItemVisible(8)"
         >
           <p class="mb-3">
             Si ta demande n'est pas validée à J-6, cela signifie que d'autres pilotes avec un nombre
@@ -859,7 +859,7 @@
 
         <FaqItem
           question="10. Puis-je annuler ma réservation après validation ?"
-          v-show="isItemVisible(7)"
+          v-show="isItemVisible(9)"
         >
           <p class="mb-3">
             Bien sûr. Note cependant que ton nombre de Coins sera quand même augmenté en fonction du
@@ -875,12 +875,12 @@
 
         <FaqItem
           question="11. J'ai une réservation, chez qui dois-je récupérer le matériel ?"
-          v-show="isItemVisible(8)"
+          v-show="isItemVisible(10)"
         >
           <p class="mb-3">Tu trouveras cette information avec le menu planning. Bon vol !</p>
         </FaqItem>
 
-        <FaqItem question="12. Il a plu, je n'ai pas pu voler" v-show="isItemVisible(9)">
+        <FaqItem question="12. Il a plu, je n'ai pas pu voler" v-show="isItemVisible(11)">
           <p class="mb-3">
             Désolé mais les Coins seront quand même comptés. Outre le fait que personne ne peut
             vérifier tes dires, tu as eu le matériel pour toi alors qu'un autre pilote aurait
@@ -898,7 +898,7 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="13. Comment maximiser mes chances ?" v-show="isItemVisible(10)">
+        <FaqItem question="13. Comment maximiser mes chances ?" v-show="isItemVisible(12)">
           <ul class="list-disc pl-6 space-y-3">
             <li>
               <strong>Postule à tous les biplaces qui peuvent te convenir</strong> plutôt qu'à un
@@ -948,7 +948,7 @@
 
         <FaqItem
           question="14. J'ai besoin d'un bi pour une formation, un examen ou une journée club"
-          v-show="isItemVisible(11)"
+          v-show="isItemVisible(13)"
         >
           <p class="mb-3">
             Ces événements sont prioritaires par rapport au système de Coins. Contacte un
@@ -963,7 +963,7 @@
 
         <FaqItem
           question="15. Je veux réserver plusieurs jours consécutifs"
-          v-show="isItemVisible(12)"
+          v-show="isItemVisible(14)"
         >
           <p class="mb-3">
             Aujourd'hui, et probablement pour encore quelques temps, la notion de "réserver
@@ -998,7 +998,7 @@
 
         <FaqItem
           question="16. Comment consulter mon score Coins actuel ?"
-          v-show="isItemVisible(13)"
+          v-show="isItemVisible(15)"
         >
           <p>
             Ton score Coins est visible sur ta
@@ -1009,7 +1009,7 @@
 
         <FaqItem
           question="17. Pourquoi ne puis-je pas déposer de demande de réservation ?"
-          v-show="isItemVisible(14)"
+          v-show="isItemVisible(16)"
         >
           <p>
             Soit tu n'as pas cloturé une de tes réservations précédentes, soit ton compte est
@@ -1028,7 +1028,7 @@
 
         <FaqItem
           question="18. Mon passager a surkiffé le vol et veut absolument donner de l'argent. Que dois-je faire ?"
-          v-show="isItemVisible(15)"
+          v-show="isItemVisible(17)"
         >
           <p>
             Pas de chance ! Tu n'agis pas dans le cadre de d'une activité professionnelle, tu ne
@@ -1053,7 +1053,7 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="19. Où sont les administrateurs ?" v-show="isItemVisible(16)">
+        <FaqItem question="19. Où sont les administrateurs ?" v-show="isItemVisible(18)">
           <p class="mb-3">
             Tu peux les contacter à travers le
             <a
@@ -1074,7 +1074,7 @@
 
         <FaqItem
           question="20. Qui puis-je contacter si j'ai d'autres questions ?"
-          v-show="isItemVisible(17)"
+          v-show="isItemVisible(19)"
         >
           <p class="mb-3">Pour toute question supplémentaire ou problème technique, tu peux :</p>
           <ul class="list-disc pl-6 space-y-2">
