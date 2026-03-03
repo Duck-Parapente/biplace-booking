@@ -34,6 +34,11 @@
       </div>
 
       <div ref="faqContainer" class="bg-white rounded-lg shadow-sm">
+        <!-- Introduction -->
+        <div class="px-6 pt-6 pb-3">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Introduction</h2>
+        </div>
+
         <FaqItem question="1. J'aimais bien la Duck sheet" v-show="isItemVisible(0)">
           <p class="mb-3">
             Nous aussi mais cette bonne vieille sheet avait un certain nombre de limites que cette
@@ -85,6 +90,13 @@
           </p>
         </FaqItem>
 
+        <!-- Comprendre le système des Coins -->
+        <div class="px-6 pt-6 pb-3">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            Comprendre le système des Coins
+          </h2>
+        </div>
+
         <FaqItem question="4. Qu'est-ce qu'un Coin ?" v-show="isItemVisible(3)">
           <p>
             C'est le petit nom donné aux points qui sont attribués aux pilotes pour déterminer leur
@@ -92,6 +104,13 @@
             pour comprendre comment ils sont calculés.
           </p>
         </FaqItem>
+
+        <!-- Le processus de réservation -->
+        <div class="px-6 pt-6 pb-3">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            Le processus de réservation
+          </h2>
+        </div>
 
         <FaqItem
           question="5. Quelle est la différence entre une demande de réservation et une réservation ?"
@@ -884,6 +903,13 @@
           <p class="mb-3">Tu trouveras cette information avec le menu planning. Bon vol !</p>
         </FaqItem>
 
+        <!-- Stratégies et conseils -->
+        <div class="px-6 pt-6 pb-3">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            Stratégies et conseils
+          </h2>
+        </div>
+
         <FaqItem question="12. Il a plu, je n'ai pas pu voler" v-show="isItemVisible(11)">
           <p class="mb-3">
             Désolé mais les Coins seront quand même comptés. Outre le fait que personne ne peut
@@ -949,6 +975,13 @@
             </li>
           </ul>
         </FaqItem>
+
+        <!-- Cas particuliers -->
+        <div class="px-6 pt-6 pb-3">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            Cas particuliers
+          </h2>
+        </div>
 
         <FaqItem
           question="14. J'ai besoin d'un bi pour une formation, un examen ou une journée club"
@@ -1051,6 +1084,13 @@
             />
           </p>
         </FaqItem>
+
+        <!-- Aide et contact -->
+        <div class="px-6 pt-6 pb-3">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            Aide et contact
+          </h2>
+        </div>
 
         <FaqItem question="19. Où sont les administrateurs ?" v-show="isItemVisible(18)">
           <p class="mb-3">
