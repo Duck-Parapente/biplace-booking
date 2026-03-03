@@ -168,6 +168,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     this.addEvent(
       new ReservationUpdatedDomainEvent({
         aggregateId: this.id,
+        userId: this.props.userId,
         metadata,
         manualCost,
       }),

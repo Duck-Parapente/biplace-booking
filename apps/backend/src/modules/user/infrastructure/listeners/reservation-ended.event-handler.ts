@@ -1,13 +1,21 @@
 import { ReservationCancelledDomainEvent } from '@modules/reservation/domain/events/reservation-cancelled.domain-event';
 import { ReservationClosedDomainEvent } from '@modules/reservation/domain/events/reservation-closed.domain-event';
+import { ReservationUpdatedDomainEvent } from '@modules/reservation/domain/events/reservation-updated.domain-event';
 import { UserRepositoryPort } from '@modules/user/domain/ports/user.repository.port';
 import { USER_REPOSITORY } from '@modules/user/user.di-tokens';
 import { Inject, Logger } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 
-@EventsHandler(ReservationCancelledDomainEvent, ReservationClosedDomainEvent)
+@EventsHandler(
+  ReservationCancelledDomainEvent,
+  ReservationClosedDomainEvent,
+  ReservationUpdatedDomainEvent,
+)
 export class ReservationEndedEventHandler
-  implements IEventHandler<ReservationCancelledDomainEvent | ReservationClosedDomainEvent>
+  implements
+    IEventHandler<
+      ReservationCancelledDomainEvent | ReservationClosedDomainEvent | ReservationUpdatedDomainEvent
+    >
 {
   private readonly logger = new Logger(ReservationEndedEventHandler.name);
 
@@ -21,7 +29,10 @@ export class ReservationEndedEventHandler
     id,
     userId,
     metadata,
-  }: ReservationCancelledDomainEvent | ReservationClosedDomainEvent): Promise<void> {
+  }:
+    | ReservationCancelledDomainEvent
+    | ReservationClosedDomainEvent
+    | ReservationUpdatedDomainEvent): Promise<void> {
     try {
       this.logger.log({
         message: `Handling event ${id.uuid} for reservation ${aggregateId.uuid}`,
@@ -32,7 +43,7 @@ export class ReservationEndedEventHandler
       });
 
       if (!userId) {
-        this.logger.warn(`No userId provided in ReservationCancelledDomainEvent ${id.uuid}`);
+        this.logger.warn(`No userId provided in event ${id.uuid}`);
         return;
       }
 
