@@ -223,7 +223,7 @@ const { callApi } = useApi();
 const { packs, getPacks } = usePack();
 const { isAdmin } = useAuth();
 
-const selectedPackId = ref<string | null>(null);
+const { value: selectedPackId } = useLocalStorage<string | null>('selectedPackId', null);
 const packData = ref<PackReservationsDto | null>(null);
 const loading = ref<boolean>(false);
 const error = ref<string | null>(null);
@@ -295,7 +295,12 @@ const handleCostUpdated = async () => {
   }
 };
 
-onMounted(() => {
-  getPacks();
+onMounted(async () => {
+  await getPacks();
+
+  // Restore previously selected pack if any
+  if (selectedPackId.value) {
+    await fetchPackReservations(selectedPackId.value);
+  }
 });
 </script>

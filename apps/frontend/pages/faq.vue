@@ -34,6 +34,11 @@
       </div>
 
       <div ref="faqContainer" class="bg-white rounded-lg shadow-sm">
+        <!-- Introduction -->
+        <div class="px-6 pt-6 pb-3">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Introduction</h2>
+        </div>
+
         <FaqItem question="1. J'aimais bien la Duck sheet" v-show="isItemVisible(0)">
           <p class="mb-3">
             Nous aussi mais cette bonne vieille sheet avait un certain nombre de limites que cette
@@ -58,7 +63,7 @@
             </li>
             <li>
               Avoir LU ET signé et envoyé la
-              <a href="https://drive.google.com/file/d/1GSdB7lp_31N4jSX0m7lzxjC3m1EXwyn0/view">
+              <a class="underline" href="https://drive.google.com/file/d/1GSdB7lp_31N4jSX0m7lzxjC3m1EXwyn0/view">
                 convention de réservation</a
               >
               au président du Duck.
@@ -68,7 +73,8 @@
           <br />
           <p class="mb-3">
             Si tu coches toutes les cases, tu peux demander la création de ton compte sur le channel
-            discord biplace-reservations. Prévois un peu de délai.
+            <a class="underline" :href="biplaceReservationsChannel">discord biplace-reservations</a
+            >. Prévois un peu de délai.
           </p>
         </FaqItem>
 
@@ -82,6 +88,13 @@
           </p>
         </FaqItem>
 
+        <!-- Comprendre le système des Coins -->
+        <div class="px-6 pt-6 pb-3">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            Comprendre le système des Coins
+          </h2>
+        </div>
+
         <FaqItem question="4. Qu'est-ce qu'un Coin ?" v-show="isItemVisible(3)">
           <p>
             C'est le petit nom donné aux points qui sont attribués aux pilotes pour déterminer leur
@@ -89,6 +102,13 @@
             pour comprendre comment ils sont calculés.
           </p>
         </FaqItem>
+
+        <!-- Le processus de réservation -->
+        <div class="px-6 pt-6 pb-3">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            Le processus de réservation
+          </h2>
+        </div>
 
         <FaqItem
           question="5. Quelle est la différence entre une demande de réservation et une réservation ?"
@@ -881,6 +901,13 @@
           <p class="mb-3">Tu trouveras cette information avec le menu planning. Bon vol !</p>
         </FaqItem>
 
+        <!-- Stratégies et conseils -->
+        <div class="px-6 pt-6 pb-3">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            Stratégies et conseils
+          </h2>
+        </div>
+
         <FaqItem question="12. Il a plu, je n'ai pas pu voler" v-show="isItemVisible(11)">
           <p class="mb-3">
             Désolé mais les Coins seront quand même comptés. Outre le fait que personne ne peut
@@ -946,6 +973,13 @@
             </li>
           </ul>
         </FaqItem>
+
+        <!-- Cas particuliers -->
+        <div class="px-6 pt-6 pb-3">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            Cas particuliers
+          </h2>
+        </div>
 
         <FaqItem
           question="14. J'ai besoin d'un bi pour une formation, un examen ou une journée club"
@@ -1017,12 +1051,7 @@
             désactivé parce que tu n'as pas payé ton supplément de cotisation biplace annuel. <br />
             <a :href="adhesionLink" class="text-blue-600 underline">Tu peux le faire avec ce lien</a
             >. Dès que c'est fait, envoie un message
-            <a
-              href="https://discord.com/channels/943454897431523349/1471134092497129492"
-              class="text-blue-600 underline"
-            >
-              sur discord</a
-            >
+            <a :href="biplaceReservationsChannel" class="text-blue-600 underline"> sur discord</a>
             afin qu'admin réactive ton compte.
           </p>
         </FaqItem>
@@ -1054,15 +1083,17 @@
           </p>
         </FaqItem>
 
+        <!-- Aide et contact -->
+        <div class="px-6 pt-6 pb-3">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            Aide et contact
+          </h2>
+        </div>
+
         <FaqItem question="19. Où sont les administrateurs ?" v-show="isItemVisible(18)">
           <p class="mb-3">
             Tu peux les contacter à travers le
-            <a
-              href="https://discord.com/channels/943454897431523349/1471134092497129492"
-              class="text-blue-600 underline"
-            >
-              Discord
-            </a>
+            <a :href="biplaceReservationsChannel" class="text-blue-600 underline"> Discord </a>
             ou
             <a :href="`mailto:${config.public.supportEmail}`" class="text-blue-600 underline">
               en envoyant un email au support </a
@@ -1086,12 +1117,7 @@
             </li>
             <li>
               Envoyer un message sur
-              <a
-                href="https://discord.com/channels/943454897431523349/1471134092497129492"
-                class="text-blue-600 underline"
-              >
-                Discord
-              </a>
+              <a :href="biplaceReservationsChannel" class="text-blue-600 underline"> Discord </a>
             </li>
             <li>
               <a :href="`mailto:${config.public.supportEmail}`" class="text-blue-600 underline">
@@ -1121,6 +1147,7 @@ definePageMeta({
 
 const config = useRuntimeConfig();
 const { adhesionLink, participationLink } = useHelloAssoLinks();
+const { biplaceReservationsChannel } = useDiscordLinks();
 
 // Search functionality
 const searchQuery = ref('');
@@ -1135,8 +1162,10 @@ const isItemVisible = (index: number) => {
     return true;
   }
 
-  // Get the specific FaqItem component
-  const faqItemElement = faqContainer.value.children[index] as any;
+  // Get only FaqItem elements using data attribute
+  const faqItems = Array.from(faqContainer.value.querySelectorAll('[data-faq-item]'));
+
+  const faqItemElement = faqItems[index] as HTMLElement;
   if (!faqItemElement) {
     return true;
   }
@@ -1159,12 +1188,14 @@ const filteredCount = computed(() => {
     return 0;
   }
 
+  const faqItems = faqContainer.value.querySelectorAll('[data-faq-item]');
+
   if (!searchQuery.value.trim()) {
-    return faqContainer.value.children.length;
+    return faqItems.length;
   }
 
   let count = 0;
-  for (let i = 0; i < faqContainer.value.children.length; i++) {
+  for (let i = 0; i < faqItems.length; i++) {
     if (isItemVisible(i)) {
       count++;
     }

@@ -141,8 +141,8 @@ const users = ref<UserDto[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const searchQuery = ref('');
-const sortBy = ref<'firstName' | 'lastName'>('lastName');
-const sortOrder = ref<'asc' | 'desc'>('asc');
+const { value: sortBy } = useLocalStorage<'firstName' | 'lastName'>('contacts_sortBy', 'lastName');
+const { value: sortOrder } = useLocalStorage<'asc' | 'desc'>('contacts_sortOrder', 'asc');
 const editModalOpen = ref(false);
 const selectedUser = ref<UserDto | null>(null);
 
