@@ -65,6 +65,7 @@
             </li>
             <li>Avoir envoyé ton chèque de caution au président du Duck.</li>
           </ul>
+          <br />
           <p class="mb-3">
             Si tu coches toutes les cases, tu peux demander la création de ton compte sur le channel
             discord biplace-reservations. Prévois un peu de délai.
@@ -76,8 +77,8 @@
           v-show="isItemVisible(0)"
         >
           <p class="mb-3">
-            Depuis la page d'accueil, clique sur bouton "Se connecter" puis sur "mot de passe
-            oublié? ". Renseigne ton email et suis la procédure.
+            Depuis la page d'accueil, clique sur bouton "Se connecter" puis sur "mot de passe oublié
+            ? ". Renseigne ton email et suis la procédure.
           </p>
         </FaqItem>
 
