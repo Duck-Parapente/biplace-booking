@@ -333,7 +333,7 @@
                 <strong
                   >Résultat : Une demande plus prioritaire n'est pas satisfaite parce que tous les
                   packs souhaités sont déjà attribués à un (des) pilote(s) encore plus prioritaires.
-                  Le pilote B aurait pu augumenter ses chances en postulant à plus de packs.</strong
+                  Le pilote 2 aurait pu augumenter ses chances en postulant à plus de packs.</strong
                 >
               </p>
             </div>
