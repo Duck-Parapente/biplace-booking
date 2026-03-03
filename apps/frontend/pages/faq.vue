@@ -58,16 +58,20 @@
             </li>
             <li>
               Avoir LU ET signé et envoyé la
-              <a href="https://drive.google.com/file/d/1GSdB7lp_31N4jSX0m7lzxjC3m1EXwyn0/view">
+              <a
+                class="underline"
+                href="https://drive.google.com/file/d/1GSdB7lp_31N4jSX0m7lzxjC3m1EXwyn0/view"
+              >
                 charte</a
               >
               au président du Duck.
             </li>
             <li>Avoir envoyé ton chèque de caution au président du Duck.</li>
           </ul>
-          <p class="mb-3">
+          <p class="mt-3">
             Si tu coches toutes les cases, tu peux demander la création de ton compte sur le channel
-            discord biplace-reservations. Prévois un peu de délai.
+            <a class="underline" :href="biplaceReservationsChannel">discord biplace-reservations</a
+            >. Prévois un peu de délai.
           </p>
         </FaqItem>
 
@@ -1016,12 +1020,7 @@
             désactivé parce que tu n'as pas payé ton supplément de cotisation biplace annuel. <br />
             <a :href="adhesionLink" class="text-blue-600 underline">Tu peux le faire avec ce lien</a
             >. Dès que c'est fait, envoie un message
-            <a
-              href="https://discord.com/channels/943454897431523349/1471134092497129492"
-              class="text-blue-600 underline"
-            >
-              sur discord</a
-            >
+            <a :href="biplaceReservationsChannel" class="text-blue-600 underline"> sur discord</a>
             afin qu'admin réactive ton compte.
           </p>
         </FaqItem>
@@ -1056,12 +1055,7 @@
         <FaqItem question="19. Où sont les administrateurs ?" v-show="isItemVisible(18)">
           <p class="mb-3">
             Tu peux les contacter à travers le
-            <a
-              href="https://discord.com/channels/943454897431523349/1471134092497129492"
-              class="text-blue-600 underline"
-            >
-              Discord
-            </a>
+            <a :href="biplaceReservationsChannel" class="text-blue-600 underline"> Discord </a>
             ou
             <a :href="`mailto:${config.public.supportEmail}`" class="text-blue-600 underline">
               en envoyant un email au support </a
@@ -1085,12 +1079,7 @@
             </li>
             <li>
               Envoyer un message sur
-              <a
-                href="https://discord.com/channels/943454897431523349/1471134092497129492"
-                class="text-blue-600 underline"
-              >
-                Discord
-              </a>
+              <a :href="biplaceReservationsChannel" class="text-blue-600 underline"> Discord </a>
             </li>
             <li>
               <a :href="`mailto:${config.public.supportEmail}`" class="text-blue-600 underline">
@@ -1120,6 +1109,7 @@ definePageMeta({
 
 const config = useRuntimeConfig();
 const { adhesionLink, participationLink } = useHelloAssoLinks();
+const { biplaceReservationsChannel } = useDiscordLinks();
 
 // Search functionality
 const searchQuery = ref('');
