@@ -1206,8 +1206,8 @@ const filteredCount = computed(() => {
 </script>
 
 <style scoped>
-a,
-:deep(a) {
+/* Only style links within FAQ items, not standalone NuxtLinks like the back button */
+:deep([data-faq-item] a) {
   @apply text-blue-600 underline hover:text-blue-800;
 }
 </style>
