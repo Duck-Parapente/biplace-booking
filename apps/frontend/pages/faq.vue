@@ -55,6 +55,7 @@
           question="2. Quels sont les pré-requis pour obtenir un compte sur l'application ?"
           v-show="isItemVisible(1)"
         >
+          <p hidden>charte</p>
           <ul class="list-disc pl-6 space-y-2">
             <li>Être à jour de ta cotisation au duck parapente.</li>
             <li>
