@@ -63,7 +63,10 @@
             </li>
             <li>
               Avoir LU ET signé et envoyé la
-              <a class="underline" href="https://drive.google.com/file/d/1GSdB7lp_31N4jSX0m7lzxjC3m1EXwyn0/view">
+              <a
+                class="underline"
+                href="https://drive.google.com/file/d/1GSdB7lp_31N4jSX0m7lzxjC3m1EXwyn0/view"
+              >
                 convention de réservation</a
               >
               au président du Duck.
@@ -984,7 +987,8 @@
         <FaqItem
           question="14. J'ai besoin d'un bi pour une formation, un examen ou une journée club"
           v-show="isItemVisible(13)"
-        >
+          ><p hidden>qbi préfo pré-formation qualification</p>
+
           <p class="mb-3">
             Ces événements sont prioritaires par rapport au système de Coins. Contacte un
             administrateur pour qu'il valide ta demande de réservation avant J-6. Le plus tôt
