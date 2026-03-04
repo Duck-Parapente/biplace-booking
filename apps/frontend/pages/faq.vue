@@ -76,8 +76,8 @@
           <br />
           <p class="mb-3">
             Si tu coches toutes les cases, tu peux demander la création de ton compte sur le channel
-            <a class="underline" :href="biplaceReservationsChannel">discord biplace-reservations</a
-            >. Prévois un peu de délai.
+            <a :href="biplaceReservationsChannel">discord biplace-reservations</a>. Prévois un peu
+            de délai.
           </p>
         </FaqItem>
 
@@ -1041,8 +1041,7 @@
         >
           <p>
             Ton score Coins est visible sur ta
-            <NuxtLink to="/mon-compte" class="text-blue-600 underline">page de profil</NuxtLink>. Il
-            est mis à jour en temps réel.
+            <NuxtLink to="/mon-compte">page de profil</NuxtLink>. Il est mis à jour en temps réel.
           </p>
         </FaqItem>
 
@@ -1053,9 +1052,9 @@
           <p>
             Soit tu n'as pas cloturé une de tes réservations précédentes, soit ton compte est
             désactivé parce que tu n'as pas payé ton supplément de cotisation biplace annuel. <br />
-            <a :href="adhesionLink" class="text-blue-600 underline">Tu peux le faire avec ce lien</a
-            >. Dès que c'est fait, envoie un message
-            <a :href="biplaceReservationsChannel" class="text-blue-600 underline"> sur discord</a>
+            <a :href="adhesionLink">Tu peux le faire avec ce lien</a>. Dès que c'est fait, envoie un
+            message
+            <a :href="biplaceReservationsChannel"> sur discord</a>
             afin qu'admin réactive ton compte.
           </p>
         </FaqItem>
@@ -1071,9 +1070,7 @@
             matériel.
             <br />
             A titre d'information, un vol coûte environ 20€ de frais d'achat et d'entretien.<br />
-            <a :href="participationLink" class="text-blue-600 underline"
-              >Ceci est le lien de l'helloasso du club.</a
-            >
+            <a :href="participationLink">Ceci est le lien de l'helloasso du club.</a>
           </p>
           <p>
             Tu peux également lui faire flasher ce QR code pour faire un don directement depuis son
@@ -1097,12 +1094,10 @@
         <FaqItem question="19. Où sont les administrateurs ?" v-show="isItemVisible(18)">
           <p class="mb-3">
             Tu peux les contacter à travers le
-            <a :href="biplaceReservationsChannel" class="text-blue-600 underline"> Discord </a>
+            <a :href="biplaceReservationsChannel"> Discord </a>
             ou
-            <a :href="`mailto:${config.public.supportEmail}`" class="text-blue-600 underline">
-              en envoyant un email au support </a
-            >. Il seront très heureux de résoudre tes problèmes liés à la réservation des
-            biplaces.<br />
+            <a :href="`mailto:${config.public.supportEmail}`"> en envoyant un email au support </a>.
+            Il seront très heureux de résoudre tes problèmes liés à la réservation des biplaces.<br />
             Pense néanmoins, qu'ils ont des métiers et qu'ils vont parfois voler. Si tu t'y prends
             une heure avant ta deadline, tu risques de rester avec ton problème.
           </p>
@@ -1116,17 +1111,15 @@
           <ul class="list-disc pl-6 space-y-2">
             <li>
               Consulter la page
-              <NuxtLink to="/contacts" class="text-blue-600 underline">Contacts</NuxtLink>
+              <NuxtLink to="/contacts">Contacts</NuxtLink>
               pour joindre un autre canard.
             </li>
             <li>
               Envoyer un message sur
-              <a :href="biplaceReservationsChannel" class="text-blue-600 underline"> Discord </a>
+              <a :href="biplaceReservationsChannel"> Discord </a>
             </li>
             <li>
-              <a :href="`mailto:${config.public.supportEmail}`" class="text-blue-600 underline">
-                Envoyer un email au support
-              </a>
+              <a :href="`mailto:${config.public.supportEmail}`"> Envoyer un email au support </a>
             </li>
           </ul>
         </FaqItem>
@@ -1207,3 +1200,10 @@ const filteredCount = computed(() => {
   return count;
 });
 </script>
+
+<style scoped>
+a,
+:deep(a) {
+  @apply text-blue-600 underline hover:text-blue-800;
+}
+</style>
