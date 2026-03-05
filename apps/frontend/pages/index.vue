@@ -1,25 +1,30 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
-    <PlanningWeekSelector v-model="currentWeekStart" />
+    <PlanningWeekSelector v-model="currentWeekStart" @next="nextWeek" @previous="previousWeek" />
     <PlanningPackFilter
       :sorted-packs="packs"
       :selected-packs="selectedPacks"
       @toggle-pack="togglePack"
     />
 
-    <div class="flex-1 p-2 max-w-[800px] mx-auto w-full flex flex-col min-h-0 mb-16">
-      <div class="flex-1 overflow-y-auto pb-2">
-        <div class="space-y-1.5">
-          <!-- Day Card -->
-          <PlanningDayCard
-            v-for="day in filteredPlanningDays"
-            :key="day.date.toString()"
-            :day="day"
-            :is-expanded="expandedDays.has(day.date.toString())"
-            @toggle-expanded="toggleDay(day.date.toString())"
-            @after-cancel-reservation="refreshPlanning"
-          />
-        </div>
+    <div
+      ref="swipeContainer"
+      class="flex-1 p-2 max-w-[800px] mx-auto w-full flex flex-col min-h-0 mb-16"
+    >
+      <div class="flex-1 overflow-y-auto pb-2 relative">
+        <Transition :name="transitionName" mode="out-in">
+          <div :key="currentWeekStart.toISOString()" class="space-y-1.5">
+            <!-- Day Card -->
+            <PlanningDayCard
+              v-for="day in filteredPlanningDays"
+              :key="day.date.toString()"
+              :day="day"
+              :is-expanded="expandedDays.has(day.date.toString())"
+              @toggle-expanded="toggleDay(day.date.toString())"
+              @after-cancel-reservation="refreshPlanning"
+            />
+          </div>
+        </Transition>
       </div>
     </div>
 
@@ -44,6 +49,7 @@
 </template>
 
 <script setup lang="ts">
+import { useSwipe } from '@vueuse/core';
 import type { CreateReservationDto } from 'shared';
 import { ref, computed, watch, onMounted } from 'vue';
 
@@ -64,6 +70,37 @@ const { selectedPacks, togglePack, setSelectedPacks } = useSelectedPacks();
 
 const currentWeekStart = ref<Date>(getMonday(new Date()));
 const week = computed(() => getWeekDays(currentWeekStart.value));
+
+// Transition state and direction
+const isTransitioning = ref(false);
+const transitionName = ref('slide-left');
+
+// Week navigation functions
+function nextWeek() {
+  transitionName.value = 'slide-left';
+  const newDate = new Date(currentWeekStart.value);
+  newDate.setDate(newDate.getDate() + 7);
+  currentWeekStart.value = newDate;
+}
+
+function previousWeek() {
+  transitionName.value = 'slide-right';
+  const newDate = new Date(currentWeekStart.value);
+  newDate.setDate(newDate.getDate() - 7);
+  currentWeekStart.value = newDate;
+}
+
+// Swipe functionality
+const swipeContainer = ref<HTMLElement | null>(null);
+const { direction } = useSwipe(swipeContainer, {
+  onSwipeEnd(e: TouchEvent, direction: 'left' | 'right' | 'up' | 'down' | 'none') {
+    if (direction === 'left') {
+      nextWeek();
+    } else if (direction === 'right') {
+      previousWeek();
+    }
+  },
+});
 
 // Create Reservation Modal
 const showCreateReservationModal = ref(false);
@@ -91,7 +128,9 @@ const refreshPlanning = async () => {
 
 // Fetch planning when week changes
 watch(currentWeekStart, async () => {
+  isTransitioning.value = true;
   await refreshPlanning();
+  isTransitioning.value = false;
 
   // Select all packs by default if none selected
   if (selectedPacks.value.size === 0) {
@@ -128,3 +167,37 @@ const toggleDay = (dateKey: string) => {
   set.has(dateKey) ? set.delete(dateKey) : set.add(dateKey);
 };
 </script>
+
+<style scoped>
+/* Slide left transition (next week) */
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-left-enter-from {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.slide-left-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+/* Slide right transition (previous week) */
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-right-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.slide-right-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+</style>
