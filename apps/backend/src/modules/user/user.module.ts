@@ -2,13 +2,13 @@ import { EventEmitter } from '@libs/database/helpers/event-emitter';
 import { EVENT_EMITTER } from '@libs/events/domain/event-emitter.di-tokens';
 import { Module } from '@nestjs/common';
 
-import { SyncExternalUserService } from './application/commands/sync-external-user/sync-external-user.service';
+import { CreateUserService } from './application/commands/create-user/create-user.service';
 import { UpdateUserService } from './application/commands/update-user/update-user.service';
 import { GetUserService } from './application/queries/get-user/get-user.service';
 import { GetUsersService } from './application/queries/get-users/get-users.service';
+import { CreateUserHttpController } from './infrastructure/http/controllers/create-user.http.controller';
 import { GetUserHttpController } from './infrastructure/http/controllers/get-user.http.controller';
 import { GetUsersHttpController } from './infrastructure/http/controllers/get-users.http.controller';
-import { SyncExternalUserHttpController } from './infrastructure/http/controllers/sync-external-user.http.controller';
 import { UpdateUserHttpController } from './infrastructure/http/controllers/update-user.http.controller';
 import { ReservationEndedEventHandler } from './infrastructure/listeners/reservation-ended.event-handler';
 import { UserRepository } from './infrastructure/persistence/user.repository';
@@ -17,13 +17,13 @@ import { USER_REPOSITORY } from './user.di-tokens';
 @Module({
   imports: [],
   controllers: [
-    SyncExternalUserHttpController,
+    CreateUserHttpController,
     GetUserHttpController,
     GetUsersHttpController,
     UpdateUserHttpController,
   ],
   providers: [
-    SyncExternalUserService,
+    CreateUserService,
     GetUserService,
     GetUsersService,
     UpdateUserService,

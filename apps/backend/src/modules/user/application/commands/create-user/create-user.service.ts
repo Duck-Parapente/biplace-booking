@@ -4,18 +4,18 @@ import { USER_REPOSITORY } from '@modules/user/user.di-tokens';
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { SyncExternalUserCommand } from './sync-external-user.command';
+import { CreateUserCommand } from './create-user.command';
 
-@CommandHandler(SyncExternalUserCommand)
-export class SyncExternalUserService implements ICommandHandler<SyncExternalUserCommand, void> {
-  private readonly logger = new Logger(SyncExternalUserService.name);
+@CommandHandler(CreateUserCommand)
+export class CreateUserService implements ICommandHandler<CreateUserCommand, void> {
+  private readonly logger = new Logger(CreateUserService.name);
 
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
   ) {}
 
-  async execute(command: SyncExternalUserCommand): Promise<void> {
+  async execute(command: CreateUserCommand): Promise<void> {
     const user = UserEntity.create({
       email: command.email,
       externalAuthId: command.externalAuthId,
