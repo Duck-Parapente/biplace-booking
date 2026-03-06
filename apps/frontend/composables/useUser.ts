@@ -53,6 +53,33 @@ export const useUser = () => {
   };
 
   /**
+   * Create a new user
+   */
+  const createUser = async (email: string): Promise<UserDto> => {
+    try {
+      updating.value = true;
+      updateError.value = null;
+
+      const newUser = await callApi<UserDto>('/users', {
+        method: 'POST',
+        body: JSON.stringify({ email }),
+      });
+
+      // Add the new user to the list
+      users.value.push(newUser);
+
+      return newUser;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Impossible de créer le contact';
+      updateError.value = errorMessage;
+      console.error('Failed to create user:', err);
+      throw new Error(errorMessage);
+    } finally {
+      updating.value = false;
+    }
+  };
+
+  /**
    * Check if the user's profile is complete
    */
   const isProfileComplete = (user: UserDto | null | undefined): boolean => {
@@ -170,6 +197,7 @@ export const useUser = () => {
     // Methods
     getUser,
     getUsers,
+    createUser,
     updateUser,
     adminUpdateUser,
     validateUserForm,
