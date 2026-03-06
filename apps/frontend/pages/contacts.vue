@@ -31,6 +31,7 @@
               >
                 <option value="firstName">Prénom</option>
                 <option value="lastName">Nom</option>
+                <option v-if="isAdmin" value="currentScore">Coins</option>
               </select>
               <button
                 @click="toggleSortOrder"
@@ -166,7 +167,10 @@ const users = ref<UserDto[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const searchQuery = ref('');
-const { value: sortBy } = useLocalStorage<'firstName' | 'lastName'>('contacts_sortBy', 'lastName');
+const { value: sortBy } = useLocalStorage<'firstName' | 'lastName' | 'currentScore'>(
+  'contacts_sortBy',
+  'lastName',
+);
 const { value: sortOrder } = useLocalStorage<'asc' | 'desc'>('contacts_sortOrder', 'asc');
 const editModalOpen = ref(false);
 const selectedUser = ref<UserDto | null>(null);
@@ -190,8 +194,20 @@ const { getDisplay: userStatus } = useUserStatus();
 
 const loadUsers = async () => {
   const response = await getUsers();
+  const sortKey = sortBy.value;
   users.value = chain(response)
-    .orderBy([(user) => (user[sortBy.value] || user.email || '').toLowerCase()], [sortOrder.value])
+    .orderBy(
+      [
+        (user) => {
+          const value = user[sortKey as keyof typeof user];
+          if (sortKey === 'currentScore') {
+            return value ?? 0;
+          }
+          return (value || user.email || '').toString().toLowerCase();
+        },
+      ],
+      [sortOrder.value],
+    )
     .value();
 };
 
