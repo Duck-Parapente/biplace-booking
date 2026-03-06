@@ -31,6 +31,7 @@
               >
                 <option value="firstName">Prénom</option>
                 <option value="lastName">Nom</option>
+                <option v-if="isAdmin" value="currentScore">Coins</option>
               </select>
               <button
                 @click="toggleSortOrder"
@@ -79,6 +80,12 @@
                     >
                       Jusqu'au {{ new Date(user.activeUntil).toLocaleDateString('fr-FR') }}
                     </span>
+                    <span
+                      v-if="user.currentScore !== undefined && user.currentScore !== null"
+                      class="text-xs text-gray-700 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200"
+                    >
+                      Coins: {{ user.currentScore }}
+                    </span>
                   </div>
                 </div>
 
@@ -120,7 +127,24 @@
       :open="editModalOpen"
       :user="selectedUser"
       @close="closeEditModal"
-      @updated="handleUserUpdated"
+      @updated="refreshUsersList"
+    />
+
+    <!-- Create User Button - Fixed bottom right (only for Admin) -->
+    <button
+      v-if="isAdmin"
+      @click="openCreateUserModal"
+      class="fixed bottom-4 right-4 bg-secondary-600 text-white rounded-full p-4 shadow-lg hover:bg-secondary-700 transition z-50"
+      aria-label="Créer un nouveau contact"
+    >
+      <IconPlus class="w-6 h-6" />
+    </button>
+
+    <!-- Create User Modal -->
+    <CreateUserModal
+      :open="showCreateUserModal"
+      @close="closeCreateUserModal"
+      @created="refreshUsersList"
     />
   </main>
 </template>
@@ -128,6 +152,8 @@
 <script setup lang="ts">
 import { chain, filter } from 'lodash';
 import type { UserDto } from 'shared';
+
+import IconPlus from '~/components/icons/IconPlus.vue';
 
 definePageMeta({
   middleware: 'auth',
@@ -141,10 +167,14 @@ const users = ref<UserDto[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const searchQuery = ref('');
-const { value: sortBy } = useLocalStorage<'firstName' | 'lastName'>('contacts_sortBy', 'lastName');
+const { value: sortBy } = useLocalStorage<'firstName' | 'lastName' | 'currentScore'>(
+  'contacts_sortBy',
+  'lastName',
+);
 const { value: sortOrder } = useLocalStorage<'asc' | 'desc'>('contacts_sortOrder', 'asc');
 const editModalOpen = ref(false);
 const selectedUser = ref<UserDto | null>(null);
+const showCreateUserModal = ref(false);
 
 const filteredUsers = computed(() => {
   if (!searchQuery.value.trim()) {
@@ -164,8 +194,20 @@ const { getDisplay: userStatus } = useUserStatus();
 
 const loadUsers = async () => {
   const response = await getUsers();
+  const sortKey = sortBy.value;
   users.value = chain(response)
-    .orderBy([(user) => (user[sortBy.value] || user.email || '').toLowerCase()], [sortOrder.value])
+    .orderBy(
+      [
+        (user) => {
+          const value = user[sortKey as keyof typeof user];
+          if (sortKey === 'currentScore') {
+            return value ?? 0;
+          }
+          return (value || user.email || '').toString().toLowerCase();
+        },
+      ],
+      [sortOrder.value],
+    )
     .value();
 };
 
@@ -184,12 +226,20 @@ const closeEditModal = () => {
   selectedUser.value = null;
 };
 
-const handleUserUpdated = async () => {
+const refreshUsersList = async () => {
   try {
     await loadUsers();
   } catch (e: any) {
     console.error('Error reloading users:', e);
   }
+};
+
+const openCreateUserModal = () => {
+  showCreateUserModal.value = true;
+};
+
+const closeCreateUserModal = () => {
+  showCreateUserModal.value = false;
 };
 
 onMounted(async () => {

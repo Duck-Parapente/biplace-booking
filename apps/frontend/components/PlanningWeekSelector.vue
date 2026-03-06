@@ -2,7 +2,7 @@
   <div class="bg-gray-50">
     <div class="flex items-center justify-between p-2 max-w-[800px] mx-auto">
       <button
-        @click="previousWeek"
+        @click="$emit('previous')"
         class="px-2 py-1 text-gray-600 hover:text-secondary-600 hover:bg-gray-100/80 rounded-lg transition-all duration-200"
         aria-label="Semaine précédente"
       >
@@ -25,7 +25,7 @@
         </button>
       </div>
       <button
-        @click="nextWeek"
+        @click="$emit('next')"
         class="px-2 py-1 text-gray-600 hover:text-secondary-600 hover:bg-gray-100/80 rounded-lg transition-all duration-200"
         aria-label="Semaine suivante"
       >
@@ -40,21 +40,14 @@ import { formatWeekRange, getMonday } from '~/composables/useDateHelpers';
 
 const currentWeekStart = defineModel<Date>({ required: true });
 
+defineEmits<{
+  next: [];
+  previous: [];
+}>();
+
 const isCurrentWeek = computed(
   () => currentWeekStart.value.toDateString() === getMonday(new Date()).toDateString(),
 );
-
-function previousWeek() {
-  const newDate = new Date(currentWeekStart.value);
-  newDate.setDate(newDate.getDate() - 7);
-  currentWeekStart.value = newDate;
-}
-
-function nextWeek() {
-  const newDate = new Date(currentWeekStart.value);
-  newDate.setDate(newDate.getDate() + 7);
-  currentWeekStart.value = newDate;
-}
 
 function goToCurrentWeek() {
   currentWeekStart.value = getMonday(new Date());
