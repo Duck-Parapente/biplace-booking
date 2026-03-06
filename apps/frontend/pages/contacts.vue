@@ -79,6 +79,12 @@
                     >
                       Jusqu'au {{ new Date(user.activeUntil).toLocaleDateString('fr-FR') }}
                     </span>
+                    <span
+                      v-if="user.currentScore !== undefined && user.currentScore !== null"
+                      class="text-xs text-gray-700 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200"
+                    >
+                      Coins: {{ user.currentScore }}
+                    </span>
                   </div>
                 </div>
 
