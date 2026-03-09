@@ -39,7 +39,8 @@
               v-if="packData.flightsMinutesSinceLastControlDate != null"
               class="text-sm text-gray-400"
             >
-              ({{ Math.round(packData.flightsMinutesSinceLastControlDate / 60) }}h depuis)
+              ({{ Math.round(packData.flightsMinutesSinceLastControlDate / 60) }}h depuis le 1er
+              mars)
             </span>
           </template>
           <span v-else class="text-sm text-gray-400">Non renseigné</span>
