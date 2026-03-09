@@ -22,14 +22,15 @@ export function calculateReservationCost({
   startingDate,
   now = DateValueObject.now(),
 }: CalculateReservationCostParams): Integer {
+  const firstEntryTime = getFirstEntryTime(startingDate);
   const effectiveCreatedAt = createdAt.interpretAsParisTime();
 
   if (eventType === ReservationCostEventType.CLOSE) {
-    return calculateCloseCost(effectiveCreatedAt, startingDate);
+    return calculateCloseCost(effectiveCreatedAt, createdAt, firstEntryTime, startingDate);
   }
 
   if (eventType === ReservationCostEventType.CANCEL) {
-    return calculateCancelCost(effectiveCreatedAt, createdAt, startingDate, now);
+    return calculateCancelCost(effectiveCreatedAt, createdAt, firstEntryTime, startingDate, now);
   }
 
   throw new Error(`Unsupported event type: ${eventType}`);
@@ -37,29 +38,29 @@ export function calculateReservationCost({
 
 function calculateCloseCost(
   effectiveCreatedAt: DateValueObject,
+  createdAt: DateValueObject,
+  firstEntryTime: DateValueObject,
   startingDate: DateValueObject,
 ): Integer {
-  return calculateMaxAllowedCost(effectiveCreatedAt, startingDate, 24);
+  const costStartTime = createdAt.isBefore(firstEntryTime)
+    ? firstEntryTime.interpretAsParisTime()
+    : effectiveCreatedAt;
+  return calculateMaxAllowedCost(costStartTime, startingDate, 24);
 }
 
 function calculateCancelCost(
   effectiveCreatedAt: DateValueObject,
   createdAt: DateValueObject,
+  firstEntryTime: DateValueObject,
   startingDate: DateValueObject,
   now: DateValueObject,
 ): Integer {
-  // Check if reservation is in the algo's 6-day window at cancellation time
-  const windowEntryTime = getWindowEntryTime(startingDate, now);
-  if (!windowEntryTime) {
+  if (now.isBefore(firstEntryTime)) {
     return new Integer({ value: 0 });
   }
-
-  // Determine when to start counting: creation time or window entry time
-  const costStartTime = windowEntryTime.isBefore(createdAt) ? createdAt : windowEntryTime;
-
+  const costStartTime = firstEntryTime.isBefore(createdAt) ? createdAt : firstEntryTime;
   const maxAllowedCost = calculateMaxAllowedCost(effectiveCreatedAt, startingDate, 0);
   const hoursSinceStart = costStartTime.roundedUpHoursBetween(now, THRESHOLD_TO_CEIL_IN_MINUTES);
-
   return hoursSinceStart.min(maxAllowedCost);
 }
 
@@ -75,21 +76,9 @@ function calculateMaxAllowedCost(
   return hoursToEndOfStartingDay.max(new Integer({ value: minCost }));
 }
 
-function getWindowEntryTime(
-  startingDate: DateValueObject,
-  now: DateValueObject,
-): DateValueObject | null {
-  // Calculate when this starting date FIRST entered the 6-day window
-  // It enters as J+6, which is 6 days before the starting date at 20:00 Paris
+function getFirstEntryTime(startingDate: DateValueObject): DateValueObject {
   const sixDaysBefore = startingDate.startOfDayInUTC(-algorithmConfig.windowDays);
   const dateAtAlgoRun = new Date(sixDaysBefore.value);
   dateAtAlgoRun.setUTCHours(algorithmConfig.newDateOpeningHourParis, 0, 0, 0);
-  const firstEntryTime = DateValueObject.fromDate(dateAtAlgoRun).convertFromParisTime();
-
-  // If we're cancelling before the reservation entered the window, no cost
-  if (now.isBefore(firstEntryTime)) {
-    return null;
-  }
-
-  return firstEntryTime;
+  return DateValueObject.fromDate(dateAtAlgoRun).convertFromParisTime();
 }
