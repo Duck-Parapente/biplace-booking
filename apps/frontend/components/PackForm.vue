@@ -21,7 +21,7 @@
     <BaseInput
       id="flightsHours"
       v-model="localForm.flightsHours"
-      label="Heures de vol"
+      label="Heures de vol (au 1er mars 2026)"
       type="number"
       :min="0"
       :step="0.5"
@@ -30,7 +30,7 @@
     <BaseInput
       id="flightsCount"
       v-model="localForm.flightsCount"
-      label="Nombre de vols"
+      label="Nombre de vols (au 1er mars 2026)"
       type="number"
       :min="0"
     />
