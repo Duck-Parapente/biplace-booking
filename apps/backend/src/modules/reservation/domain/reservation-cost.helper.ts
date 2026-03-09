@@ -28,7 +28,11 @@ export function calculateReservationCost({
     return calculateCloseCost(effectiveCreatedAt, startingDate);
   }
 
-  return calculateCancelCost(effectiveCreatedAt, createdAt, startingDate, now);
+  if (eventType === ReservationCostEventType.CANCEL) {
+    return calculateCancelCost(effectiveCreatedAt, createdAt, startingDate, now);
+  }
+
+  throw new Error(`Unsupported event type: ${eventType}`);
 }
 
 function calculateCloseCost(
