@@ -61,6 +61,14 @@ describe('calculateReservationCost', () => {
       expected: 4,
     },
     {
+      name: 'closed a reservation before the 6 days-window',
+      eventType: ReservationCostEventType.CLOSE,
+      createdAt: '2026-02-25T15:03:25Z',
+      startingDate: '2026-03-07T00:00:00Z',
+      now: '2026-03-07T22:24:43Z',
+      expected: 148,
+    },
+    {
       name: 'closed a reservation created for current day',
       eventType: ReservationCostEventType.CLOSE,
       createdAt: '2024-03-05T15:00:00Z',
