@@ -34,225 +34,24 @@
       </div>
 
       <div ref="faqContainer" class="bg-white rounded-lg shadow-sm">
-        <!-- Introduction -->
-        <div class="px-6 pt-6 pb-3">
-          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Introduction</h2>
-        </div>
+        <template v-for="section in faqSections" :key="section.title">
+          <div class="px-6 pt-6 pb-3">
+            <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+              {{ section.title }}
+            </h2>
+          </div>
 
-        <FaqItem
-          id="duck-sheet"
-          question="1. J'aimais bien la Duck sheet"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqDuckSheet />
-        </FaqItem>
-
-        <FaqItem
-          id="pre-requis-compte"
-          question="2. Quels sont les pré-requis pour obtenir un compte sur l'application ?"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqPreRequisCompte />
-        </FaqItem>
-
-        <FaqItem
-          id="mot-de-passe"
-          question="3. Un admin m'a créé un compte mais je n'ai pas le mot de passe..."
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqMotDePasse />
-        </FaqItem>
-
-        <!-- Comprendre le système des Coins -->
-        <div class="px-6 pt-6 pb-3">
-          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">
-            Comprendre le système des Coins
-          </h2>
-        </div>
-
-        <FaqItem
-          id="quest-ce-quun-coin"
-          question="4. Qu'est-ce qu'un Coin ?"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqQuestCeQuUnCoin />
-        </FaqItem>
-
-        <!-- Le processus de réservation -->
-        <div class="px-6 pt-6 pb-3">
-          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">
-            Le processus de réservation
-          </h2>
-        </div>
-
-        <FaqItem
-          id="demande-vs-reservation"
-          question="5. Quelle est la différence entre une demande de réservation et une réservation ?"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqDemandeVsReservation />
-        </FaqItem>
-
-        <FaqItem
-          id="processus-reservation"
-          question="6. Comment se déroule le processus de réservation ?"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqProcessusReservation />
-        </FaqItem>
-
-        <FaqItem
-          id="algorithme-attribution"
-          question="7. Comment fonctionne l'algorithme d'attribution des packs ?"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqAlgorithmeAttribution />
-        </FaqItem>
-
-        <FaqItem
-          id="comptage-coins"
-          question="8. Comment sont comptés les Coins ?"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqComptageCoins />
-        </FaqItem>
-
-        <FaqItem
-          id="demande-non-validee"
-          question="9. Que se passe-t-il si ma demande n'est pas validée ?"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqDemandeNonValidee />
-        </FaqItem>
-
-        <FaqItem
-          id="annuler-reservation"
-          question="10. Puis-je annuler ma réservation après validation ?"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqAnnulerReservation />
-        </FaqItem>
-
-        <FaqItem
-          id="recuperer-materiel"
-          question="11. J'ai une réservation, chez qui dois-je récupérer le matériel ?"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqRecupererMateriel />
-        </FaqItem>
-
-        <!-- Stratégies et conseils -->
-        <div class="px-6 pt-6 pb-3">
-          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">
-            Stratégies et conseils
-          </h2>
-        </div>
-
-        <FaqItem
-          id="pas-pu-voler"
-          question="12. Il a plu, je n'ai pas pu voler"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqPasPuVoler />
-        </FaqItem>
-
-        <FaqItem
-          id="maximiser-chances"
-          question="13. Comment maximiser mes chances ?"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqMaximiserChances />
-        </FaqItem>
-
-        <!-- Cas particuliers -->
-        <div class="px-6 pt-6 pb-3">
-          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">
-            Cas particuliers
-          </h2>
-        </div>
-
-        <FaqItem
-          id="formation-examen-club"
-          question="14. J'ai besoin d'un bi pour une formation, un examen ou une journée club"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqFormationExamenClub />
-        </FaqItem>
-
-        <FaqItem
-          id="jours-consecutifs"
-          question="15. Je veux réserver plusieurs jours consécutifs"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqJoursConsecutifs />
-        </FaqItem>
-
-        <FaqItem
-          id="score-coins"
-          question="16. Comment consulter mon score Coins actuel ?"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqScoreCoins />
-        </FaqItem>
-
-        <FaqItem
-          id="impossible-deposer-demande"
-          question="17. Pourquoi ne puis-je pas déposer de demande de réservation ?"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqImpossibleDeposerDemande />
-        </FaqItem>
-
-        <FaqItem
-          id="participation-passager"
-          question="18. Mon passager a surkiffé le vol et veut absolument donner de l'argent. Que dois-je faire ?"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqParticipationPassager />
-        </FaqItem>
-
-        <!-- Aide et contact -->
-        <div class="px-6 pt-6 pb-3">
-          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">
-            Aide et contact
-          </h2>
-        </div>
-
-        <FaqItem
-          id="administrateurs"
-          question="19. Où sont les administrateurs ?"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqAdministrateurs />
-        </FaqItem>
-
-        <FaqItem
-          id="contact-questions"
-          question="20. Qui puis-je contacter si j'ai d'autres questions ?"
-          :is-initially-open="isInitiallyOpen"
-          :is-item-visible="isItemVisible"
-        >
-          <FaqContactQuestions />
-        </FaqItem>
+          <FaqItem
+            v-for="item in section.items"
+            :key="item.id"
+            :id="item.id"
+            :question="item.question"
+            :is-initially-open="isInitiallyOpen"
+            :is-item-visible="isItemVisible"
+          >
+            <component :is="item.component" />
+          </FaqItem>
+        </template>
       </div>
 
       <div class="mt-8 text-center">
@@ -270,9 +69,163 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js';
 
+import {
+  FaqDuckSheet,
+  FaqPreRequisCompte,
+  FaqMotDePasse,
+  FaqQuestCeQuUnCoin,
+  FaqDemandeVsReservation,
+  FaqProcessusReservation,
+  FaqAlgorithmeAttribution,
+  FaqComptageCoins,
+  FaqDemandeNonValidee,
+  FaqAnnulerReservation,
+  FaqRecupererMateriel,
+  FaqPasPuVoler,
+  FaqMaximiserChances,
+  FaqFormationExamenClub,
+  FaqJoursConsecutifs,
+  FaqScoreCoins,
+  FaqImpossibleDeposerDemande,
+  FaqParticipationPassager,
+  FaqAdministrateurs,
+  FaqContactQuestions,
+} from '#components';
+
 definePageMeta({
   pageTitle: 'FAQ - Questions fréquentes',
 });
+
+const faqSections = [
+  {
+    title: 'Introduction',
+    items: [
+      { id: 'duck-sheet', question: "1. J'aimais bien la Duck sheet", component: FaqDuckSheet },
+      {
+        id: 'pre-requis-compte',
+        question: "2. Quels sont les pré-requis pour obtenir un compte sur l'application ?",
+        component: FaqPreRequisCompte,
+      },
+      {
+        id: 'mot-de-passe',
+        question: "3. Un admin m'a créé un compte mais je n'ai pas le mot de passe...",
+        component: FaqMotDePasse,
+      },
+    ],
+  },
+  {
+    title: 'Comprendre le système des Coins',
+    items: [
+      {
+        id: 'quest-ce-quun-coin',
+        question: "4. Qu'est-ce qu'un Coin ?",
+        component: FaqQuestCeQuUnCoin,
+      },
+    ],
+  },
+  {
+    title: 'Le processus de réservation',
+    items: [
+      {
+        id: 'demande-vs-reservation',
+        question:
+          '5. Quelle est la différence entre une demande de réservation et une réservation ?',
+        component: FaqDemandeVsReservation,
+      },
+      {
+        id: 'processus-reservation',
+        question: '6. Comment se déroule le processus de réservation ?',
+        component: FaqProcessusReservation,
+      },
+      {
+        id: 'algorithme-attribution',
+        question: "7. Comment fonctionne l'algorithme d'attribution des packs ?",
+        component: FaqAlgorithmeAttribution,
+      },
+      {
+        id: 'comptage-coins',
+        question: '8. Comment sont comptés les Coins ?',
+        component: FaqComptageCoins,
+      },
+      {
+        id: 'demande-non-validee',
+        question: "9. Que se passe-t-il si ma demande n'est pas validée ?",
+        component: FaqDemandeNonValidee,
+      },
+      {
+        id: 'annuler-reservation',
+        question: '10. Puis-je annuler ma réservation après validation ?',
+        component: FaqAnnulerReservation,
+      },
+      {
+        id: 'recuperer-materiel',
+        question: "11. J'ai une réservation, chez qui dois-je récupérer le matériel ?",
+        component: FaqRecupererMateriel,
+      },
+    ],
+  },
+  {
+    title: 'Stratégies et conseils',
+    items: [
+      {
+        id: 'pas-pu-voler',
+        question: "12. Il a plu, je n'ai pas pu voler",
+        component: FaqPasPuVoler,
+      },
+      {
+        id: 'maximiser-chances',
+        question: '13. Comment maximiser mes chances ?',
+        component: FaqMaximiserChances,
+      },
+    ],
+  },
+  {
+    title: 'Cas particuliers',
+    items: [
+      {
+        id: 'formation-examen-club',
+        question: "14. J'ai besoin d'un bi pour une formation, un examen ou une journée club",
+        component: FaqFormationExamenClub,
+      },
+      {
+        id: 'jours-consecutifs',
+        question: '15. Je veux réserver plusieurs jours consécutifs',
+        component: FaqJoursConsecutifs,
+      },
+      {
+        id: 'score-coins',
+        question: '16. Comment consulter mon score Coins actuel ?',
+        component: FaqScoreCoins,
+      },
+      {
+        id: 'impossible-deposer-demande',
+        question: '17. Pourquoi ne puis-je pas déposer de demande de réservation ?',
+        component: FaqImpossibleDeposerDemande,
+      },
+      {
+        id: 'participation-passager',
+        question:
+          "18. Mon passager a surkiffé le vol et veut absolument donner de l'argent. Que dois-je faire ?",
+        component: FaqParticipationPassager,
+      },
+    ],
+  },
+  {
+    title: 'Aide et contact',
+    items: [
+      {
+        id: 'administrateurs',
+        question: '19. Où sont les administrateurs ?',
+        component: FaqAdministrateurs,
+      },
+      {
+        id: 'contact-questions',
+        question: "20. Qui puis-je contacter si j'ai d'autres questions ?",
+        component: FaqContactQuestions,
+      },
+    ],
+  },
+];
 
 const route = useRoute();
 const initialOpenId = route.hash?.slice(1) || '';

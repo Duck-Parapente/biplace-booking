@@ -6,7 +6,7 @@
     class="border-b border-gray-200 scroll-mt-4"
   >
     <button
-      class="w-full py-4 px-6 text-left flex justify-between items-center hover:bg-gray-200 transition-colors bg-gray-100"
+      class="w-full py-4 px-6 text-left flex justify-between items-center hover:bg-gray-300 transition-colors bg-gray-200"
       @click="isOpen = !isOpen"
     >
       <div class="flex items-center gap-2 pr-4">
