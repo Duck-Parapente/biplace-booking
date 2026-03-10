@@ -39,7 +39,12 @@
           <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Introduction</h2>
         </div>
 
-        <FaqItem question="1. J'aimais bien la Duck sheet" v-show="isItemVisible(0)">
+        <FaqItem
+          id="duck-sheet"
+          question="1. J'aimais bien la Duck sheet"
+          :is-initially-open="initialOpenId === 'duck-sheet'"
+          v-show="isItemVisible(0)"
+        >
           <p class="mb-3">
             Nous aussi mais cette bonne vieille sheet avait un certain nombre de limites que cette
             application vise à combler :
@@ -52,7 +57,9 @@
         </FaqItem>
 
         <FaqItem
+          id="pre-requis-compte"
           question="2. Quels sont les pré-requis pour obtenir un compte sur l'application ?"
+          :is-initially-open="initialOpenId === 'pre-requis-compte'"
           v-show="isItemVisible(1)"
         >
           <p hidden>charte</p>
@@ -84,7 +91,9 @@
         </FaqItem>
 
         <FaqItem
+          id="mot-de-passe"
           question="3. Un admin m'a créé un compte mais je n'ai pas le mot de passe..."
+          :is-initially-open="initialOpenId === 'mot-de-passe'"
           v-show="isItemVisible(2)"
         >
           <p class="mb-3">
@@ -100,7 +109,12 @@
           </h2>
         </div>
 
-        <FaqItem question="4. Qu'est-ce qu'un Coin ?" v-show="isItemVisible(3)">
+        <FaqItem
+          id="quest-ce-quun-coin"
+          question="4. Qu'est-ce qu'un Coin ?"
+          :is-initially-open="initialOpenId === 'quest-ce-quun-coin'"
+          v-show="isItemVisible(3)"
+        >
           <p>
             C'est le petit nom donné aux points qui sont attribués aux pilotes pour déterminer leur
             priorité. <strong>Plus tu as de Coins, moins tu es prioritaire.</strong> Lis la suite
@@ -116,7 +130,9 @@
         </div>
 
         <FaqItem
+          id="demande-vs-reservation"
           question="5. Quelle est la différence entre une demande de réservation et une réservation ?"
+          :is-initially-open="initialOpenId === 'demande-vs-reservation'"
           v-show="isItemVisible(4)"
         >
           <p class="mb-3">
@@ -137,7 +153,9 @@
         </FaqItem>
 
         <FaqItem
+          id="processus-reservation"
           question="6. Comment se déroule le processus de réservation ?"
+          :is-initially-open="initialOpenId === 'processus-reservation'"
           v-show="isItemVisible(5)"
         >
           <div class="space-y-4">
@@ -201,7 +219,9 @@
         </FaqItem>
 
         <FaqItem
+          id="algorithme-attribution"
           question="7. Comment fonctionne l'algorithme d'attribution des packs ?"
+          :is-initially-open="initialOpenId === 'algorithme-attribution'"
           v-show="isItemVisible(6)"
         >
           <p class="mb-4">Deux critères sont utilisés :</p>
@@ -401,7 +421,12 @@
           </div>
         </FaqItem>
 
-        <FaqItem question="8. Comment sont comptés les Coins ?" v-show="isItemVisible(7)">
+        <FaqItem
+          id="comptage-coins"
+          question="8. Comment sont comptés les Coins ?"
+          :is-initially-open="initialOpenId === 'comptage-coins'"
+          v-show="isItemVisible(7)"
+        >
           <p class="mb-4">
             Un certain nombre de Coins est attribué à toute demande de réservation validée. Lors du
             process d'attribution, l'application utilise la somme des Coins de toutes les
@@ -865,7 +890,9 @@
         </FaqItem>
 
         <FaqItem
+          id="demande-non-validee"
           question="9. Que se passe-t-il si ma demande n'est pas validée ?"
+          :is-initially-open="initialOpenId === 'demande-non-validee'"
           v-show="isItemVisible(8)"
         >
           <p class="mb-3">
@@ -884,7 +911,9 @@
         </FaqItem>
 
         <FaqItem
+          id="annuler-reservation"
           question="10. Puis-je annuler ma réservation après validation ?"
+          :is-initially-open="initialOpenId === 'annuler-reservation'"
           v-show="isItemVisible(9)"
         >
           <p class="mb-3">
@@ -900,7 +929,9 @@
         </FaqItem>
 
         <FaqItem
+          id="recuperer-materiel"
           question="11. J'ai une réservation, chez qui dois-je récupérer le matériel ?"
+          :is-initially-open="initialOpenId === 'recuperer-materiel'"
           v-show="isItemVisible(10)"
           ><p hidden>chercher</p>
           <p class="mb-3">
@@ -917,7 +948,12 @@
           </h2>
         </div>
 
-        <FaqItem question="12. Il a plu, je n'ai pas pu voler" v-show="isItemVisible(11)">
+        <FaqItem
+          id="plu-pas-vole"
+          question="12. Il a plu, je n'ai pas pu voler"
+          :is-initially-open="initialOpenId === 'plu-pas-vole'"
+          v-show="isItemVisible(11)"
+        >
           <p class="mb-3">
             Désolé mais les Coins seront quand même comptés. Outre le fait que personne ne peut
             vérifier tes dires, tu as eu le matériel pour toi alors qu'un autre pilote aurait
@@ -935,7 +971,12 @@
           </p>
         </FaqItem>
 
-        <FaqItem question="13. Comment maximiser mes chances ?" v-show="isItemVisible(12)">
+        <FaqItem
+          id="maximiser-chances"
+          question="13. Comment maximiser mes chances ?"
+          :is-initially-open="initialOpenId === 'maximiser-chances'"
+          v-show="isItemVisible(12)"
+        >
           <ul class="list-disc pl-6 space-y-3">
             <li>
               <strong>Postule à tous les biplaces qui peuvent te convenir</strong> plutôt qu'à un
@@ -991,7 +1032,9 @@
         </div>
 
         <FaqItem
+          id="formation-examen-club"
           question="14. J'ai besoin d'un bi pour une formation, un examen ou une journée club"
+          :is-initially-open="initialOpenId === 'formation-examen-club'"
           v-show="isItemVisible(13)"
           ><p hidden>qbi préfo pré-formation qualification</p>
 
@@ -1007,7 +1050,9 @@
         </FaqItem>
 
         <FaqItem
+          id="jours-consecutifs"
           question="15. Je veux réserver plusieurs jours consécutifs"
+          :is-initially-open="initialOpenId === 'jours-consecutifs'"
           v-show="isItemVisible(14)"
         >
           <p class="mb-3">
@@ -1042,7 +1087,9 @@
         </FaqItem>
 
         <FaqItem
+          id="score-coins"
           question="16. Comment consulter mon score Coins actuel ?"
+          :is-initially-open="initialOpenId === 'score-coins'"
           v-show="isItemVisible(15)"
         >
           <p>
@@ -1052,7 +1099,9 @@
         </FaqItem>
 
         <FaqItem
+          id="impossible-deposer-demande"
           question="17. Pourquoi ne puis-je pas déposer de demande de réservation ?"
+          :is-initially-open="initialOpenId === 'impossible-deposer-demande'"
           v-show="isItemVisible(16)"
         >
           <p>
@@ -1066,7 +1115,9 @@
         </FaqItem>
 
         <FaqItem
+          id="passager-donner-argent"
           question="18. Mon passager a surkiffé le vol et veut absolument donner de l'argent. Que dois-je faire ?"
+          :is-initially-open="initialOpenId === 'passager-donner-argent'"
           v-show="isItemVisible(17)"
         >
           <p>
@@ -1097,7 +1148,12 @@
           </h2>
         </div>
 
-        <FaqItem question="19. Où sont les administrateurs ?" v-show="isItemVisible(18)">
+        <FaqItem
+          id="administrateurs"
+          question="19. Où sont les administrateurs ?"
+          :is-initially-open="initialOpenId === 'administrateurs'"
+          v-show="isItemVisible(18)"
+        >
           <p class="mb-3">
             Tu peux les contacter à travers le
             <a :href="biplaceReservationsChannel"> Discord </a>
@@ -1110,7 +1166,9 @@
         </FaqItem>
 
         <FaqItem
+          id="contact-questions"
           question="20. Qui puis-je contacter si j'ai d'autres questions ?"
+          :is-initially-open="initialOpenId === 'contact-questions'"
           v-show="isItemVisible(19)"
         >
           <p class="mb-3">Pour toute question supplémentaire ou problème technique, tu peux :</p>
@@ -1153,6 +1211,8 @@ definePageMeta({
 });
 
 const config = useRuntimeConfig();
+const route = useRoute();
+const initialOpenId = route.hash?.slice(1) || '';
 
 // Search functionality
 const searchQuery = ref('');
@@ -1190,6 +1250,13 @@ onMounted(() => {
     minMatchCharLength: 2,
   });
   matchingIndices.value = new Set(data.map((d) => d.index));
+
+  // Scroll to hash target
+  if (initialOpenId) {
+    nextTick(() => {
+      document.getElementById(initialOpenId)?.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
 });
 
 watch(searchQuery, (query) => {
