@@ -62,8 +62,7 @@ definePageMeta({
   middleware: 'auth',
   pageTitle: 'HelloAsso',
 });
-
-const { participationLink } = useHelloAssoLinks();
+import { participationLink } from '~/config/links.config';
 
 const linkInput = ref<HTMLInputElement | null>(null);
 const copied = ref(false);

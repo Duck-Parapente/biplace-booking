@@ -1146,13 +1146,13 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js';
 
+import { adhesionLink, participationLink, biplaceReservationsChannel } from '~/config/links.config';
+
 definePageMeta({
   pageTitle: 'FAQ - Questions fréquentes',
 });
 
 const config = useRuntimeConfig();
-const { adhesionLink, participationLink } = useHelloAssoLinks();
-const { biplaceReservationsChannel } = useDiscordLinks();
 
 // Search functionality
 const searchQuery = ref('');
