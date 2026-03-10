@@ -69,10 +69,7 @@
             </li>
             <li>
               Avoir LU ET signé et envoyé la
-              <a
-                class="underline"
-                href="https://drive.google.com/file/d/1GSdB7lp_31N4jSX0m7lzxjC3m1EXwyn0/view"
-              >
+              <a href="https://drive.google.com/file/d/1GSdB7lp_31N4jSX0m7lzxjC3m1EXwyn0/view">
                 convention de réservation</a
               >
               au président du Duck.
