@@ -70,6 +70,18 @@ const props = defineProps<{
 const isOpen = ref(props.isInitiallyOpen(props.id));
 const copied = ref(false);
 
+watch(isOpen, (open) => {
+  if (open) {
+    history.replaceState(null, '', `#${props.id}`);
+    return;
+  }
+
+  if (location.hash === `#${props.id}`) {
+    history.replaceState(null, '', location.pathname + location.search);
+    return;
+  }
+});
+
 function copyLink() {
   const url = `${window.location.origin}/faq#${props.id}`;
   navigator.clipboard.writeText(url);
