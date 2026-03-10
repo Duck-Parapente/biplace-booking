@@ -12,6 +12,7 @@
   "dependencies": {
     "@auth0/auth0-vue": "2.4.0",
     "@vueuse/core": "14.2.1",
+    "fuse.js": "7.1.0",
     "lodash": "4.17.21",
     "nuxt": "4.2.0",
     "shared": "workspace:*",
