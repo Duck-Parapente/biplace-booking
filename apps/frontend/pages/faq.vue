@@ -59,6 +59,11 @@
           <ul class="list-disc pl-6 space-y-2">
             <li>Être à jour de ta cotisation au duck parapente.</li>
             <li>
+              Avoir payé le supplément de cotisation biplace sur
+              <a :href="adhesionLink">helloasso</a>.
+            </li>
+            <li>Avoir envoyé ton chèque de caution au président du Duck.</li>
+            <li>
               Etre qualifié biplace ou en cours de formation (= BPC minimum et pré-formation en
               vue).
             </li>
@@ -72,7 +77,6 @@
               >
               au président du Duck.
             </li>
-            <li>Avoir envoyé ton chèque de caution au président du Duck.</li>
           </ul>
           <br />
           <p class="mb-3">
