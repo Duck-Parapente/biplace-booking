@@ -43,7 +43,7 @@
           id="duck-sheet"
           question="1. J'aimais bien la Duck sheet"
           :is-initially-open="initialOpenId === 'duck-sheet'"
-          v-show="isItemVisible(0)"
+          v-show="isItemVisible('duck-sheet')"
         >
           <p class="mb-3">
             Nous aussi mais cette bonne vieille sheet avait un certain nombre de limites que cette
@@ -60,7 +60,7 @@
           id="pre-requis-compte"
           question="2. Quels sont les pré-requis pour obtenir un compte sur l'application ?"
           :is-initially-open="initialOpenId === 'pre-requis-compte'"
-          v-show="isItemVisible(1)"
+          v-show="isItemVisible('pre-requis-compte')"
         >
           <p hidden>charte</p>
           <ul class="list-disc pl-6 space-y-2">
@@ -94,7 +94,7 @@
           id="mot-de-passe"
           question="3. Un admin m'a créé un compte mais je n'ai pas le mot de passe..."
           :is-initially-open="initialOpenId === 'mot-de-passe'"
-          v-show="isItemVisible(2)"
+          v-show="isItemVisible('mot-de-passe')"
         >
           <p class="mb-3">
             Depuis la page d'accueil, clique sur bouton "Se connecter" puis sur "mot de passe oublié
@@ -113,7 +113,7 @@
           id="quest-ce-quun-coin"
           question="4. Qu'est-ce qu'un Coin ?"
           :is-initially-open="initialOpenId === 'quest-ce-quun-coin'"
-          v-show="isItemVisible(3)"
+          v-show="isItemVisible('quest-ce-quun-coin')"
         >
           <p>
             C'est le petit nom donné aux points qui sont attribués aux pilotes pour déterminer leur
@@ -133,7 +133,7 @@
           id="demande-vs-reservation"
           question="5. Quelle est la différence entre une demande de réservation et une réservation ?"
           :is-initially-open="initialOpenId === 'demande-vs-reservation'"
-          v-show="isItemVisible(4)"
+          v-show="isItemVisible('demande-vs-reservation')"
         >
           <p class="mb-3">
             <strong class="text-gray-900">Une demande de réservation</strong> est ton souhait de
@@ -156,7 +156,7 @@
           id="processus-reservation"
           question="6. Comment se déroule le processus de réservation ?"
           :is-initially-open="initialOpenId === 'processus-reservation'"
-          v-show="isItemVisible(5)"
+          v-show="isItemVisible('processus-reservation')"
         >
           <div class="space-y-4">
             <div class="border-l-4 border-blue-500 pl-4 py-2">
@@ -222,7 +222,7 @@
           id="algorithme-attribution"
           question="7. Comment fonctionne l'algorithme d'attribution des packs ?"
           :is-initially-open="initialOpenId === 'algorithme-attribution'"
-          v-show="isItemVisible(6)"
+          v-show="isItemVisible('algorithme-attribution')"
         >
           <p class="mb-4">Deux critères sont utilisés :</p>
           <ol class="list-decimal pl-6 mb-4 space-y-3">
@@ -425,7 +425,7 @@
           id="comptage-coins"
           question="8. Comment sont comptés les Coins ?"
           :is-initially-open="initialOpenId === 'comptage-coins'"
-          v-show="isItemVisible(7)"
+          v-show="isItemVisible('comptage-coins')"
         >
           <p class="mb-4">
             Un certain nombre de Coins est attribué à toute demande de réservation validée. Lors du
@@ -893,7 +893,7 @@
           id="demande-non-validee"
           question="9. Que se passe-t-il si ma demande n'est pas validée ?"
           :is-initially-open="initialOpenId === 'demande-non-validee'"
-          v-show="isItemVisible(8)"
+          v-show="isItemVisible('demande-non-validee')"
         >
           <p class="mb-3">
             Si ta demande n'est pas validée à J-6, cela signifie que d'autres pilotes avec un nombre
@@ -914,7 +914,7 @@
           id="annuler-reservation"
           question="10. Puis-je annuler ma réservation après validation ?"
           :is-initially-open="initialOpenId === 'annuler-reservation'"
-          v-show="isItemVisible(9)"
+          v-show="isItemVisible('annuler-reservation')"
         >
           <p class="mb-3">
             Bien sûr. Note cependant que ton nombre de Coins sera quand même augmenté en fonction du
@@ -932,7 +932,7 @@
           id="recuperer-materiel"
           question="11. J'ai une réservation, chez qui dois-je récupérer le matériel ?"
           :is-initially-open="initialOpenId === 'recuperer-materiel'"
-          v-show="isItemVisible(10)"
+          v-show="isItemVisible('recuperer-materiel')"
           ><p hidden>chercher</p>
           <p class="mb-3">
             Cette information se trouve sous le menu "Infos packs". Choisis ton pack et tu
@@ -952,7 +952,7 @@
           id="plu-pas-vole"
           question="12. Il a plu, je n'ai pas pu voler"
           :is-initially-open="initialOpenId === 'plu-pas-vole'"
-          v-show="isItemVisible(11)"
+          v-show="isItemVisible('plu-pas-vole')"
         >
           <p class="mb-3">
             Désolé mais les Coins seront quand même comptés. Outre le fait que personne ne peut
@@ -975,7 +975,7 @@
           id="maximiser-chances"
           question="13. Comment maximiser mes chances ?"
           :is-initially-open="initialOpenId === 'maximiser-chances'"
-          v-show="isItemVisible(12)"
+          v-show="isItemVisible('maximiser-chances')"
         >
           <ul class="list-disc pl-6 space-y-3">
             <li>
@@ -1035,7 +1035,7 @@
           id="formation-examen-club"
           question="14. J'ai besoin d'un bi pour une formation, un examen ou une journée club"
           :is-initially-open="initialOpenId === 'formation-examen-club'"
-          v-show="isItemVisible(13)"
+          v-show="isItemVisible('formation-examen-club')"
           ><p hidden>qbi préfo pré-formation qualification</p>
 
           <p class="mb-3">
@@ -1053,7 +1053,7 @@
           id="jours-consecutifs"
           question="15. Je veux réserver plusieurs jours consécutifs"
           :is-initially-open="initialOpenId === 'jours-consecutifs'"
-          v-show="isItemVisible(14)"
+          v-show="isItemVisible('jours-consecutifs')"
         >
           <p class="mb-3">
             Aujourd'hui, et probablement pour encore quelques temps, la notion de "réserver
@@ -1090,7 +1090,7 @@
           id="score-coins"
           question="16. Comment consulter mon score Coins actuel ?"
           :is-initially-open="initialOpenId === 'score-coins'"
-          v-show="isItemVisible(15)"
+          v-show="isItemVisible('score-coins')"
         >
           <p>
             Ton score Coins est visible sur ta
@@ -1102,7 +1102,7 @@
           id="impossible-deposer-demande"
           question="17. Pourquoi ne puis-je pas déposer de demande de réservation ?"
           :is-initially-open="initialOpenId === 'impossible-deposer-demande'"
-          v-show="isItemVisible(16)"
+          v-show="isItemVisible('impossible-deposer-demande')"
         >
           <p>
             Soit tu n'as pas cloturé une de tes réservations précédentes, soit ton compte est
@@ -1118,7 +1118,7 @@
           id="passager-donner-argent"
           question="18. Mon passager a surkiffé le vol et veut absolument donner de l'argent. Que dois-je faire ?"
           :is-initially-open="initialOpenId === 'passager-donner-argent'"
-          v-show="isItemVisible(17)"
+          v-show="isItemVisible('passager-donner-argent')"
         >
           <p>
             Pas de chance ! Tu n'agis pas dans le cadre de d'une activité professionnelle, tu ne
@@ -1152,7 +1152,7 @@
           id="administrateurs"
           question="19. Où sont les administrateurs ?"
           :is-initially-open="initialOpenId === 'administrateurs'"
-          v-show="isItemVisible(18)"
+          v-show="isItemVisible('administrateurs')"
         >
           <p class="mb-3">
             Tu peux les contacter à travers le
@@ -1169,7 +1169,7 @@
           id="contact-questions"
           question="20. Qui puis-je contacter si j'ai d'autres questions ?"
           :is-initially-open="initialOpenId === 'contact-questions'"
-          v-show="isItemVisible(19)"
+          v-show="isItemVisible('contact-questions')"
         >
           <p class="mb-3">Pour toute question supplémentaire ou problème technique, tu peux :</p>
           <ul class="list-disc pl-6 space-y-2">
@@ -1225,31 +1225,31 @@ const normalize = (text: string): string =>
     .toLowerCase();
 
 interface FaqEntry {
-  index: number;
+  slug: string;
   text: string;
 }
 
 const fuseInstance = ref<Fuse<FaqEntry> | null>(null);
-const totalCount = ref(0);
-const matchingIndices = ref<Set<number>>(new Set());
+const allSlugs = ref<string[]>([]);
+const matchingSlugs = ref<Set<string>>(new Set());
 
 onMounted(() => {
   if (!faqContainer.value) return;
   const items = faqContainer.value.querySelectorAll('[data-faq-item]');
-  totalCount.value = items.length;
-  const data: FaqEntry[] = Array.from(items).map((el, index) => ({
-    index,
+  const data: FaqEntry[] = Array.from(items).map((el) => ({
+    slug: el.id,
     text: normalize(
       [el.querySelector('h3')?.textContent, el.querySelector('.p-4')?.textContent].join(' '),
     ),
   }));
+  allSlugs.value = data.map((d) => d.slug);
   fuseInstance.value = new Fuse(data, {
     keys: ['text'],
     threshold: 0.3,
     ignoreLocation: true,
     minMatchCharLength: 2,
   });
-  matchingIndices.value = new Set(data.map((d) => d.index));
+  matchingSlugs.value = new Set(allSlugs.value);
 
   // Scroll to hash target
   if (initialOpenId) {
@@ -1261,20 +1261,20 @@ onMounted(() => {
 
 watch(searchQuery, (query) => {
   if (!fuseInstance.value || !query.trim()) {
-    matchingIndices.value = new Set(Array.from({ length: totalCount.value }, (_, i) => i));
+    matchingSlugs.value = new Set(allSlugs.value);
     return;
   }
   const results = fuseInstance.value.search(normalize(query));
-  matchingIndices.value = new Set(results.map((r) => r.item.index));
+  matchingSlugs.value = new Set(results.map((r) => r.item.slug));
 });
 
-const isItemVisible = (index: number) => {
+const isItemVisible = (slug: string) => {
   if (!searchQuery.value.trim()) return true;
-  return matchingIndices.value.has(index);
+  return matchingSlugs.value.has(slug);
 };
 
 const filteredCount = computed(() =>
-  searchQuery.value.trim() ? matchingIndices.value.size : totalCount.value,
+  searchQuery.value.trim() ? matchingSlugs.value.size : allSlugs.value.length,
 );
 </script>
 
