@@ -160,12 +160,12 @@
         </div>
 
         <FaqItem
-          id="pas-pu-vole"
+          id="pas-pu-voler"
           question="12. Il a plu, je n'ai pas pu voler"
           :is-initially-open="isInitiallyOpen"
           :is-item-visible="isItemVisible"
         >
-          <FaqPasPuVole />
+          <FaqPasPuVoler />
         </FaqItem>
 
         <FaqItem
