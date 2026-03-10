@@ -42,8 +42,8 @@
         <FaqItem
           id="duck-sheet"
           question="1. J'aimais bien la Duck sheet"
-          :is-initially-open="initialOpenId === 'duck-sheet'"
-          v-show="isItemVisible('duck-sheet')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <p class="mb-3">
             Nous aussi mais cette bonne vieille sheet avait un certain nombre de limites que cette
@@ -59,8 +59,8 @@
         <FaqItem
           id="pre-requis-compte"
           question="2. Quels sont les pré-requis pour obtenir un compte sur l'application ?"
-          :is-initially-open="initialOpenId === 'pre-requis-compte'"
-          v-show="isItemVisible('pre-requis-compte')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <p hidden>charte</p>
           <ul class="list-disc pl-6 space-y-2">
@@ -93,8 +93,8 @@
         <FaqItem
           id="mot-de-passe"
           question="3. Un admin m'a créé un compte mais je n'ai pas le mot de passe..."
-          :is-initially-open="initialOpenId === 'mot-de-passe'"
-          v-show="isItemVisible('mot-de-passe')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <p class="mb-3">
             Depuis la page d'accueil, clique sur bouton "Se connecter" puis sur "mot de passe oublié
@@ -112,8 +112,8 @@
         <FaqItem
           id="quest-ce-quun-coin"
           question="4. Qu'est-ce qu'un Coin ?"
-          :is-initially-open="initialOpenId === 'quest-ce-quun-coin'"
-          v-show="isItemVisible('quest-ce-quun-coin')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <p>
             C'est le petit nom donné aux points qui sont attribués aux pilotes pour déterminer leur
@@ -132,8 +132,8 @@
         <FaqItem
           id="demande-vs-reservation"
           question="5. Quelle est la différence entre une demande de réservation et une réservation ?"
-          :is-initially-open="initialOpenId === 'demande-vs-reservation'"
-          v-show="isItemVisible('demande-vs-reservation')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <p class="mb-3">
             <strong class="text-gray-900">Une demande de réservation</strong> est ton souhait de
@@ -155,8 +155,8 @@
         <FaqItem
           id="processus-reservation"
           question="6. Comment se déroule le processus de réservation ?"
-          :is-initially-open="initialOpenId === 'processus-reservation'"
-          v-show="isItemVisible('processus-reservation')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <div class="space-y-4">
             <div class="border-l-4 border-blue-500 pl-4 py-2">
@@ -221,8 +221,8 @@
         <FaqItem
           id="algorithme-attribution"
           question="7. Comment fonctionne l'algorithme d'attribution des packs ?"
-          :is-initially-open="initialOpenId === 'algorithme-attribution'"
-          v-show="isItemVisible('algorithme-attribution')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <p class="mb-4">Deux critères sont utilisés :</p>
           <ol class="list-decimal pl-6 mb-4 space-y-3">
@@ -424,8 +424,8 @@
         <FaqItem
           id="comptage-coins"
           question="8. Comment sont comptés les Coins ?"
-          :is-initially-open="initialOpenId === 'comptage-coins'"
-          v-show="isItemVisible('comptage-coins')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <p class="mb-4">
             Un certain nombre de Coins est attribué à toute demande de réservation validée. Lors du
@@ -892,8 +892,8 @@
         <FaqItem
           id="demande-non-validee"
           question="9. Que se passe-t-il si ma demande n'est pas validée ?"
-          :is-initially-open="initialOpenId === 'demande-non-validee'"
-          v-show="isItemVisible('demande-non-validee')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <p class="mb-3">
             Si ta demande n'est pas validée à J-6, cela signifie que d'autres pilotes avec un nombre
@@ -913,8 +913,8 @@
         <FaqItem
           id="annuler-reservation"
           question="10. Puis-je annuler ma réservation après validation ?"
-          :is-initially-open="initialOpenId === 'annuler-reservation'"
-          v-show="isItemVisible('annuler-reservation')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <p class="mb-3">
             Bien sûr. Note cependant que ton nombre de Coins sera quand même augmenté en fonction du
@@ -931,8 +931,8 @@
         <FaqItem
           id="recuperer-materiel"
           question="11. J'ai une réservation, chez qui dois-je récupérer le matériel ?"
-          :is-initially-open="initialOpenId === 'recuperer-materiel'"
-          v-show="isItemVisible('recuperer-materiel')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
           ><p hidden>chercher</p>
           <p class="mb-3">
             Cette information se trouve sous le menu "Infos packs". Choisis ton pack et tu
@@ -949,10 +949,10 @@
         </div>
 
         <FaqItem
-          id="plu-pas-vole"
+          id="pas-pu-vole"
           question="12. Il a plu, je n'ai pas pu voler"
-          :is-initially-open="initialOpenId === 'plu-pas-vole'"
-          v-show="isItemVisible('plu-pas-vole')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <p class="mb-3">
             Désolé mais les Coins seront quand même comptés. Outre le fait que personne ne peut
@@ -974,8 +974,8 @@
         <FaqItem
           id="maximiser-chances"
           question="13. Comment maximiser mes chances ?"
-          :is-initially-open="initialOpenId === 'maximiser-chances'"
-          v-show="isItemVisible('maximiser-chances')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <ul class="list-disc pl-6 space-y-3">
             <li>
@@ -1034,8 +1034,8 @@
         <FaqItem
           id="formation-examen-club"
           question="14. J'ai besoin d'un bi pour une formation, un examen ou une journée club"
-          :is-initially-open="initialOpenId === 'formation-examen-club'"
-          v-show="isItemVisible('formation-examen-club')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
           ><p hidden>qbi préfo pré-formation qualification</p>
 
           <p class="mb-3">
@@ -1052,8 +1052,8 @@
         <FaqItem
           id="jours-consecutifs"
           question="15. Je veux réserver plusieurs jours consécutifs"
-          :is-initially-open="initialOpenId === 'jours-consecutifs'"
-          v-show="isItemVisible('jours-consecutifs')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <p class="mb-3">
             Aujourd'hui, et probablement pour encore quelques temps, la notion de "réserver
@@ -1089,8 +1089,8 @@
         <FaqItem
           id="score-coins"
           question="16. Comment consulter mon score Coins actuel ?"
-          :is-initially-open="initialOpenId === 'score-coins'"
-          v-show="isItemVisible('score-coins')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <p>
             Ton score Coins est visible sur ta
@@ -1101,8 +1101,8 @@
         <FaqItem
           id="impossible-deposer-demande"
           question="17. Pourquoi ne puis-je pas déposer de demande de réservation ?"
-          :is-initially-open="initialOpenId === 'impossible-deposer-demande'"
-          v-show="isItemVisible('impossible-deposer-demande')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <p>
             Soit tu n'as pas cloturé une de tes réservations précédentes, soit ton compte est
@@ -1115,10 +1115,10 @@
         </FaqItem>
 
         <FaqItem
-          id="passager-donner-argent"
+          id="participation-passager"
           question="18. Mon passager a surkiffé le vol et veut absolument donner de l'argent. Que dois-je faire ?"
-          :is-initially-open="initialOpenId === 'passager-donner-argent'"
-          v-show="isItemVisible('passager-donner-argent')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <p>
             Pas de chance ! Tu n'agis pas dans le cadre de d'une activité professionnelle, tu ne
@@ -1151,8 +1151,8 @@
         <FaqItem
           id="administrateurs"
           question="19. Où sont les administrateurs ?"
-          :is-initially-open="initialOpenId === 'administrateurs'"
-          v-show="isItemVisible('administrateurs')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <p class="mb-3">
             Tu peux les contacter à travers le
@@ -1168,8 +1168,8 @@
         <FaqItem
           id="contact-questions"
           question="20. Qui puis-je contacter si j'ai d'autres questions ?"
-          :is-initially-open="initialOpenId === 'contact-questions'"
-          v-show="isItemVisible('contact-questions')"
+          :is-initially-open="isInitiallyOpen"
+          :is-item-visible="isItemVisible"
         >
           <p class="mb-3">Pour toute question supplémentaire ou problème technique, tu peux :</p>
           <ul class="list-disc pl-6 space-y-2">
@@ -1267,6 +1267,8 @@ watch(searchQuery, (query) => {
   const results = fuseInstance.value.search(normalize(query));
   matchingSlugs.value = new Set(results.map((r) => r.item.slug));
 });
+
+const isInitiallyOpen = (slug: string) => initialOpenId === slug;
 
 const isItemVisible = (slug: string) => {
   if (!searchQuery.value.trim()) return true;
