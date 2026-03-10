@@ -1144,6 +1144,8 @@
 </template>
 
 <script setup lang="ts">
+import Fuse from 'fuse.js';
+
 definePageMeta({
   pageTitle: 'FAQ - Questions fréquentes',
 });
@@ -1156,55 +1158,57 @@ const { biplaceReservationsChannel } = useDiscordLinks();
 const searchQuery = ref('');
 const faqContainer = ref<HTMLElement>();
 
+const normalize = (text: string): string =>
+  text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+
+interface FaqEntry {
+  index: number;
+  text: string;
+}
+
+const fuseInstance = ref<Fuse<FaqEntry> | null>(null);
+const totalCount = ref(0);
+const matchingIndices = ref<Set<number>>(new Set());
+
+onMounted(() => {
+  if (!faqContainer.value) return;
+  const items = faqContainer.value.querySelectorAll('[data-faq-item]');
+  totalCount.value = items.length;
+  const data: FaqEntry[] = Array.from(items).map((el, index) => ({
+    index,
+    text: normalize(
+      [el.querySelector('h3')?.textContent, el.querySelector('.p-4')?.textContent].join(' '),
+    ),
+  }));
+  fuseInstance.value = new Fuse(data, {
+    keys: ['text'],
+    threshold: 0.3,
+    ignoreLocation: true,
+    minMatchCharLength: 2,
+  });
+  matchingIndices.value = new Set(data.map((d) => d.index));
+});
+
+watch(searchQuery, (query) => {
+  if (!fuseInstance.value || !query.trim()) {
+    matchingIndices.value = new Set(Array.from({ length: totalCount.value }, (_, i) => i));
+    return;
+  }
+  const results = fuseInstance.value.search(normalize(query));
+  matchingIndices.value = new Set(results.map((r) => r.item.index));
+});
+
 const isItemVisible = (index: number) => {
-  if (!searchQuery.value.trim()) {
-    return true;
-  }
-
-  if (!faqContainer.value) {
-    return true;
-  }
-
-  // Get only FaqItem elements using data attribute
-  const faqItems = Array.from(faqContainer.value.querySelectorAll('[data-faq-item]'));
-
-  const faqItemElement = faqItems[index] as HTMLElement;
-  if (!faqItemElement) {
-    return true;
-  }
-
-  const query = searchQuery.value.toLowerCase();
-
-  // Get text content from the FaqItem's question and content
-  const questionEl = faqItemElement.querySelector('h3');
-  const contentEl = faqItemElement.querySelector('.p-4');
-
-  const questionText = questionEl?.textContent?.toLowerCase() || '';
-  const contentText = contentEl?.textContent?.toLowerCase() || '';
-  const searchableText = questionText + ' ' + contentText;
-
-  return searchableText.includes(query);
+  if (!searchQuery.value.trim()) return true;
+  return matchingIndices.value.has(index);
 };
 
-const filteredCount = computed(() => {
-  if (!faqContainer.value) {
-    return 0;
-  }
-
-  const faqItems = faqContainer.value.querySelectorAll('[data-faq-item]');
-
-  if (!searchQuery.value.trim()) {
-    return faqItems.length;
-  }
-
-  let count = 0;
-  for (let i = 0; i < faqItems.length; i++) {
-    if (isItemVisible(i)) {
-      count++;
-    }
-  }
-  return count;
-});
+const filteredCount = computed(() =>
+  searchQuery.value.trim() ? matchingIndices.value.size : totalCount.value,
+);
 </script>
 
 <style scoped>
