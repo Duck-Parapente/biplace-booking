@@ -6,13 +6,13 @@
     class="border-b border-gray-200 scroll-mt-4"
   >
     <button
-      class="w-full py-4 px-6 text-left flex justify-between items-center hover:bg-gray-300 transition-colors bg-gray-200"
+      class="w-full py-5 px-6 text-left flex justify-between items-center hover:bg-gray-300 transition-colors bg-gray-200 cursor-pointer"
       @click="isOpen = !isOpen"
     >
-      <div class="flex items-center gap-2 pr-4">
-        <h3 class="text-lg font-semibold text-gray-900">{{ question }}</h3>
+      <div class="flex items-center gap-3 pr-4">
+        <h3 class="text-base font-semibold text-gray-900">{{ question }}</h3>
         <span
-          class="text-gray-400 hover:text-gray-600 transition-colors p-1 flex-shrink-0"
+          class="text-gray-400 hover:text-gray-600 transition-colors p-2 -m-1 flex-shrink-0 rounded hover:bg-gray-100"
           title="Copier le lien"
           @click.stop="copyLink"
         >
@@ -53,7 +53,7 @@
         "
       />
     </button>
-    <div v-show="isOpen" class="p-4 text-gray-700 leading-relaxed">
+    <div v-show="isOpen" class="px-6 pt-4 pb-8 text-gray-700 leading-relaxed">
       <slot />
     </div>
   </div>

@@ -35,8 +35,8 @@
 
       <div ref="faqContainer" class="bg-white rounded-lg shadow-sm">
         <template v-for="section in faqSections" :key="section.title">
-          <div class="px-6 pt-6 pb-3">
-            <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+          <div class="px-6 pt-8 pb-2">
+            <h2 class="text-xs font-bold text-gray-500 uppercase tracking-widest">
               {{ section.title }}
             </h2>
           </div>
@@ -299,6 +299,6 @@ const filteredCount = computed(() =>
 <style scoped>
 /* Only style links within FAQ items, not standalone NuxtLinks like the back button */
 :deep([data-faq-item] a) {
-  @apply text-blue-600 underline hover:text-blue-800;
+  @apply text-blue-600 underline hover:text-blue-800 py-1 px-0.5 -mx-0.5 rounded;
 }
 </style>
