@@ -111,6 +111,11 @@ const faqSections = [
         question: "3. Un admin m'a créé un compte mais je n'ai pas le mot de passe...",
         component: FaqMotDePasse,
       },
+      {
+        id: 'email-non-reçu',
+        question: "4. Un admin m'a créé un compte mais je n'ai pas reçu l'email de confirmation...",
+        component: FaqMotDePasse,
+      },
     ],
   },
   {
@@ -118,7 +123,7 @@ const faqSections = [
     items: [
       {
         id: 'quest-ce-quun-coin',
-        question: "4. Qu'est-ce qu'un Coin ?",
+        question: "5. Qu'est-ce qu'un Coin ?",
         component: FaqQuestCeQuUnCoin,
       },
     ],
@@ -129,37 +134,37 @@ const faqSections = [
       {
         id: 'demande-vs-reservation',
         question:
-          '5. Quelle est la différence entre une demande de réservation et une réservation ?',
+          '6. Quelle est la différence entre une demande de réservation et une réservation ?',
         component: FaqDemandeVsReservation,
       },
       {
         id: 'processus-reservation',
-        question: '6. Comment se déroule le processus de réservation ?',
+        question: '7. Comment se déroule le processus de réservation ?',
         component: FaqProcessusReservation,
       },
       {
         id: 'algorithme-attribution',
-        question: "7. Comment fonctionne l'algorithme d'attribution des packs ?",
+        question: "8. Comment fonctionne l'algorithme d'attribution des packs ?",
         component: FaqAlgorithmeAttribution,
       },
       {
         id: 'comptage-coins',
-        question: '8. Comment sont comptés les Coins ?',
+        question: '9. Comment sont comptés les Coins ?',
         component: FaqComptageCoins,
       },
       {
         id: 'demande-non-validee',
-        question: "9. Que se passe-t-il si ma demande n'est pas validée ?",
+        question: "10. Que se passe-t-il si ma demande n'est pas validée ?",
         component: FaqDemandeNonValidee,
       },
       {
         id: 'annuler-reservation',
-        question: '10. Puis-je annuler ma réservation après validation ?',
+        question: '11. Puis-je annuler ma réservation après validation ?',
         component: FaqAnnulerReservation,
       },
       {
         id: 'recuperer-materiel',
-        question: "11. J'ai une réservation, chez qui dois-je récupérer le matériel ?",
+        question: "12. J'ai une réservation, chez qui dois-je récupérer le matériel ?",
         component: FaqRecupererMateriel,
       },
     ],
@@ -169,12 +174,12 @@ const faqSections = [
     items: [
       {
         id: 'pas-pu-voler',
-        question: "12. Il a plu, je n'ai pas pu voler",
+        question: "13. Il a plu, je n'ai pas pu voler",
         component: FaqPasPuVoler,
       },
       {
         id: 'maximiser-chances',
-        question: '13. Comment maximiser mes chances ?',
+        question: '14. Comment maximiser mes chances ?',
         component: FaqMaximiserChances,
       },
     ],
@@ -184,28 +189,28 @@ const faqSections = [
     items: [
       {
         id: 'formation-examen-club',
-        question: "14. J'ai besoin d'un bi pour une formation, un examen ou une journée club",
+        question: "15. J'ai besoin d'un bi pour une formation, un examen ou une journée club",
         component: FaqFormationExamenClub,
       },
       {
         id: 'jours-consecutifs',
-        question: '15. Je veux réserver plusieurs jours consécutifs',
+        question: '16. Je veux réserver plusieurs jours consécutifs',
         component: FaqJoursConsecutifs,
       },
       {
         id: 'score-coins',
-        question: '16. Comment consulter mon score Coins actuel ?',
+        question: '17. Comment consulter mon score Coins actuel ?',
         component: FaqScoreCoins,
       },
       {
         id: 'impossible-deposer-demande',
-        question: '17. Pourquoi ne puis-je pas déposer de demande de réservation ?',
+        question: '18. Pourquoi ne puis-je pas déposer de demande de réservation ?',
         component: FaqImpossibleDeposerDemande,
       },
       {
         id: 'participation-passager',
         question:
-          "18. Mon passager a surkiffé le vol et veut absolument donner de l'argent. Que dois-je faire ?",
+          "19. Mon passager a surkiffé le vol et veut absolument donner de l'argent. Que dois-je faire ?",
         component: FaqParticipationPassager,
       },
     ],
@@ -215,12 +220,12 @@ const faqSections = [
     items: [
       {
         id: 'administrateurs',
-        question: '19. Où sont les administrateurs ?',
+        question: '20. Où sont les administrateurs ?',
         component: FaqAdministrateurs,
       },
       {
         id: 'contact-questions',
-        question: "20. Qui puis-je contacter si j'ai d'autres questions ?",
+        question: "21. Qui puis-je contacter si j'ai d'autres questions ?",
         component: FaqContactQuestions,
       },
     ],
