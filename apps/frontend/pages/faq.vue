@@ -255,7 +255,10 @@ onMounted(() => {
   const data: FaqEntry[] = Array.from(items).map((el) => ({
     slug: el.id,
     text: normalize(
-      [el.querySelector('h3')?.textContent, el.querySelector('.p-4')?.textContent].join(' '),
+      [
+        el.querySelector('h3')?.textContent,
+        el.querySelector('[data-faq-answer]')?.textContent,
+      ].join(' '),
     ),
   }));
   allSlugs.value = data.map((d) => d.slug);
