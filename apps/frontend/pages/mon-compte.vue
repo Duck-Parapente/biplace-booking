@@ -189,6 +189,7 @@
 
 <script setup lang="ts">
 import { UserStatus } from '~/composables/useUserStatus';
+import { adhesionLink } from '~/config/links.config';
 import type { UserFormData, ValidationErrors } from '~/types/user';
 
 definePageMeta({
@@ -210,7 +211,6 @@ const {
 } = useUser();
 
 const { getDisplay: userStatus } = useUserStatus();
-const { adhesionLink } = useHelloAssoLinks();
 
 const formData = ref<UserFormData>({
   firstName: '',
