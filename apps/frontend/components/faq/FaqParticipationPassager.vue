@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p hidden>participation</p>
     <p>
       Pas de chance ! Tu n'agis pas dans le cadre de d'une activité professionnelle, tu ne peux pas
       encaisser d'argent pour te payer la Rolex de Rihana. Par contre, tu peux suggérer à ton
