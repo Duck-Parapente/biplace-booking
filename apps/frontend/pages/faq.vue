@@ -16,10 +16,13 @@
             </button>
           </div>
         </div>
-        <p v-if="searchQuery && filteredCount === 0" class="mt-2 text-sm text-gray-500">
+        <p v-if="searchQuery && filteredCount === 0" class="mt-2 px-4 py-2 text-sm text-gray-500">
           Aucun résultat trouvé pour "{{ searchQuery }}"
         </p>
-        <p v-else-if="searchQuery && filteredCount > 0" class="mt-2 text-sm text-gray-500">
+        <p
+          v-else-if="searchQuery && filteredCount > 0"
+          class="mt-2 px-4 py-2 text-sm text-gray-500"
+        >
           {{ filteredCount }} résultat{{ filteredCount > 1 ? 's' : '' }} trouvé{{
             filteredCount > 1 ? 's' : ''
           }}

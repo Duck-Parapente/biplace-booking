@@ -9,10 +9,10 @@
       class="w-full py-5 px-6 text-left flex justify-between items-center hover:bg-gray-300 transition-colors bg-gray-200 cursor-pointer"
       @click="isOpen = !isOpen"
     >
-      <div class="flex items-center gap-3 pr-4">
-        <h3 class="text-base font-semibold text-gray-900">{{ question }}</h3>
+      <div class="pr-4">
+        <h3 class="text-base font-semibold text-gray-900 inline">{{ question }}</h3>
         <span
-          class="text-gray-400 hover:text-gray-600 transition-colors p-2 -m-1 flex-shrink-0 rounded hover:bg-gray-100"
+          class="inline-flex align-middle text-gray-400 hover:text-gray-600 transition-colors pl-2"
           title="Copier le lien"
           @click.stop="copyLink"
         >
