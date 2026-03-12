@@ -35,10 +35,7 @@
         </div>
       </div>
 
-      <div
-        v-if="userData && userStatus(userData).status !== UserStatus.ACTIVE"
-        class="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-600 shadow-sm"
-      >
+      <div class="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-600 shadow-sm">
         <p class="text-sm font-medium text-gray-900 mb-2">💳 Cotisation biplace 2026</p>
         <p class="text-xs text-gray-700 mb-3">
           Tu as réglé ta cotisation biplace pour 2026 ? Si oui, demande à un admin de mettre à jour
@@ -188,7 +185,6 @@
 </template>
 
 <script setup lang="ts">
-import { UserStatus } from '~/composables/useUserStatus';
 import { adhesionLink } from '~/config/links.config';
 import type { UserFormData, ValidationErrors } from '~/types/user';
 
