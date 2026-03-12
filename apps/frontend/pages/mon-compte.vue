@@ -35,7 +35,10 @@
         </div>
       </div>
 
-      <div class="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-600 shadow-sm">
+      <div
+        v-if="showAdhesionBanner"
+        class="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-600 shadow-sm"
+      >
         <p class="text-sm font-medium text-gray-900 mb-2">💳 Cotisation biplace 2026</p>
         <p class="text-xs text-gray-700 mb-3">
           Tu as réglé ta cotisation biplace pour 2026 ? Si oui, demande à un admin de mettre à jour
@@ -207,6 +210,16 @@ const {
 } = useUser();
 
 const { getDisplay: userStatus } = useUserStatus();
+
+const showAdhesionBanner = computed(() => {
+  if (!userData.value?.isActive) return true;
+  if (!userData.value?.activeUntil) return false;
+
+  const activeUntil = new Date(userData.value.activeUntil);
+  const oneMonthBefore = new Date(activeUntil);
+  oneMonthBefore.setMonth(oneMonthBefore.getMonth() - 1);
+  return new Date() >= oneMonthBefore;
+});
 
 const formData = ref<UserFormData>({
   firstName: '',
