@@ -19,8 +19,9 @@
     <div class="space-y-6">
       <div>
         <h5 class="font-semibold text-gray-900 mb-3">
-          ✅ Cas 1 : Tu réserves tôt et clôtures ta réservation après le vol
+          ✅ Cas 1 : Tu déposes une demande tôt (avant J-6) et clôtures ta réservation après le vol.
         </h5>
+        <p class="mb-4">Si tu es le plus prioritaire, le matériel te sera attribué à J-6 20:00.</p>
         <div>
           <table class="w-full text-xs text-gray-600 table-fixed">
             <tbody>
@@ -168,12 +169,18 @@
 
       <div>
         <h5 class="font-semibold text-gray-900 mb-3">
-          ✅ Cas 2 : Tu réserves tardivement et clôtures ta réservation après le vol
+          ✅ Cas 2 : Tu obtiens une réservation tardivement (après J-6) et tu la clôtures après le
+          vol
         </h5>
-        <p class="mb-4">
-          C'est possible si du matériel est encore disponible ou qu'une réservation a été annulée à
-          moins de 6 jours du jour J.
-        </p>
+        <p class="mb-4">Ce cas peut se produire dans deux situations :</p>
+        <ul class="list-disc pl-6 space-y-2">
+          <li>Du matériel était disponible après J-6 et tu as déposé une demande opportuniste.</li>
+          <li>
+            Tu avais déposé une demande mais un autre pilote plus prioritaire a obtenu le matériel.
+            Imaginons que tu es numéro 2 en file d'attente, le pilote a depuis annulé sa
+            réservation. Le matériel t'a alors été attribué.
+          </li>
+        </ul>
         <div>
           <table class="w-full text-xs text-gray-600 table-fixed">
             <tbody>
@@ -317,6 +324,11 @@
 
       <div>
         <h5 class="font-semibold text-gray-900 mb-3">⚠️ Cas 3 : Tu annules</h5>
+        <p class="mb-4">
+          Tu as déposé une demande et obtenu du matériel pour offrir un vol surprise à Tata Suzanne
+          mais elle t'informe qu'à cause de ses problèmes de hanche, elle préfère regarder les
+          autres voler en buvant des canons en terrasse à l'atterro.
+        </p>
         <div>
           <table class="w-full text-xs text-gray-600 table-fixed">
             <tbody>
