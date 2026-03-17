@@ -100,7 +100,7 @@ const faqSections = [
       { id: 'duck-sheet', question: "1. J'aimais bien la Duck sheet", component: FaqDuckSheet },
       {
         id: 'pre-requis-compte',
-        question: "2. Comment obtenir un compte ?",
+        question: '2. Comment obtenir un compte ?',
         component: FaqObtnenirUnCompte,
       },
       {

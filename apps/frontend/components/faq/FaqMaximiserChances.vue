@@ -23,15 +23,16 @@
           effet, si le pilote à qui il est attribué se désiste, il te sera peut-être attribué.<br />
           Par contre, si le 2, tu décides que comme tu n'as pas de biplace, tu iras grimper avec tes
           potes, annule ta demande. Dans le cas contraire, si le pilote à qui il est attribué se
-          désiste, il te sera peut-être attribué et tu seras redevable d'au moins un Coin même si tu
-          l'annules rapidement.
+          désiste, il te sera peut-être attribué et tu seras redevable de quelques Coins suivant
+          quand tu l'annuleras.
         </li>
         <li>
           <strong>Réserver plus tard que J-6 coûte moins cher mais est plus risqué.</strong><br />
           Cela peut être une stratégie plus économique dans les périodes de faible demande : Si tu
           désires voler en février, la demande est généralement faible. En consultant régulièrement
           le planning, tu peux attendre le dernier moment pour réserver et ainsi limiter le nombre
-          de Coins.
+          de Coins.<br />Valide néanmoins avec le précédent emprunteur que tu pourras récupérer le
+          matériel selon ses disponibilités.
         </li>
         <li>
           <strong>Si tu sens que la météo va tourner au vinaigre,</strong> annule ta réservation le

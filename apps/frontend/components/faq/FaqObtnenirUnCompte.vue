@@ -1,15 +1,13 @@
 <template>
   <div>
     <p hidden>charte</p>
-      <p class="mb-3">
-En premier, lieu, tu dois templir les prérequis suivants :
-      </p>
-      <ul class="list-disc pl-6 space-y-2">
-        <li>Être à jour de ta cotisation au Duck parapente.</li>
-        <li>
-          Avoir payé le supplément de cotisation biplace sur
-          <a :href="adhesionLink">helloasso</a>.
-        </li>
+    <p class="mb-3">En premier, lieu, tu dois templir les prérequis suivants :</p>
+    <ul class="list-disc pl-6 space-y-2">
+      <li>Être à jour de ta cotisation au Duck parapente.</li>
+      <li>
+        Avoir payé le supplément de cotisation biplace sur
+        <a :href="adhesionLink">helloasso</a>.
+      </li>
       <li>Avoir envoyé ton chèque de caution au président du Duck.</li>
       <li>
         Etre qualifié biplace ou en cours de formation (= BPC minimum et pré-formation en vue).
