@@ -67,7 +67,7 @@ import Fuse from 'fuse.js';
 
 import {
   FaqDuckSheet,
-  FaqPreRequisCompte,
+  FaqObtnenirUnCompte,
   FaqMotDePasse,
   FaqQuestCeQuUnCoin,
   FaqDemandeVsReservation,
@@ -85,6 +85,7 @@ import {
   FaqImpossibleDeposerDemande,
   FaqParticipationPassager,
   FaqAdministrateurs,
+  FaqIndisponibilites,
   FaqContactQuestions,
 } from '#components';
 
@@ -99,8 +100,8 @@ const faqSections = [
       { id: 'duck-sheet', question: "1. J'aimais bien la Duck sheet", component: FaqDuckSheet },
       {
         id: 'pre-requis-compte',
-        question: "2. Quels sont les pré-requis pour obtenir un compte sur l'application ?",
-        component: FaqPreRequisCompte,
+        question: '2. Comment obtenir un compte ?',
+        component: FaqObtnenirUnCompte,
       },
       {
         id: 'mot-de-passe',
@@ -212,16 +213,26 @@ const faqSections = [
     ],
   },
   {
+    title: 'Respos pack',
+    items: [
+      {
+        id: 'gestion-indisponibilite',
+        question: '20. Comment gérer les indisponibilités ?',
+        component: FaqIndisponibilites,
+      },
+    ],
+  },
+  {
     title: 'Aide et contact',
     items: [
       {
         id: 'administrateurs',
-        question: '20. Où sont les administrateurs ?',
+        question: '21. Où sont les administrateurs ?',
         component: FaqAdministrateurs,
       },
       {
         id: 'contact-questions',
-        question: "21. Qui puis-je contacter si j'ai d'autres questions ?",
+        question: "22. Qui puis-je contacter si j'ai d'autres questions ?",
         component: FaqContactQuestions,
       },
     ],
