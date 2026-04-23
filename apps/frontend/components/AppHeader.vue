@@ -22,6 +22,15 @@
       </button>
       <span class="text-xl font-semibold">{{ pageTitle }}</span>
     </div>
+    <NuxtLink
+      v-if="isAuthenticated && hasNewsToShow"
+      to="/nouveautes"
+      class="relative text-secondary-600 hover:opacity-80 transition-opacity -my-2 -mr-2 p-2"
+      aria-label="Nouveautés"
+    >
+      <IconBell class="h-6 w-6" />
+      <span class="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-red-500" />
+    </NuxtLink>
   </header>
 
   <!-- Fullscreen Burger Menu -->
@@ -54,10 +63,14 @@
                 v-for="item in category.items"
                 :key="item.path"
                 :to="item.path"
-                class="text-secondary-600 text-2xl font-semibold hover:opacity-80 transition-opacity"
+                class="relative text-secondary-600 text-2xl font-semibold hover:opacity-80 transition-opacity"
                 @click="isMenuOpen = false"
               >
                 {{ item.label }}
+                <span
+                  v-if="item.hasNotification && hasNewsToShow"
+                  class="absolute -top-1 -right-4 h-2.5 w-2.5 rounded-full bg-red-500"
+                />
               </NuxtLink>
             </div>
           </div>
@@ -84,12 +97,14 @@ defineOptions({
 const { logout, isAuthenticated, isAdminOrManager } = useAuth();
 const { maintenanceMode } = usePublicConfig();
 const { pageTitle } = usePageTitle();
+const { hasNewsToShow } = useNews();
 const isMenuOpen = ref(false);
 
 interface MenuItem {
   path: string;
   label: string;
   requiresAdminOrManager?: boolean;
+  hasNotification?: boolean;
 }
 
 interface MenuCategory {
@@ -109,6 +124,7 @@ const menuCategories: MenuCategory[] = [
   {
     label: 'Informations',
     items: [
+      { path: '/nouveautes', label: 'Nouveautés', hasNotification: true },
       { path: '/faq', label: 'FAQ' },
       { path: '/contacts', label: 'Contacts' },
       { path: '/helloasso', label: 'HelloAsso' },
@@ -132,6 +148,7 @@ const visibleMenuCategories = computed(() => {
     .map((category) => ({
       ...category,
       items: category.items.filter((item) => {
+        if (item.hasNotification && !hasNewsToShow.value) return false;
         if (!item.requiresAdminOrManager) return true;
         return isAdminOrManager.value;
       }),
