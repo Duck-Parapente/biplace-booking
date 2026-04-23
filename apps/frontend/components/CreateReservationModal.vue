@@ -10,8 +10,17 @@
         <BaseInput
           id="startingDate"
           v-model="form.startingDate"
-          label="Date"
+          label="Date de début"
           type="date"
+          required
+        />
+
+        <BaseInput
+          id="endDate"
+          v-model="form.endDate"
+          label="Date de fin"
+          type="date"
+          :min="form.startingDate"
           required
         />
 
@@ -96,17 +105,15 @@
 </template>
 
 <script setup lang="ts">
-import type { CreateReservationDto } from 'shared';
-
 interface Props {
   show: boolean;
-  modelValue: CreateReservationDto;
+  modelValue: CreateReservationFormData;
 }
 
 interface Emits {
   (e: 'close'): void;
   (e: 'submit'): void;
-  (e: 'update:modelValue', value: CreateReservationDto): void;
+  (e: 'update:modelValue', value: CreateReservationFormData): void;
 }
 
 const props = defineProps<Props>();
@@ -123,6 +130,15 @@ const form = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value),
 });
+
+watch(
+  () => form.value.startingDate,
+  (newStart) => {
+    if (!form.value.endDate || form.value.endDate < newStart) {
+      form.value.endDate = newStart;
+    }
+  },
+);
 
 // Selection state (for autocomplete search)
 const userSearch = ref('');

@@ -50,7 +50,6 @@
 
 <script setup lang="ts">
 import { useSwipe } from '@vueuse/core';
-import type { CreateReservationDto } from 'shared';
 import { ref, computed, watch, onMounted } from 'vue';
 
 import IconPlus from '~/components/icons/IconPlus.vue';
@@ -104,14 +103,16 @@ const { direction } = useSwipe(swipeContainer, {
 
 // Create Reservation Modal
 const showCreateReservationModal = ref(false);
-const createReservationForm = ref<CreateReservationDto>({
+const createReservationForm = ref({
   startingDate: formatDateToString(new Date()),
+  endDate: formatDateToString(new Date()),
   packId: '',
 });
 
 const openCreateReservationModal = () => {
   createReservationForm.value = {
     startingDate: formatDateToString(new Date()),
+    endDate: formatDateToString(new Date()),
     packId: '',
   };
   showCreateReservationModal.value = true;
