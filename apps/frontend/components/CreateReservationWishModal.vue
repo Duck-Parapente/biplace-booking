@@ -129,6 +129,9 @@ const packSearch = ref('');
 const showModal = ref(false);
 const selectedPacks = ref<PackDto[]>([]);
 const config = useRuntimeConfig();
+const route = useRoute();
+const router = useRouter();
+const hasProcessedQuery = ref(false);
 
 const minDate = computed(() => {
   const todayDate = formatDateToString(new Date());
@@ -197,4 +200,38 @@ const removePackChoice = (packId: string) => {
   selectedPacks.value = selectedPacks.value.filter((p) => p.id !== packId);
   addReservationWishForm.value.packChoices = selectedPacks.value.map((p) => p.id);
 };
+
+const prefillFromQuery = () => {
+  if (hasProcessedQuery.value) return;
+
+  const { date, packId } = route.query;
+  if (!date && !packId) return;
+
+  // Wait for packs to be loaded if packId is specified
+  if (packId && props.packs.length === 0) return;
+
+  hasProcessedQuery.value = true;
+
+  showModal.value = true;
+  submitError.value = null;
+  submitSuccess.value = false;
+  packSearch.value = '';
+
+  const pack = packId ? props.packs.find((p) => p.id === packId) : undefined;
+  selectedPacks.value = pack ? [pack] : [];
+
+  addReservationWishForm.value = {
+    startingDate: (date as string) || '',
+    packChoices: pack ? [pack.id] : [],
+    publicComment: undefined,
+  };
+
+  router.replace({ query: {} });
+};
+
+watch(
+  () => props.packs,
+  () => prefillFromQuery(),
+  { immediate: true },
+);
 </script>

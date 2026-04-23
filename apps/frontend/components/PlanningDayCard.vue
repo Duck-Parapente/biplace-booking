@@ -24,14 +24,22 @@
 
       <!-- Pack Status Tags (when collapsed) -->
       <div v-if="!isExpanded" class="flex flex-wrap gap-1 mt-2">
-        <BaseTag
-          v-for="pack in day.packs"
-          :key="pack.packId"
-          rounded="rounded"
-          :variant="getPackStatusConfig(pack).variant"
-        >
-          {{ pack.packLabel }}
-        </BaseTag>
+        <template v-for="pack in day.packs" :key="pack.packId">
+          <NuxtLink
+            v-if="getPackStatusConfig(pack).status === 'available'"
+            :to="{
+              path: '/mes-demandes',
+              query: { date: formatDateToString(new Date(day.date)), packId: pack.packId },
+            }"
+          >
+            <BaseTag rounded="rounded" :variant="getPackStatusConfig(pack).variant">
+              {{ pack.packLabel }}
+            </BaseTag>
+          </NuxtLink>
+          <BaseTag v-else rounded="rounded" :variant="getPackStatusConfig(pack).variant">
+            {{ pack.packLabel }}
+          </BaseTag>
+        </template>
       </div>
     </div>
 
@@ -47,8 +55,20 @@
 
           <div class="flex flex-col items-end gap-1">
             <div class="flex items-stretch gap-1 text-sm">
+              <NuxtLink
+                v-if="!pack.reservation && getPackStatusConfig(pack).status === 'available'"
+                :to="{
+                  path: '/mes-demandes',
+                  query: { date: formatDateToString(new Date(day.date)), packId: pack.packId },
+                }"
+              >
+                <BaseTag rounded="rounded" :variant="getPackStatusConfig(pack).variant">
+                  <component :is="getPackStatusConfig(pack).icon" class="w-3 h-3 mr-1" />
+                  {{ getPackStatusConfig(pack).label }}
+                </BaseTag>
+              </NuxtLink>
               <BaseTag
-                v-if="!pack.reservation"
+                v-else-if="!pack.reservation"
                 rounded="rounded"
                 :variant="getPackStatusConfig(pack).variant"
               >
@@ -102,7 +122,7 @@ import IconCheck from '~/components/icons/IconCheck.vue';
 import IconClock from '~/components/icons/IconClock.vue';
 import IconUser from '~/components/icons/IconUser.vue';
 import IconX from '~/components/icons/IconX.vue';
-import { isToday, isBeforeToday } from '~/composables/useDateHelpers';
+import { isToday, isBeforeToday, formatDateToString } from '~/composables/useDateHelpers';
 
 interface PlanningDay {
   date: string;
@@ -164,6 +184,7 @@ const getPackStatusConfig = (pack: PackPlanningDto) => {
   if (pack.reservation) {
     const user = getReservedUser(pack.reservation.userId);
     return {
+      status: 'reserved' as const,
       variant: 'danger' as const,
       icon: IconUser,
       label: getUserDisplayName(user) ?? 'Admin',
@@ -173,12 +194,14 @@ const getPackStatusConfig = (pack: PackPlanningDto) => {
   }
   if (pack.pendingWishesCount > 0) {
     return {
+      status: 'pending' as const,
       variant: 'warning' as const,
       icon: IconClock,
       label: `${pack.pendingWishesCount} ${pack.pendingWishesCount > 1 ? 'demandes' : 'demande'}`,
     };
   }
   return {
+    status: 'available' as const,
     variant: 'success' as const,
     icon: IconCheck,
     label: 'Disponible',
