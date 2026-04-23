@@ -27,10 +27,7 @@
         <template v-for="pack in day.packs" :key="pack.packId">
           <NuxtLink
             v-if="getPackStatusConfig(pack).status === 'available'"
-            :to="{
-              path: '/mes-demandes',
-              query: { date: formatDateToString(new Date(day.date)), packId: pack.packId },
-            }"
+            :to="getCreateWishLink(pack)"
           >
             <BaseTag rounded="rounded" :variant="getPackStatusConfig(pack).variant">
               {{ pack.packLabel }}
@@ -56,11 +53,8 @@
           <div class="flex flex-col items-end gap-1">
             <div class="flex items-stretch gap-1 text-sm">
               <NuxtLink
-                v-if="!pack.reservation && getPackStatusConfig(pack).status === 'available'"
-                :to="{
-                  path: '/mes-demandes',
-                  query: { date: formatDateToString(new Date(day.date)), packId: pack.packId },
-                }"
+                v-if="getPackStatusConfig(pack).status === 'available'"
+                :to="getCreateWishLink(pack)"
               >
                 <BaseTag rounded="rounded" :variant="getPackStatusConfig(pack).variant">
                   <component :is="getPackStatusConfig(pack).icon" class="w-3 h-3 mr-1" />
@@ -68,7 +62,7 @@
                 </BaseTag>
               </NuxtLink>
               <BaseTag
-                v-else-if="!pack.reservation"
+                v-else-if="getPackStatusConfig(pack).status !== 'reserved'"
                 rounded="rounded"
                 :variant="getPackStatusConfig(pack).variant"
               >
@@ -179,6 +173,11 @@ const getReservedUser = (userId: string | undefined) => {
   if (!userId) return undefined;
   return users.value.find((u) => u.id === userId);
 };
+
+const getCreateWishLink = (pack: PackPlanningDto) => ({
+  path: '/mes-demandes',
+  query: { date: formatDateToString(new Date(props.day.date)), packId: pack.packId },
+});
 
 const getPackStatusConfig = (pack: PackPlanningDto) => {
   if (pack.reservation) {
