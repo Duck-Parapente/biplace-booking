@@ -67,7 +67,14 @@ const { getPacks } = usePack();
 const { resetSubmissionState } = useReservationForm();
 const { selectedPacks, togglePack, setSelectedPacks } = useSelectedPacks();
 
-const currentWeekStart = ref<Date>(getMonday(new Date()));
+const { value: storedWeekStart } = useLocalStorage<string>(
+  'planning-week-start',
+  formatDateToString(getMonday(new Date())),
+);
+const currentWeekStart = ref<Date>(getMonday(new Date(storedWeekStart.value)));
+watch(currentWeekStart, (date) => {
+  storedWeekStart.value = formatDateToString(date);
+});
 const week = computed(() => getWeekDays(currentWeekStart.value));
 
 // Transition state and direction
