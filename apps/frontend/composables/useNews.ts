@@ -11,7 +11,7 @@ const NEWS: NewsEntry[] = [
     date: '2025-04-23',
     title: 'Lien cliquable depuis le planning',
     content:
-      "Vous pouvez désormais faire une demande de réservation directement depuis le planning en cliquant sur une date. Un formulaire pré-rempli avec la date sélectionnée s'ouvrira pour faciliter votre réservation.",
+      "Vous pouvez désormais faire une demande de réservation directement depuis le planning en cliquant sur un biplace. Un formulaire pré-rempli avec la date et le biplace sélectionnés s'ouvrira pour faciliter votre réservation. Il vous faudra rajouter les autres biplaces désirés le cas échéant.",
   },
   {
     version: 1,
