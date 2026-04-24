@@ -24,19 +24,11 @@
 
       <!-- Pack Status Tags (when collapsed) -->
       <div v-if="!isExpanded" class="flex flex-wrap gap-1 mt-2">
-        <template v-for="pack in day.packs" :key="pack.packId">
-          <NuxtLink
-            v-if="getPackStatusConfig(pack).status === 'available'"
-            :to="getCreateWishLink(pack)"
-          >
-            <BaseTag rounded="rounded" :variant="getPackStatusConfig(pack).variant">
-              {{ pack.packLabel }}
-            </BaseTag>
-          </NuxtLink>
-          <BaseTag v-else rounded="rounded" :variant="getPackStatusConfig(pack).variant">
+        <NuxtLink v-for="pack in day.packs" :key="pack.packId" :to="getCreateWishLink(pack)">
+          <BaseTag rounded="rounded" :variant="getPackStatusConfig(pack).variant">
             {{ pack.packLabel }}
           </BaseTag>
-        </template>
+        </NuxtLink>
       </div>
     </div>
 
@@ -61,14 +53,15 @@
                   {{ getPackStatusConfig(pack).label }}
                 </BaseTag>
               </NuxtLink>
-              <BaseTag
+              <NuxtLink
                 v-else-if="getPackStatusConfig(pack).status !== 'reserved'"
-                rounded="rounded"
-                :variant="getPackStatusConfig(pack).variant"
+                :to="getCreateWishLink(pack)"
               >
-                <component :is="getPackStatusConfig(pack).icon" class="w-3 h-3 mr-1" />
-                {{ getPackStatusConfig(pack).label }}
-              </BaseTag>
+                <BaseTag rounded="rounded" :variant="getPackStatusConfig(pack).variant">
+                  <component :is="getPackStatusConfig(pack).icon" class="w-3 h-3 mr-1" />
+                  {{ getPackStatusConfig(pack).label }}
+                </BaseTag>
+              </NuxtLink>
               <PilotDisplay
                 v-else
                 :display-name="getPackStatusConfig(pack).label"

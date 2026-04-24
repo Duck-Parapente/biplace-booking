@@ -216,6 +216,13 @@ const prefillFromQuery = () => {
   if (packId && props.packs.length === 0) return;
 
   hasProcessedQuery.value = true;
+
+  if (props.hasUnclosedOldReservation) {
+    alert('Tu as une ancienne réservation à clôturer avant de pouvoir créer une nouvelle demande.');
+    router.back();
+    return;
+  }
+
   openedFromQuery.value = true;
 
   showModal.value = true;
