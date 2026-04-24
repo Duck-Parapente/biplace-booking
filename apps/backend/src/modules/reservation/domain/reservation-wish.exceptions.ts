@@ -10,6 +10,7 @@ export class UserHasReservationWishOnStartingDateException extends ExceptionBase
     super(
       `User with ID ${userId.uuid} already has a reservation wish on starting date ${startingDate.value.toISOString()}.`,
     );
+    this.label = `Tu as déjà une demande de réservation le ${startingDate.formatDDMMYY()}.`;
   }
 }
 
@@ -23,6 +24,7 @@ export class CannotUpdateReservationWishStatusException extends ExceptionBase {
     super(
       `Cannot update reservation wish with ID ${reservationWishId.uuid} from status ${previousStatus} to ${newStatus}.`,
     );
+    this.label = 'Impossible de modifier le statut de cette demande de réservation.';
   }
 }
 
@@ -31,6 +33,7 @@ export class ReservationWishNotFoundException extends ExceptionBase {
 
   constructor(reservationWishId: UUID) {
     super(`Reservation wish with ID ${reservationWishId.uuid} not found.`);
+    this.label = 'Demande de réservation introuvable.';
   }
 }
 
@@ -41,6 +44,7 @@ export class ReservationWishInvalidDateRangeException extends ExceptionBase {
     super(
       `Invalid date range: starting date ${startingDate.value.toISOString()} is not before ending date ${endingDate.value.toISOString()}.`,
     );
+    this.label = `Plage de dates invalide : la date de début ${startingDate.formatDDMMYY()} doit être antérieure à la date de fin ${endingDate.formatDDMMYY()}.`;
   }
 }
 
@@ -49,5 +53,6 @@ export class EmptyPackChoicesException extends ExceptionBase {
 
   constructor() {
     super('Reservation wish must have at least one pack choice.');
+    this.label = 'La demande de réservation doit contenir au moins un biplace.';
   }
 }

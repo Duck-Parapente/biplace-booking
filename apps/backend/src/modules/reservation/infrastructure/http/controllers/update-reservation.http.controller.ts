@@ -45,7 +45,10 @@ export class UpdateReservationHttpController {
     const reservation = await this.reservationRepository.findById(reservationId);
 
     if (!reservation) {
-      throw new NotFoundException(`Reservation not found: ${id}`);
+      throw new NotFoundException({
+        label: 'Réservation introuvable.',
+        message: `Reservation not found: ${id}`,
+      });
     }
 
     const command = new UpdateReservationCommand({
@@ -64,7 +67,7 @@ export class UpdateReservationHttpController {
       this.logger.error('Error updating reservation', error);
 
       if (error instanceof ReservationNotFoundException) {
-        throw new NotFoundException(error.message);
+        throw new NotFoundException({ label: error.label, message: error.message });
       }
 
       throw error;

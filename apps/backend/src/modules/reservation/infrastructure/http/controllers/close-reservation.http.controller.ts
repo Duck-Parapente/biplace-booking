@@ -52,7 +52,10 @@ export class CloseReservationHttpController {
     const reservation = await this.reservationRepository.findById(reservationId);
 
     if (!reservation) {
-      throw new NotFoundException(`Reservation not found: ${id}`);
+      throw new NotFoundException({
+        label: 'Réservation introuvable.',
+        message: `Reservation not found: ${id}`,
+      });
     }
 
     await this.reservationAuthorizationService.checkUserIsAllowedToCloseReservation(
@@ -82,11 +85,11 @@ export class CloseReservationHttpController {
       this.logger.error('Error closing reservation', error);
 
       if (error instanceof ReservationNotFoundException) {
-        throw new NotFoundException(error.message);
+        throw new NotFoundException({ label: error.label, message: error.message });
       }
 
       if (error instanceof CannotCloseReservationException) {
-        throw new BadRequestException(error.message);
+        throw new BadRequestException({ label: error.label, message: error.message });
       }
 
       throw error;

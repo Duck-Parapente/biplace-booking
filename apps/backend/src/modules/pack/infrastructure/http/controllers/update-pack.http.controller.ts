@@ -45,7 +45,10 @@ export class UpdatePackHttpController {
     );
 
     if (!isUserAllowedToManagePack) {
-      throw new ForbiddenException('User is not allowed to update this pack');
+      throw new ForbiddenException({
+        label: "Tu n'es pas autorisé à modifier ce biplace.",
+        message: 'User is not allowed to update this pack',
+      });
     }
 
     const command = new UpdatePackCommand({

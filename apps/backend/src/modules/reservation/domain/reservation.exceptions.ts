@@ -8,6 +8,7 @@ export class CannotCreateReservationException extends ExceptionBase {
     super(
       `Cannot create reservation for pack ID ${packId.uuid} on starting date ${startingDate.value.toISOString()}.`,
     );
+    this.label = `Impossible de créer la réservation le ${startingDate.formatDDMMYY()}.`;
   }
 }
 
@@ -15,6 +16,7 @@ export class ReservationNotFoundException extends ExceptionBase {
   code = ReservationNotFoundException.name;
   constructor(reservationId: UUID) {
     super(`Reservation not found: ${reservationId.uuid}`);
+    this.label = 'Réservation introuvable.';
   }
 }
 
@@ -24,6 +26,8 @@ export class CannotCancelReservationException extends ExceptionBase {
     super(
       `Cannot cancel reservation ${reservationId.uuid} with status ${status}. Only confirmed reservations can be cancelled.`,
     );
+    this.label =
+      "Impossible d'annuler cette réservation. Seules les réservations confirmées peuvent être annulées.";
   }
 }
 
@@ -34,6 +38,7 @@ export class ReservationInvalidDateRangeException extends ExceptionBase {
     super(
       `Invalid date range: starting date ${startingDate.value.toISOString()} is not before ending date ${endingDate.value.toISOString()}.`,
     );
+    this.label = `Plage de dates invalide : la date de début ${startingDate.formatDDMMYY()} doit être antérieure à la date de fin ${endingDate.formatDDMMYY()}.`;
   }
 }
 
@@ -43,5 +48,7 @@ export class CannotCloseReservationException extends ExceptionBase {
     super(
       `Cannot close reservation ${reservationId.uuid} with status ${status}. Only confirmed reservations can be closed.`,
     );
+    this.label =
+      'Impossible de clôturer cette réservation. Seules les réservations confirmées peuvent être clôturées.';
   }
 }

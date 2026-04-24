@@ -62,11 +62,11 @@ export class UpdateReservationWishHttpController {
       this.logger.error('Error cancelling reservation wish', error);
 
       if (error instanceof ReservationWishNotFoundException) {
-        throw new NotFoundException(error.message);
+        throw new NotFoundException({ label: error.label, message: error.message });
       }
 
       if (error instanceof CannotUpdateReservationWishStatusException) {
-        throw new BadRequestException(error.message);
+        throw new BadRequestException({ label: error.label, message: error.message });
       }
 
       throw error;
@@ -83,6 +83,9 @@ export class UpdateReservationWishHttpController {
       return;
     }
 
-    throw new ForbiddenException('User is not allowed to update this reservation wish');
+    throw new ForbiddenException({
+      label: "Tu n'es pas autorisé à modifier cette demande de réservation.",
+      message: 'User is not allowed to update this reservation wish',
+    });
   }
 }

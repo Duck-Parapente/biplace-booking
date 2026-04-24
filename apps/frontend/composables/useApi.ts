@@ -37,10 +37,14 @@ export const useApi = () => {
       // Try to parse JSON error response
       try {
         const errorData = await response.json();
-        // Extract the message if it exists, otherwise show full error
-        errorMessage = errorData.message || JSON.stringify(errorData, null, 2);
+        // Prefer French label, then message, then full error object
+        errorMessage = errorData.label || errorData.message || JSON.stringify(errorData, null, 2);
       } catch {
         // If not JSON, keep the default message
+      }
+
+      if (errorMessage.toLowerCase() === 'internal server error') {
+        errorMessage = 'Une erreur inattendue est survenue. Réessaie plus tard.';
       }
 
       throw new Error(errorMessage);

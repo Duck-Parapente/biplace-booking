@@ -16,6 +16,7 @@ import {
  */
 export class ArgumentInvalidException extends ExceptionBase {
   readonly code = ARGUMENT_INVALID;
+  override label = 'Argument invalide.';
 }
 
 /**
@@ -26,6 +27,7 @@ export class ArgumentInvalidException extends ExceptionBase {
  */
 export class ArgumentNotProvidedException extends ExceptionBase {
   readonly code = ARGUMENT_NOT_PROVIDED;
+  override label = 'Argument manquant.';
 }
 
 /**
@@ -37,6 +39,7 @@ export class ArgumentNotProvidedException extends ExceptionBase {
  */
 export class ArgumentOutOfRangeException extends ExceptionBase {
   readonly code = ARGUMENT_OUT_OF_RANGE;
+  override label = 'Argument hors limites.';
 }
 
 /**
@@ -47,6 +50,7 @@ export class ArgumentOutOfRangeException extends ExceptionBase {
  */
 export class ConflictException extends ExceptionBase {
   readonly code = CONFLICT;
+  override label = 'Conflit détecté.';
 }
 
 /**
@@ -60,6 +64,7 @@ export class NotFoundException extends ExceptionBase {
 
   constructor(message = NotFoundException.message) {
     super(message);
+    this.label = 'Élément introuvable.';
   }
 
   readonly code = NOT_FOUND;
@@ -76,6 +81,7 @@ export class InternalServerErrorException extends ExceptionBase {
 
   constructor(message = InternalServerErrorException.message) {
     super(message);
+    this.label = 'Une erreur inattendue est survenue.';
   }
 
   readonly code = INTERNAL_SERVER_ERROR;

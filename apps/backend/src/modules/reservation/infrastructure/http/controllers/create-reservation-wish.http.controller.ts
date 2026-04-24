@@ -10,11 +10,6 @@ import { RolesGuard } from '@libs/guards/roles.guard';
 import { CreateReservationWishCommand } from '@modules/reservation/application/commands/create-reservation-wish/create-reservation-wish.command';
 import { CreateReservationWishService } from '@modules/reservation/application/commands/create-reservation-wish/create-reservation-wish.service';
 import {
-  EmptyPackChoicesException,
-  ReservationWishInvalidDateRangeException,
-  UserHasReservationWishOnStartingDateException,
-} from '@modules/reservation/domain/reservation-wish.exceptions';
-import {
   Controller,
   Post,
   Body,
@@ -56,15 +51,8 @@ export class CreateReservationWishHttpController {
       return { message: 'Reservation wish created' };
     } catch (error) {
       this.logger.error('Error creating reservation wish', error);
-      if (
-        error instanceof ExceptionBase &&
-        [
-          EmptyPackChoicesException.name,
-          ReservationWishInvalidDateRangeException.name,
-          UserHasReservationWishOnStartingDateException.name,
-        ].includes(error.code)
-      ) {
-        throw new BadRequestException(error.message);
+      if (error instanceof ExceptionBase) {
+        throw new BadRequestException({ label: error.label, message: error.message });
       }
 
       throw error;

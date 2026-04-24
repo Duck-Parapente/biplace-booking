@@ -1,5 +1,6 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
+import { ExceptionBase } from '@libs/exceptions';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
@@ -8,10 +9,6 @@ import { RolesGuard } from '@libs/guards/roles.guard';
 import { CreateReservationCommand } from '@modules/reservation/application/commands/create-reservation/create-reservation.command';
 import { CreateReservationService } from '@modules/reservation/application/commands/create-reservation/create-reservation.service';
 import { ReservationAuthorizationService } from '@modules/reservation/application/services/reservation-authorization.service';
-import {
-  CannotCreateReservationException,
-  ReservationInvalidDateRangeException,
-} from '@modules/reservation/domain/reservation.exceptions';
 import {
   Controller,
   Post,
@@ -62,13 +59,8 @@ export class CreateReservationHttpController {
       return { message: 'Reservation created' };
     } catch (error) {
       this.logger.error('Error creating reservation', error);
-      if (
-        error instanceof Error &&
-        [CannotCreateReservationException.name, ReservationInvalidDateRangeException.name].includes(
-          error.name,
-        )
-      ) {
-        throw new BadRequestException(error.message);
+      if (error instanceof ExceptionBase) {
+        throw new BadRequestException({ label: error.label, message: error.message });
       }
 
       throw error;

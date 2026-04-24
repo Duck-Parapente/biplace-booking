@@ -42,7 +42,8 @@ export const useReservationForm = () => {
         } catch (err) {
           const baseMessage =
             err instanceof Error ? err.message : 'Impossible de créer la réservation';
-          const errorMessage = `Erreur le ${formatDate(date)} : ${baseMessage}. Les dates précédentes ont été créées.`;
+          const cleanMessage = baseMessage.replace(/\.+$/, '');
+          const errorMessage = `Erreur le ${formatDate(date)} : ${cleanMessage}. Les dates précédentes ont été créées.`;
           submitError.value = errorMessage;
           console.error(`Failed to create reservation for ${date}:`, err);
           throw err;
