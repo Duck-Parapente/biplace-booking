@@ -1,5 +1,6 @@
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
+import { ExceptionBase } from '@libs/exceptions';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
 import { MaintenanceModeGuard } from '@libs/guards/maintenance-mode.guard';
@@ -63,12 +64,12 @@ export class CreateReservationHttpController {
     } catch (error) {
       this.logger.error('Error creating reservation', error);
       if (
-        error instanceof Error &&
+        error instanceof ExceptionBase &&
         [CannotCreateReservationException.name, ReservationInvalidDateRangeException.name].includes(
-          error.name,
+          error.code,
         )
       ) {
-        throw new BadRequestException(error.message);
+        throw new BadRequestException({ label: error.label, message: error.message });
       }
 
       throw error;

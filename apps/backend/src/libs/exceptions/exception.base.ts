@@ -23,6 +23,7 @@ export interface SerializedException {
  */
 export abstract class ExceptionBase extends Error {
   abstract code: string;
+  label?: string;
 
   public readonly correlationId: string;
 

@@ -30,6 +30,13 @@ export class DateValueObject extends ValueObject<DateProps> {
     return this.value.getTime() < other.value.getTime();
   }
 
+  formatDDMMYY(): string {
+    const dd = String(this.value.getUTCDate()).padStart(2, '0');
+    const mm = String(this.value.getUTCMonth() + 1).padStart(2, '0');
+    const yy = String(this.value.getUTCFullYear()).slice(-2);
+    return `${dd}-${mm}-${yy}`;
+  }
+
   roundedUpHoursBetween(other: DateValueObject, thresholdToCeilInMinutes: number = 60): Integer {
     const diffMs = other.value.getTime() - this.value.getTime();
     const diffHours = diffMs / (1000 * 60 * 60);

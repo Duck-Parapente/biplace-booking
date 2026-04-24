@@ -64,7 +64,7 @@ export class CreateReservationWishHttpController {
           UserHasReservationWishOnStartingDateException.name,
         ].includes(error.code)
       ) {
-        throw new BadRequestException(error.message);
+        throw new BadRequestException({ label: error.label, message: error.message });
       }
 
       throw error;
