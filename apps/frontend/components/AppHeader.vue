@@ -148,7 +148,6 @@ const visibleMenuCategories = computed(() => {
     .map((category) => ({
       ...category,
       items: category.items.filter((item) => {
-        if (item.hasNotification && !hasNewsToShow.value) return false;
         if (!item.requiresAdminOrManager) return true;
         return isAdminOrManager.value;
       }),
