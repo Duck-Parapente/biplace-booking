@@ -10,10 +10,6 @@ import { CreateReservationCommand } from '@modules/reservation/application/comma
 import { CreateReservationService } from '@modules/reservation/application/commands/create-reservation/create-reservation.service';
 import { ReservationAuthorizationService } from '@modules/reservation/application/services/reservation-authorization.service';
 import {
-  CannotCreateReservationException,
-  ReservationInvalidDateRangeException,
-} from '@modules/reservation/domain/reservation.exceptions';
-import {
   Controller,
   Post,
   Body,
@@ -63,12 +59,7 @@ export class CreateReservationHttpController {
       return { message: 'Reservation created' };
     } catch (error) {
       this.logger.error('Error creating reservation', error);
-      if (
-        error instanceof ExceptionBase &&
-        [CannotCreateReservationException.name, ReservationInvalidDateRangeException.name].includes(
-          error.code,
-        )
-      ) {
+      if (error instanceof ExceptionBase) {
         throw new BadRequestException({ label: error.label, message: error.message });
       }
 

@@ -22,7 +22,7 @@ export class ReservationAuthorizationService {
       return;
     }
 
-    throw new ForbiddenException('User is not allowed to cancel this reservation');
+    throw new ForbiddenException({ label: 'Tu n\'es pas autorisé à annuler cette réservation.', message: 'User is not allowed to cancel this reservation' });
   }
 
   async checkUserIsAllowedToCloseReservation(
@@ -39,7 +39,7 @@ export class ReservationAuthorizationService {
       return;
     }
 
-    throw new ForbiddenException('User is not allowed to close this reservation');
+    throw new ForbiddenException({ label: 'Tu n\'es pas autorisé à clôturer cette réservation.', message: 'User is not allowed to close this reservation' });
   }
 
   async checkUserIsAllowedToCreateReservation(
@@ -51,6 +51,6 @@ export class ReservationAuthorizationService {
       return;
     }
 
-    throw new ForbiddenException('User is not allowed to create a reservation for this pack');
+    throw new ForbiddenException({ label: 'Tu n\'es pas autorisé à créer une réservation pour ce biplace.', message: 'User is not allowed to create a reservation for this pack' });
   }
 }

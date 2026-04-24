@@ -19,7 +19,7 @@ export class GetUserService {
 
     if (!user) {
       this.logger.warn(`User not found: ${command.userId.uuid}`);
-      throw new NotFoundException(`User with ID ${command.userId.uuid} not found`);
+      throw new NotFoundException({ label: 'Utilisateur introuvable.', message: `User with ID ${command.userId.uuid} not found` });
     }
 
     return user;
