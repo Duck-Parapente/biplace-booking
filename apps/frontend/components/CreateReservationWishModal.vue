@@ -132,6 +132,7 @@ const config = useRuntimeConfig();
 const route = useRoute();
 const router = useRouter();
 const hasProcessedQuery = ref(false);
+const openedFromQuery = ref(false);
 
 const minDate = computed(() => {
   const todayDate = formatDateToString(new Date());
@@ -157,6 +158,10 @@ const openCreateModal = () => {
 
 const closeModal = () => {
   showModal.value = false;
+  if (openedFromQuery.value) {
+    openedFromQuery.value = false;
+    router.back();
+  }
 };
 
 const handleSubmit = async () => {
@@ -211,6 +216,7 @@ const prefillFromQuery = () => {
   if (packId && props.packs.length === 0) return;
 
   hasProcessedQuery.value = true;
+  openedFromQuery.value = true;
 
   showModal.value = true;
   submitError.value = null;
