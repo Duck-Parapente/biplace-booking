@@ -3,13 +3,13 @@
     :class="[
       'rounded shadow-sm',
       isBeforeToday(day.date) ? 'bg-gray-100 border border-gray-200' : '',
-      isToday(day.date) ? 'bg-white border-2 border-gray-300' : '',
+      isToday(day.date) ? 'bg-white border-2 border-gray-700' : '',
       !isBeforeToday(day.date) && !isToday(day.date) ? 'bg-white border border-gray-200' : '',
     ]"
   >
     <div
       @click="toggleExpanded"
-      class="px-3 py-1.5 cursor-pointer hover:bg-gray-50 transition"
+      class="px-3 py-1.5 cursor-pointer hover:bg-gray-100 transition"
       :class="isExpanded ? 'border-b border-gray-200' : ''"
     >
       <div class="flex items-center justify-between">
@@ -24,8 +24,17 @@
 
       <!-- Pack Status Tags (when collapsed) -->
       <div v-if="!isExpanded" class="flex flex-wrap gap-1 mt-2">
-        <NuxtLink v-for="pack in day.packs" :key="pack.packId" :to="getCreateWishLink(pack)">
-          <BaseTag rounded="rounded" :variant="getPackStatusConfig(pack).variant">
+        <NuxtLink
+          v-for="pack in day.packs"
+          :key="pack.packId"
+          :to="getCreateWishLink(pack)"
+          class="group"
+        >
+          <BaseTag
+            rounded="rounded"
+            :variant="getPackStatusConfig(pack).variant"
+            class="transition group-hover:brightness-90"
+          >
             {{ pack.packLabel }}
           </BaseTag>
         </NuxtLink>
@@ -47,8 +56,13 @@
               <NuxtLink
                 v-if="getPackStatusConfig(pack).status === 'available'"
                 :to="getCreateWishLink(pack)"
+                class="group"
               >
-                <BaseTag rounded="rounded" :variant="getPackStatusConfig(pack).variant">
+                <BaseTag
+                  rounded="rounded"
+                  :variant="getPackStatusConfig(pack).variant"
+                  class="transition group-hover:brightness-90"
+                >
                   <component :is="getPackStatusConfig(pack).icon" class="w-3 h-3 mr-1" />
                   {{ getPackStatusConfig(pack).label }}
                 </BaseTag>
@@ -56,8 +70,13 @@
               <NuxtLink
                 v-else-if="getPackStatusConfig(pack).status !== 'reserved'"
                 :to="getCreateWishLink(pack)"
+                class="group"
               >
-                <BaseTag rounded="rounded" :variant="getPackStatusConfig(pack).variant">
+                <BaseTag
+                  rounded="rounded"
+                  :variant="getPackStatusConfig(pack).variant"
+                  class="transition group-hover:brightness-90"
+                >
                   <component :is="getPackStatusConfig(pack).icon" class="w-3 h-3 mr-1" />
                   {{ getPackStatusConfig(pack).label }}
                 </BaseTag>
@@ -70,7 +89,7 @@
               <button
                 v-if="pack.reservation && canCancelReservation(pack)"
                 @click="handleCancelReservation(pack.reservation.id)"
-                class="flex items-center justify-center px-2 py-1 rounded-md bg-red-700 hover:bg-red-800 transition text-white"
+                class="flex items-center justify-center px-2 py-1 rounded-md bg-red-700 hover:bg-red-800 transition text-white focus:ring-2 focus:ring-red-400"
                 aria-label="Annuler la réservation"
               >
                 <IconX class="w-3 h-3" />
