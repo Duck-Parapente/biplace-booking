@@ -64,6 +64,18 @@
           </div>
         </div>
 
+        <div class="flex items-center gap-2">
+          <input
+            id="training"
+            type="checkbox"
+            v-model="isTraining"
+            class="h-4 w-4 text-secondary-600 border-gray-300 rounded"
+          />
+          <label for="training" class="text-sm text-gray-700">
+            Réservation pour une formation ?
+          </label>
+        </div>
+
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1"> Commentaire public </label>
           <textarea
@@ -105,6 +117,8 @@
 </template>
 
 <script setup lang="ts">
+import { ReservationContext } from 'shared';
+
 interface Props {
   show: boolean;
   modelValue: CreateReservationFormData;
@@ -152,6 +166,13 @@ const packOptions = computed(() => {
     value: pack.id,
     label: pack.label,
   }));
+});
+
+const isTraining = computed({
+  get: () => form.value.context === ReservationContext.TRAINING,
+  set: (value: boolean) => {
+    form.value.context = value ? ReservationContext.TRAINING : ReservationContext.CLASSIC;
+  },
 });
 
 const userOptions = computed(() => {
@@ -208,9 +229,14 @@ const resetForm = () => {
 // Watch for modal open/close
 watch(
   () => props.show,
-  async (isOpen) => {
+  (isOpen) => {
     if (isOpen) {
       resetForm();
+
+      // Ensure default value
+      if (!form.value.context) {
+        form.value.context = ReservationContext.CLASSIC;
+      }
     }
   },
 );
