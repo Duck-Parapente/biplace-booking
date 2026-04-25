@@ -19,7 +19,7 @@
         <BaseInput
           id="flightTimeMinutes"
           v-model.number="form.flightTimeMinutes"
-          label="Temps de vol (minutes)"
+          label="Temps de vol ou de gonflage (minutes)"
           type="number"
           required
           placeholder="Ex: 30"
