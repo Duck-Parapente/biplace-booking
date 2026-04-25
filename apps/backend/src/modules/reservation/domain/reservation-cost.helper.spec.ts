@@ -2,7 +2,7 @@ import { DateValueObject } from '@libs/ddd/date.value-object';
 
 import { calculateReservationCost, ReservationCostEventType } from './reservation-cost.helper';
 
-describe('calculateReservationCost', () => {
+describe('calculateReservationCost when CLASSIC reservation', () => {
   it.each([
     {
       name: 'cancelled a reservation 15 hours after creation',
@@ -119,10 +119,58 @@ describe('calculateReservationCost', () => {
   ])('$name', ({ eventType, createdAt, startingDate, now, expected }) => {
     const result = calculateReservationCost({
       eventType,
+      context: 'CLASSIC' as const,
       createdAt: DateValueObject.fromDate(new Date(createdAt)),
       startingDate: DateValueObject.fromDate(new Date(startingDate)),
       now: DateValueObject.fromDate(new Date(now)),
     });
+    expect(result.value).toBe(expected);
+  });
+});
+
+describe('calculateReservationCost when TRAINING reservation', () => {
+  it.each([
+    {
+      name: 'close always costs 24',
+      eventType: ReservationCostEventType.CLOSE,
+      createdAt: '2024-01-01T10:00:00Z',
+      startingDate: '2024-01-02T00:00:00Z',
+      now: '2024-01-03T10:00:00Z',
+      expected: 24,
+    },
+    {
+      name: 'cancel always costs 0',
+      eventType: ReservationCostEventType.CANCEL,
+      createdAt: '2025-05-10T08:00:00Z',
+      startingDate: '2025-05-15T00:00:00Z',
+      now: '2025-05-20T12:00:00Z',
+      expected: 0,
+    },
+    {
+      name: 'close ignores completely inconsistent dates',
+      eventType: ReservationCostEventType.CLOSE,
+      createdAt: '2100-01-01T00:00:00Z',
+      startingDate: '1900-01-01T00:00:00Z',
+      now: '1800-01-01T00:00:00Z',
+      expected: 24,
+    },
+    {
+      name: 'cancel ignores completely inconsistent dates',
+      eventType: ReservationCostEventType.CANCEL,
+      createdAt: '2100-01-01T00:00:00Z',
+      startingDate: '1900-01-01T00:00:00Z',
+      now: '1800-01-01T00:00:00Z',
+      expected: 0,
+    },
+  ])('$name', ({ eventType, createdAt, startingDate, now, expected }) => {
+    const result = calculateReservationCost({
+      context: 'TRAINING' as const,
+      eventType,
+      createdAt: DateValueObject.fromDate(new Date(createdAt)),
+      startingDate: DateValueObject.fromDate(new Date(startingDate)),
+      now: DateValueObject.fromDate(new Date(now)),
+    });
+
     expect(result.value).toBe(expected);
   });
 });

@@ -37,8 +37,22 @@ export const useApi = () => {
       // Try to parse JSON error response
       try {
         const errorData = await response.json();
-        // Prefer French label, then message, then full error object
-        errorMessage = errorData.label || errorData.message || JSON.stringify(errorData, null, 2);
+
+        if (Array.isArray(errorData.message)) {
+          // Extract readable messages from validation errors
+          errorMessage = errorData.message
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .map((err: any) => {
+              if (err.constraints) {
+                return Object.values(err.constraints).join(', ');
+              }
+              return JSON.stringify(err);
+            })
+            .join('\n');
+        } else {
+          // Prefer label, then message
+          errorMessage = errorData.label || errorData.message || JSON.stringify(errorData, null, 2);
+        }
       } catch {
         // If not JSON, keep the default message
       }

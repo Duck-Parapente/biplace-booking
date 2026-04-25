@@ -36,17 +36,6 @@
             <span class="text-red-500">*</span>
           </label>
           <div class="space-y-2">
-            <select
-              id="packSearch"
-              :value="packSearch"
-              @change="handlePackSelectFromDropdown($event)"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-600 focus:border-transparent"
-            >
-              <option value="">Sélectionner un pack...</option>
-              <option v-for="pack in packOptions" :key="pack.value" :value="pack.value">
-                {{ pack.label }}
-              </option>
-            </select>
             <div v-if="selectedPacks.length > 0" class="flex flex-wrap gap-2">
               <div
                 v-for="(pack, index) in selectedPacks"
@@ -63,6 +52,25 @@
                   <IconXCircle class="h-3 w-3" />
                 </button>
               </div>
+            </div>
+            <div
+              class="border border-gray-300 rounded-lg divide-y divide-gray-200 max-h-48 overflow-y-auto"
+            >
+              <label
+                v-for="pack in allPackItems.filter((p) => !isPackSelected(p.id))"
+                :key="pack.id"
+                class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-gray-50 transition"
+              >
+                <input
+                  type="checkbox"
+                  :checked="isPackSelected(pack.id)"
+                  @change="togglePack(pack.id)"
+                  class="h-4 w-4 rounded border-gray-300 text-secondary-600 focus:ring-secondary-600"
+                />
+                <span class="text-sm text-gray-700">
+                  {{ pack.label }}{{ pack.description ? ` (${pack.description})` : '' }}
+                </span>
+              </label>
             </div>
           </div>
         </div>
@@ -125,7 +133,6 @@ const { addReservationWishForm, submitReservationWish, submitError, submitSucces
   useReservationWish();
 
 const props = defineProps<Props>();
-const packSearch = ref('');
 const showModal = ref(false);
 const selectedPacks = ref<PackDto[]>([]);
 const config = useRuntimeConfig();
@@ -148,7 +155,6 @@ const openCreateModal = () => {
   submitError.value = null;
   submitSuccess.value = false;
   selectedPacks.value = [];
-  packSearch.value = '';
   addReservationWishForm.value = {
     startingDate: '',
     packChoices: [],
@@ -174,30 +180,19 @@ const handleSubmit = async () => {
   }
 };
 
-const packOptions = computed(() =>
-  props.packs
-    .filter((pack) => !selectedPacks.value.find((p) => p.id === pack.id))
-    .sort((a, b) => a.order - b.order)
-    .map((pack) => ({
-      value: pack.id,
-      label: `${pack.label}${pack.description ? ` (${pack.description})` : ''}`,
-    })),
-);
+const allPackItems = computed(() => [...props.packs].sort((a, b) => a.order - b.order));
 
-const handlePackSelect = (packId: string) => {
-  const pack = props.packs.find((p) => p.id === packId);
-  if (pack && !selectedPacks.value.find((p) => p.id === pack.id)) {
-    selectedPacks.value.push(pack);
-    addReservationWishForm.value.packChoices = selectedPacks.value.map((p) => p.id);
-  }
-  packSearch.value = '';
-};
+const isPackSelected = (packId: string) => selectedPacks.value.some((p) => p.id === packId);
 
-const handlePackSelectFromDropdown = (event: Event) => {
-  const target = event.target as HTMLSelectElement;
-  const packId = target.value;
-  if (packId) {
-    handlePackSelect(packId);
+const togglePack = (packId: string) => {
+  if (isPackSelected(packId)) {
+    removePackChoice(packId);
+  } else {
+    const pack = props.packs.find((p) => p.id === packId);
+    if (pack) {
+      selectedPacks.value.push(pack);
+      addReservationWishForm.value.packChoices = selectedPacks.value.map((p) => p.id);
+    }
   }
 };
 
@@ -228,7 +223,6 @@ const prefillFromQuery = () => {
   showModal.value = true;
   submitError.value = null;
   submitSuccess.value = false;
-  packSearch.value = '';
 
   const pack = packId ? props.packs.find((p) => p.id === packId) : undefined;
   selectedPacks.value = pack ? [pack] : [];

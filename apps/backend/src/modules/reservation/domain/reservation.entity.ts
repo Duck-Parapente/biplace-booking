@@ -75,6 +75,10 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     return this.props.publicComment;
   }
 
+  get context() {
+    return this.props.context;
+  }
+
   get reservationWishId() {
     return this.props.reservationWishId;
   }
@@ -117,6 +121,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
       eventType,
       createdAt: this.createdAt,
       startingDate: this.startingDate,
+      context: this.context,
       now,
     });
 

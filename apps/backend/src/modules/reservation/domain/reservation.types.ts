@@ -7,6 +7,7 @@ interface BaseReservationProps {
   userId?: UUID;
   startingDate: DateValueObject;
   endingDate: DateValueObject;
+  context: 'TRAINING' | 'CLASSIC';
   publicComment?: string;
   reservationWishId?: UUID;
 }
