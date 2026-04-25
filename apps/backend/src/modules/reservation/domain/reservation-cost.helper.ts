@@ -14,14 +14,39 @@ interface CalculateReservationCostParams {
   createdAt: DateValueObject;
   startingDate: DateValueObject;
   now: DateValueObject;
+  context: 'CLASSIC' | 'TRAINING';
 }
 
-export function calculateReservationCost({
+export const calculateReservationCost = ({
+  eventType,
+  createdAt,
+  startingDate,
+  context,
+  now,
+}: CalculateReservationCostParams): Integer => {
+  if (context === 'TRAINING') {
+    return new Integer({ value: eventType === ReservationCostEventType.CLOSE ? 24 : 0 });
+  }
+
+  if (context === 'CLASSIC') {
+    return calculateClassicReservationCost({
+      eventType,
+      createdAt,
+      startingDate,
+      context,
+      now,
+    });
+  }
+
+  throw new Error(`Unsupported context: ${context}`);
+};
+
+const calculateClassicReservationCost = ({
   eventType,
   createdAt,
   startingDate,
   now = DateValueObject.now(),
-}: CalculateReservationCostParams): Integer {
+}: CalculateReservationCostParams): Integer => {
   const firstEntryTime = getFirstEntryTime(startingDate);
   const effectiveCreatedAt = createdAt.interpretAsParisTime();
 
@@ -44,7 +69,7 @@ export function calculateReservationCost({
   }
 
   throw new Error(`Unsupported event type: ${eventType}`);
-}
+};
 
 function computeHours(start: DateValueObject, end: DateValueObject): Integer {
   return start.roundedUpHoursBetween(end, THRESHOLD_TO_CEIL_IN_MINUTES);

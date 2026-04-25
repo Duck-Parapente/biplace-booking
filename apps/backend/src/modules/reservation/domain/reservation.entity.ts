@@ -121,6 +121,7 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
       eventType,
       createdAt: this.createdAt,
       startingDate: this.startingDate,
+      context: this.context,
       now,
     });
 
