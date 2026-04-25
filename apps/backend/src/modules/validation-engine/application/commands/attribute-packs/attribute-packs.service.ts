@@ -170,6 +170,7 @@ export class AttributePacksService {
             userId: wish.user.id,
             startingDate,
             endingDate,
+            context: 'CLASSIC',
             reservationWishId: wish.id,
             publicComment: wish.publicComment,
           },

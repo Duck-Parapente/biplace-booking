@@ -4,6 +4,7 @@ import {
   IsArray,
   IsBoolean,
   IsDateString,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -27,6 +28,11 @@ export class CreateReservationWishDto {
   publicComment?: string;
 }
 
+export enum ReservationContext {
+  TRAINING = 'TRAINING',
+  CLASSIC = 'CLASSIC',
+}
+
 export class CreateReservationDto {
   @IsNotEmpty()
   @IsDateString()
@@ -43,6 +49,10 @@ export class CreateReservationDto {
   @IsOptional()
   @IsString()
   publicComment?: string;
+
+  @IsNotEmpty()
+  @IsEnum(ReservationContext)
+  context!: ReservationContext;
 }
 
 export class CloseReservationDto {

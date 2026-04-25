@@ -71,6 +71,11 @@ enum ReservationStatus {
     CLOSED
 }
 
+enum ReservationContext {
+    TRAINING
+    CLASSIC
+}
+
 model ReservationWish {
     id            String                      @id
     startingDate  DateTime                    @db.Timestamptz(3)
@@ -95,21 +100,22 @@ model ReservationWishPackChoice {
 }
 
 model Reservation {
-    id                String            @id
+    id                String             @id
     status            ReservationStatus
-    startingDate      DateTime          @db.Timestamptz(3)
-    endingDate        DateTime          @db.Timestamptz(3)
-    pack              Pack              @relation(fields: [packId], references: [id])
+    startingDate      DateTime           @db.Timestamptz(3)
+    endingDate        DateTime           @db.Timestamptz(3)
+    pack              Pack               @relation(fields: [packId], references: [id])
     packId            String
-    user              User?             @relation(fields: [userId], references: [id])
+    user              User?              @relation(fields: [userId], references: [id])
     userId            String?
     publicComment     String?
-    createdAt         DateTime          @db.Timestamptz(3)
-    reservationWish   ReservationWish?  @relation(fields: [reservationWishId], references: [id])
-    reservationWishId String?           @unique
+    createdAt         DateTime           @db.Timestamptz(3)
+    reservationWish   ReservationWish?   @relation(fields: [reservationWishId], references: [id])
+    reservationWishId String?            @unique
     manualCost        Int?
     automaticCost     Int?
     flightLog         FlightLog?
+    context           ReservationContext
 }
 
 model FlightLog {

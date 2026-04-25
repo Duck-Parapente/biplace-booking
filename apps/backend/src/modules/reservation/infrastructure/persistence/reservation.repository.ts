@@ -37,6 +37,7 @@ export const toEntity = (record: Reservation): ReservationEntity => {
       status: mapStatus(record.status),
       endingDate: DateValueObject.fromDate(record.endingDate),
       publicComment: record.publicComment ?? undefined,
+      context: record.context,
       packId: new UUID({ uuid: record.packId }),
       userId: record.userId ? new UUID({ uuid: record.userId }) : undefined,
       reservationWishId: record.reservationWishId
@@ -79,6 +80,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
         createdAt: reservation.createdAt.value,
         startingDate: reservation.startingDate.value,
         endingDate: reservation.endingDate.value,
+        context: reservation.context,
         publicComment: reservation.publicComment ?? null,
         packId: reservation.packId.uuid,
         userId: reservation.userId?.uuid ?? null,
@@ -143,6 +145,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
         startingDate: entity.startingDate,
         endingDate: entity.endingDate,
         publicComment: entity.publicComment,
+        context: entity.context,
       };
     });
   }

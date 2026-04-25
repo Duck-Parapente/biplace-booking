@@ -34,7 +34,7 @@ export class CreateReservationHttpController {
   @Post()
   async createReservation(
     @Request() { user: { id: createdById, roles } }: { user: AuthenticatedUser },
-    @Body() { startingDate, packId, userId, publicComment }: CreateReservationDto,
+    @Body() { startingDate, packId, userId, publicComment, context }: CreateReservationDto,
   ) {
     const command = new CreateReservationCommand({
       reservation: {
@@ -43,6 +43,7 @@ export class CreateReservationHttpController {
         startingDate: DateValueObject.fromDateString(startingDate).startOfDayInUTC(0),
         endingDate: DateValueObject.fromDateString(startingDate).startOfDayInUTC(1),
         publicComment,
+        context,
       },
       metadata: { userId: createdById },
       explanationTable: '',

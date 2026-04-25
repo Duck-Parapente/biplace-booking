@@ -75,6 +75,10 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     return this.props.publicComment;
   }
 
+  get context() {
+    return this.props.context;
+  }
+
   get reservationWishId() {
     return this.props.reservationWishId;
   }
