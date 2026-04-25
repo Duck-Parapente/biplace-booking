@@ -18,7 +18,10 @@ export class UpdatePackService implements ICommandHandler<UpdatePackCommand, voi
     const pack = await this.packRepository.findById(packId);
 
     if (!pack) {
-      throw new NotFoundException({ label: 'Biplace introuvable.', message: `Pack with id ${packId.uuid} not found` });
+      throw new NotFoundException({
+        label: 'Biplace introuvable.',
+        message: `Pack with id ${packId.uuid} not found`,
+      });
     }
 
     pack.update(updates, metadata);

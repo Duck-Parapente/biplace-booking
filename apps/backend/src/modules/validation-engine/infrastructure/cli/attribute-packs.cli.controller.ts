@@ -24,7 +24,10 @@ export class AttibutePackCliController {
   async attributePacks() {
     const isMaintenanceMode = await this.featureFlagProvider.isFlagActive(MAINTENANCE_MODE_KEY);
     if (isMaintenanceMode) {
-      throw new BadRequestException({ label: 'Le mode maintenance est déjà actif.', message: 'Maintenance mode is already active. Cannot run attribution.' });
+      throw new BadRequestException({
+        label: 'Le mode maintenance est déjà actif.',
+        message: 'Maintenance mode is already active. Cannot run attribution.',
+      });
     }
 
     try {
