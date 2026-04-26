@@ -45,7 +45,7 @@
         <div>
           <a
             :href="smsLink"
-            class="block w-full bg-secondary-600 text-white text-center px-4 py-3 rounded hover:opacity-90 transition font-medium"
+            class="lg:hidden block w-full bg-secondary-600 text-white text-center px-4 py-3 rounded hover:opacity-90 transition font-medium"
           >
             📱 Partager par SMS
           </a>
