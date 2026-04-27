@@ -56,7 +56,7 @@ interface PackReservation {
   status: ReservationStatus;
   manualCost: Integer | null;
   automaticCost: Integer | null;
-  userName?: string;
+  userId?: UUID;
   flightLog?: FlightLogProps;
 }
 

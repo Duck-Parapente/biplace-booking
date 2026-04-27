@@ -53,7 +53,7 @@ export function mapPackReservationsToDto({
       id: reservation.id.uuid,
       startingDate: reservation.startingDate.value.toISOString(),
       endingDate: reservation.endingDate.value.toISOString(),
-      userName: reservation.userName ?? null,
+      userId: reservation.userId?.uuid ?? null,
       status: mapReservationStatusToWishStatus(reservation.status),
       manualCost: reservation.manualCost?.value ?? null,
       automaticCost: reservation.automaticCost?.value ?? null,
