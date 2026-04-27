@@ -6,13 +6,9 @@ import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { PackNoteEntity } from '@modules/pack/domain/pack-note.entity';
 import { PackNoteRepositoryPort } from '@modules/pack/domain/ports/pack-note.repository.port';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { PackNote, User } from '@prisma/client';
+import { PackNote } from '@prisma/client';
 
-type PackNoteWithUser = PackNote & { createdBy: User };
-
-const toEntity = (packNote: PackNoteWithUser): PackNoteEntity => {
-  const { firstName, lastName, email } = packNote.createdBy;
-  const createdByName = `${firstName ?? ''} ${lastName ?? ''}`.trim() || email;
+const toEntity = (packNote: PackNote): PackNoteEntity => {
   return new PackNoteEntity({
     id: new UUID({ uuid: packNote.id }),
     createdAt: DateValueObject.fromDate(packNote.createdAt),
@@ -20,7 +16,6 @@ const toEntity = (packNote: PackNoteWithUser): PackNoteEntity => {
       packId: new UUID({ uuid: packNote.packId }),
       content: packNote.content,
       createdById: new UUID({ uuid: packNote.createdById }),
-      createdByName,
     },
   });
 };
@@ -52,7 +47,6 @@ export class PackNoteRepository implements PackNoteRepositoryPort {
   async findById(noteId: UUID): Promise<PackNoteEntity | null> {
     const packNote = await prisma.packNote.findUnique({
       where: { id: noteId.uuid },
-      include: { createdBy: true },
     });
     return packNote ? toEntity(packNote) : null;
   }

@@ -6,9 +6,6 @@ export interface PackNoteProfile {
   createdById: UUID;
 }
 
-export type PackNoteProps = PackNoteProfile & {
-  createdByName: string;
-};
-
+export type PackNoteProps = PackNoteProfile;
 export type CreatePackNoteProps = PackNoteProfile;
 export type UpdatePackNoteProps = Pick<PackNoteProfile, 'content'>;
