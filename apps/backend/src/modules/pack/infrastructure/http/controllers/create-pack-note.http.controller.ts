@@ -11,7 +11,7 @@ import { CreatePackNoteDto, UserRoles } from 'shared';
 
 @Controller('packs/:packId/notes')
 @UseGuards(JwtAuthGuard, RolesGuard, MaintenanceModeGuard)
-@Roles(UserRoles.ADMIN, UserRoles.MANAGER)
+@Roles(UserRoles.USER)
 export class CreatePackNoteHttpController {
   private readonly logger = new Logger(CreatePackNoteHttpController.name);
 
