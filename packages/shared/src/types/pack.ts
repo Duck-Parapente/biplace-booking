@@ -74,6 +74,12 @@ export class CreatePackNoteDto {
   content!: string;
 }
 
+export class UpdatePackNoteDto {
+  @IsNotEmpty()
+  @IsString()
+  content!: string;
+}
+
 export class PackNoteDto {
   @IsNotEmpty()
   @IsUUID()

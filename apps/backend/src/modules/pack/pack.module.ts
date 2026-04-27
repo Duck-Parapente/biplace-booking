@@ -5,12 +5,14 @@ import { Module } from '@nestjs/common';
 import { CreatePackService } from './application/commands/create-pack/create-pack.service';
 import { CreatePackNoteService } from './application/commands/create-pack-note/create-pack-note.service';
 import { UpdatePackService } from './application/commands/update-pack/update-pack.service';
+import { UpdatePackNoteService } from './application/commands/update-pack-note/update-pack-note.service';
 import { GetPackNotesService } from './application/queries/get-pack-notes/get-pack-notes.service';
 import { GetPacksService } from './application/queries/get-packs/get-packs.service';
 import { CreatePackNoteHttpController } from './infrastructure/http/controllers/create-pack-note.http.controller';
 import { CreatePackHttpController } from './infrastructure/http/controllers/create-pack.http.controller';
 import { GetPackNotesHttpController } from './infrastructure/http/controllers/get-pack-notes.http.controller';
 import { GetPacksHttpController } from './infrastructure/http/controllers/get-packs.http.controller';
+import { UpdatePackNoteHttpController } from './infrastructure/http/controllers/update-pack-note.http.controller';
 import { UpdatePackHttpController } from './infrastructure/http/controllers/update-pack.http.controller';
 import { PackNoteRepository } from './infrastructure/persistence/pack-note.repository';
 import { PackRepository } from './infrastructure/persistence/pack.repository';
@@ -24,12 +26,14 @@ import { PACK_NOTE_REPOSITORY, PACK_REPOSITORY } from './pack.di-tokens';
     UpdatePackHttpController,
     CreatePackNoteHttpController,
     GetPackNotesHttpController,
+    UpdatePackNoteHttpController,
   ],
   providers: [
     CreatePackService,
     GetPacksService,
     UpdatePackService,
     CreatePackNoteService,
+    UpdatePackNoteService,
     GetPackNotesService,
     { provide: PACK_REPOSITORY, useClass: PackRepository },
     { provide: PACK_NOTE_REPOSITORY, useClass: PackNoteRepository },

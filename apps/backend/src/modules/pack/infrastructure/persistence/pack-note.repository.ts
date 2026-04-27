@@ -49,6 +49,14 @@ export class PackNoteRepository implements PackNoteRepositoryPort {
     this.logger.log(`PackNote created: ${packNote.id.uuid}`);
   }
 
+  async findById(noteId: UUID): Promise<PackNoteEntity | null> {
+    const packNote = await prisma.packNote.findUnique({
+      where: { id: noteId.uuid },
+      include: { createdBy: true },
+    });
+    return packNote ? toEntity(packNote) : null;
+  }
+
   async findByPackId(packId: UUID): Promise<PackNoteEntity[]> {
     const packNotes = await prisma.packNote.findMany({
       where: { packId: packId.uuid },
@@ -56,5 +64,13 @@ export class PackNoteRepository implements PackNoteRepositoryPort {
       include: { createdBy: true },
     });
     return packNotes.map(toEntity);
+  }
+
+  async update(packNote: PackNoteEntity): Promise<void> {
+    await prisma.packNote.update({
+      where: { id: packNote.id.uuid },
+      data: { content: packNote.content },
+    });
+    this.logger.log(`PackNote updated: ${packNote.id.uuid}`);
   }
 }

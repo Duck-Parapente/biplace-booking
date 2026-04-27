@@ -3,7 +3,7 @@ import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
 import { PackNoteCreatedDomainEvent } from './events/pack-note-created.domain-event';
-import { CreatePackNoteProps, PackNoteProps } from './pack-note.types';
+import { CreatePackNoteProps, PackNoteProps, UpdatePackNoteProps } from './pack-note.types';
 
 export class PackNoteEntity extends AggregateRoot<PackNoteProps> {
   protected readonly _id!: AggregateID;
@@ -39,6 +39,10 @@ export class PackNoteEntity extends AggregateRoot<PackNoteProps> {
 
   get createdByName() {
     return this.props.createdByName;
+  }
+
+  update(props: UpdatePackNoteProps): void {
+    this.props.content = props.content;
   }
 
   validate(): void {}

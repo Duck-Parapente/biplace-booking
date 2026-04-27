@@ -11,3 +11,4 @@ export type PackNoteProps = PackNoteProfile & {
 };
 
 export type CreatePackNoteProps = PackNoteProfile;
+export type UpdatePackNoteProps = Pick<PackNoteProfile, 'content'>;
