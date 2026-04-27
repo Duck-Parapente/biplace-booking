@@ -56,6 +56,7 @@
       @updated="handleCostUpdated"
     />
 
+    // TODO: use patch endpoint
     <CreatePackNoteModal
       v-if="selectedPackId"
       :open="noteModalOpen"
