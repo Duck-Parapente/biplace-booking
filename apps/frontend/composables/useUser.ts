@@ -185,6 +185,14 @@ export const useUser = () => {
     }
   };
 
+  const getUserName = (userId: string): string => {
+    const user = users.value.find((u) => u.id === userId);
+    if (!user) return userId;
+    if (user.firstName || user.lastName)
+      return [user.firstName, user.lastName].filter(Boolean).join(' ');
+    return user.email;
+  };
+
   return {
     // State
     userData,
@@ -202,5 +210,6 @@ export const useUser = () => {
     adminUpdateUser,
     validateUserForm,
     isProfileComplete,
+    getUserName,
   };
 };
