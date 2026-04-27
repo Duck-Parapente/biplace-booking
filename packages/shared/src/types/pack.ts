@@ -94,6 +94,10 @@ export class PackNoteDto {
   @IsNotEmpty()
   @IsUUID()
   createdById!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  createdByName!: string;
 }
 
 export class PackDto {

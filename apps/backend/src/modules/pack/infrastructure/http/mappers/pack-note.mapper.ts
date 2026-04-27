@@ -8,5 +8,6 @@ export function mapPackNoteToDto(packNote: PackNoteEntity): PackNoteDto {
     content: packNote.content,
     createdAt: packNote.createdAt.value.toISOString(),
     createdById: packNote.createdById.uuid,
+    createdByName: packNote.createdByName,
   };
 }

@@ -37,5 +37,9 @@ export class PackNoteEntity extends AggregateRoot<PackNoteProps> {
     return this.props.createdById;
   }
 
+  get createdByName() {
+    return this.props.createdByName;
+  }
+
   validate(): void {}
 }

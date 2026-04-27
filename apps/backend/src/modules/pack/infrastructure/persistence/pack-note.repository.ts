@@ -6,18 +6,24 @@ import { EventEmitterPort } from '@libs/events/domain/event-emitter.port';
 import { PackNoteEntity } from '@modules/pack/domain/pack-note.entity';
 import { PackNoteRepositoryPort } from '@modules/pack/domain/ports/pack-note.repository.port';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { PackNote } from '@prisma/client';
+import { PackNote, User } from '@prisma/client';
 
-const toEntity = (packNote: PackNote): PackNoteEntity =>
-  new PackNoteEntity({
+type PackNoteWithUser = PackNote & { createdBy: User };
+
+const toEntity = (packNote: PackNoteWithUser): PackNoteEntity => {
+  const { firstName, lastName, email } = packNote.createdBy;
+  const createdByName = `${firstName ?? ''} ${lastName ?? ''}`.trim() || email;
+  return new PackNoteEntity({
     id: new UUID({ uuid: packNote.id }),
     createdAt: DateValueObject.fromDate(packNote.createdAt),
     props: {
       packId: new UUID({ uuid: packNote.packId }),
       content: packNote.content,
       createdById: new UUID({ uuid: packNote.createdById }),
+      createdByName,
     },
   });
+};
 
 @Injectable()
 export class PackNoteRepository implements PackNoteRepositoryPort {
@@ -47,6 +53,7 @@ export class PackNoteRepository implements PackNoteRepositoryPort {
     const packNotes = await prisma.packNote.findMany({
       where: { packId: packId.uuid },
       orderBy: { createdAt: 'desc' },
+      include: { createdBy: true },
     });
     return packNotes.map(toEntity);
   }

@@ -6,6 +6,8 @@ export interface PackNoteProfile {
   createdById: UUID;
 }
 
-export type PackNoteProps = PackNoteProfile;
+export type PackNoteProps = PackNoteProfile & {
+  createdByName: string;
+};
 
 export type CreatePackNoteProps = PackNoteProfile;
