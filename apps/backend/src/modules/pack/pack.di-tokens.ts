@@ -1,1 +1,2 @@
 export const PACK_REPOSITORY = Symbol('PACK_REPOSITORY');
+export const PACK_NOTE_REPOSITORY = Symbol('PACK_NOTE_REPOSITORY');

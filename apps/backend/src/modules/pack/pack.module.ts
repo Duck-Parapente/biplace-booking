@@ -8,8 +8,9 @@ import { GetPacksService } from './application/queries/get-packs/get-packs.servi
 import { CreatePackHttpController } from './infrastructure/http/controllers/create-pack.http.controller';
 import { GetPacksHttpController } from './infrastructure/http/controllers/get-packs.http.controller';
 import { UpdatePackHttpController } from './infrastructure/http/controllers/update-pack.http.controller';
+import { PackNoteRepository } from './infrastructure/persistence/pack-note.repository';
 import { PackRepository } from './infrastructure/persistence/pack.repository';
-import { PACK_REPOSITORY } from './pack.di-tokens';
+import { PACK_NOTE_REPOSITORY, PACK_REPOSITORY } from './pack.di-tokens';
 
 @Module({
   imports: [],
@@ -19,6 +20,7 @@ import { PACK_REPOSITORY } from './pack.di-tokens';
     GetPacksService,
     UpdatePackService,
     { provide: PACK_REPOSITORY, useClass: PackRepository },
+    { provide: PACK_NOTE_REPOSITORY, useClass: PackNoteRepository },
     { provide: EVENT_EMITTER, useClass: EventEmitter },
   ],
   exports: [GetPacksService],
