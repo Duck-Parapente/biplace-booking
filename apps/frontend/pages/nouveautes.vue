@@ -14,7 +14,7 @@
             <span v-if="isUnread(entry)" class="h-2 w-2 rounded-full bg-red-500 shrink-0" />
             <h2 class="text-lg font-semibold text-secondary-600">{{ entry.title }}</h2>
           </div>
-          <span class="text-sm text-gray-400">{{ entry.date }}</span>
+          <span class="text-sm text-gray-400">{{ formatDate(entry.date) }}</span>
         </div>
         <p class="text-gray-600">{{ entry.content }}</p>
       </div>
@@ -23,6 +23,8 @@
 </template>
 
 <script setup lang="ts">
+import { formatDate } from '~/composables/useDateHelpers';
+
 const { news, lastSeenVersion, markAsSeen } = useNews();
 
 const previousLastSeen = lastSeenVersion.value;
