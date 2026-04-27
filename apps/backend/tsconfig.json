@@ -13,6 +13,7 @@
     "skipLibCheck": true,
     "strict": true,
     "baseUrl": "./",
+    "types": ["jest", "node"],
     "paths": {
       "@*": ["src/*"],
       "shared": ["../../packages/shared/src"]
