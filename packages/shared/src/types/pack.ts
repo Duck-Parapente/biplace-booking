@@ -88,7 +88,7 @@ export class PackNoteDto {
   content!: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsDateString()
   createdAt!: string;
 
   @IsNotEmpty()
