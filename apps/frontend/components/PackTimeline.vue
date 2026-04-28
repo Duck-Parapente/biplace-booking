@@ -58,18 +58,13 @@
             <div
               v-if="item.type === 'note'"
               class="border border-amber-200 bg-amber-50 rounded-lg px-3 py-2 flex flex-col gap-1"
+              :class="{
+                'cursor-pointer hover:bg-amber-100 transition':
+                  item.data.createdById === userData?.id,
+              }"
+              @click="item.data.createdById === userData?.id && emit('note-edit', item.data)"
             >
-              <div class="flex items-center justify-between gap-3">
-                <p class="text-xs text-gray-400">{{ formatDate(item.data.createdAt) }}</p>
-                <button
-                  v-if="item.data.createdById === userData?.id"
-                  type="button"
-                  class="text-xs text-amber-600 hover:text-amber-800 transition"
-                  @click.stop="emit('note-edit', item.data)"
-                >
-                  Modifier
-                </button>
-              </div>
+              <p class="text-xs text-gray-400">{{ formatDate(item.data.createdAt) }}</p>
               <p class="text-sm text-gray-700 whitespace-pre-line">{{ item.data.content }}</p>
               <p v-if="item.data.createdById" class="text-xs text-amber-700 text-right">
                 — {{ getUserName(item.data.createdById) }}
