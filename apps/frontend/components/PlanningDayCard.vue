@@ -24,20 +24,20 @@
 
       <!-- Pack Status Tags (when collapsed) -->
       <div v-if="!isExpanded" class="flex flex-wrap gap-1 mt-2">
-        <NuxtLink
-          v-for="pack in day.packs"
-          :key="pack.packId"
-          :to="getCreateWishLink(pack)"
-          class="group"
-        >
-          <BaseTag
-            rounded="rounded"
-            :variant="getPackStatusConfig(pack).variant"
-            class="transition group-hover:brightness-90"
-          >
+        <template v-for="pack in day.packs" :key="pack.packId">
+          <NuxtLink v-if="!isBeforeToday(day.date)" :to="getCreateWishLink(pack)" class="group">
+            <BaseTag
+              rounded="rounded"
+              :variant="getPackStatusConfig(pack).variant"
+              class="transition group-hover:brightness-90"
+            >
+              {{ pack.packLabel }}
+            </BaseTag>
+          </NuxtLink>
+          <BaseTag v-else rounded="rounded" :variant="getPackStatusConfig(pack).variant">
             {{ pack.packLabel }}
           </BaseTag>
-        </NuxtLink>
+        </template>
       </div>
     </div>
 
@@ -54,7 +54,7 @@
           <div class="flex flex-col items-end gap-1">
             <div class="flex items-stretch gap-1 text-sm">
               <NuxtLink
-                v-if="getPackStatusConfig(pack).status === 'available'"
+                v-if="getPackStatusConfig(pack).status !== 'reserved' && !isBeforeToday(day.date)"
                 :to="getCreateWishLink(pack)"
                 class="group"
               >
@@ -67,20 +67,14 @@
                   {{ getPackStatusConfig(pack).label }}
                 </BaseTag>
               </NuxtLink>
-              <NuxtLink
+              <BaseTag
                 v-else-if="getPackStatusConfig(pack).status !== 'reserved'"
-                :to="getCreateWishLink(pack)"
-                class="group"
+                rounded="rounded"
+                :variant="getPackStatusConfig(pack).variant"
               >
-                <BaseTag
-                  rounded="rounded"
-                  :variant="getPackStatusConfig(pack).variant"
-                  class="transition group-hover:brightness-90"
-                >
-                  <component :is="getPackStatusConfig(pack).icon" class="w-3 h-3 mr-1" />
-                  {{ getPackStatusConfig(pack).label }}
-                </BaseTag>
-              </NuxtLink>
+                <component :is="getPackStatusConfig(pack).icon" class="w-3 h-3 mr-1" />
+                {{ getPackStatusConfig(pack).label }}
+              </BaseTag>
               <PilotDisplay
                 v-else
                 :display-name="getPackStatusConfig(pack).label"
