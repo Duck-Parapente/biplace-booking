@@ -188,7 +188,13 @@ const timeline = computed<TimelineItem[]>(() => {
     data: n,
   }));
 
-  return [...reservationItems, ...noteItems].sort((a, b) => b.sortDate - a.sortDate);
+  return [...reservationItems, ...noteItems].sort((a, b) => {
+    if (b.sortDate !== a.sortDate) return b.sortDate - a.sortDate;
+    // notes before reservations when timestamps are equal
+    if (a.type === 'note' && b.type !== 'note') return -1;
+    if (b.type === 'note' && a.type !== 'note') return 1;
+    return 0;
+  });
 });
 
 const handleReservationClick = (reservation: ReservationItem) => {

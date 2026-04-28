@@ -69,10 +69,10 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1"> Observations </label>
           <textarea
-            v-model="form.publicComment"
+            v-model="form.packNote"
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-600 focus:border-transparent"
             rows="3"
-            placeholder="Commentaire visible par tout le monde"
+            placeholder="Note visible par tout le monde"
           ></textarea>
         </div>
 
@@ -142,10 +142,11 @@ const canClose = computed(() => {
   const isBeforeNow = new Date(props.wish.startingDate) < new Date();
   return isBeforeNow && !!props.wish.reservation?.isClosable;
 });
+
 const form = ref<CloseReservationDto>({
   flightTimeMinutes: 0,
   flightsCount: 0,
-  publicComment: '',
+  packNote: '',
   shouldWarnPackOwner: false,
 });
 
@@ -175,7 +176,7 @@ const resetForm = () => {
   form.value = {
     flightTimeMinutes: 0,
     flightsCount: 0,
-    publicComment: '',
+    packNote: '',
     shouldWarnPackOwner: false,
   };
   checklist.value = {

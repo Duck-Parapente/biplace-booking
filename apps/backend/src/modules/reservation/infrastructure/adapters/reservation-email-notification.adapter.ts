@@ -44,7 +44,11 @@ export class ReservationEmailNotificationAdapter implements ReservationNotificat
     );
   }
 
-  async notifyReservationClosed(reservationId: UUID, flightLog: FlightLogProps): Promise<void> {
+  async notifyReservationClosed(
+    reservationId: UUID,
+    flightLog: FlightLogProps,
+    packNote?: string,
+  ): Promise<void> {
     try {
       const { pack, user, startingDate } = await prisma.reservation.findUniqueOrThrow({
         where: { id: reservationId.uuid },
@@ -77,7 +81,7 @@ export class ReservationEmailNotificationAdapter implements ReservationNotificat
           selectedPackLabel: pack.label,
           flightsCount: flightLog.flightsCount.value,
           flightTimeMinutes: flightLog.flightTimeMinutes.value,
-          publicComment: flightLog.publicComment || '-',
+          publicComment: packNote ?? '-',
         },
       });
     } catch (error) {

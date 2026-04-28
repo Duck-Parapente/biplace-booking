@@ -17,13 +17,14 @@ export class ReservationClosedEventHandler implements IEventHandler<ReservationC
     id,
     userId,
     flightLog,
+    packNote,
     aggregateId,
     metadata,
   }: ReservationClosedDomainEvent): Promise<void> {
     try {
       this.logger.log({
         message: `${ReservationClosedDomainEvent.name} received`,
-        userId,
+        userId: userId?.uuid,
         flightLog,
         eventId: id.uuid,
         aggregateId: aggregateId.uuid,
@@ -31,7 +32,7 @@ export class ReservationClosedEventHandler implements IEventHandler<ReservationC
       });
 
       this.logger.log(`Sending close notification for reservation ${aggregateId.uuid}`);
-      await this.notificationPort.notifyReservationClosed(aggregateId, flightLog);
+      await this.notificationPort.notifyReservationClosed(aggregateId, flightLog, packNote);
     } catch (error) {
       this.logger.error(
         `Error in ReservationClosedEventHandler: ${(error as Error).message}`,

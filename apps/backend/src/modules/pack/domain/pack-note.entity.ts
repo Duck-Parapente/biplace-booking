@@ -1,5 +1,4 @@
 import { AggregateRoot, AggregateID, DomainEventMetadata } from '@libs/ddd';
-import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 
 import { PackNoteCreatedDomainEvent } from './events/pack-note-created.domain-event';
@@ -12,7 +11,7 @@ export class PackNoteEntity extends AggregateRoot<PackNoteProps> {
     const id = UUID.random();
     const entity = new PackNoteEntity({
       id,
-      createdAt: DateValueObject.fromDate(new Date()),
+      createdAt: props.createdAt,
       props,
     });
     entity.addEvent(

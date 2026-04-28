@@ -9,5 +9,9 @@ export interface ReservationNotificationPort {
     userId?: UUID,
   ): Promise<void>;
   notifyReservationCancelled(reservationId: UUID, userId?: UUID): Promise<void>;
-  notifyReservationClosed(reservationId: UUID, flightLog: FlightLogProps): Promise<void>;
+  notifyReservationClosed(
+    reservationId: UUID,
+    flightLog: FlightLogProps,
+    packNote?: string,
+  ): Promise<void>;
 }

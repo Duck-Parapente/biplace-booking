@@ -46,7 +46,7 @@ export class CloseReservationHttpController {
     @Param('id') id: string,
     @Request() { user: { id: userId, roles } }: { user: AuthenticatedUser },
     @Body()
-    { flightTimeMinutes, flightsCount, publicComment, shouldWarnPackOwner }: CloseReservationDto,
+    { flightTimeMinutes, flightsCount, packNote, shouldWarnPackOwner }: CloseReservationDto,
   ) {
     const reservationId = new UUID({ uuid: id });
     const reservation = await this.reservationRepository.findById(reservationId);
@@ -69,9 +69,9 @@ export class CloseReservationHttpController {
       flightLog: {
         flightTimeMinutes: new Integer({ value: flightTimeMinutes }),
         flightsCount: new Integer({ value: flightsCount }),
-        publicComment,
         shouldWarnPackOwner,
       },
+      packNote,
       metadata: {
         userId,
       },
