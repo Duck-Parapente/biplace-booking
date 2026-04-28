@@ -14,6 +14,7 @@ import { GetPackNotesHttpController } from './infrastructure/http/controllers/ge
 import { GetPacksHttpController } from './infrastructure/http/controllers/get-packs.http.controller';
 import { UpdatePackNoteHttpController } from './infrastructure/http/controllers/update-pack-note.http.controller';
 import { UpdatePackHttpController } from './infrastructure/http/controllers/update-pack.http.controller';
+import { PackReservationClosedEventHandler } from './infrastructure/listeners/reservation-closed.event-handler';
 import { PackNoteRepository } from './infrastructure/persistence/pack-note.repository';
 import { PackRepository } from './infrastructure/persistence/pack.repository';
 import { PACK_NOTE_REPOSITORY, PACK_REPOSITORY } from './pack.di-tokens';
@@ -35,6 +36,7 @@ import { PACK_NOTE_REPOSITORY, PACK_REPOSITORY } from './pack.di-tokens';
     CreatePackNoteService,
     UpdatePackNoteService,
     GetPackNotesService,
+    PackReservationClosedEventHandler,
     { provide: PACK_REPOSITORY, useClass: PackRepository },
     { provide: PACK_NOTE_REPOSITORY, useClass: PackNoteRepository },
     { provide: EVENT_EMITTER, useClass: EventEmitter },

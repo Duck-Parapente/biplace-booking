@@ -146,7 +146,11 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
     return this.canBeModified();
   }
 
-  close(flightLog: FlightLogProps, metadata: DomainEventMetadata): ReservationEntity {
+  close(
+    flightLog: FlightLogProps,
+    packNote: string | undefined,
+    metadata: DomainEventMetadata,
+  ): ReservationEntity {
     if (!this.isClosable()) {
       throw new CannotCloseReservationException(this.id, this.props.status);
     }
@@ -158,9 +162,14 @@ export class ReservationEntity extends AggregateRoot<ReservationProps> {
       new ReservationClosedDomainEvent({
         aggregateId: this.id,
         metadata,
-        automaticCost: this.props.automaticCost,
         userId: this.props.userId,
+        reservation: {
+          packId: this.props.packId,
+          startingDate: this.props.startingDate,
+          automaticCost: this.props.automaticCost,
+        },
         flightLog,
+        packNote,
       }),
     );
 

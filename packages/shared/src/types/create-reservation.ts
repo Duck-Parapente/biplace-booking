@@ -66,7 +66,7 @@ export class CloseReservationDto {
 
   @IsOptional()
   @IsString()
-  publicComment?: string;
+  packNote?: string;
 
   @IsNotEmpty()
   @IsBoolean()

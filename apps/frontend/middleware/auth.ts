@@ -13,7 +13,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return;
   }
 
-  const { getUser, isProfileComplete } = useUser();
+  const { getUser, isProfileComplete, userData } = useUser();
 
   // Check localStorage cache first
   const CACHE_KEY = 'profile_complete_check';
@@ -26,6 +26,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
       const isExpired = Date.now() - timestamp > CACHE_DURATION;
 
       if (!isExpired && isComplete) {
+        // Still populate userData if not yet loaded (needed for components that read it)
+        if (!userData.value) {
+          getUser().catch(console.error);
+        }
         return;
       }
     } catch (e) {

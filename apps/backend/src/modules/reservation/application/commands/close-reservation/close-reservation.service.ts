@@ -20,8 +20,13 @@ export class CloseReservationService implements ICommandHandler<CloseReservation
     private readonly flightLogRepository: FlightLogRepositoryPort,
   ) {}
 
-  async execute({ reservation, flightLog, metadata }: CloseReservationCommand): Promise<void> {
-    const closedReservation = reservation.close(flightLog, metadata);
+  async execute({
+    reservation,
+    flightLog,
+    packNote,
+    metadata,
+  }: CloseReservationCommand): Promise<void> {
+    const closedReservation = reservation.close(flightLog, packNote, metadata);
 
     await this.reservationRepository.update(closedReservation);
     await this.flightLogRepository.create(reservation.id, flightLog);

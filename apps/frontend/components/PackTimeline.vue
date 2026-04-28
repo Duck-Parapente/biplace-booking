@@ -4,7 +4,7 @@
       <h2 class="text-xl font-semibold text-gray-800 shrink-0">Carnet de vol</h2>
       <div class="flex items-center gap-4">
         <label class="flex items-center gap-2 text-sm cursor-pointer">
-          <span class="text-gray-600">Confirmés</span>
+          <span class="text-gray-600">Vols non clôturés</span>
           <button
             type="button"
             :class="[
@@ -25,7 +25,7 @@
         </label>
 
         <label v-if="isAdmin" class="flex items-center gap-2 text-sm cursor-pointer">
-          <span>Édition</span>
+          <span class="text-gray-600">Édition</span>
           <button
             type="button"
             :class="[
@@ -188,7 +188,13 @@ const timeline = computed<TimelineItem[]>(() => {
     data: n,
   }));
 
-  return [...reservationItems, ...noteItems].sort((a, b) => b.sortDate - a.sortDate);
+  return [...reservationItems, ...noteItems].sort((a, b) => {
+    if (b.sortDate !== a.sortDate) return b.sortDate - a.sortDate;
+    // notes before reservations when timestamps are equal
+    if (a.type === 'note' && b.type !== 'note') return -1;
+    if (b.type === 'note' && a.type !== 'note') return 1;
+    return 0;
+  });
 });
 
 const handleReservationClick = (reservation: ReservationItem) => {

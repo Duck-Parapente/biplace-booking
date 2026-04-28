@@ -1,3 +1,4 @@
+import { DateValueObject } from '@libs/ddd/date.value-object';
 import { UUID } from '@libs/ddd/uuid.value-object';
 import { JwtAuthGuard } from '@libs/guards/jwt-auth.guard';
 import { AuthenticatedUser } from '@libs/guards/jwt.strategy';
@@ -28,6 +29,7 @@ export class CreatePackNoteHttpController {
         packId: new UUID({ uuid: packId }),
         content: dto.content,
         createdById: userId,
+        createdAt: DateValueObject.fromDate(new Date()),
       },
       metadata: { userId },
     });
