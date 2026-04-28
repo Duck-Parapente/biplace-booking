@@ -169,6 +169,13 @@ export const usePack = () => {
     });
   };
 
+  const updatePackNote = async (packId: string, noteId: string, content: string): Promise<void> => {
+    await callApi(`${BASE_PATH}/${packId}/notes/${noteId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ content }),
+    });
+  };
+
   const getPackNotes = async (packId: string): Promise<PackNoteDto[]> => {
     return callApi<PackNoteDto[]>(`${BASE_PATH}/${packId}/notes`);
   };
@@ -214,6 +221,7 @@ export const usePack = () => {
     closeModal,
     submitPack,
     createPackNote,
+    updatePackNote,
     getPackNotes,
   };
 };

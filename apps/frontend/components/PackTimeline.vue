@@ -61,6 +61,14 @@
             >
               <div class="flex items-center justify-between gap-3">
                 <p class="text-xs text-gray-400">{{ formatDate(item.data.createdAt) }}</p>
+                <button
+                  v-if="item.data.createdById === userData?.id"
+                  type="button"
+                  class="text-xs text-amber-600 hover:text-amber-800 transition"
+                  @click.stop="emit('note-edit', item.data)"
+                >
+                  Modifier
+                </button>
               </div>
               <p class="text-sm text-gray-700 whitespace-pre-line">{{ item.data.content }}</p>
               <p v-if="item.data.createdById" class="text-xs text-amber-700 text-right">
@@ -154,12 +162,13 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   'reservation-click': [reservation: ReservationItem];
+  'note-edit': [note: PackNoteDto];
 }>();
 
 const editMode = ref(false);
 const showConfirmed = ref(false);
 
-const { getUserName, getUsers } = useUser();
+const { getUserName, getUsers, userData } = useUser();
 
 const timeline = computed<TimelineItem[]>(() => {
   const reservationItems: TimelineItem[] = props.reservations

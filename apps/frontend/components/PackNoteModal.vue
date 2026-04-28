@@ -5,7 +5,9 @@
     @click.self="handleClose"
   >
     <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-      <h3 class="text-xl font-semibold mb-4 text-secondary-600">Ajouter une note</h3>
+      <h3 class="text-xl font-semibold mb-4 text-secondary-600">
+        {{ note ? 'Modifier la note' : 'Ajouter une note' }}
+      </h3>
       <div class="space-y-4">
         <div>
           <label for="note-content" class="block text-sm font-medium text-gray-700 mb-2">
@@ -44,18 +46,22 @@
 </template>
 
 <script setup lang="ts">
+import type { PackNoteDto } from 'shared';
+
 interface Props {
   open: boolean;
   packId: string;
+  note?: PackNoteDto | null;
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
   close: [];
   created: [];
+  updated: [];
 }>();
 
-const { createPackNote } = usePack();
+const { createPackNote, updatePackNote } = usePack();
 
 const content = ref('');
 const saving = ref(false);
@@ -65,7 +71,7 @@ watch(
   () => props.open,
   (isOpen) => {
     if (isOpen) {
-      content.value = '';
+      content.value = props.note?.content ?? '';
       errorMessage.value = null;
     }
   },
@@ -83,8 +89,15 @@ const handleConfirm = async () => {
   try {
     saving.value = true;
     errorMessage.value = null;
-    await createPackNote(props.packId, content.value.trim());
-    emit('created');
+
+    if (props.note) {
+      await updatePackNote(props.packId, props.note.id, content.value.trim());
+      emit('updated');
+    } else {
+      await createPackNote(props.packId, content.value.trim());
+      emit('created');
+    }
+
     emit('close');
   } catch (error) {
     errorMessage.value = error instanceof Error ? error.message : 'Une erreur est survenue.';

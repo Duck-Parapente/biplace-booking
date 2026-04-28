@@ -33,6 +33,7 @@
         :notes="packNotes"
         :is-admin="isAdmin"
         @reservation-click="handleReservationClick"
+        @note-edit="handleNoteEdit"
       />
     </div>
 
@@ -41,7 +42,7 @@
       type="button"
       class="fixed bottom-4 right-4 w-12 h-12 bg-amber-400 hover:bg-amber-500 text-white rounded-full shadow-lg flex items-center justify-center text-2xl transition z-40"
       title="Ajouter une note"
-      @click="noteModalOpen = true"
+      @click="openNoteModal"
     >
       ✏️
     </button>
@@ -56,13 +57,14 @@
       @updated="handleCostUpdated"
     />
 
-    // TODO: use patch endpoint
-    <CreatePackNoteModal
+    <PackNoteModal
       v-if="selectedPackId"
       :open="noteModalOpen"
       :pack-id="selectedPackId"
-      @close="noteModalOpen = false"
+      :note="editingNote"
+      @close="closeNoteModal"
       @created="handleNoteCreated"
+      @updated="handleNoteUpdated"
     />
   </main>
 </template>
@@ -91,6 +93,7 @@ const error = ref<string | null>(null);
 const editModalOpen = ref<boolean>(false);
 const noteModalOpen = ref<boolean>(false);
 const editingReservation = ref<ReservationItem | null>(null);
+const editingNote = ref<PackNoteDto | null>(null);
 
 const packOptions = computed<AutocompleteOption[]>(() => {
   return packs.value
@@ -149,7 +152,28 @@ const handleCostUpdated = async () => {
   }
 };
 
+const openNoteModal = () => {
+  editingNote.value = null;
+  noteModalOpen.value = true;
+};
+
+const closeNoteModal = () => {
+  noteModalOpen.value = false;
+  editingNote.value = null;
+};
+
+const handleNoteEdit = (note: PackNoteDto) => {
+  editingNote.value = note;
+  noteModalOpen.value = true;
+};
+
 const handleNoteCreated = async () => {
+  if (selectedPackId.value) {
+    await fetchPackNotes(selectedPackId.value);
+  }
+};
+
+const handleNoteUpdated = async () => {
   if (selectedPackId.value) {
     await fetchPackNotes(selectedPackId.value);
   }
