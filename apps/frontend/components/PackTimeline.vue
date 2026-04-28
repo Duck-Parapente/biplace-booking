@@ -4,7 +4,7 @@
       <h2 class="text-xl font-semibold text-gray-800 shrink-0">Carnet de vol</h2>
       <div class="flex items-center gap-4">
         <label class="flex items-center gap-2 text-sm cursor-pointer">
-          <span class="text-gray-600">Confirmés</span>
+          <span class="text-gray-600">Vols non clôturés</span>
           <button
             type="button"
             :class="[
@@ -25,7 +25,7 @@
         </label>
 
         <label v-if="isAdmin" class="flex items-center gap-2 text-sm cursor-pointer">
-          <span>Édition</span>
+          <span class="text-gray-600">Édition</span>
           <button
             type="button"
             :class="[
