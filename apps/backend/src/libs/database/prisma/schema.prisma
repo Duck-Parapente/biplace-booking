@@ -39,6 +39,7 @@ model User {
     ownedPacks        Pack[]
     reservationWishes ReservationWish[]
     reservations      Reservation[]
+    packNotes         PackNote[]
 }
 
 model Pack {
@@ -56,6 +57,17 @@ model Pack {
     order                 Int
     reservationWishes     ReservationWishPackChoice[]
     reservations          Reservation[]
+    notes                 PackNote[]
+}
+
+model PackNote {
+    id          String   @id
+    packId      String
+    pack        Pack     @relation(fields: [packId], references: [id], onDelete: Cascade)
+    content     String
+    createdAt   DateTime @db.Timestamptz(3)
+    createdBy   User     @relation(fields: [createdById], references: [id])
+    createdById String
 }
 
 enum ReservationWishStatus {

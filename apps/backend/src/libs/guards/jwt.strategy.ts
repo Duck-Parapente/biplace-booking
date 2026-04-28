@@ -56,7 +56,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: JwtPayload): Promise<AuthenticatedUser> {
     if (!payload.sub) {
-      throw new UnauthorizedException({ label: 'Session invalide.', message: 'Invalid token payload' });
+      throw new UnauthorizedException({
+        label: 'Session invalide.',
+        message: 'Invalid token payload',
+      });
     }
 
     const user = await prisma.user.findUnique({
@@ -64,7 +67,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
 
     if (!user) {
-      throw new UnauthorizedException({ label: 'Utilisateur introuvable.', message: 'User not found' });
+      throw new UnauthorizedException({
+        label: 'Utilisateur introuvable.',
+        message: 'User not found',
+      });
     }
     return {
       id: new UUID({ uuid: user.id }),

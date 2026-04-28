@@ -1,7 +1,6 @@
 <template>
   <main class="h-full flex flex-col bg-gray-50 overflow-hidden">
     <div class="flex-1 p-3 max-w-4xl mx-auto w-full flex flex-col min-h-0">
-      <!-- Pack Selection -->
       <select
         id="pack-select"
         v-model="selectedPackId"
@@ -14,70 +13,7 @@
         </option>
       </select>
 
-      <!-- Pack Info -->
-      <div
-        v-if="selectedPackId && !loading && !error && packData"
-        class="relative mb-4 bg-blue-50 border-l-4 border-blue-600 p-3 rounded-lg shadow-md space-y-2 cursor-pointer"
-        @click="showMoreInfo = !showMoreInfo"
-      >
-        <!-- Toggle icon (top right) -->
-        <span class="absolute top-2 right-2 text-lg leading-none text-blue-600">
-          {{ showMoreInfo ? '➖' : '➕' }}
-        </span>
-
-        <!-- Always displayed -->
-        <div class="flex items-center gap-2 text-gray-800">
-          <span class="text-sm text-gray-500">Respo:</span>
-          <span>{{ packData.ownerFullName }}</span>
-        </div>
-
-        <div class="flex items-center gap-2 text-gray-800">
-          <span class="text-sm text-gray-500">Contrôle:</span>
-          <template v-if="packData.lastControlDate">
-            <span>{{ formatDate(packData.lastControlDate) }}</span>
-            <span
-              v-if="packData.flightsMinutesSinceLastControlDate != null"
-              class="text-sm text-gray-400"
-            >
-              ({{ Math.round(packData.flightsMinutesSinceLastControlDate / 60) }}h depuis le 1er
-              mars)
-            </span>
-          </template>
-          <span v-else class="text-sm text-gray-400">Non renseigné</span>
-        </div>
-
-        <div class="flex items-center gap-2 text-gray-800">
-          <span class="text-sm text-gray-500">Pliage secours:</span>
-          <span v-if="packData.lastRescueFoldingDate">{{
-            formatDate(packData.lastRescueFoldingDate)
-          }}</span>
-          <span v-else class="text-sm text-gray-400">Non renseigné</span>
-        </div>
-
-        <!-- Expanded info -->
-        <div v-if="showMoreInfo" class="pt-2 border-t border-blue-200 space-y-2">
-          <div v-if="packData.description" class="flex items-baseline gap-2 text-gray-800">
-            <span class="text-sm text-gray-500">Description:</span>
-            <span>{{ packData.description }}</span>
-          </div>
-
-          <div v-if="packData.details" class="text-gray-800">
-            <span class="text-sm text-gray-500">Détails:</span>
-            <div class="whitespace-pre-line mt-1" v-html="packData.details"></div>
-          </div>
-
-          <div class="border-t border-blue-200 pt-2 flex justify-center gap-8 text-gray-800">
-            <div class="flex items-center gap-2">
-              <span>✈️</span>
-              <span>{{ packData.totalFlightsCount }} vols</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span>⏱️</span>
-              <span>{{ Math.round((packData.totalFlightsMinutes ?? 0) / 60) }}h</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PackInfoCard v-if="selectedPackId && !loading && !error && packData" :pack-data="packData" />
 
       <div v-if="loading" class="text-gray-500">
         <p>Chargement...</p>
@@ -91,112 +27,26 @@
         <p>Veuillez sélectionner un pack pour voir le carnet de vol.</p>
       </div>
 
-      <div v-else class="flex-1 flex flex-col min-h-0">
-        <!-- Carnet de vol title with edit button -->
-        <div class="mb-2 flex items-center justify-between">
-          <h2 class="text-xl font-semibold text-gray-800">Carnet de vol</h2>
-          <div v-if="isAdmin" class="flex items-center gap-2">
-            <label class="flex items-center gap-2 text-sm cursor-pointer">
-              <span>Mode édition</span>
-              <button
-                type="button"
-                :class="[
-                  editMode ? 'bg-primary-400' : 'bg-gray-200',
-                  'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2',
-                ]"
-                role="switch"
-                :aria-checked="editMode"
-                @click="editMode = !editMode"
-              >
-                <span
-                  :class="[
-                    editMode ? 'translate-x-5' : 'translate-x-0',
-                    'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  ]"
-                />
-              </button>
-            </label>
-          </div>
-        </div>
-
-        <div class="flex-1 overflow-y-auto">
-          <div class="rounded-lg shadow-sm">
-            <div
-              v-if="reservations.length === 0"
-              class="text-gray-500 text-sm bg-white p-3 rounded-lg"
-            >
-              <p>Aucun vol enregistré pour ce pack.</p>
-            </div>
-
-            <div v-else class="space-y-2">
-              <div
-                v-for="reservation in reservations"
-                :key="reservation.id"
-                class="border bg-white border-gray-300 rounded-lg p-3 hover:shadow-md transition"
-                :class="{ 'cursor-pointer hover:bg-gray-50': editMode }"
-                @click="handleReservationClick(reservation)"
-              >
-                <div class="flex justify-between items-start mb-2">
-                  <DateDisplay :date="reservation.startingDate" />
-                  <div class="flex flex-col items-end gap-1.5">
-                    <BaseTag
-                      v-if="reservation.status === ReservationWishStatusDto.CANCELLED"
-                      variant="danger"
-                    >
-                      Annulé
-                    </BaseTag>
-                    <BaseTag
-                      v-else-if="reservation.status === ReservationWishStatusDto.CLOSED"
-                      variant="success"
-                    >
-                      Clôturé
-                    </BaseTag>
-                    <BaseTag
-                      v-else-if="reservation.status === ReservationWishStatusDto.CONFIRMED"
-                      variant="gray"
-                    >
-                      Confirmé
-                    </BaseTag>
-                  </div>
-                </div>
-
-                <div v-if="reservation.userName" class="mb-2 text-sm flex items-center gap-2">
-                  <span class="font-semibold">Pilote:</span>
-                  <PilotDisplay :display-name="reservation.userName" />
-                  <template v-if="editMode">
-                    <span class="font-semibold text-xl text-gray-200">&nbsp;/&nbsp;</span>
-                    <CostDisplay :cost="reservation.manualCost ?? reservation.automaticCost ?? 0" />
-                  </template>
-                </div>
-
-                <div
-                  v-if="reservation.flightLog"
-                  class="bg-gray-100 rounded-lg p-2 space-y-1.5 text-sm"
-                >
-                  <div class="flex items-center gap-2">
-                    <span class="font-semibold">Temps de vol:</span>
-                    <span>{{ reservation.flightLog.flightTimeMinutes }} minutes</span>
-                  </div>
-
-                  <div class="flex items-center gap-2">
-                    <span class="font-semibold">Nombre de vols:</span>
-                    <span>{{ reservation.flightLog.flightsCount }}</span>
-                  </div>
-
-                  <div
-                    v-if="reservation.flightLog.publicComment"
-                    class="pt-1.5 border-t border-gray-200"
-                  >
-                    <p class="font-semibold mb-1">Commentaire:</p>
-                    <p class="italic text-gray-600">"{{ reservation.flightLog.publicComment }}"</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PackTimeline
+        v-else
+        :reservations="packData?.reservations ?? []"
+        :notes="packNotes"
+        :is-admin="isAdmin"
+        @reservation-click="handleReservationClick"
+        @note-edit="handleNoteEdit"
+      />
     </div>
+
+    <button
+      v-if="selectedPackId && isAdminOrManager"
+      type="button"
+      class="fixed bottom-4 right-4 w-12 h-12 bg-amber-400 hover:bg-amber-500 text-white rounded-full shadow-lg flex items-center justify-center text-2xl transition z-40"
+      title="Ajouter une note"
+      @click="openNoteModal"
+    >
+      ✏️
+    </button>
+
     <EditCostModal
       v-if="editingReservation"
       :open="editModalOpen"
@@ -206,32 +56,44 @@
       @close="closeEditModal"
       @updated="handleCostUpdated"
     />
+
+    <PackNoteModal
+      v-if="selectedPackId"
+      :open="noteModalOpen"
+      :pack-id="selectedPackId"
+      :note="editingNote"
+      @close="closeNoteModal"
+      @created="handleNoteCreated"
+      @updated="handleNoteUpdated"
+    />
   </main>
 </template>
 
 <script setup lang="ts">
-import { ReservationWishStatusDto, type PackReservationsDto } from 'shared';
+import type { PackReservationsDto, PackNoteDto } from 'shared';
 
 import type { AutocompleteOption } from '~/components/atoms/BaseAutocomplete.vue';
-import { formatDate } from '~/composables/useDateHelpers';
 
 definePageMeta({
   middleware: 'auth',
   pageTitle: 'Infos packs',
 });
 
+type ReservationItem = PackReservationsDto['reservations'][0];
+
 const { callApi } = useApi();
-const { packs, getPacks } = usePack();
-const { isAdmin } = useAuth();
+const { packs, getPacks, getPackNotes } = usePack();
+const { isAdmin, isAdminOrManager } = useAuth();
 
 const { value: selectedPackId } = useLocalStorage<string | null>('selectedPackId', null);
 const packData = ref<PackReservationsDto | null>(null);
+const packNotes = ref<PackNoteDto[]>([]);
 const loading = ref<boolean>(false);
 const error = ref<string | null>(null);
-const editMode = ref<boolean>(false);
-const showMoreInfo = ref<boolean>(false);
 const editModalOpen = ref<boolean>(false);
-const editingReservation = ref<PackReservationsDto['reservations'][0] | null>(null);
+const noteModalOpen = ref<boolean>(false);
+const editingReservation = ref<ReservationItem | null>(null);
+const editingNote = ref<PackNoteDto | null>(null);
 
 const packOptions = computed<AutocompleteOption[]>(() => {
   return packs.value
@@ -242,21 +104,13 @@ const packOptions = computed<AutocompleteOption[]>(() => {
     }));
 });
 
-const reservations = computed(() => {
-  return (packData.value?.reservations ?? [])
-    .filter(
-      (reservation) => editMode.value || reservation.status !== ReservationWishStatusDto.CANCELLED,
-    )
-    .sort((a, b) => new Date(b.startingDate).getTime() - new Date(a.startingDate).getTime());
-});
-
 const handlePackSelect = async (packId: string | null) => {
   if (!packId) {
     packData.value = null;
+    packNotes.value = [];
     return;
   }
-
-  await fetchPackReservations(packId);
+  await Promise.all([fetchPackReservations(packId), fetchPackNotes(packId)]);
 };
 
 const fetchPackReservations = async (packId: string) => {
@@ -274,13 +128,15 @@ const fetchPackReservations = async (packId: string) => {
   }
 };
 
-const handleReservationClick = (reservation: PackReservationsDto['reservations'][0]) => {
-  if (editMode.value) {
-    openEditModal(reservation);
+const fetchPackNotes = async (packId: string) => {
+  try {
+    packNotes.value = await getPackNotes(packId);
+  } catch (err) {
+    console.error('Failed to fetch pack notes:', err);
   }
 };
 
-const openEditModal = (reservation: PackReservationsDto['reservations'][0]) => {
+const handleReservationClick = (reservation: ReservationItem) => {
   editingReservation.value = reservation;
   editModalOpen.value = true;
 };
@@ -296,12 +152,41 @@ const handleCostUpdated = async () => {
   }
 };
 
+const openNoteModal = () => {
+  editingNote.value = null;
+  noteModalOpen.value = true;
+};
+
+const closeNoteModal = () => {
+  noteModalOpen.value = false;
+  editingNote.value = null;
+};
+
+const handleNoteEdit = (note: PackNoteDto) => {
+  editingNote.value = note;
+  noteModalOpen.value = true;
+};
+
+const handleNoteCreated = async () => {
+  if (selectedPackId.value) {
+    await fetchPackNotes(selectedPackId.value);
+  }
+};
+
+const handleNoteUpdated = async () => {
+  if (selectedPackId.value) {
+    await fetchPackNotes(selectedPackId.value);
+  }
+};
+
 onMounted(async () => {
   await getPacks();
 
-  // Restore previously selected pack if any
   if (selectedPackId.value) {
-    await fetchPackReservations(selectedPackId.value);
+    await Promise.all([
+      fetchPackReservations(selectedPackId.value),
+      fetchPackNotes(selectedPackId.value),
+    ]);
   }
 });
 </script>

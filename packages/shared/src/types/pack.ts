@@ -68,6 +68,40 @@ export class UpdatePackDto {
   lastRescueFoldingDate?: string | null;
 }
 
+export class CreatePackNoteDto {
+  @IsNotEmpty()
+  @IsString()
+  content!: string;
+}
+
+export class UpdatePackNoteDto {
+  @IsNotEmpty()
+  @IsString()
+  content!: string;
+}
+
+export class PackNoteDto {
+  @IsNotEmpty()
+  @IsUUID()
+  id!: string;
+
+  @IsNotEmpty()
+  @IsUUID()
+  packId!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  content!: string;
+
+  @IsNotEmpty()
+  @IsDateString()
+  createdAt!: string;
+
+  @IsNotEmpty()
+  @IsUUID()
+  createdById!: string;
+}
+
 export class PackDto {
   @IsUUID()
   @IsNotEmpty()

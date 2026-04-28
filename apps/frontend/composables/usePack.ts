@@ -1,4 +1,4 @@
-import type { CreatePackDto, PackDto, UpdatePackDto } from 'shared';
+import type { CreatePackDto, PackDto, PackNoteDto, UpdatePackDto } from 'shared';
 import { UserRoles } from 'shared';
 
 const BASE_PATH = '/packs';
@@ -162,6 +162,24 @@ export const usePack = () => {
     }
   };
 
+  const createPackNote = async (packId: string, content: string): Promise<void> => {
+    await callApi(`${BASE_PATH}/${packId}/notes`, {
+      method: 'POST',
+      body: JSON.stringify({ content }),
+    });
+  };
+
+  const updatePackNote = async (packId: string, noteId: string, content: string): Promise<void> => {
+    await callApi(`${BASE_PATH}/${packId}/notes/${noteId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ content }),
+    });
+  };
+
+  const getPackNotes = async (packId: string): Promise<PackNoteDto[]> => {
+    return callApi<PackNoteDto[]>(`${BASE_PATH}/${packId}/notes`);
+  };
+
   // Computed wording based on current mode
   const currentOperationConfig = computed(() => PACK_OPERATION_CONFIG[modalMode.value]);
 
@@ -202,6 +220,9 @@ export const usePack = () => {
     openEditPackModal,
     closeModal,
     submitPack,
+    createPackNote,
+    updatePackNote,
+    getPackNotes,
   };
 };
 

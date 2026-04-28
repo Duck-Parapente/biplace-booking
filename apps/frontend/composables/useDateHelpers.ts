@@ -31,8 +31,8 @@ export function formatDateLong(date: Date | string): {
  */
 export function formatDate(date: Date | string): string {
   return toDate(date).toLocaleDateString('fr-FR', {
-    day: '2-digit',
-    month: '2-digit',
+    day: 'numeric',
+    month: 'short',
     year: 'numeric',
   });
 }

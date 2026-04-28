@@ -7,6 +7,13 @@ interface NewsEntry {
 
 const NEWS: NewsEntry[] = [
   {
+    version: 3,
+    date: '2026-04-27',
+    title: 'Notes sur les packs',
+    content:
+      "Vous pouvez désormais ajouter des notes sur les packs (bouton ✏️ en bas à droite). Ces notes apparaissent dans le carnet de vol du pack, avec la date et l'auteur.",
+  },
+  {
     version: 2,
     date: '2025-04-23',
     title: 'Lien cliquable depuis le planning',

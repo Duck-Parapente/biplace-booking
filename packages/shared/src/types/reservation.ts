@@ -159,9 +159,9 @@ class PackReservationDto {
   @IsInt()
   automaticCost!: number | null;
 
+  @IsUUID()
   @IsOptional()
-  @IsString()
-  userName!: string | null;
+  userId!: string | null;
 
   @IsOptional()
   flightLog!: FlightLogDto | null;

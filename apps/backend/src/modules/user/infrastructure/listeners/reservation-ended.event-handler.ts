@@ -39,7 +39,7 @@ export class ReservationEndedEventHandler
         eventId: id.uuid,
         reservationId: aggregateId.uuid,
         userId: userId?.uuid,
-        metadata: metadata,
+        metadata,
       });
 
       if (!userId) {

@@ -34,6 +34,20 @@ export const useAuth = (): UseAuth => {
         },
       });
     } catch (error) {
+      // Silent auth fails on localhost when refresh token is expired (iframe blocked by third-party cookie restrictions).
+      // Auth0 surfaces this as consent_required / login_required — redirect to login rather than surfacing a raw error.
+      const recoverableErrors = ['consent_required', 'login_required', 'interaction_required'];
+      if (
+        error &&
+        typeof error === 'object' &&
+        'error' in error &&
+        recoverableErrors.includes((error as { error: string }).error)
+      ) {
+        await login({
+          authorizationParams: { audience: config.public.auth0Audience },
+        });
+        throw error; // unreachable — loginWithRedirect navigates away
+      }
       console.error('Error getting access token:', error);
       throw error;
     }

@@ -2,6 +2,8 @@ import { algorithmConfig } from '@libs/config/algorithm.constants';
 import { DateValueObject } from '@libs/ddd/date.value-object';
 import { Integer } from '@libs/ddd/integer.value-object';
 
+import { ReservationProps } from './reservation.types';
+
 const THRESHOLD_TO_CEIL_IN_MINUTES = 55;
 
 export enum ReservationCostEventType {
@@ -14,7 +16,7 @@ interface CalculateReservationCostParams {
   createdAt: DateValueObject;
   startingDate: DateValueObject;
   now: DateValueObject;
-  context: 'CLASSIC' | 'TRAINING';
+  context: ReservationProps['context'];
 }
 
 export const calculateReservationCost = ({

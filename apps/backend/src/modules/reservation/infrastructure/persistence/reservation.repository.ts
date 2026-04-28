@@ -185,7 +185,6 @@ export class ReservationRepository implements ReservationRepositoryPort {
           packId: packId.uuid,
         },
         include: {
-          user: true,
           flightLog: true,
         },
         orderBy: {
@@ -228,10 +227,7 @@ export class ReservationRepository implements ReservationRepositoryPort {
         id: new UUID({ uuid: reservation.id }),
         startingDate: DateValueObject.fromDate(reservation.startingDate),
         endingDate: DateValueObject.fromDate(reservation.endingDate),
-        userName: reservation.user
-          ? `${reservation.user.firstName ?? ''} ${reservation.user.lastName ?? ''}`.trim() ||
-            reservation.user.email
-          : undefined,
+        userId: reservation.userId ? new UUID({ uuid: reservation.userId }) : undefined,
         status: mapStatus(reservation.status),
         manualCost:
           reservation.manualCost !== null ? new Integer({ value: reservation.manualCost }) : null,

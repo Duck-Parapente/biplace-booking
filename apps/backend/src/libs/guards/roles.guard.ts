@@ -23,7 +23,10 @@ export class RolesGuard implements CanActivate {
     const user = request.user as AuthenticatedUser;
 
     if (!user) {
-      throw new ForbiddenException({ label: 'Utilisateur non authentifié.', message: 'User not authenticated' });
+      throw new ForbiddenException({
+        label: 'Utilisateur non authentifié.',
+        message: 'User not authenticated',
+      });
     }
 
     const userRoles = user.roles || [];
@@ -32,7 +35,7 @@ export class RolesGuard implements CanActivate {
 
     if (!hasRole) {
       throw new ForbiddenException({
-        label: 'Tu n\'as pas les droits nécessaires.',
+        label: "Tu n'as pas les droits nécessaires.",
         message: `User does not have the required role(s): ${requiredRoles.join(', ')}`,
       });
     }
