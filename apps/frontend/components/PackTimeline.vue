@@ -1,8 +1,8 @@
 <template>
   <div class="flex-1 flex flex-col min-h-0">
-    <div class="mb-3 flex items-center justify-between gap-3">
+    <div class="mb-6 flex items-start justify-between gap-3">
       <h2 class="text-xl font-semibold text-gray-800 shrink-0">Carnet de vol</h2>
-      <div class="flex items-center gap-4">
+      <div class="flex flex-col items-end gap-2">
         <label class="flex items-center gap-2 text-sm cursor-pointer">
           <span class="text-gray-600">Vols non clôturés</span>
           <button
@@ -25,7 +25,7 @@
         </label>
 
         <label v-if="isAdmin" class="flex items-center gap-2 text-sm cursor-pointer">
-          <span class="text-gray-600">Édition</span>
+          <span class="text-gray-600">Mode édition</span>
           <button
             type="button"
             :class="[
