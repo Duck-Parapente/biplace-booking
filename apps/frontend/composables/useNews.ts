@@ -11,14 +11,14 @@ const NEWS: NewsEntry[] = [
     date: '2026-04-27',
     title: 'Notes sur les packs',
     content:
-      "Vous pouvez désormais ajouter des notes sur les packs (bouton ✏️ en bas à droite). Ces notes apparaissent dans le carnet de vol du pack, avec la date et l'auteur.",
+      "Vous pouvez désormais ajouter des notes sur les packs (bouton ✏️ en bas à droite). Ces notes apparaissent dans le carnet de vol du pack, avec la date et l'auteur.<br><br>Les commentaires à la clôture d'une réservation sont désormais aussi affichés comme des notes dans le carnet de vol.",
   },
   {
     version: 2,
     date: '2025-04-23',
     title: 'Lien cliquable depuis le planning',
     content:
-      "Vous pouvez désormais faire une demande de réservation directement depuis le planning en cliquant sur un biplace. Un formulaire pré-rempli avec la date et le biplace sélectionnés s'ouvrira pour faciliter votre réservation. Il vous faudra rajouter les autres biplaces désirés le cas échéant.",
+      "Vous pouvez désormais faire une demande de réservation directement depuis le planning en cliquant sur un biplace.<br><br>Un formulaire pré-rempli avec la date et le biplace sélectionnés s'ouvrira pour faciliter votre réservation. Il vous faudra rajouter les autres biplaces désirés le cas échéant.",
   },
   {
     version: 1,
