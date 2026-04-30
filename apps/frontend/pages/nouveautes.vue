@@ -16,7 +16,7 @@
           </div>
           <span class="text-sm text-gray-400">{{ formatDate(entry.date) }}</span>
         </div>
-        <p class="text-gray-600">{{ entry.content }}</p>
+        <div class="text-gray-600 prose prose-sm max-w-none" v-html="entry.content" />
       </div>
     </div>
   </div>
