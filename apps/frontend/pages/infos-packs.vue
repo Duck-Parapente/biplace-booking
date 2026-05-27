@@ -38,7 +38,7 @@
     </div>
 
     <button
-      v-if="selectedPackId && isAdminOrManager"
+      v-if="selectedPackId"
       type="button"
       class="fixed bottom-4 right-4 w-12 h-12 bg-amber-400 hover:bg-amber-500 text-white rounded-full shadow-lg flex items-center justify-center text-2xl transition z-40"
       title="Ajouter une note"
@@ -83,7 +83,7 @@ type ReservationItem = PackReservationsDto['reservations'][0];
 
 const { callApi } = useApi();
 const { packs, getPacks, getPackNotes } = usePack();
-const { isAdmin, isAdminOrManager } = useAuth();
+const { isAdmin } = useAuth();
 
 const { value: selectedPackId } = useLocalStorage<string | null>('selectedPackId', null);
 const packData = ref<PackReservationsDto | null>(null);
