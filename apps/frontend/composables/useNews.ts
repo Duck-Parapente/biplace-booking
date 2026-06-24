@@ -7,6 +7,13 @@ interface NewsEntry {
 
 const NEWS: NewsEntry[] = [
   {
+    version: 4,
+    date: '2026-06-24',
+    title: 'Accessoires partagés',
+    content:
+      "Une nouvelle page « Accessoires » (menu Réservations) permet de suivre le matériel qu'on se prête, comme la sellette Kinder.<br><br>Vous pouvez aussi laisser des notes datées et signées (ex. « chez moi à Corence ») pour que tout le monde sache où elle se trouve.",
+  },
+  {
     version: 3,
     date: '2026-04-27',
     title: 'Notes sur les packs',
