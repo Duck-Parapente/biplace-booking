@@ -11,7 +11,7 @@ const NEWS: NewsEntry[] = [
     date: '2026-06-24',
     title: 'Accessoires partagés',
     content:
-      "Une nouvelle page « Accessoires » (menu Réservations) permet de suivre le matériel qu'on se prête, comme la sellette Kinder.<br><br>Vous pouvez aussi laisser des notes datées et signées (ex. « chez moi à Corence ») pour que tout le monde sache où elle se trouve.",
+      "Une nouvelle page « Accessoires » (menu Réservations) permet de suivre le matériel qu'on se prête, comme la sellette Kinder.<br><br>Vous pouvez aussi laisser des notes datées et signées (ex. « chez moi à Corenc ») pour que tout le monde sache où elle se trouve.",
   },
   {
     version: 3,
