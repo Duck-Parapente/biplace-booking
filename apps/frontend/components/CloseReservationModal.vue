@@ -25,14 +25,34 @@
           placeholder="Ex: 30"
         />
 
-        <BaseInput
-          id="flightsCount"
-          v-model.number="form.flightsCount"
-          label="Nombre de vols"
-          type="number"
-          required
-          placeholder="Ex: 1"
-        />
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Nombre de vols <span class="text-red-500">*</span>
+          </label>
+          <div class="flex items-center gap-3">
+            <button
+              type="button"
+              @click="decrementFlightsCount"
+              :disabled="form.flightsCount <= 0"
+              class="w-10 h-10 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300 transition rounded disabled:opacity-50"
+            >
+              <span class="text-lg font-medium">−</span>
+            </button>
+            <input
+              :value="form.flightsCount"
+              type="number"
+              readonly
+              class="w-16 text-center px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
+            />
+            <button
+              type="button"
+              @click="incrementFlightsCount"
+              class="w-10 h-10 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300 transition rounded"
+            >
+              <span class="text-lg font-medium">+</span>
+            </button>
+          </div>
+        </div>
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -164,6 +184,17 @@ const form = ref<CloseReservationDto>({
 
 // Composables
 const { closeReservation, closing, closeError, closeSuccess } = useReservation();
+
+// Flights count steppers
+const incrementFlightsCount = () => {
+  form.value.flightsCount += 1;
+};
+
+const decrementFlightsCount = () => {
+  if (form.value.flightsCount > 0) {
+    form.value.flightsCount -= 1;
+  }
+};
 
 // Close modal helper
 const closeModal = () => {
