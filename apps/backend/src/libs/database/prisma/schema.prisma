@@ -40,6 +40,28 @@ model User {
     reservationWishes ReservationWish[]
     reservations      Reservation[]
     packNotes         PackNote[]
+    heldEquipments    Equipment[]       @relation("EquipmentHolder")
+    equipmentNotes    EquipmentNote[]
+}
+
+model Equipment {
+    id              String          @id
+    label           String
+    order           Int
+    currentHolderId String?
+    currentHolder   User?           @relation("EquipmentHolder", fields: [currentHolderId], references: [id])
+    createdAt       DateTime        @db.Timestamptz(3)
+    notes           EquipmentNote[]
+}
+
+model EquipmentNote {
+    id          String    @id
+    equipmentId String
+    equipment   Equipment @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+    content     String
+    createdAt   DateTime  @db.Timestamptz(3)
+    createdBy   User      @relation(fields: [createdById], references: [id])
+    createdById String
 }
 
 model Pack {
