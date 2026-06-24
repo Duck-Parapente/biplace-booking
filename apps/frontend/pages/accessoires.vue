@@ -49,7 +49,7 @@
                 class="px-4 py-2 text-sm bg-secondary-600 text-white hover:bg-secondary-700 transition rounded disabled:opacity-50"
                 @click="takeEquipment(equipment)"
               >
-                Je la prends
+                Je le prends
               </button>
               <button
                 v-else
@@ -58,7 +58,7 @@
                 class="px-4 py-2 text-sm bg-gray-200 text-gray-700 hover:bg-gray-300 transition rounded disabled:opacity-50"
                 @click="releaseEquipment(equipment)"
               >
-                Je la rends
+                Je le rends
               </button>
             </div>
 
@@ -153,6 +153,7 @@ const fetchAllNotes = async () => {
 
 const takeEquipment = async (equipment: EquipmentDto) => {
   if (!userData.value) return;
+  if (!confirm(`Es-tu sûr de vouloir prendre "${equipment.label}" ?`)) return;
   await changeHolder(equipment.id, userData.value.id);
 };
 
