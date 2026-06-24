@@ -1,5 +1,6 @@
 import { JwtStrategy } from '@libs/guards/jwt.strategy';
 import { MailModule } from '@libs/mail/mail.module';
+import { EquipmentModule } from '@modules/equipment/equipment.module';
 import { FeatureFlagModule } from '@modules/feature-flag/feature-flag.module';
 import { PackModule } from '@modules/pack/pack.module';
 import { ReservationModule } from '@modules/reservation/reservation.module';
@@ -12,7 +13,13 @@ import { PassportModule } from '@nestjs/passport';
 import { ConsoleModule } from 'nestjs-console';
 import { LoggerModule } from 'nestjs-pino';
 
-const appModules = [UserModule, PackModule, ReservationModule, ValidationEngineModule];
+const appModules = [
+  UserModule,
+  PackModule,
+  EquipmentModule,
+  ReservationModule,
+  ValidationEngineModule,
+];
 
 @Module({
   imports: [
