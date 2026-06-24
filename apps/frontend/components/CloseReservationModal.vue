@@ -87,6 +87,10 @@
           </label>
         </div>
 
+        <div v-if="flightTimeError" class="p-3 bg-red-50 text-red-700 text-sm">
+          <p>{{ flightTimeError }}</p>
+        </div>
+
         <div v-if="closeError" class="p-3 bg-red-50 text-red-700 text-sm">
           <p><strong>Erreur:</strong> {{ closeError }}</p>
         </div>
@@ -98,7 +102,7 @@
         <div class="flex gap-3 pt-2">
           <button
             type="submit"
-            :disabled="closing || closeSuccess || !isChecklistComplete"
+            :disabled="closing || closeSuccess || !isChecklistComplete || !!flightTimeError"
             class="flex-1 bg-secondary-600 text-white hover:bg-secondary-700 transition text-sm px-4 py-2 rounded disabled:opacity-50"
           >
             {{ closing ? 'Clôture...' : 'Clôturer' }}
@@ -138,6 +142,14 @@ const isChecklistComplete = computed(() => {
   return checklist.value.cleanHarness && checklist.value.dryWing && checklist.value.okHelmet;
 });
 
+// Un vol doit durer au moins 1 minute : on ne peut pas avoir plus de vols que de minutes
+const flightTimeError = computed(() => {
+  if (form.value.flightsCount > form.value.flightTimeMinutes) {
+    return 'Minimum 1 minute par vol. Vérifiez le temps de vol et le nombre de vols.';
+  }
+  return null;
+});
+
 const canClose = computed(() => {
   const isBeforeNow = new Date(props.wish.startingDate) < new Date();
   return isBeforeNow && !!props.wish.reservation?.isClosable;
@@ -161,6 +173,7 @@ const closeModal = () => {
 // Form submission
 const handleSubmit = async () => {
   if (!props.wish.reservation) return;
+  if (flightTimeError.value) return;
 
   try {
     await closeReservation(props.wish.reservation.id, form.value);
