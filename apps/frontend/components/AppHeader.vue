@@ -119,7 +119,7 @@ const menuCategories: MenuCategory[] = [
       { path: '/', label: 'Planning' },
       { path: '/mes-demandes', label: 'Mes demandes' },
       { path: '/infos-packs', label: 'Infos packs' },
-      { path: '/equipements', label: 'Accessoires' },
+      { path: '/accessoires', label: 'Accessoires' },
     ],
   },
   {
