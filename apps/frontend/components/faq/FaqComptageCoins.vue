@@ -11,9 +11,14 @@
     </p>
     <p class="mb-4">
       <strong>Pour une réservation avec vol</strong>, le nombre de Coins correspond au nombre
-      d'heures écoulées entre l'attribution du matériel et 23:59 de la date du vol.<br />
+      d'heures écoulées entre l'attribution du matériel et 23:59 de la date du vol avec un minimum
+      de 24 coins (un jour).<br />
       <strong>Pour une réservation annulée</strong>, le nombre de Coins correspond au nombre
-      d'heures écoulées entre l'attribution du matériel et l'heure d'annulation.
+      d'heures écoulées entre l'attribution du matériel et l'heure d'annulation.<br />
+      <strong>Cas particulier :</strong> les formations et examens sont créditées de 24 coins par
+      jour réservé quelque soit la date de la demande à condition de respecter ce
+      <NuxtLink to="/faq#formation-examen-club" class="underline"> process</NuxtLink>. En cas
+      d'annulation, aucun coin ne sera compté.
     </p>
     <p class="mb-4">Voici quelques exemples pour illustrer cela :</p>
     <div class="space-y-6">
