@@ -186,7 +186,7 @@ const faqSections = [
     items: [
       {
         id: 'formation-examen-club',
-        question: "15. J'ai besoin d'un bi pour une formation, un examen ou une journée club",
+        question: "15. J'ai besoin d'un bi pour une formation, un recyclage, un examen ou une journée club",
         component: FaqFormationExamenClub,
       },
       {
